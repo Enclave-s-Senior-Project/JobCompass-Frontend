@@ -37,18 +37,6 @@ export function FormSignUp() {
                         Log in
                     </Link>
                 </div>
-                <Select name="roleId" defaultValue={state.roleId.toString()}>
-                    <SelectTrigger className="h-12 rounded-sm focus-visible:border-primary focus-visible:ring-primary text-base max-w-36">
-                        <SelectValue placeholder="Select a role" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {roles.map((role) => (
-                            <SelectItem className="h-12 rounded-sm text-base" key={role.roleId} value={role.roleId}>
-                                {role.roleName}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
             </div>
             <div className="space-y-5">
                 <div className="flex items-center gap-5">
