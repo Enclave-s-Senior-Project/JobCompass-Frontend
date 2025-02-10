@@ -5,8 +5,7 @@ declare module 'form-credentials' {
     }
 
     interface SignUpCredentials {
-        roleId: string | number;
-        fullName: string;
+        full_name: string;
         username: string;
         email: string;
         password: string;
