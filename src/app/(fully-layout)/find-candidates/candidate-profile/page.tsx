@@ -19,6 +19,7 @@ import { PiCake } from 'react-icons/pi';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import ShareProfile from '@/components/custom-ui/share-profile';
+import { routes } from '@/configs/routes';
 
 export default function FindCandidatesPage() {
     return (
@@ -178,22 +179,22 @@ export default function FindCandidatesPage() {
                             <p className="mb-5 text-base font-medium">Or Contact Via</p>
                             <div className="flex items-center gap-3">
                                 <Button size="icon" variant="secondary" className="size-12">
-                                    <Link href="/">
+                                    <Link href={routes.home}>
                                         <FaFacebookF />
                                     </Link>
                                 </Button>
                                 <Button size="icon" variant="secondary" className="size-12">
-                                    <Link href="/">
+                                    <Link href={routes.home}>
                                         <FaXTwitter />
                                     </Link>
                                 </Button>
                                 <Button size="icon" variant="secondary" className="size-12">
-                                    <Link href="/">
+                                    <Link href={routes.home}>
                                         <FaInstagram />
                                     </Link>
                                 </Button>
                                 <Button size="icon" variant="secondary" className="size-12">
-                                    <Link href="/">
+                                    <Link href={routes.home}>
                                         <FaYoutube />
                                     </Link>
                                 </Button>

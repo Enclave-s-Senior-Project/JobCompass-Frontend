@@ -11,6 +11,7 @@ import { InputPassword } from '@/components/custom-ui/input-password';
 import { ButtonOptionsSignIn } from '@/components/custom-ui/button-options-sign-in';
 import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
+import { routes } from '@/configs/routes';
 
 export function FormSignUp() {
     const [showPassword, setShowPassword] = useState(false);
@@ -38,7 +39,7 @@ export function FormSignUp() {
                 <div>
                     <h5 className="mb-4 text-[32px] leading-10 font-medium">Create account</h5>
                     <p className="inline text-gray-600">Already have account?</p>&nbsp;
-                    <Link href="/sign-in" className="text-primary font-medium">
+                    <Link href={routes.signIn} className="text-primary font-medium">
                         Log in
                     </Link>
                 </div>

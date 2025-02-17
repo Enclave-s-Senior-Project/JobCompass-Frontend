@@ -13,6 +13,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { PiUserCircle, PiTimer, PiUsers, PiSignOutFill, PiBuilding } from 'react-icons/pi';
+import { routes } from '@/configs/routes';
 
 export function SwitchSignIn() {
     const isLogged = false; // replace with actual logic
@@ -24,7 +25,7 @@ export function SwitchSignIn() {
                 <Badge className={clsx(badgeVariants({ variant: 'notify' }), 'absolute top-0 right-0 size-2.5')} />
             </div>
             {/*if there is enterprise role, this will be shown*/}
-            <Link href="/">
+            <Link href={routes.home}>
                 <Button variant="outline-primary" size="xl-responsive">
                     Post a Job
                 </Button>
@@ -65,12 +66,12 @@ export function SwitchSignIn() {
         </div>
     ) : (
         <div className="w-full flex items-center justify-end gap-2 lg:gap-3">
-            <Link href="/sign-in">
+            <Link href={routes.signIn}>
                 <Button variant="outline-primary" size="xl-responsive">
                     Sign in
                 </Button>
             </Link>
-            <Link href="/">
+            <Link href={routes.home}>
                 <Button variant="default" size="xl-responsive">
                     Post a Job
                 </Button>

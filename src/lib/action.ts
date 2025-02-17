@@ -1,16 +1,23 @@
 import { BaseAxios } from './axios';
-import * as services from '@/services/auth.service';
+import * as Services from '@/services';
 import { DetailedRequest } from 'api-types';
 import { toast } from 'react-toastify';
-import { errorKeyMessage } from './errors';
-import { signUpSchema, verifyEmailScheme, verifySignInScheme } from './zod-schemas';
+import { errorKeyMessage } from './message-keys';
+import { forgetPasswordSchema, signUpSchema, verifyEmailSchema, verifySignInSchema } from './zod-schemas';
+
+const handleErrorToast = (err: any) => {
+    if (err.props.title) {
+        const errorMessage = errorKeyMessage[err.props.title as keyof typeof errorKeyMessage];
+        toast.error(errorMessage);
+    }
+};
 
 export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, formData: FormData) => {
     const username = formData.get('username')?.toString() ?? '';
     const password = formData.get('password')?.toString() ?? '';
     const data = { username, password };
     const axios = new BaseAxios('auth');
-    const validate = verifySignInScheme.safeParse(data);
+    const validate = verifySignInSchema.safeParse(data);
 
     currentState.username = username;
     currentState.password = password;
@@ -26,7 +33,7 @@ export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, 
     }
 
     try {
-        const res = await services.AuthService.login(data);
+        const res = await Services.AuthService.login(data);
         if (res.value)
             axios.storeTokenInfo(res.value?.accessToken, res.value?.tokenType, res.value?.accessTokenExpires);
         return {
@@ -35,10 +42,7 @@ export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, 
             success: true,
         };
     } catch (err: any) {
-        if (err.props.title) {
-            const errorMessage = errorKeyMessage[err.props.title as keyof typeof errorKeyMessage];
-            toast.error(errorMessage);
-        }
+        handleErrorToast(err);
     }
 
     return {
@@ -64,7 +68,6 @@ export const signUpSubmit = async (currentState: DetailedRequest.SignUpRequest, 
     currentState.confirmPassword = formValue.confirmPassword;
 
     const validation = signUpSchema.safeParse(formValue);
-    console.log(validation);
 
     if (!validation.success) {
         return {
@@ -74,7 +77,7 @@ export const signUpSubmit = async (currentState: DetailedRequest.SignUpRequest, 
         };
     }
     try {
-        const temp = await services.AuthService.register(formValue);
+        const temp = await Services.AuthService.register(formValue);
         if (temp.code >= 200 && temp.code <= 299) {
             return {
                 ...currentState,
@@ -82,32 +85,43 @@ export const signUpSubmit = async (currentState: DetailedRequest.SignUpRequest, 
                 success: true,
             };
         }
+    } catch (error: any) {
+        handleErrorToast(error);
+    }
+    return { ...currentState, errors: {}, success: false };
+};
+
+export const forgetPasswordSubmit = async (currentState: any, formData: FormData) => {
+    currentState.email = formData.get('email')?.toString() ?? '';
+    const validation = forgetPasswordSchema.safeParse({ email: currentState.email });
+
+    if (!validation.success) {
+        return {
+            ...currentState,
+            errors: validation.error.flatten().fieldErrors,
+            success: false,
+            data: {},
+        };
+    }
+
+    try {
+        const data = await Services.AuthService.forgetPassword({ email: currentState.email });
+        return { ...currentState, errors: {}, success: true, data };
     } catch (error: any) {
         if (error.props.title) {
             const errorMessage = errorKeyMessage[error.props.title as keyof typeof errorKeyMessage] || 'Oops!';
             toast.error(errorMessage);
         }
     }
-    return { ...currentState, errors: {}, success: false };
-};
 
-export const forgetPasswordSubmit = (currentState: DetailedRequest.ForgetPasswordRequest, formData: FormData) => {
-    const email = formData.get('email');
-
-    console.log({ email });
-
-    //     handle call api
-    //     ...
-
-    return currentState;
+    return { ...currentState, errors: {}, success: false, data: {} };
 };
 
 export const verifyEmail = async (currentState: DetailedRequest.VerifyEmailRequest, formData: FormData) => {
-    console.log('1', currentState);
     const email = currentState.email;
     const code = formData.get('code')?.toString() || '';
     const formValue = { email, code };
-    const validation = verifyEmailScheme.safeParse(formValue);
+    const validation = verifyEmailSchema.safeParse(formValue);
     if (!validation.success) {
         return {
             ...currentState,
@@ -116,7 +130,7 @@ export const verifyEmail = async (currentState: DetailedRequest.VerifyEmailReque
         };
     }
     try {
-        const temp = await services.AuthService.verifyEmail(formValue);
+        const temp = await Services.AuthService.verifyEmail(formValue);
         if (temp.code >= 200 && temp.code <= 299) {
             return {
                 errors: {},
@@ -125,16 +139,7 @@ export const verifyEmail = async (currentState: DetailedRequest.VerifyEmailReque
             };
         }
     } catch (error: any) {
-        console.log(error.props.title);
-        if (error.props.title === 'AUTH_VERIFY_CODE_INVALID') {
-            return {
-                ...currentState,
-                errors: {
-                    code: ['Verify Code Invalid.'],
-                },
-                success: false,
-            };
-        }
+        handleErrorToast(error);
     }
     return { ...currentState, errors: {}, success: false };
 };

@@ -5,7 +5,7 @@ import NextError from 'next/error';
 
 const axios = new BaseAxios('auth');
 
-export class AuthService {
+export default class AuthService {
     public static async login(data: DetailedRequest.SignInRequest) {
         try {
             const temp = await axios.post<ApiResponse<DetailedResponse.SignIn>>('/login', data);
@@ -55,6 +55,23 @@ export class AuthService {
             console.log('data', data);
             const temp = await axios.post<ApiResponse<DetailedResponse.VerifyEmail>>('/verify-email', data);
             return temp.payload;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
+
+    public static async forgetPassword(data: DetailedRequest.ForgetPasswordRequest) {
+        try {
+            const dataResponse = await axios.post<ApiResponse<DetailedResponse.ForgetPassword>>('/forget-password', {
+                email: data.email,
+            });
+            return dataResponse.payload;
         } catch (err) {
             if (err instanceof AxiosError) {
                 throw new NextError({

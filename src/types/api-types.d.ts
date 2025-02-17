@@ -37,6 +37,7 @@ declare module 'api-types' {
             email: string | null;
             code: string;
         }
+        interface ForgetPassword {}
     }
 
     namespace DetailedRequest {

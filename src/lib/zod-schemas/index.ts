@@ -16,13 +16,17 @@ const signUpSchema = z
         path: ['confirmPassword'],
     });
 
-const verifyEmailScheme = z.object({
+const verifyEmailSchema = z.object({
     code: z.string().min(6, 'Code is required'),
 });
 
-const verifySignInScheme = z.object({
+const verifySignInSchema = z.object({
     username: z.string().min(1, 'Email is required').email('Invalid email'),
     password: z.string().min(1, 'Password is required'),
 });
 
-export { signUpSchema, verifySignInScheme, verifyEmailScheme };
+const forgetPasswordSchema = z.object({
+    email: z.string().trim().min(1, 'Email is required').email('Invalid email'),
+});
+
+export { signUpSchema, verifySignInSchema, verifyEmailSchema, forgetPasswordSchema };

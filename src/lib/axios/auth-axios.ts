@@ -1,6 +1,6 @@
 import { InternalAxiosRequestConfig } from 'axios';
 import { BaseAxios } from './base-axios';
-import { AuthService } from '@/services/auth.service';
+import { AuthService } from '@/services';
 
 export class AuthAxios extends BaseAxios {
     constructor(prefix: string) {

@@ -1,11 +1,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import headerLogo from '@/assets/svgs/header-logo.svg';
+import { routes } from '@/configs/routes';
 
 export function ButtonHome() {
     return (
         <div>
-            <Link href="/">
+            <Link href={routes.home}>
                 <div className="logo">
                     <Image
                         loading="eager"

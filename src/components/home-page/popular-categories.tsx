@@ -7,6 +7,7 @@ import { Category } from '@/types/categories-home-page.types';
 import { HomePart } from './home-part';
 import { motionVariant } from '@/lib/motion-variants';
 import { IconPresent } from '../custom-ui/icon-present';
+import { routes } from '@/configs/routes';
 
 const categories: Category[] = [
     { name: 'Design & Creative', jobs: 235, icon: Building2 },
@@ -41,7 +42,7 @@ export function PopularCategory() {
                     return (
                         <motion.div key={index} variants={motionVariant.itemVariants}>
                             <IconPresent.Group className="md:p-6 hover:bg-white rounded-md hover:shadow-primary-50 hover:shadow-lg">
-                                <Link href="/">
+                                <Link href={routes.home}>
                                     <div className="flex items-center gap-2 md:gap-3 overflow-hidden">
                                         <IconPresent.Icon Icon={Icon} size="md" />
                                         <div>

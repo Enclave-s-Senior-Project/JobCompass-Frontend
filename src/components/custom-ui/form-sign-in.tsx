@@ -12,6 +12,7 @@ import { ButtonOptionsSignIn } from '@/components/custom-ui/button-options-sign-
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import clsx from 'clsx';
+import { routes } from '@/configs/routes';
 
 export function FormSignIn() {
     const [showPassword, setShowPassword] = useState(false);
@@ -77,7 +78,7 @@ export function FormSignIn() {
                             Remember me
                         </label>
                     </div>
-                    <Link href="/forget-password" className="text-primary text-sm hover:underline font-medium">
+                    <Link href={routes.forgetPassword} className="text-primary text-sm hover:underline font-medium">
                         Forget password
                     </Link>
                 </div>
