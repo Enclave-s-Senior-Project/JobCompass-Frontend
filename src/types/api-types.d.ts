@@ -40,6 +40,7 @@ declare module 'api-types' {
         type ForgetPassword = any;
         type ResetPassword = any;
         interface JobCardProps {
+            id: string;
             title: string;
             company: string;
             location: string;

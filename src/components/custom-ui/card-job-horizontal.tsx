@@ -11,13 +11,13 @@ export default function CardJobHorizontal(props: { job: DetailedResponse.JobCard
     const { job } = props;
     return (
         <motion.div
-            className="space-y-6"
+            className="space-y-6 "
             variants={motionVariant.itemVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
         >
-            <div className="flex gap-8 flex-wrap items-center justify-between p-8 rounded-xl border-2 border-gray-100 hover:border-primary transition-colors">
+            <div className="flex gap-8 flex-wrap items-center justify-between p-8 rounded-xl border-2 border-gray-100 hover:border-primary transition-colors xl:w-[1320px]">
                 <div className="flex items-center gap-5">
                     <div className="w-16 h-w-16 bg-slate-100 rounded-lg flex items-center justify-center">
                         <svg width="68" height="68" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -4,11 +4,12 @@ import { LayoutGrid, List, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SearchForm from '@/components/custom-ui/search-bar';
 import { DetailedRequest } from 'api-types';
-import JobCard from '@/components/custom-ui/job-card';
+import JobCardTwoType from '@/components/custom-ui/card-job-two-type';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const jobs = [
     {
+        id: '1',
         company: 'Reddit',
         logo: '/next.svg',
         title: 'Marketing Officer',
@@ -18,7 +19,83 @@ const jobs = [
         applicants: 'test',
         featured: true,
     },
-    // Add more job listings...
+    {
+        id: '1',
+        company: 'Reddit',
+        logo: '/next.svg',
+        title: 'Marketing Officer',
+        location: 'United Kingdom of Great Britain',
+        type: 'Full Time',
+        salary: '$50k-$70k',
+        applicants: 'test',
+        featured: true,
+    },
+    {
+        id: '1',
+        company: 'Reddit',
+        logo: '/next.svg',
+        title: 'Marketing Officer',
+        location: 'United Kingdom of Great Britain',
+        type: 'Full Time',
+        salary: '$50k-$70k',
+        applicants: 'test',
+        featured: true,
+    },
+    {
+        id: '1',
+        company: 'Reddit',
+        logo: '/next.svg',
+        title: 'Marketing Officer',
+        location: 'United Kingdom of Great Britain',
+        type: 'Full Time',
+        salary: '$50k-$70k',
+        applicants: 'test',
+        featured: true,
+    },
+    {
+        id: '1',
+        company: 'Reddit',
+        logo: '/next.svg',
+        title: 'Marketing Officer',
+        location: 'United Kingdom of Great Britain',
+        type: 'Full Time',
+        salary: '$50k-$70k',
+        applicants: 'test',
+        featured: true,
+    },
+    {
+        id: '1',
+        company: 'Reddit',
+        logo: '/next.svg',
+        title: 'Marketing Officer',
+        location: 'United Kingdom of Great Britain',
+        type: 'Full Time',
+        salary: '$50k-$70k',
+        applicants: 'test',
+        featured: true,
+    },
+    {
+        id: '1',
+        company: 'Reddit',
+        logo: '/next.svg',
+        title: 'Marketing Officer',
+        location: 'United Kingdom of Great Britain',
+        type: 'Full Time',
+        salary: '$50k-$70k',
+        applicants: 'test',
+        featured: true,
+    },
+    {
+        id: '1',
+        company: 'Reddit',
+        logo: '/next.svg',
+        title: 'Marketing Officer',
+        location: 'United Kingdom of Great Britain',
+        type: 'Full Time',
+        salary: '$50k-$70k',
+        applicants: 'test',
+        featured: true,
+    },
 ];
 export default function Page() {
     const [viewType, setViewType] = useState<'grid' | 'list'>('grid');
@@ -29,7 +106,7 @@ export default function Page() {
         advance: '',
     });
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 12;
+    const itemsPerPage = 6;
 
     // Calculate pagination
     const totalPages = Math.ceil(jobs.length / itemsPerPage);
@@ -149,8 +226,8 @@ export default function Page() {
                                 : 'flex flex-col place-items-center gap-y-6'
                         }
                     >
-                        {currentJobs.map((job) => (
-                            <JobCard job={job} viewType={viewType} />
+                        {currentJobs.map((job, index) => (
+                            <JobCardTwoType job={job} viewType={viewType} key={index} />
                         ))}
                     </div>
                 </div>
