@@ -1,7 +1,6 @@
 'use client';
-import { DetailedResponse, Job } from 'api-types';
+import { Job } from 'api-types';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 import { MapPin } from 'lucide-react';
 import Link from 'next/link';
 
@@ -49,7 +48,9 @@ export default function CardJob(props: { job: Job }) {
                     <div className="flex items-center gap-2 text-sm text-[#636A80]">
                         <span>{job.type}</span>
                         <span>•</span>
-                        <span>{job.highestWage}</span>
+                        <span>
+                            ${job.lowestWage}-${job.highestWage}
+                        </span>
                     </div>
                 </div>
             </motion.div>

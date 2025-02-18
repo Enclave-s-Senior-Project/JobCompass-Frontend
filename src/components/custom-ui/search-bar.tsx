@@ -2,7 +2,6 @@
 import type React from 'react';
 import { useState } from 'react';
 import { Search, MapPin, ChartBarStacked, ChevronRight } from 'lucide-react';
-
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DetailedRequest } from 'api-types';

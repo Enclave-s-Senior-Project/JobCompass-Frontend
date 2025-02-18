@@ -1,5 +1,5 @@
 'use client';
-import { DetailedResponse, Job } from 'api-types';
+import { Job } from 'api-types';
 import CardJobHorizontal from './card-job-horizontal';
 import CardJob from './card-job';
 import { useEffect } from 'react';

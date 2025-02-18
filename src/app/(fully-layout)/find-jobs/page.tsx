@@ -1,12 +1,10 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { LayoutGrid, List } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SearchForm from '@/components/custom-ui/search-bar';
-import { DetailedRequest, DetailedResponse, Job } from 'api-types';
-import { JobCardTwoType } from '@/components/custom-ui/card-job-two-type';
+import { DetailedRequest } from 'api-types';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import * as services from '@/services/job.service';
 import ListCardJobs from '@/components/custom-ui/list-card-jobs';
 
 export default function Page() {
@@ -31,7 +29,6 @@ export default function Page() {
         <main className="min-h-screen bg-white">
             <SearchForm onSearch={handleSearch} />
             <div className="flex flex-col md:flex-row justify-between items-center max-w-screen-xl mx-auto mb-6 mt-6 gap-28">
-                {/* Div bên trái */}
                 <div className="flex flex-wrap items-center gap-2">
                     {Object.entries(activeFilters).map(([key, value]) => {
                         if (!value) return null;
