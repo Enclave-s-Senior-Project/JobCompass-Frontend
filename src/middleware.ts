@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { routes } from './configs/routes';
 
 export function middleware(req: NextRequest) {
     const check = JSON.parse(req.cookies.get('login')?.value || 'false');
@@ -8,5 +9,5 @@ export function middleware(req: NextRequest) {
     }
 }
 export const config = {
-    matcher: ['/sign-in'],
+    matcher: [routes.signIn, routes.signUp, routes.verifyEmail],
 };

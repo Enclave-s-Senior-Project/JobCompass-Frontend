@@ -112,7 +112,7 @@ export function FormSignUp() {
                             'h-12 rounded-sm',
                             state.errors?.password
                                 ? 'border-2 border-danger ring-danger'
-                                : 'focus-visible:border-primary focus-visible:ring-primary'
+                                : 'focus-within:border-primary focus-within:ring-1 focus-within:ring-primary focus-visible:ring-primary'
                         )}
                     />
                     <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
@@ -131,7 +131,7 @@ export function FormSignUp() {
                             'h-12 rounded-sm',
                             state.errors?.confirmPassword
                                 ? 'border-2 border-danger ring-danger'
-                                : 'focus-visible:border-primary focus-visible:ring-primary'
+                                : 'focus-within:border-primary focus-within:ring-1 focus-within:ring-primary focus-visible:ring-primary'
                         )}
                     />
                     <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">

@@ -1,60 +1,96 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import { Input } from '../ui/input';
-import { LuArrowRight, LuEye, LuEyeOff } from 'react-icons/lu';
-import { useState } from 'react';
+import { LuArrowRight } from 'react-icons/lu';
+import { useActionState, useEffect, useState } from 'react';
+import { InputPassword } from './input-password';
+import clsx from 'clsx';
+import { resetPassword } from '@/lib/action';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { routes } from '@/configs/routes';
+import { successKeyMessage } from '@/lib/message-keys';
+import { toast } from 'react-toastify';
 
 export function FormResetPassword() {
+    const search = useSearchParams();
+    const router = useRouter();
+
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+    const [state, onSubmit, isPending] = useActionState(resetPassword, {
+        email: search.get('email'),
+        token: search.get('token'),
+        iv: search.get('iv'),
+        newPassword: '',
+        confirmPassword: '',
+        errors: {},
+        success: false,
+    });
+
+    useEffect(() => {
+        if (state.success) {
+            router.push(routes.signIn);
+            toast.success(successKeyMessage.RESET_PASSWORD);
+        }
+    }, [state.success]);
+
     return (
-        <form className="flex flex-col items-center justify-center px-4 text-center">
+        <form className="flex flex-col items-center justify-center px-4 text-center" action={onSubmit}>
             <div className="flex flex-col items-center justify-center">
                 <div className="max-w-[536px] space-y-9 text-center px-5 md:px-0">
                     <h1 className="text-[32px] leading-[40px] font-inter font-medium">Reset Password</h1>
 
                     <p className="font-inter text-base leading-6 text-muted-foreground">
-                        Duis luctus interdum metus, ut consectetur ante consectetur sed. Suspendisse euismod viverra
-                        massa sit amet mollis.
+                        Please reset your password to ensure security and continue using the service smoothly. Make sure
+                        to choose a strong and memorable password.
                     </p>
 
-                    <div className="space-y-4">
+                    <div className="space-y-5">
                         <div className="relative">
-                            <Input
+                            <InputPassword
+                                defaultValue={state.newPassword}
                                 name="newPassword"
-                                placeholder="New Password"
                                 type={showPassword ? 'text' : 'password'}
-                                className="h-16 rounded-sm focus-visible:border-primary focus-visible:ring-primary pr-12"
+                                hide={!showPassword}
+                                setHide={setShowPassword}
+                                placeholder="New Password"
+                                className={clsx(
+                                    'h-16 rounded-sm',
+                                    state.errors?.newPassword
+                                        ? 'border-2 border-danger ring-danger'
+                                        : 'focus-within:border-primary focus-within:ring-1 focus-within:ring-primary focus-visible:ring-primary'
+                                )}
                             />
-                            <button
-                                type="button"
-                                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                                onClick={() => setShowPassword(!showPassword)}
-                            >
-                                {showPassword ? <LuEyeOff size={20} /> : <LuEye size={20} />}
-                            </button>
+                            <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                                {state.errors?.newPassword && state.errors.newPassword[0]}
+                            </p>
                         </div>
 
                         <div className="relative">
-                            <Input
+                            <InputPassword
+                                defaultValue={state.confirmPassword}
                                 name="confirmPassword"
-                                placeholder="Confirm Password"
                                 type={showConfirmPassword ? 'text' : 'password'}
-                                className="h-16 rounded-sm focus-visible:border-primary focus-visible:ring-primary pr-12"
+                                hide={!showConfirmPassword}
+                                setHide={setShowConfirmPassword}
+                                placeholder="Confirm Password"
+                                className={clsx(
+                                    'h-16 rounded-sm',
+                                    state.errors?.confirmPassword
+                                        ? 'border-2 border-danger ring-danger'
+                                        : 'focus-within:border-primary focus-within:ring-1 focus-within:ring-primary focus-visible:ring-primary'
+                                )}
                             />
-                            <button
-                                type="button"
-                                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                            >
-                                {showConfirmPassword ? <LuEyeOff size={20} /> : <LuEye size={20} />}
-                            </button>
+                            <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                                {state.errors?.confirmPassword && state.errors.confirmPassword[0]}
+                            </p>
                         </div>
                     </div>
 
                     <Button
                         type="submit"
                         className="group w-full h-14 rounded-sm text-base [&_svg]:size-6 font-semibold"
+                        isPending={isPending}
                     >
                         Reset Password <LuArrowRight className="group-hover:translate-x-2 transition-all" />
                     </Button>

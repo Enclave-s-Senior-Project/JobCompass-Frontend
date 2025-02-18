@@ -82,4 +82,19 @@ export default class AuthService {
             throw err;
         }
     }
+
+    public static async resetPassword(data: DetailedRequest.ResetPasswordRequest) {
+        try {
+            const dataResponse = await axios.post<ApiResponse<DetailedResponse.ResetPassword>>('/reset-password', data);
+            return dataResponse.payload;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
 }

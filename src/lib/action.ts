@@ -3,7 +3,13 @@ import * as Services from '@/services';
 import { DetailedRequest } from 'api-types';
 import { toast } from 'react-toastify';
 import { errorKeyMessage } from './message-keys';
-import { forgetPasswordSchema, signUpSchema, verifyEmailSchema, verifySignInSchema } from './zod-schemas';
+import {
+    forgetPasswordSchema,
+    resetPasswordSchema,
+    signUpSchema,
+    verifyEmailSchema,
+    verifySignInSchema,
+} from './zod-schemas';
 
 const handleErrorToast = (err: any) => {
     if (err.props.title) {
@@ -117,7 +123,7 @@ export const forgetPasswordSubmit = async (currentState: any, formData: FormData
     return { ...currentState, errors: {}, success: false, data: {} };
 };
 
-export const verifyEmail = async (currentState: DetailedRequest.VerifyEmailRequest, formData: FormData) => {
+export const verifyEmail = async (currentState: any, formData: FormData) => {
     const email = currentState.email;
     const code = formData.get('code')?.toString() || '';
     const formValue = { email, code };
@@ -133,8 +139,8 @@ export const verifyEmail = async (currentState: DetailedRequest.VerifyEmailReque
         const temp = await Services.AuthService.verifyEmail(formValue);
         if (temp.code >= 200 && temp.code <= 299) {
             return {
-                errors: {},
                 ...currentState,
+                errors: {},
                 success: true,
             };
         }
@@ -142,4 +148,28 @@ export const verifyEmail = async (currentState: DetailedRequest.VerifyEmailReque
         handleErrorToast(error);
     }
     return { ...currentState, errors: {}, success: false };
+};
+
+export const resetPassword = async (currentState: any, formData: FormData) => {
+    currentState.newPassword = formData.get('newPassword')?.toString() ?? '';
+    currentState.confirmPassword = formData.get('confirmPassword')?.toString() ?? '';
+
+    const validation = resetPasswordSchema.safeParse(currentState);
+    if (!validation.success) {
+        return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
+    }
+
+    try {
+        const dataResponse = await Services.AuthService.resetPassword({
+            email: currentState.email,
+            newPassword: currentState.newPassword,
+            iv: currentState.iv,
+            token: currentState.token,
+        });
+        return { ...currentState, errors: {}, success: true, data: dataResponse.value };
+    } catch (error: any) {
+        handleErrorToast(error);
+    }
+
+    return { ...currentState, errors: {}, success: false, data: null };
 };

@@ -37,7 +37,8 @@ declare module 'api-types' {
             email: string | null;
             code: string;
         }
-        interface ForgetPassword {}
+        type ForgetPassword = any;
+        type ResetPassword = any;
     }
 
     namespace DetailedRequest {
@@ -59,12 +60,18 @@ declare module 'api-types' {
         }
 
         interface VerifyEmailRequest {
-            email: string | null;
+            email: string;
             code: string;
         }
 
         interface ForgetPasswordCredentials {
             email: string;
+        }
+
+        interface ResetPasswordRequest extends ForgetPasswordRequest {
+            newPassword: string;
+            token: string;
+            iv: string;
         }
     }
 }
