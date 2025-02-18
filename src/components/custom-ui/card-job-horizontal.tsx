@@ -1,4 +1,5 @@
-import { DetailedResponse } from 'api-types';
+'use client';
+import { DetailedResponse, Job } from 'api-types';
 import { motion } from 'framer-motion';
 import { motionVariant } from '@/lib/motion-variants';
 import { Badge } from '@/components/ui/badge';
@@ -7,7 +8,7 @@ import { ButtonMark } from '../custom-ui/button-mark';
 import { Button } from '@/components/ui/button';
 import { LuArrowRight } from 'react-icons/lu';
 
-export default function CardJobHorizontal(props: { job: DetailedResponse.JobCardProps }) {
+export default function CardJobHorizontal(props: { job: Job }) {
     const { job } = props;
     return (
         <motion.div
@@ -30,20 +31,20 @@ export default function CardJobHorizontal(props: { job: DetailedResponse.JobCard
                     </div>
                     <div className="space-y-3">
                         <h3 className="font-semibold text-xl flex items-center gap-2">
-                            {job.title}&nbsp;
+                            {job?.name}&nbsp;
                             <Badge className="bg-primary-100 text-primary border-none rounded-xl px-4 shadow-none">
                                 {job.type}
                             </Badge>
                         </h3>
                         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                             <span className="flex items-center gap-1 text-sm">
-                                <Building2 className="h-5 w-5" /> {job.company}
+                                <Building2 className="h-5 w-5" /> {job.enterprise.name}
                             </span>
                             <span className="flex items-center gap-1 text-sm">
-                                <MapPin className="h-5 w-5" /> {job.location}
+                                <MapPin className="h-5 w-5" /> {job.enterprise.name}
                             </span>
                             <span className="flex items-center gap-1 text-sm">
-                                <Users className="h-5 w-5" /> {job.salary}
+                                <Users className="h-5 w-5" /> {job.lowestWage}
                             </span>
                         </div>
                     </div>
