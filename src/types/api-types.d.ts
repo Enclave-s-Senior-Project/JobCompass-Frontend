@@ -39,6 +39,16 @@ declare module 'api-types' {
         }
         type ForgetPassword = any;
         type ResetPassword = any;
+        interface JobCardProps {
+            title: string;
+            company: string;
+            location: string;
+            type: string;
+            applicants: string;
+            featured?: boolean;
+            salary: string;
+            logo: string;
+        }
     }
 
     namespace DetailedRequest {
@@ -72,6 +82,12 @@ declare module 'api-types' {
             newPassword: string;
             token: string;
             iv: string;
+        }
+        interface SearchFilterListJobsCredentials {
+            keyword: string;
+            location: string;
+            category: string;
+            advance: string;
         }
     }
 }
