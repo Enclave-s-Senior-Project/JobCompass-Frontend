@@ -1,3 +1,4 @@
+'use client';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -5,22 +6,35 @@ import {
     Mail,
     ChevronLeft,
     ChevronRight,
-    Link,
     Phone,
     Bookmark,
     Map,
     NotepadText,
     CircleUserRound,
+    Link2,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { PiCake } from 'react-icons/pi';
 import ShareProfile from '@/components/custom-ui/share-profile';
 import { FaFacebookF, FaXTwitter } from 'react-icons/fa6';
 import { DialogApplyJob } from '@/components/custom-ui/dialog-apply-job';
+import Link from 'next/link';
+import { Pagination } from '@/components/custom-ui/pagination';
 export default function SingleJob() {
     return (
-        <div className="min-h-screen p-4 md:p-8">
-            <main className="max-w-6xl mx-auto space-y-8">
+        <div className="min-h-screen ">
+            <div className="w-full h-[76px] bg-[#F1F2F4] flex items-center">
+                <div className="flex  max-w-6xl mx-auto w-full items-center justify-between">
+                    <h1 className="text-[18px] leading-[28px]">Find Job</h1>
+                    <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <Link href="/">Home</Link>
+                        <ChevronRight className="h-4 w-4" />
+                        <span className="text-gray-900">Find Job</span>
+                    </div>
+                </div>
+            </div>
+
+            <main className="max-w-6xl mx-auto space-y-8 pt-5">
                 {/* Header Section */}
                 <div className="bg-white rounded-lg  ">
                     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
@@ -46,7 +60,7 @@ export default function SingleJob() {
                                 </div>
                                 <div className="flex flex-wrap gap-5 text-sm text-muted-foreground mt-2">
                                     <span className="flex flex-row gap-1 text-[#474C54]">
-                                        <Link className="w-5 h-5 text-[#0066FF]" />
+                                        <Link2 className="w-5 h-5 text-[#0066FF]" />
                                         https://instagram.com
                                     </span>
                                     <span className="flex flex-row gap-1 text-[#474C54]">
@@ -130,7 +144,7 @@ export default function SingleJob() {
                             </div>
                         </div>
                         {/* Contact information */}
-                        <Card className="max-w-2xl mx-auto">
+                        <Card className="max-w-2xl mx-auto border-primary-50 border-2">
                             <CardHeader className="space-y-2">
                                 <div className="flex items-center gap-4">
                                     <Image
@@ -202,17 +216,7 @@ export default function SingleJob() {
 
                 {/* Related Jobs Section */}
                 <div>
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-2xl font-semibold">Related Jobs</h2>
-                        <div className="flex gap-2">
-                            <Button variant="outline" size="icon-lg">
-                                <ChevronLeft className="h-4 w-4" />
-                            </Button>
-                            <Button variant="outline" size="icon-lg">
-                                <ChevronRight className="h-4 w-4" />
-                            </Button>
-                        </div>
-                    </div>
+                    <Pagination />
 
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {[

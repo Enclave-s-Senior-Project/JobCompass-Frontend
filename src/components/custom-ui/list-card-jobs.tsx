@@ -5,7 +5,7 @@ import { JobCardTwoType } from './card-job-two-type';
 import { useState } from 'react';
 import * as services from '@/services/job.service';
 import { useQuery } from '@tanstack/react-query';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, FileX } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
 
 export default function ListCardJobs(props: { viewType: 'list' | 'grid' }) {
@@ -50,6 +50,15 @@ export default function ListCardJobs(props: { viewType: 'list' | 'grid' }) {
                     <div className="flex justify-center items-center min-h-[50vh]">
                         <Skeleton className="w-[424px] h-[204px] rounded-full" />
                     </div>
+                ) : !jobCards?.data?.length ? (
+                    <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4">
+                        <FileX className="h-16 w-16 text-muted-foreground mb-4" />
+                        <h3 className="text-lg font-semibold text-foreground mb-2">Không tìm thấy công việc nào</h3>
+                        <p className="text-muted-foreground max-w-[500px]">
+                            Hiện tại chưa có công việc nào được đăng tải. Vui lòng quay lại sau hoặc thử tìm kiếm với
+                            các tiêu chí khác.
+                        </p>
+                    </div>
                 ) : (
                     <div
                         className={
@@ -58,12 +67,11 @@ export default function ListCardJobs(props: { viewType: 'list' | 'grid' }) {
                                 : 'flex flex-col place-items-center gap-y-6'
                         }
                     >
-                        {jobCards?.data.map((job, index) => (
+                        {jobCards.data.map((job, index) => (
                             <JobCardTwoType job={job} viewType={viewType} key={index} />
                         ))}
                     </div>
                 )}
-
                 {/* Pagination */}
                 {totalPages > 1 && (
                     <div className="flex justify-center mt-8 pb-6">
