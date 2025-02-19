@@ -3,7 +3,7 @@ import { ApiResponse, DetailedRequest, DetailedResponse, Job } from 'api-types';
 import { AxiosError } from 'axios';
 import NextError from 'next/error';
 
-const axios = new BaseAxios('api/v1/job');
+const axios = new BaseAxios('job');
 
 export class JobService {
     public static async getAllJobs(data: DetailedRequest.ParamListJobsCredentials) {
