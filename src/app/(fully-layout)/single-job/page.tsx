@@ -2,12 +2,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
-    MapPin,
-    Calendar,
-    Clock,
-    Building2,
     Mail,
-    Globe,
     ChevronLeft,
     ChevronRight,
     Link,
@@ -16,18 +11,12 @@ import {
     Map,
     NotepadText,
     CircleUserRound,
-    PhoneCall,
-    MapPinHouse,
-    Download,
-    Facebook,
-    Twitter,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { LuArrowRight } from 'react-icons/lu';
 import { PiCake } from 'react-icons/pi';
-import { Separator } from '@radix-ui/react-select';
-import { FaFacebookF, FaInstagram, FaXTwitter, FaYoutube } from 'react-icons/fa6';
 import ShareProfile from '@/components/custom-ui/share-profile';
+import { FaFacebookF, FaXTwitter } from 'react-icons/fa6';
+import { DialogApplyJob } from '@/components/custom-ui/dialog-apply-job';
 export default function SingleJob() {
     return (
         <div className="min-h-screen p-4 md:p-8">
@@ -75,10 +64,7 @@ export default function SingleJob() {
                             <Button variant="outline" size="icon" className="h-[56px] w-[56px] hover:bg-[#E7F0FA]">
                                 <Bookmark className="h-[24px] w-[24px]" />
                             </Button>
-                            <Button className="flex-1 md:flex-none w-[248px] h-[56px]">
-                                Apply Now
-                                <ChevronRight className="ml-2 h-4 w-4" />
-                            </Button>
+                            <DialogApplyJob nameJob="Senior UX Designer" />
                         </div>
                     </div>
                 </div>
@@ -121,7 +107,7 @@ export default function SingleJob() {
                         </div>
                     </div>
                     <div className="col-span-12 md:col-span-5 space-y-6">
-                        <div className="p-6 flex flex-wrap gap-y-6 rounded-md border-2 border-primary-50">
+                        <div className="p-6 flex items-center justify-center flex-wrap gap-y-6 rounded-md border-2 border-primary-50">
                             <div className="basis-1/2 w-1/2">
                                 <PiCake className="mb-3 size-6 text-primary" />
                                 <p className="mb-1 uppercase text-gray-500 text-[12px]">date of birth</p>
@@ -144,76 +130,6 @@ export default function SingleJob() {
                             </div>
                         </div>
                         {/* Contact information */}
-                        {/* <div className="p-6 rounded-md border-2 border-primary-50 space-y-4">
-                            <p className="text-base font-medium">Contact Information</p>
-
-                            <div>
-                                <div className="flex items-center gap-4">
-                                    <MapPinHouse className="size-8 text-primary" />
-                                    <div className="space-y-1">
-                                        <p className="uppercase text-[12px] text-gray-600">location</p>
-                                        <p className="text-black text-sm font-medium">
-                                            Beverly Hills, California 90202
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <Separator />
-                            <div>
-                                <div className="flex items-start gap-4">
-                                    <PhoneCall className="size-8 text-primary" />
-                                    <div className="space-y-2">
-                                        <div className="space-y-1">
-                                            <p className="uppercase text-[12px] text-gray-600">PRIMARY PHONE</p>
-                                            <p className="text-black text-sm font-medium">
-                                                <a href="tel:+1-202-555-0141">+1-202-555-0141</a>
-                                            </p>
-                                        </div>
-                                        <div className="space-y-1">
-                                            <p className="uppercase text-[12px] text-gray-600">SECONDARY PHONE</p>
-                                            <p className="text-black text-sm font-medium">
-                                                <a href="tel:+1-202-555-0141">+1-202-555-0141</a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <Separator />
-                            <div>
-                                <div className="flex items-center gap-4">
-                                    <Mail className="size-8 text-primary" />
-                                    <div className="space-y-1">
-                                        <p className="uppercase text-[12px] text-gray-600">email address</p>
-                                        <p className="text-black text-sm font-medium">
-                                            <a href="mailto:ester.howard@gmail.com">ester.howard@gmail.com</a>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <p className="mb-5 text-base font-medium">Or Contact Via</p>
-                            <div className="flex items-center gap-3">
-                                <Button size="icon" variant="secondary" className="size-12">
-                                    <Link href="/">
-                                        <FaFacebookF />
-                                    </Link>
-                                </Button>
-                                <Button size="icon" variant="secondary" className="size-12">
-                                    <Link href="/">
-                                        <FaXTwitter />
-                                    </Link>
-                                </Button>
-                                <Button size="icon" variant="secondary" className="size-12">
-                                    <Link href="/">
-                                        <FaInstagram />
-                                    </Link>
-                                </Button>
-                                <Button size="icon" variant="secondary" className="size-12">
-                                    <Link href="/">
-                                        <FaYoutube />
-                                    </Link>
-                                </Button>
-                            </div>
-                        </div> */}
                         <Card className="max-w-2xl mx-auto">
                             <CardHeader className="space-y-2">
                                 <div className="flex items-center gap-4">
@@ -254,43 +170,26 @@ export default function SingleJob() {
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <p className="text-[16px] text-muted-foreground">Website:</p>
-                                        <Link
-                                            href="https://twitter.com"
-                                            className="font-medium text-primary hover:underline"
-                                        >
-                                            https://twitter.com
-                                        </Link>
+                                        <p className="text-[16px]">twitter@gmail.com</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-2 pt-4">
-                                    <Link
-                                        href="#"
-                                        className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#1877F2] text-white hover:bg-[#1877F2]/90"
-                                    >
-                                        <Facebook size={20} />
+                                    <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#1877F2] text-white hover:bg-[#1877F2]/90">
+                                        <FaFacebookF size={20} />
                                         <span className="sr-only">Facebook</span>
-                                    </Link>
-                                    <Link
-                                        href="#"
-                                        className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#1DA1F2] text-white hover:bg-[#1DA1F2]/90"
-                                    >
-                                        <Twitter size={20} />
+                                    </div>
+                                    <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#1DA1F2] text-white hover:bg-[#1DA1F2]/90">
+                                        <FaXTwitter size={20} />
                                         <span className="sr-only">Twitter</span>
-                                    </Link>
-                                    <Link
-                                        href="#"
-                                        className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#FF008C] to-[#FFCD1E] text-white hover:opacity-90"
-                                    >
-                                        <Twitter size={20} />
+                                    </div>
+                                    <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#FF008C] to-[#FFCD1E] text-white hover:opacity-90">
+                                        <FaXTwitter size={20} />
                                         <span className="sr-only">Instagram</span>
-                                    </Link>
-                                    <Link
-                                        href="#"
-                                        className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#FF0000] text-white hover:bg-[#FF0000]/90"
-                                    >
-                                        <Twitter size={20} />
+                                    </div>
+                                    <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#FF0000] text-white hover:bg-[#FF0000]/90">
+                                        <FaXTwitter size={20} />
                                         <span className="sr-only">YouTube</span>
-                                    </Link>
+                                    </div>
                                 </div>
                             </CardContent>
                         </Card>
