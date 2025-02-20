@@ -55,6 +55,21 @@ export default class AuthService {
             console.log('data', data);
             const temp = await axios.post<ApiResponse<DetailedResponse.VerifyEmail>>('/verify-email', data);
             return temp.payload;
+        } catch (err: any) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
+
+    public static async reSendEmail(data: { email: string }) {
+        try {
+            const temp = await axios.post<ApiResponse<any>>('/resend-email', data);
+            return temp.payload;
         } catch (err) {
             if (err instanceof AxiosError) {
                 throw new NextError({

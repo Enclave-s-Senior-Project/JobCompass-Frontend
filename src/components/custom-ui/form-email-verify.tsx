@@ -6,9 +6,10 @@ import { LuArrowRight } from 'react-icons/lu';
 import { verifyEmail } from '@/lib/action';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
+import AuthService from '@/services/auth.service';
+
 export function FormEmailVerify() {
     const router = useRouter();
-
     const search = useSearchParams();
     const email = search.get('email') || '';
 
@@ -18,7 +19,17 @@ export function FormEmailVerify() {
         errors: {},
         success: false,
     });
-
+    const handleResend = async () => {
+        const data = { email: email };
+        try {
+            const temp = await AuthService.reSendEmail(data);
+            if (temp.code >= 200) {
+                toast.success('Email sent successfully.');
+            }
+        } catch (err) {
+            toast.error('Failed to resend verification email');
+        }
+    };
     useEffect(() => {
         if (state.errors?.code) {
             toast.error(state.errors.code[0]);
@@ -56,7 +67,10 @@ export function FormEmailVerify() {
                     </Button>
 
                     <p className="text-sm">
-                        Didn&apos;t receive any code? <button className="text-blue-600 hover:underline">Resend</button>
+                        Didn&apos;t receive any code?{' '}
+                        <button type="button" className="text-blue-600 hover:underline" onClick={handleResend}>
+                            Resend
+                        </button>
                     </p>
                 </div>
             </div>

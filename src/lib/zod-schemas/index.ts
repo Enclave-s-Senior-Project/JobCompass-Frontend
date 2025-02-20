@@ -26,7 +26,7 @@ const signUpSchema = z
     });
 
 const verifyEmailSchema = z.object({
-    code: z.string().min(6, 'Code is required'),
+    code: z.string().min(6, 'Code is min 6 characters'),
 });
 
 const verifySignInSchema = z.object({

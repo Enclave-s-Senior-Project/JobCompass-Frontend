@@ -92,6 +92,7 @@ export const signUpSubmit = async (currentState: DetailedRequest.SignUpRequest, 
             };
         }
     } catch (error: any) {
+        console.log(error);
         handleErrorToast(error);
     }
     return { ...currentState, errors: {}, success: false };

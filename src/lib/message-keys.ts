@@ -4,6 +4,7 @@ const errorKeyMessage = {
     INVALID_CREDENTIALS: 'Password or email went wrong.',
     USERNAME_TOO_SHORT: 'Username is too short.',
     EMAIL_NOT_EXIST: 'Email not registered. Try again!',
+    AUTH_VERIFY_CODE_INVALID: 'Invalid code',
 };
 
 const successKeyMessage = {
