@@ -28,17 +28,19 @@ PaginationItem.displayName = 'PaginationItem';
 
 type PaginationLinkProps = {
     isActive?: boolean;
+    disabled?: boolean;
 } & Pick<ButtonProps, 'size'> &
     React.ComponentProps<'a'>;
 
-const PaginationLink = ({ className, isActive, size = 'icon', ...props }: PaginationLinkProps) => (
+const PaginationLink = ({ className, isActive, size = 'icon-lg', ...props }: PaginationLinkProps) => (
     <a
         aria-current={isActive ? 'page' : undefined}
         className={cn(
             buttonVariants({
-                variant: isActive ? 'outline' : 'ghost',
+                variant: isActive ? 'primary' : 'ghost',
                 size,
             }),
+            'rounded-full shadow-none',
             className
         )}
         {...props}
@@ -49,8 +51,10 @@ PaginationLink.displayName = 'PaginationLink';
 const PaginationPrevious = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
     <PaginationLink
         aria-label="Go to previous page"
-        size="default"
-        className={cn('p-3 rounded-full hover:bg-primary-50 hover:text-primary text-primary [&_svg]:size-6', className)}
+        className={cn(buttonVariants({
+            variant: 'secondary',
+            size:"icon-lg"
+        }),'p-3 rounded-full shadow-none', props.disabled ? 'opacity-60 pointer-events-none':'', className)}
         {...props}
     >
         <ArrowLeft />
@@ -59,7 +63,14 @@ const PaginationPrevious = ({ className, ...props }: React.ComponentProps<typeof
 PaginationPrevious.displayName = 'PaginationPrevious';
 
 const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
-    <PaginationLink aria-label="Go to next page" size="default" className={cn('p-3 rounded-full hover:bg-primary-50 hover:text-primary text-primary [&_svg]:size-6', className)} {...props}>
+    <PaginationLink
+        aria-label="Go to next page"
+        className={cn(buttonVariants({
+            variant: 'secondary',
+            size:"icon-lg"
+        }),'p-3 rounded-full shadow-none', className)}
+        {...props}
+    >
         <ArrowRight />
     </PaginationLink>
 );

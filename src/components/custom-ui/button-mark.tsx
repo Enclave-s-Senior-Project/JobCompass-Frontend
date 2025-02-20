@@ -1,22 +1,21 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Bookmark } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export const ButtonMark = ({
+    className,
     onClick,
-    variant = 'third',
+    variant = 'secondary',
+    size = 'icon-lg',
 }: {
-    variant?: 'third' | 'secondary';
+    className?: string;
+    variant?: 'outline' | 'secondary';
+    size?: 'icon-xl' | 'icon-lg' | 'icon-md';
     onClick?: () => void;
 }) => {
     return (
-        <Button
-            type="button"
-            className="[&_svg]:size-6 p-2 h-10 lg:p-3 lg:h-12"
-            size="xl"
-            variant={variant}
-            onClick={onClick}
-        >
+        <Button type="button" className={cn(className)} size={size} variant={variant} onClick={onClick}>
             <Bookmark />
         </Button>
     );

@@ -12,13 +12,16 @@ import {
 export default function JobWishListPage() {
     return (
         <div className="p-12 space-y-3">
-            <h5>Favorite Jobs (17)</h5>
+            <div className='flex items-center'>
+                <h5 className='text-lg text-gray-900 font-medium'>Favorite Jobs</h5>&nbsp;
+                <span className='text-base text-gray-400 font-normal'>(17)</span>
+            </div>
             <div></div>
             <div>
                 <Pagination>
                     <PaginationContent>
                         <PaginationItem>
-                            <PaginationPrevious href="#" />
+                            <PaginationPrevious href="#" disabled={true} />
                         </PaginationItem>
                         <PaginationItem>
                             <PaginationLink href="#">1</PaginationLink>

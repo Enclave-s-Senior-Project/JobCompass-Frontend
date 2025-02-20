@@ -89,7 +89,8 @@ export function FormResetPassword() {
 
                     <Button
                         type="submit"
-                        className="group w-full h-14 rounded-sm text-base [&_svg]:size-6 font-semibold"
+                        size="xl"
+                        className="group w-full rounded-sm text-base font-semibold"
                         isPending={isPending}
                     >
                         Reset Password <LuArrowRight className="group-hover:translate-x-2 transition-all" />

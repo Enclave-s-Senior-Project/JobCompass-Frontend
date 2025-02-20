@@ -156,11 +156,7 @@ export function FormSignUp() {
                     Terms of Services
                 </Link>
             </div>
-            <Button
-                type="submit"
-                className="group h-14 rounded-sm text-base [&_svg]:size-6 font-semibold"
-                isPending={isPending}
-            >
+            <Button type="submit" size="xl" className="group rounded-sm text-base font-semibold" isPending={isPending}>
                 Create account <LuArrowRight className="group-hover:translate-x-2 transition-all" />
             </Button>
             <div className="space-y-4">

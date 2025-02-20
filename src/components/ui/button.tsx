@@ -6,33 +6,32 @@ import { cn } from '@/lib/utils';
 import { ImSpinner2 } from 'react-icons/im';
 
 const buttonVariants = cva(
-    'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+    'inline-flex items-center justify-center gap-3 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
     {
         variants: {
             variant: {
-                default: 'bg-primary text-primary-foreground shadow hover:bg-primary/90',
-                destructive: 'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
-                outline: 'border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground',
-                secondary: 'bg-primary-100 text-primary shadow-sm hover:bg-primary hover:text-white',
-                third: 'bg-white text-primary shadow-sm hover:bg-primary-100',
-                ghost: 'hover:bg-accent hover:text-accent-foreground',
-                link: 'text-primary underline-offset-4 hover:underline',
-                'outline-primary': 'border border-primary-200 bg-background shadow-sm hover:bg-accent text-primary',
+                primary:
+                    'bg-primary border-primary text-primary-foreground shadow hover:bg-primary-600 hover:border-primary-600',
+                secondary:
+                    'bg-primary-50 border-primary-50 text-primary shadow hover:bg-primary-100 hover:border-primary-100 ',
+                third: 'bg-primary-50 border-primary-50 text-primary shadow hover:bg-primary hover:border-primary hover:text-primary-foreground',
+                'outline-secondary':
+                    'border-primary-100 bg-white text-primary shadow hover:bg-primary hover:border-primary hover:text-primary-foreground',
+                    ghost: 'border-transparent bg-white text-gray-600 hover:bg-gray-100/80 hover:text-gray-900 shadow',
+                outline: 'border-primary-100 bg-white text-primary shadow hover:border-primary',
             },
             size: {
-                default: 'h-9 px-4 py-2',
-                sm: 'h-8 rounded-sm px-3 text-xs',
-                lg: 'h-10 rounded-sm px-6 text-base',
-                xl: 'h-12 rounded-sm px-6 text-base',
-                'sm-responsive': 'h-6 lg:h-8 rounded-sm px-1 lg:px-3 text-xs',
-                'lg-responsive': 'h-8 lg:h-10 rounded-sm px-4 lg:px-6 text-base',
-                'xl-responsive': 'h-10 lg:h-12 rounded-sm px-4 lg:px-6 text-base',
-                icon: 'h-9 w-9',
+                md: 'border py-1 px-2 sm:py-2 sm:px-4 rounded-sm text-xs [&_svg]:size-4 md:[&_svg]:size-5',
+                lg: 'border py-2 px-4 md:py-3 md:px-6 rounded-sm text-sm md:text-base [&_svg]:size-5 md:[&_svg]:size-6',
+                xl: 'border-2 py-3 px-6 lg:py-4 lg:px-8 rounded-sm text-base [&_svg]:size-6 md:[&_svg]:size-d',
+                'icon-md': 'border p-1 md:p-2 rounded-sm text-sm md:text-base [&_svg]:size-4 md:[&_svg]:size-5',
+                'icon-lg': 'border p-2 md:p-3 rounded-sm text-sm md:text-base [&_svg]:size-5 md:[&_svg]:size-6',
+                'icon-xl': 'border p-3 md:p-6 rounded-sm text-sm md:text-base [&_svg]:size-6 md:[&_svg]:size-d',
             },
         },
         defaultVariants: {
-            variant: 'default',
-            size: 'default',
+            variant: 'primary',
+            size: 'lg',
         },
     }
 );

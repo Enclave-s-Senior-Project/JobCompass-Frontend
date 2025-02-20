@@ -45,11 +45,7 @@ export function FormForgetPassword() {
                     {state.errors?.email && state.errors.email[0]}
                 </p>
             </div>
-            <Button
-                type="submit"
-                className="group h-14 rounded-sm text-base [&_svg]:size-6 font-semibold"
-                isPending={isPending}
-            >
+            <Button type="submit" size="xl" className="group rounded-sm text-base font-semibold" isPending={isPending}>
                 Reset Password <LuArrowRight className="group-hover:translate-x-2 transition-all" />
             </Button>
             <div className="space-y-4">

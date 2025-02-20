@@ -83,11 +83,7 @@ export function FormSignIn() {
                     </Link>
                 </div>
             </div>
-            <Button
-                type="submit"
-                className="group h-14 rounded-sm text-base [&_svg]:size-6 font-semibold"
-                isPending={isPending}
-            >
+            <Button type="submit" size="xl" className="group font-semibold" isPending={isPending}>
                 Sign in <LuArrowRight className="group-hover:translate-x-2 transition-all duration-100" />
             </Button>
             <div className="space-y-4">

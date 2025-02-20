@@ -40,15 +40,15 @@ export default function FindCandidatesPage() {
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
-                        <ButtonMark variant="secondary" />
+                        <ButtonMark variant="secondary" className="border-2" />
                         <Button
-                            variant="outline-primary"
-                            size="xl-responsive"
+                            variant="outline-secondary"
+                            size="lg"
                             className="rounded-sm [&_svg]:size-6 border-2 border-primary"
                         >
                             <Mail className="hidden md:block" /> Send Mail
                         </Button>
-                        <Button size="xl-responsive" className="rounded-sm [&_svg]:size-6">
+                        <Button variant="primary" size="lg" className="border-2 rounded-sm [&_svg]:size-6">
                             <CircleArrowRight className="hidden md:block" /> Hire Candidates
                         </Button>
                     </div>
@@ -124,7 +124,7 @@ export default function FindCandidatesPage() {
                                         <p className="text-sm font-medium uppercase">PDF</p>
                                     </div>
                                 </div>
-                                <Button size="xl-responsive" variant="secondary" className="[&_svg]:size-6">
+                                <Button size="lg" variant="secondary" className="[&_svg]:size-6">
                                     <Download /> <span className="sm:hidden block lg:block">Download</span>
                                 </Button>
                             </div>
@@ -178,22 +178,22 @@ export default function FindCandidatesPage() {
                             </div>
                             <p className="mb-5 text-base font-medium">Or Contact Via</p>
                             <div className="flex items-center gap-3">
-                                <Button size="icon" variant="secondary" className="size-12">
+                                <Button size="icon-lg" variant="third" className="size-12">
                                     <Link href={routes.home}>
                                         <FaFacebookF />
                                     </Link>
                                 </Button>
-                                <Button size="icon" variant="secondary" className="size-12">
+                                <Button size="icon-lg" variant="third" className="size-12">
                                     <Link href={routes.home}>
                                         <FaXTwitter />
                                     </Link>
                                 </Button>
-                                <Button size="icon" variant="secondary" className="size-12">
+                                <Button size="icon-lg" variant="third" className="size-12">
                                     <Link href={routes.home}>
                                         <FaInstagram />
                                     </Link>
                                 </Button>
-                                <Button size="icon" variant="secondary" className="size-12">
+                                <Button size="icon-lg" variant="third" className="size-12">
                                     <Link href={routes.home}>
                                         <FaYoutube />
                                     </Link>

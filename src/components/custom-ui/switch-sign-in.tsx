@@ -26,7 +26,7 @@ export function SwitchSignIn() {
             </div>
             {/*if there is enterprise role, this will be shown*/}
             <Link href={routes.home}>
-                <Button variant="outline-primary" size="xl-responsive">
+                <Button variant="outline" size="lg">
                     Post a Job
                 </Button>
             </Link>
@@ -67,12 +67,12 @@ export function SwitchSignIn() {
     ) : (
         <div className="w-full flex items-center justify-end gap-2 lg:gap-3">
             <Link href={routes.signIn}>
-                <Button variant="outline-primary" size="xl-responsive">
+                <Button variant="outline" size="lg">
                     Sign in
                 </Button>
             </Link>
             <Link href={routes.home}>
-                <Button variant="default" size="xl-responsive">
+                <Button variant="primary" size="lg">
                     Post a Job
                 </Button>
             </Link>
