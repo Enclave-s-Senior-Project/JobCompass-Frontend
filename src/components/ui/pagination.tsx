@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { ButtonProps, buttonVariants } from '@/components/ui/button';
@@ -50,19 +50,17 @@ const PaginationPrevious = ({ className, ...props }: React.ComponentProps<typeof
     <PaginationLink
         aria-label="Go to previous page"
         size="default"
-        className={cn('gap-1 pl-2.5', className)}
+        className={cn('p-3 rounded-full hover:bg-primary-50 hover:text-primary text-primary [&_svg]:size-6', className)}
         {...props}
     >
-        <ChevronLeft className="h-4 w-4" />
-        <span>Previous</span>
+        <ArrowLeft />
     </PaginationLink>
 );
 PaginationPrevious.displayName = 'PaginationPrevious';
 
 const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
-    <PaginationLink aria-label="Go to next page" size="default" className={cn('gap-1 pr-2.5', className)} {...props}>
-        <span>Next</span>
-        <ChevronRight className="h-4 w-4" />
+    <PaginationLink aria-label="Go to next page" size="default" className={cn('p-3 rounded-full hover:bg-primary-50 hover:text-primary text-primary [&_svg]:size-6', className)} {...props}>
+        <ArrowRight />
     </PaginationLink>
 );
 PaginationNext.displayName = 'PaginationNext';

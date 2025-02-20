@@ -23,7 +23,7 @@ export function HeaderSection() {
     };
 
     return (
-        <header>
+        <header className="border-b">
             {/*for mobile*/}
             <div className="px-3 py-2 lg:hidden flex items-center justify-between gap-2">
                 <div className="mr-auto">
