@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Search, MapPin, ChartBarStacked, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { DetailedRequest } from 'api-types';
+import { DetailedRequest } from '@/types';
 import Link from 'next/link';
 
 interface SearchFormProps {
@@ -105,7 +105,8 @@ export default function SearchForm({ onSearch }: SearchFormProps) {
                     <div className="relative flex-1 min-w-[250px]  md:min-w-[131px] max-w-[131px] pl-3">
                         <Button
                             type="submit"
-                            className="bg-blue-600 hover:bg-blue-700 text-white w-full h-[56px] rounded-sm text-[16px]"
+                            variant='primary'
+                            className="text-white w-full rounded-sm text-[16px]"
                         >
                             Find Job
                         </Button>

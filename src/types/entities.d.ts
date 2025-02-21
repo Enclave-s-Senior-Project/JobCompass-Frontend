@@ -15,3 +15,24 @@ export interface Job {
     enterprise: Enterprise;
     address: Address;
 }
+
+export interface Enterprise {
+    createdAt: string;
+    updatedAt: string;
+    isActive: boolean;
+    enterpriseId: string;
+    name: string;
+    email: string;
+    phone: string;
+    description: string;
+    enterpriseBenefits: string;
+    companyVision: string;
+    logoUrl: string;
+    foundedIn: string;
+    organizationType: string;
+    teamSize: string;
+    industryType: string;
+    bio: string;
+    isPremium: boolean;
+    expiredPremium: string;
+}

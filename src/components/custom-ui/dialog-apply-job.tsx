@@ -40,26 +40,26 @@ export function DialogApplyJob(props: { nameJob: string }) {
                         <label className="text-sm font-medium">Cover Letter</label>
                         <div className="rounded-md border">
                             <div className="flex items-center gap-1 border-b p-2">
-                                <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <Button variant="ghost" size="icon-lg" className="h-8 w-8">
                                     <span className="font-bold">B</span>
                                 </Button>
-                                <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <Button variant="ghost" size="icon-lg" className="h-8 w-8">
                                     <span className="italic">I</span>
                                 </Button>
-                                <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <Button variant="ghost" size="icon-lg" className="h-8 w-8">
                                     <span className="underline">U</span>
                                 </Button>
-                                <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <Button variant="ghost" size="icon-lg" className="h-8 w-8">
                                     <span className="line-through">S</span>
                                 </Button>
                                 <div className="h-4 w-px bg-border mx-1" />
-                                <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <Button variant="ghost" size="icon-lg" className="h-8 w-8">
                                     <span>🔗</span>
                                 </Button>
-                                <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <Button variant="ghost" size="icon-lg" className="h-8 w-8">
                                     <span>≡</span>
                                 </Button>
-                                <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <Button variant="ghost" size="icon-lg" className="h-8 w-8">
                                     <span>⋮</span>
                                 </Button>
                             </div>

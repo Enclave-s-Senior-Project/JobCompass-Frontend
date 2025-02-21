@@ -1,8 +1,7 @@
 'use client';
-import { Job } from 'api-types';
+import { Job } from '@/types';
 import { motion } from 'framer-motion';
 import { MapPin } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 
 export default function CardJob(props: { job: Job }) {
@@ -16,13 +15,12 @@ export default function CardJob(props: { job: Job }) {
                 <div className="flex items-start justify-between mb-4 ">
                     <div className="flex items-start gap-4">
                         <div className=" relative rounded-lg overflow-hidden border flex-shrink-0 bg-gray-50">
-                            <Image
+                            <img
                                 src={job.introImg || 'https://www.foxsports.com/soccer/cristiano-ronaldo-player'}
                                 alt={job.enterprise.name || 'Company logo'}
                                 width={48}
                                 height={48}
                                 className="object-contain size-14 rounded-sm"
-                                priority={false} // Use true for above-the-fold images
                             />
                         </div>
 

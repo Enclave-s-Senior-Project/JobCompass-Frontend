@@ -61,7 +61,7 @@ export default function SingleJob() {
                             </div>
                         </div>
                         <div className="flex gap-3 w-full md:w-auto">
-                            <Button variant="outline" size="icon" className="h-[56px] w-[56px] hover:bg-[#E7F0FA]">
+                            <Button variant="outline" size="icon-lg" className="h-[56px] w-[56px] hover:bg-[#E7F0FA]">
                                 <Bookmark className="h-[24px] w-[24px]" />
                             </Button>
                             <DialogApplyJob nameJob="Senior UX Designer" />
@@ -205,10 +205,10 @@ export default function SingleJob() {
                     <div className="flex items-center justify-between mb-6">
                         <h2 className="text-2xl font-semibold">Related Jobs</h2>
                         <div className="flex gap-2">
-                            <Button variant="outline" size="icon">
+                            <Button variant="outline" size="icon-lg">
                                 <ChevronLeft className="h-4 w-4" />
                             </Button>
-                            <Button variant="outline" size="icon">
+                            <Button variant="outline" size="icon-lg">
                                 <ChevronRight className="h-4 w-4" />
                             </Button>
                         </div>

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { LayoutGrid, List } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SearchForm from '@/components/custom-ui/search-bar';
-import { DetailedRequest } from 'api-types';
+import { DetailedRequest } from '@/types';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import ListCardJobs from '@/components/custom-ui/list-card-jobs';
 
@@ -36,7 +36,7 @@ export default function Page() {
                             <Button
                                 key={key}
                                 variant="outline"
-                                size="sm"
+                                size="md"
                                 className="rounded-[30px]"
                                 onClick={() =>
                                     removeFilter(key as keyof DetailedRequest.SearchFilterListJobsCredentials)
@@ -76,7 +76,7 @@ export default function Page() {
                     <div className="flex items-center justify-center border rounded-md h-[48px] w-[88px]">
                         <Button
                             variant="ghost"
-                            size="sm"
+                            size="md"
                             className={`px-2 h-[32px] w-[32px] ${viewType === 'grid' ? 'bg-gray-100' : ''}`}
                             onClick={() => setViewType('grid')}
                         >
@@ -84,7 +84,7 @@ export default function Page() {
                         </Button>
                         <Button
                             variant="ghost"
-                            size="sm"
+                            size="md"
                             className={`px-2 h-[32px] w-[32px] ${viewType === 'list' ? 'bg-gray-100' : ''}`}
                             onClick={() => setViewType('list')}
                         >

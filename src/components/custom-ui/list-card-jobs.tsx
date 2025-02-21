@@ -1,6 +1,6 @@
 'use client';
 
-import { DetailedRequest } from 'api-types';
+import { DetailedRequest } from '@/types';
 import { JobCardTwoType } from './card-job-two-type';
 import { useState } from 'react';
 import * as services from '@/services/job.service';

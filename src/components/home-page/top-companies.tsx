@@ -34,7 +34,7 @@ export function TopCompanies() {
                     onClick={prevSlide}
                     className="absolute left-0 top-1/2 -translate-y-1/2 z-10 rounded-full"
                     variant="outline"
-                    size="icon"
+                    size="icon-lg"
                 >
                     <ChevronLeft className="h-6 w-6" />
                 </Button>
@@ -42,7 +42,7 @@ export function TopCompanies() {
                     onClick={nextSlide}
                     className="absolute right-0 top-1/2 -translate-y-1/2 z-10 rounded-full"
                     variant="outline"
-                    size="icon"
+                    size="icon-lg"
                 >
                     <ChevronRight className="h-6 w-6" />
                 </Button>

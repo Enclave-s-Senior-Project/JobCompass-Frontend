@@ -1,163 +1,113 @@
-declare module 'api-types' {
-    interface ApiResponse<T> {
-        payload: {
-            code: number;
-            message_code;
-            value?: T;
-        };
-        timestamp: number;
-    }
+// @typescript-eslint/no-unused-vars
 
-    interface UserType {
-        createdAt: string;
-        updatedAt: string;
-        isActive: boolean;
-        accountId: string;
-        email: string;
-        status: string;
-        roles: string[];
+export interface ApiResponse<T> {
+    payload: {
+        code: number;
+        message_code;
+        value?: T;
+    };
+    timestamp: number;
+}
+
+export interface Meta {
+    page: string;
+    take: string;
+    itemCount: number;
+    pageCount: number;
+    hasPreviousPage: boolean;
+    hasNextPage: boolean;
+}
+
+export namespace DetailedResponse {
+    export interface RefreshToken {
+        tokenType: string;
+        accessToken: string;
+        accessTokenExpires: number;
     }
-    interface Job {
-        createdAt: string;
-        updatedAt: string;
-        isActive: boolean;
-        jobId: string;
-        name: string;
-        lowestWage: string;
-        highestWage: string;
-        description: string;
+    export interface SignIn extends RefreshToken {
+        user: UserType;
+    }
+    export interface SignUp {
+        full_name: string;
+        username: string;
+        email: string;
+        password: string;
+    }
+    export interface VerifyEmail {
+        email: string | null;
+        code: string;
+    }
+    export type ForgetPassword = any;
+    export type ResetPassword = any;
+    export interface JobCardProps {
+        id: string;
+        title: string;
+        company: string;
+        location: string;
         type: string;
-        experience: number;
-        deadline: string;
-        introImg: string;
-        status: boolean;
-        enterprise: Enterprise;
-        address: Address;
+        applicants: string;
+        featured?: boolean;
+        salary: string;
+        logo: string;
     }
-    interface Enterprise {
-        createdAt: string;
-        updatedAt: string;
-        isActive: boolean;
-        enterpriseId: string;
-        name: string;
+    export interface GetAllJobs {
+        data: Job[];
+        meta: {
+            page: string;
+            take: string;
+            itemCount: number;
+            pageCount: number;
+            hasPreviousPage: boolean;
+            hasNextPage: boolean;
+        };
+    }
+}
+
+export namespace DetailedRequest {
+    export interface Pagination {
+        order?: 'ASC' | 'DESC';
+        page?: number;
+        take?: number;
+        option?: string;
+    }
+
+    export interface SignInRequest {
+        username: string;
+        password: string;
+    }
+
+    export interface SignUpRequest {
+        full_name: string;
+        username: string;
         email: string;
-        phone: string;
-        description: string;
-        enterpriseBenefits: string;
-        companyVision: string;
-        logoUrl: string;
-        foundedIn: string;
-        organizationType: string;
-        teamSize: string;
-        industryType: string;
-        bio: string;
-        isPremium: boolean;
-        expiredPremium: string;
-    }
-    interface Meta {
-        page: string;
-        take: string;
-        itemCount: number;
-        pageCount: number;
-        hasPreviousPage: boolean;
-        hasNextPage: boolean;
-    }
-    interface Address {
-        isActive: boolean;
-        country: string;
-        city: string;
-        street: string;
-        zipCode: number;
+        password: string;
+        confirmPassword: string;
     }
 
-    namespace DetailedResponse {
-        interface RefreshToken {
-            tokenType: string;
-            accessToken: string;
-            accessTokenExpires: number;
-        }
-        interface SignIn extends RefreshToken {
-            user: UserType;
-        }
-        interface SignUp {
-            full_name: string;
-            username: string;
-            email: string;
-            password: string;
-        }
-        interface VerifyEmail {
-            email: string | null;
-            code: string;
-        }
-        type ForgetPassword = any;
-        type ResetPassword = any;
-        interface JobCardProps {
-            id: string;
-            title: string;
-            company: string;
-            location: string;
-            type: string;
-            applicants: string;
-            featured?: boolean;
-            salary: string;
-            logo: string;
-        }
-        interface GetAllJobs {
-            data: Job[];
-            meta: {
-                page: string;
-                take: string;
-                itemCount: number;
-                pageCount: number;
-                hasPreviousPage: boolean;
-                hasNextPage: boolean;
-            };
-        }
+    export interface ForgetPasswordRequest {
+        email: string;
     }
 
-    namespace DetailedRequest {
-        interface SignInRequest {
-            username: string;
-            password: string;
-        }
-
-        interface SignUpRequest {
-            full_name: string;
-            username: string;
-            email: string;
-            password: string;
-            confirmPassword: string;
-        }
-
-        interface ForgetPasswordRequest {
-            email: string;
-        }
-
-        interface VerifyEmailRequest {
-            email: string;
-            code: string;
-        }
-
-        interface ForgetPasswordCredentials {
-            email: string;
-        }
-
-        interface ResetPasswordRequest extends ForgetPasswordRequest {
-            newPassword: string;
-            token: string;
-            iv: string;
-        }
-        interface SearchFilterListJobsCredentials {
-            keyword: string;
-            location: string;
-            category: string;
-            advance: string;
-        }
-        interface ParamListJobsCredentials {
-            order: string;
-            page: number;
-            take: number;
-            option: string;
-        }
+    export interface VerifyEmailRequest {
+        email: string;
+        code: string;
     }
+
+    export interface ForgetPasswordCredentials {
+        email: string;
+    }
+
+    export interface ResetPasswordRequest extends ForgetPasswordRequest {
+        newPassword: string;
+        token: string;
+        iv: string;
+    }
+    export interface SearchFilterListJobsCredentials {
+        keyword: string;
+        location: string;
+        category: string;
+        advance: string;
+    }
+    export interface ParamListJobsCredentials extends Pagination {}
+    export interface FavoriteJobs extends Pagination {}
 }

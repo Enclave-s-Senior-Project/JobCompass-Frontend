@@ -1,5 +1,5 @@
 'use client';
-import { Job } from 'api-types';
+import { Job } from '@/types';
 import CardJobHorizontal from './card-job-horizontal';
 import CardJob from './card-job';
 

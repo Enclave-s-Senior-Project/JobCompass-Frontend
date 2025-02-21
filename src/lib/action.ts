@@ -1,6 +1,6 @@
 import { BaseAxios } from './axios';
 import * as Services from '@/services';
-import { DetailedRequest } from 'api-types';
+import { DetailedRequest } from '@/types';
 import { toast } from 'react-toastify';
 import { errorKeyMessage } from './message-keys';
 import {

@@ -1,4 +1,4 @@
-import { ApiResponse } from 'api-types';
+import { ApiResponse } from '@/types';
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import Error from 'next/error';
 

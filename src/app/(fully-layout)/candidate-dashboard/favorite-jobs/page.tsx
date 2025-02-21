@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import {
     Pagination,
@@ -8,19 +10,26 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from '@/components/ui/pagination';
+// import { useSearchParams } from 'next/navigation';
+
+// const ITEM_PER_PAGE = 10;
 
 export default function JobWishListPage() {
+    // const search = useSearchParams();
+
+    // const page = Number(search.get('page') || 1);
+
     return (
         <div className="p-12 space-y-3">
-            <div className='flex items-center'>
-                <h5 className='text-lg text-gray-900 font-medium'>Favorite Jobs</h5>&nbsp;
-                <span className='text-base text-gray-400 font-normal'>(17)</span>
+            <div className="flex items-center">
+                <h5 className="text-lg text-gray-900 font-medium">Favorite Jobs</h5>&nbsp;
+                <span className="text-base text-gray-400 font-normal">(17)</span>
             </div>
             <div></div>
             <div>
                 <Pagination>
                     <PaginationContent>
-                        <PaginationItem>
+                        <PaginationItem className="mr-2">
                             <PaginationPrevious href="#" disabled={true} />
                         </PaginationItem>
                         <PaginationItem>
@@ -37,7 +46,7 @@ export default function JobWishListPage() {
                         <PaginationItem>
                             <PaginationEllipsis />
                         </PaginationItem>
-                        <PaginationItem>
+                        <PaginationItem className="ml-2">
                             <PaginationNext href="#" />
                         </PaginationItem>
                     </PaginationContent>

@@ -1,5 +1,5 @@
 'use client';
-import { Job } from 'api-types';
+import { Job } from '@/types';
 import { motion } from 'framer-motion';
 import { motionVariant } from '@/lib/motion-variants';
 import { Badge } from '@/components/ui/badge';
