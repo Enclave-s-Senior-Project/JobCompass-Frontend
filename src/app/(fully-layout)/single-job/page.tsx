@@ -20,13 +20,11 @@ import { FaFacebookF, FaXTwitter } from 'react-icons/fa6';
 import { DialogApplyJob } from '@/components/custom-ui/dialog-apply-job';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
 import { DetailedRequest } from '@/types';
 import * as services from '@/services/job.service';
 import CardJob from '@/components/custom-ui/card-job';
 import { Skeleton } from '@/components/ui/skeleton';
 export default function SingleJob() {
-    const [currentPage, setCurrentPage] = useState(1);
     const take = 6;
     const {
         isLoading,
@@ -42,7 +40,7 @@ export default function SingleJob() {
             },
         },
     } = useQuery({
-        queryKey: ['list-card', { order: 'DESC', page: currentPage, take, option: '' }],
+        queryKey: ['list-card', { order: 'DESC', page: 1, take, option: '' }],
         queryFn: async ({ queryKey }) => {
             try {
                 const temp = await services.JobService.getAllJobs(
@@ -180,7 +178,7 @@ export default function SingleJob() {
                             </div>
                         </div>
                         {/* Contact information */}
-                        <Card className="max-w-2xl mx-auto border-primary-50 border-2">
+                        <Card className="max-w-2xl mx-auto border-primary-50 border-2 shadow-none">
                             <CardHeader className="space-y-2">
                                 <div className="flex items-center gap-4">
                                     <img
