@@ -66,14 +66,16 @@ export default function Page() {
                             <SelectValue placeholder="12 per page" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectGroup>
+                            <SelectGroup className="space-y-2 py-2">
                                 <SelectItem value="12">12 per page</SelectItem>
                                 <SelectItem value="24">24 per page</SelectItem>
+                                <SelectItem value="36">36 per page</SelectItem>
+                                <SelectItem value="48">48 per page</SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
 
-                    <div className="flex items-center justify-center border rounded-md h-[48px] w-[88px]">
+                    <div className="flex items-center justify-center border rounded-md h-[48px] w-[88px] gap-2">
                         <Button
                             variant="ghost"
                             size="md"

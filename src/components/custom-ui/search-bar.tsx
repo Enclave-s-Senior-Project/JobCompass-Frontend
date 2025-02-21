@@ -35,7 +35,7 @@ export default function SearchForm({ onSearch }: SearchFormProps) {
                         <span className="text-gray-900">Find Job</span>
                     </div>
                 </div>
-                <div className="flex flex-wrap w-full ">
+                <div className="p-3 flex flex-wrap w-full bg-[#FFFFFF] xl:w-[1320px] xl:h-[80px] items-center">
                     {/* Job Titile Input */}
                     <div className="relative flex-1 min-w-[250px] md:min-w-[375px]">
                         <div className="absolute left-3 top-1/2 -translate-y-1/2 ">
@@ -73,7 +73,7 @@ export default function SearchForm({ onSearch }: SearchFormProps) {
                             value={filters.category}
                             onValueChange={(value) => setFilters((prev) => ({ ...prev, category: value }))}
                         >
-                            <SelectTrigger className="w-full h-[56px] pl-10 pr-4 text-[#9199A3] bg-[#FFFF] border-[#F1F2F4] rounded-none border-0 border-r focus:ring-0 focus:ring-offset-0">
+                            <SelectTrigger className="w-full h-[56px] pl-10 pr-4 text-[#9199A3] bg-[#FFFF] shadow-none rounded-none border-0 border-r focus:ring-0 focus:ring-offset-0">
                                 <SelectValue placeholder="Select Category" />
                             </SelectTrigger>
                             <SelectContent>
@@ -90,7 +90,7 @@ export default function SearchForm({ onSearch }: SearchFormProps) {
                             value={filters.advance}
                             onValueChange={(value) => setFilters((prev) => ({ ...prev, advance: value }))}
                         >
-                            <SelectTrigger className="w-full h-[56px] pl-10 pr-4 text-[#9199A3] bg-[#FFFF] border-[#F1F2F4] border-0 border-r focus:ring-0 focus:ring-offset-0 rounded-none rounded-r-lg">
+                            <SelectTrigger className="w-full h-[56px] pl-10 pr-4 text-[#9199A3] shadow-none bg-[#FFFF]  border-0  focus:ring-0 focus:ring-offset-0">
                                 <SelectValue placeholder="Advance Filter" />
                             </SelectTrigger>
                             <SelectContent>

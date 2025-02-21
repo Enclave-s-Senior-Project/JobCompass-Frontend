@@ -1,5 +1,4 @@
 'use client';
-import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
@@ -12,6 +11,7 @@ import {
     NotepadText,
     CircleUserRound,
     Link2,
+    FileX,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { PiCake } from 'react-icons/pi';
@@ -19,12 +19,48 @@ import ShareProfile from '@/components/custom-ui/share-profile';
 import { FaFacebookF, FaXTwitter } from 'react-icons/fa6';
 import { DialogApplyJob } from '@/components/custom-ui/dialog-apply-job';
 import Link from 'next/link';
-import { Pagination } from '@/components/custom-ui/pagination';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { DetailedRequest } from '@/types';
+import * as services from '@/services/job.service';
+import CardJob from '@/components/custom-ui/card-job';
+import { Skeleton } from '@/components/ui/skeleton';
 export default function SingleJob() {
+    const [currentPage, setCurrentPage] = useState(1);
+    const take = 6;
+    const {
+        isLoading,
+        data: jobCards = {
+            data: [],
+            meta: {
+                page: '0',
+                take: '0',
+                itemCount: 0,
+                pageCount: 0,
+                hasPreviousPage: false,
+                hasNextPage: false,
+            },
+        },
+    } = useQuery({
+        queryKey: ['list-card', { order: 'DESC', page: currentPage, take, option: '' }],
+        queryFn: async ({ queryKey }) => {
+            try {
+                const temp = await services.JobService.getAllJobs(
+                    queryKey[1] as DetailedRequest.ParamListJobsCredentials
+                );
+                return temp.value;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        staleTime: 1 * 60 * 1000,
+        enabled: true,
+        retry: 2,
+    });
     return (
         <div className="min-h-screen ">
             <div className="w-full h-[76px] bg-[#F1F2F4] flex items-center">
-                <div className="flex  max-w-6xl mx-auto w-full items-center justify-between">
+                <div className="flex  max-w-7xl mx-auto w-full items-center justify-between">
                     <h1 className="text-[18px] leading-[28px]">Find Job</h1>
                     <div className="flex items-center gap-2 text-sm text-gray-500">
                         <Link href="/">Home</Link>
@@ -34,13 +70,13 @@ export default function SingleJob() {
                 </div>
             </div>
 
-            <main className="max-w-6xl mx-auto space-y-8 pt-5">
+            <main className="max-w-7xl mx-auto space-y-8 pt-5">
                 {/* Header Section */}
                 <div className="bg-white rounded-lg  ">
                     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
                             <div className="relative w-[96px] h-[96px] rounded-full overflow-hidden bg-gradient-to-br from-pink-500 to-orange-400">
-                                <Image src="/placeholder.svg" alt="Company logo" fill className="object-cover" />
+                                <img src="/placeholder.svg" alt="Company logo" />
                             </div>
                             <div>
                                 <div className="flex items-center gap-2">
@@ -147,7 +183,7 @@ export default function SingleJob() {
                         <Card className="max-w-2xl mx-auto border-primary-50 border-2">
                             <CardHeader className="space-y-2">
                                 <div className="flex items-center gap-4">
-                                    <Image
+                                    <img
                                         src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-VgcKFFBPX6qxbUE9wWcn0O8kezjAsY.png"
                                         alt="Instagram logo"
                                         width={56}
@@ -216,56 +252,34 @@ export default function SingleJob() {
 
                 {/* Related Jobs Section */}
                 <div>
-                    <Pagination />
-
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {[
-                            {
-                                company: 'Freepik',
-                                role: 'Visual Designer',
-                                type: 'Full Time',
-                                salary: '$50k-$55k',
-                                logo: '/placeholder.svg',
-                            },
-                            {
-                                company: 'Instagram',
-                                role: 'Front End Developer',
-                                type: 'Contract Base',
-                                salary: '$60k-$65k',
-                                logo: '/placeholder.svg',
-                            },
-                            {
-                                company: 'Upwork',
-                                role: 'Technical Support Specialist',
-                                type: 'Full Time',
-                                salary: '$55k-$60k',
-                                logo: '/placeholder.svg',
-                            },
-                        ].map((job, i) => (
-                            <Card key={i}>
-                                <CardContent className="p-6">
-                                    <div className="flex items-start gap-4">
-                                        <div className="relative w-12 h-12 rounded-lg overflow-hidden">
-                                            <Image
-                                                src={job.logo || '/placeholder.svg'}
-                                                alt={`${job.company} logo`}
-                                                fill
-                                                className="object-cover"
-                                            />
-                                        </div>
-                                        <div>
-                                            <h3 className="font-semibold">{job.role}</h3>
-                                            <p className="text-sm text-muted-foreground">{job.company}</p>
-                                            <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
-                                                <span>{job.type}</span>
-                                                <span>•</span>
-                                                <span>{job.salary}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))}
+                    <div className="flex items-center justify-between mb-6">
+                        <span className="text-[40px]">Related Jobs</span>
+                        <nav className="flex items-center gap-2">
+                            <Button className="h-[48px] w-[48px]" variant="outline">
+                                <ChevronLeft className="h-4 w-4" />
+                            </Button>
+                            <Button variant="outline" className="h-[48px] w-[48px]">
+                                <ChevronRight className="h-4 w-4" />
+                            </Button>
+                        </nav>
+                    </div>
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-8">
+                        {isLoading ? (
+                            <div className="col-span-full flex items-center justify-center min-h-[50vh]">
+                                <Skeleton className="w-[424px] h-[204px] rounded-full" />
+                            </div>
+                        ) : !jobCards?.data?.length ? (
+                            <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4">
+                                <FileX className="h-16 w-16 text-muted-foreground mb-4" />
+                                <h3 className="text-lg font-semibold text-foreground mb-2">No jobs found</h3>
+                                <p className="text-muted-foreground max-w-[500px]">
+                                    Currently, there are no jobs posted. Please check back later or try searching with
+                                    different criteria.
+                                </p>
+                            </div>
+                        ) : (
+                            jobCards.data.map((job, index) => <CardJob key={index} job={job} />)
+                        )}
                     </div>
                 </div>
             </main>
