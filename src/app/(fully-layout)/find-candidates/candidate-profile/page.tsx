@@ -40,7 +40,7 @@ export default function FindCandidatesPage() {
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
-                        <ButtonMark variant="secondary" className="border-2" />
+                        <ButtonMark className="border-2" />
                         <Button
                             variant="outline-secondary"
                             size="lg"

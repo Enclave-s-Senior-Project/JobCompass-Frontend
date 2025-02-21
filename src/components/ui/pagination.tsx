@@ -3,6 +3,9 @@ import { ArrowLeft, ArrowRight, MoreHorizontal } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { ButtonProps, buttonVariants } from '@/components/ui/button';
+import { Url } from 'next/dist/shared/lib/router/router';
+import Link from 'next/link';
+import { Meta } from '@/types';
 
 const Pagination = ({ className, ...props }: React.ComponentProps<'nav'>) => (
     <nav
@@ -31,10 +34,10 @@ type PaginationLinkProps = {
     disabled?: boolean;
     isNavigate?: boolean;
 } & Pick<ButtonProps, 'size'> &
-    React.ComponentProps<'a'>;
+    React.ComponentProps<'a'> & { href: Url };
 
 const PaginationLink = ({ className, isActive, isNavigate, size = 'icon-lg', ...props }: PaginationLinkProps) => (
-    <a
+    <Link
         aria-current={isActive ? 'page' : undefined}
         className={cn(
             buttonVariants({
@@ -42,6 +45,7 @@ const PaginationLink = ({ className, isActive, isNavigate, size = 'icon-lg', ...
                 size,
             }),
             'rounded-full min-h-12 min-w-12 shadow-none',
+            props.disabled ? 'opacity-60 pointer-events-none' : '',
             className
         )}
         {...props}
@@ -59,7 +63,6 @@ const PaginationPrevious = ({ className, ...props }: React.ComponentProps<typeof
                 size: 'icon-lg',
             }),
             'p-3 rounded-full shadow-none',
-            props.disabled ? 'opacity-60 pointer-events-none' : '',
             className
         )}
         {...props}
@@ -96,6 +99,45 @@ const PaginationEllipsis = ({ className, ...props }: React.ComponentProps<'span'
 );
 PaginationEllipsis.displayName = 'PaginationEllipsis';
 
+const getPageNumbers = (meta: Meta) => {
+    const rangeWithDots: Array<number | string> = [];
+    const currentPage = meta?.page;
+    const totalPages = meta?.pageCount;
+
+    // Always show first page
+    rangeWithDots.push(1);
+
+    if (currentPage <= 3) {
+        // Near start: show 2,3
+        for (let i = 2; i <= Math.min(3, totalPages - 1); i++) {
+            rangeWithDots.push(i);
+        }
+        if (totalPages > 4) {
+            rangeWithDots.push('ellipsis');
+        }
+    } else if (currentPage >= totalPages - 2) {
+        // Near end: show last 3 pages
+        if (totalPages > 4) {
+            rangeWithDots.push('ellipsis');
+        }
+        for (let i = Math.max(totalPages - 2, 2); i < totalPages; i++) {
+            rangeWithDots.push(i);
+        }
+    } else {
+        // Middle: show current page and one adjacent
+        rangeWithDots.push('ellipsis1');
+        rangeWithDots.push(currentPage);
+        rangeWithDots.push('ellipsis2');
+    }
+
+    // Always show last page if different from first
+    if (totalPages > 1) {
+        rangeWithDots.push(totalPages);
+    }
+
+    return rangeWithDots;
+};
+
 export {
     Pagination,
     PaginationContent,
@@ -104,4 +146,5 @@ export {
     PaginationPrevious,
     PaginationNext,
     PaginationEllipsis,
+    getPageNumbers,
 };

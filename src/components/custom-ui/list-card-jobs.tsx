@@ -8,9 +8,9 @@ import { useQuery } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
 
-export default function ListCardJobs(props: { viewType: string }) {
+export default function ListCardJobs(props: { viewType: 'list' | 'grid' }) {
     const [currentPage, setCurrentPage] = useState(1);
-    const take = 6;
+    const take = 1;
     const {
         isLoading,
         data: jobCards = {
@@ -36,7 +36,7 @@ export default function ListCardJobs(props: { viewType: string }) {
                 console.log(error);
             }
         },
-        staleTime: 1 * 60 * 1000,
+        // staleTime: 1 * 60 * 1000,
         enabled: true,
         retry: 2,
     });

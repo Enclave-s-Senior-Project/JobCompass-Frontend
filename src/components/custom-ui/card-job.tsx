@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 export default function CardJob(props: { job: Job }) {
     const { job } = props;
+    const addresses = `${props.job.addresses[0]?.city}, ${props.job.addresses[0]?.country}`;
     return (
         <Link href={'/'}>
             <motion.div
@@ -36,7 +37,7 @@ export default function CardJob(props: { job: Job }) {
                             </div>
                             <div className="flex items-center text-sm text-gray-500">
                                 <MapPin className="h-4 w-4 mr-1 flex-shrink-0 text-[#939AAD]" />
-                                <span className=" text-[#939AAD]">{job.address?.country}</span>
+                                <span className=" text-[#939AAD]">{addresses}</span>
                             </div>
                         </div>
                     </div>

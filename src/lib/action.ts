@@ -10,13 +10,7 @@ import {
     verifyEmailSchema,
     verifySignInSchema,
 } from './zod-schemas';
-
-const handleErrorToast = (err: any) => {
-    if (err.props.title) {
-        const errorMessage = errorKeyMessage[err.props.title as keyof typeof errorKeyMessage];
-        toast.error(errorMessage);
-    }
-};
+import { handleErrorToast } from './utils';
 
 export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, formData: FormData) => {
     const username = formData.get('username')?.toString() ?? '';

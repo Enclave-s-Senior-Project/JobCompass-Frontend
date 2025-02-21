@@ -94,7 +94,9 @@ export default function Page() {
                 </div>
             </div>
 
-            <ListCardJobs viewType={viewType} />
+            <div className="mx-auto container max-w-screen-xl">
+                <ListCardJobs viewType={viewType} />
+            </div>
         </main>
     );
 }

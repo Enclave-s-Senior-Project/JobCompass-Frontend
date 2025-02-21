@@ -21,13 +21,13 @@ export function SidebarDashboard({ items, title }: { title: string; items: Sideb
                 <h6 className="pl-5 border-l-[3px] border-l-transparent text-gray-400 text-[12px] leading-[18px] font-medium uppercase">
                     {title}
                 </h6>
-                <div>
+                <div className="grid grid-cols-2">
                     {items.map((item) => (
                         <Link
                             key={item.href}
                             href={item.href}
                             className={clsx(
-                                'group transition-all relative px-5 py-2 flex items-center border-l-[3px] gap-4 [&_svg]:size-6 text-sm font-medium hover:text-primary hover:bg-primary-50',
+                                'col-span-1 md:col-span-2 group transition-all relative px-5 py-2 flex items-center border-l-[3px] gap-4 [&_svg]:size-6 text-sm font-medium hover:text-primary hover:bg-primary-50',
                                 pathname === item.href
                                     ? 'text-primary border-l-primary bg-primary-50'
                                     : 'text-gray-500 border-l-white bg-white'

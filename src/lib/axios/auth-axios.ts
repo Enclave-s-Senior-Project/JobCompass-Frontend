@@ -22,7 +22,6 @@ export class AuthAxios extends BaseAxios {
                 }
 
                 if (accessToken && accessType) {
-                    console.log({ accessToken, accessType });
                     config.headers['Authorization'] = `${accessType} ${accessToken}`;
                 }
                 return config;

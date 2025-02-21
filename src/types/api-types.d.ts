@@ -1,4 +1,4 @@
-// @typescript-eslint/no-unused-vars
+import { Job } from './entities';
 
 export interface ApiResponse<T> {
     payload: {
@@ -10,8 +10,8 @@ export interface ApiResponse<T> {
 }
 
 export interface Meta {
-    page: string;
-    take: string;
+    page: number;
+    take: number;
     itemCount: number;
     pageCount: number;
     hasPreviousPage: boolean;
@@ -52,15 +52,10 @@ export namespace DetailedResponse {
     }
     export interface GetAllJobs {
         data: Job[];
-        meta: {
-            page: string;
-            take: string;
-            itemCount: number;
-            pageCount: number;
-            hasPreviousPage: boolean;
-            hasNextPage: boolean;
-        };
+        meta: Meta;
     }
+
+    export interface FavoriteJobs extends GetAllJobs {}
 }
 
 export namespace DetailedRequest {

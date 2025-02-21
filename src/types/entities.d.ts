@@ -1,3 +1,5 @@
+import { Address } from './common-types';
+
 export interface Job {
     createdAt: string;
     updatedAt: string;
@@ -13,7 +15,7 @@ export interface Job {
     introImg: string;
     status: boolean;
     enterprise: Enterprise;
-    address: Address;
+    addresses: Address[];
 }
 
 export interface Enterprise {

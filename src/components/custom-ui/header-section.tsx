@@ -30,10 +30,10 @@ export function HeaderSection() {
                     <ButtonHome />
                 </div>
                 <SwitchSignIn />
-                <Button size="lg" variant="ghost" className="[&_svg]:size-6 px-2" onClick={handleToggleSearchMobile}>
+                <Button size="icon-lg" variant="ghost" className="px-2" onClick={handleToggleSearchMobile}>
                     <HiMiniMagnifyingGlass className={showSearchMobile ? 'text-primary' : 'text-black'} />
                 </Button>
-                <Button size="lg" variant="ghost" className="[&_svg]:size-6 px-2" onClick={handleToggleMenuMobile}>
+                <Button size="icon-lg" variant="ghost" className="px-2" onClick={handleToggleMenuMobile}>
                     <IoMdMenu className={showMenuMobile ? 'text-primary' : 'text-black'} />
                 </Button>
             </div>

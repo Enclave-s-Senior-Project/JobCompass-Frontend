@@ -1,21 +1,42 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Bookmark } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export const ButtonMark = ({
     className,
-    onClick,
-    variant = 'secondary',
+    handleUnMark,
+    handleMark,
     size = 'icon-lg',
+    mark,
 }: {
     className?: string;
-    variant?: 'outline' | 'secondary';
+    handleUnMark?: () => void;
+    handleMark?: () => void;
     size?: 'icon-xl' | 'icon-lg' | 'icon-md';
+    mark?: boolean;
     onClick?: () => void;
 }) => {
+    const [marked, setMarked] = useState(!!mark);
+    const handleClick = () => {
+        if (marked && typeof handleUnMark === 'function') {
+            setMarked(false);
+            handleUnMark();
+        } else if (!marked && typeof handleMark === 'function') {
+            setMarked(true);
+            handleMark();
+        }
+    };
     return (
-        <Button type="button" className={cn(className)} size={size} variant={variant} onClick={onClick}>
+        <Button
+            type="button"
+            className={cn(className)}
+            size={size}
+            variant={marked ? 'primary' : 'third'}
+            onClick={handleClick}
+        >
             <Bookmark />
         </Button>
     );

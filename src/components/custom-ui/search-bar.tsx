@@ -103,11 +103,7 @@ export default function SearchForm({ onSearch }: SearchFormProps) {
 
                     {/* Button Find Job */}
                     <div className="relative flex-1 min-w-[250px]  md:min-w-[131px] max-w-[131px] pl-3">
-                        <Button
-                            type="submit"
-                            variant='primary'
-                            className="text-white w-full rounded-sm text-[16px]"
-                        >
+                        <Button type="submit" variant="primary" className="text-white w-full rounded-sm text-[16px]">
                             Find Job
                         </Button>
                     </div>
