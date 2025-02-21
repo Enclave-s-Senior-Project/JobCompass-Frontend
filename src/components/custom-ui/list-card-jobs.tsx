@@ -74,10 +74,10 @@ export default function ListCardJobs(props: { viewType: 'list' | 'grid' }) {
                 ) : !jobCards?.data?.length ? (
                     <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4">
                         <FileX className="h-16 w-16 text-muted-foreground mb-4" />
-                        <h3 className="text-lg font-semibold text-foreground mb-2">Không tìm thấy công việc nào</h3>
+                        <h3 className="text-lg font-semibold text-foreground mb-2">No jobs found</h3>
                         <p className="text-muted-foreground max-w-[500px]">
-                            Hiện tại chưa có công việc nào được đăng tải. Vui lòng quay lại sau hoặc thử tìm kiếm với
-                            các tiêu chí khác.
+                            Currently, there are no jobs posted. Please check back later or try searching with different
+                            criteria.
                         </p>
                     </div>
                 ) : (
