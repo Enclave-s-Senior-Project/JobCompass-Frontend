@@ -4,6 +4,7 @@ import { DetailedRequest } from '@/types';
 import { toast } from 'react-toastify';
 import { errorKeyMessage } from './message-keys';
 import {
+    applyJobCoverLetterSchema,
     forgetPasswordSchema,
     resetPasswordSchema,
     signUpSchema,
@@ -154,6 +155,28 @@ export const resetPassword = async (currentState: any, formData: FormData) => {
         return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
     }
 
+    try {
+        const dataResponse = await Services.AuthService.resetPassword({
+            email: currentState.email,
+            newPassword: currentState.newPassword,
+            iv: currentState.iv,
+            token: currentState.token,
+        });
+        return { ...currentState, errors: {}, success: true, data: dataResponse.value };
+    } catch (error: any) {
+        handleErrorToast(error);
+    }
+
+    return { ...currentState, errors: {}, success: false, data: null };
+};
+
+export const applyJob = async (currentState: any, formData: FormData) => {
+    console.log('currentState', currentState);
+    currentState.coverLetter = formData.get('coverLetter')?.toString() ?? '';
+    const validation = applyJobCoverLetterSchema.safeParse(currentState);
+    if (!validation.success) {
+        return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
+    }
     try {
         const dataResponse = await Services.AuthService.resetPassword({
             email: currentState.email,

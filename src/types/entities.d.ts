@@ -1,3 +1,4 @@
+import { profiles } from './entities.d';
 import { Address } from './common-types';
 
 export interface Job {
@@ -16,6 +17,8 @@ export interface Job {
     status: boolean;
     enterprise: Enterprise;
     addresses: Address[];
+    profiles: profile[] | null;
+    isFavorite: boolean | null;
 }
 
 export interface Enterprise {
@@ -37,4 +40,23 @@ export interface Enterprise {
     bio: string;
     isPremium: boolean;
     expiredPremium: string;
+}
+
+export interface profile {
+    createdAt: string;
+    updatedAt: string;
+    isActive: boolean;
+    profileId: string;
+    fullName: string;
+    avatarUrl: string;
+    pageUrl: string;
+    introduction: any;
+    phone: any;
+    view: number;
+    gender: string;
+    education: any;
+    isPremium: boolean;
+    expiredPremium: any;
+    experience: any;
+    account_id: string;
 }

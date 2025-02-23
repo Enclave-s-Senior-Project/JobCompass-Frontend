@@ -59,4 +59,15 @@ const resetPasswordSchema = z
         path: ['confirmPassword'],
     });
 
-export { signUpSchema, verifySignInSchema, verifyEmailSchema, forgetPasswordSchema, resetPasswordSchema };
+const applyJobCoverLetterSchema = z.object({
+    coverLetter: z.string().min(1, 'Cover letter is required'),
+});
+
+export {
+    signUpSchema,
+    verifySignInSchema,
+    verifyEmailSchema,
+    forgetPasswordSchema,
+    resetPasswordSchema,
+    applyJobCoverLetterSchema,
+};

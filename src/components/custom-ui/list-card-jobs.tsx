@@ -1,56 +1,59 @@
 'use client';
 
-import { DetailedRequest } from '@/types';
+import { DetailedRequest, Meta } from '@/types';
 import { JobCardTwoType } from './card-job-two-type';
 import { useState } from 'react';
 import * as services from '@/services/job.service';
 import { useQuery } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight, FileX } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
+import { useSearchParams } from 'next/navigation';
+import { queryKey } from '@/lib/react-query/keys';
+import { handleErrorToast } from '@/lib/utils';
+import { PrimaryPagination } from '../ui/pagination';
 
+const ITEM_PER_PAGE = 2;
 export default function ListCardJobs(props: { viewType: 'list' | 'grid' }) {
-    const [currentPage, setCurrentPage] = useState(1);
-    const take = 1;
+    const [totalPages, setTotalPages] = useState(0);
+    const search = useSearchParams();
+    const page = Number(search.get('page') || 1);
+    const order = (search.get('order')?.toUpperCase() as 'ASC' | 'DESC') || 'ASC';
     const {
-        isLoading,
-        data: jobCards = {
-            data: [],
-            meta: {
-                page: '0',
-                take: '0',
-                itemCount: 0,
-                pageCount: 0,
-                hasPreviousPage: false,
-                hasNextPage: false,
-            },
-        },
+        refetch,
+        data: resultQuery,
+        isPending,
     } = useQuery({
-        queryKey: ['list-card', { order: 'DESC', page: currentPage, take, option: '' }],
+        queryKey: [queryKey.favoriteJobs, { order, page, take: ITEM_PER_PAGE }],
         queryFn: async ({ queryKey }) => {
             try {
-                const temp = await services.JobService.getAllJobs(
-                    queryKey[1] as DetailedRequest.ParamListJobsCredentials
-                );
-                return temp.value;
-            } catch (error) {
-                console.log(error);
+                const payload = await services.JobService.getAllJobs(queryKey[1] as DetailedRequest.Pagination);
+                if (Number(payload?.meta.pageCount) > 0) setTotalPages(Number(payload?.meta.pageCount) || 0);
+                return payload;
+            } catch (error: any) {
+                handleErrorToast(error);
             }
         },
-        // staleTime: 1 * 60 * 1000,
-        enabled: true,
+        staleTime: 1000 * 60, // 1 minute
+        refetchInterval: 1000 * 60, // 1 minute
         retry: 2,
+        enabled: true,
     });
     const { viewType } = props;
-    const totalPages = jobCards?.meta?.pageCount || 1;
 
     return (
         <div className={viewType === 'grid' ? 'flex items-center justify-center' : ''}>
             <div className={viewType === 'grid' ? 'container mx-auto max-w-screen-xl' : ''}>
-                {isLoading ? (
-                    <div className="flex justify-center items-center min-h-[50vh]">
-                        <Skeleton className="w-[424px] h-[204px] rounded-full" />
-                    </div>
-                ) : !jobCards?.data?.length ? (
+                {isPending ? (
+                    [...Array(ITEM_PER_PAGE)].map((_, i) => (
+                        <div key={i} className="flex items-center space-x-2">
+                            <Skeleton className="h-56 w-56 lg:h-28 lg:w-30 rounded-sm" />
+                            <div className="space-y-2 h-56 lg:h-28 flex-1 flex flex-col">
+                                <Skeleton className="h-9 w-full" />
+                                <Skeleton className="flex-1 w-full" />
+                            </div>
+                        </div>
+                    ))
+                ) : !resultQuery?.data?.length ? (
                     <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4">
                         <FileX className="h-16 w-16 text-muted-foreground mb-4" />
                         <h3 className="text-lg font-semibold text-foreground mb-2">No jobs found</h3>
@@ -67,45 +70,22 @@ export default function ListCardJobs(props: { viewType: 'list' | 'grid' }) {
                                 : 'flex flex-col place-items-center gap-y-6'
                         }
                     >
-                        {jobCards.data.map((job, index) => (
-                            <JobCardTwoType job={job} viewType={viewType} key={index} />
+                        {resultQuery.data.map((job, index) => (
+                            <JobCardTwoType job={job} viewType={viewType} key={index} refetch={refetch} />
                         ))}
                     </div>
                 )}
                 {/* Pagination */}
-                {totalPages > 1 && (
-                    <div className="flex justify-center mt-8 pb-6">
-                        <nav className="flex items-center gap-2">
-                            <button
-                                className="rounded-full w-10 h-10 flex items-center justify-center border border-gray-300 bg-white disabled:opacity-50"
-                                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                                disabled={currentPage === 1}
-                            >
-                                <ChevronLeft className="h-4 w-4" />
-                            </button>
-
-                            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                                <button
-                                    key={page}
-                                    className={`w-12 h-12 flex items-center justify-center rounded-full transition-colors ${
-                                        page === currentPage
-                                            ? 'bg-blue-500 text-white'
-                                            : 'bg-transparent text-gray-700 hover:bg-gray-200'
-                                    }`}
-                                    onClick={() => setCurrentPage(page)}
-                                >
-                                    {page}
-                                </button>
-                            ))}
-
-                            <button
-                                className="rounded-full w-10 h-10 flex items-center justify-center border border-gray-300 bg-white disabled:opacity-50"
-                                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                                disabled={currentPage === totalPages}
-                            >
-                                <ChevronRight className="h-4 w-4" />
-                            </button>
-                        </nav>
+                {Number(totalPages) > 1 && (
+                    <div className="pt-5">
+                        <PrimaryPagination
+                            meta={resultQuery?.meta as Meta}
+                            pagination={{
+                                page,
+                                order,
+                            }}
+                            totalPages={totalPages}
+                        />
                     </div>
                 )}
             </div>

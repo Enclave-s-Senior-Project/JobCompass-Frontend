@@ -251,12 +251,12 @@ export default function SingleJob() {
                 {/* Related Jobs Section */}
                 <div>
                     <div className="flex items-center justify-between mb-6">
-                        <span className="text-[40px]">Related Jobs</span>
+                        <span className="text-[30px]">Related Jobs</span>
                         <nav className="flex items-center gap-2">
-                            <Button className="h-[48px] w-[48px]" variant="outline">
+                            <Button className="h-[38px] w-[38px]" variant="outline">
                                 <ChevronLeft className="h-4 w-4" />
                             </Button>
-                            <Button variant="outline" className="h-[48px] w-[48px]">
+                            <Button variant="outline" className="h-[40px] w-[40px]">
                                 <ChevronRight className="h-4 w-4" />
                             </Button>
                         </nav>
@@ -267,7 +267,7 @@ export default function SingleJob() {
                                 <Skeleton className="w-[424px] h-[204px] rounded-full" />
                             </div>
                         ) : !jobCards?.data?.length ? (
-                            <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4">
+                            <div className="col-span-full flex flex-col items-center justify-center min-h-[50vh] text-center">
                                 <FileX className="h-16 w-16 text-muted-foreground mb-4" />
                                 <h3 className="text-lg font-semibold text-foreground mb-2">No jobs found</h3>
                                 <p className="text-muted-foreground max-w-[500px]">

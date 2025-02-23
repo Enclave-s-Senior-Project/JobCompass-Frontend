@@ -1,9 +1,7 @@
 'use client';
 
 import React, { Fragment, Suspense, useState } from 'react';
-import {
-    PrimaryPagination,
-} from '@/components/ui/pagination';
+import { PrimaryPagination } from '@/components/ui/pagination';
 import { useSearchParams } from 'next/navigation';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
