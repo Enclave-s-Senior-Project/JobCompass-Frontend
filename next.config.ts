@@ -1,6 +1,5 @@
-import type { NextConfig } from 'next';
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
     images: {
         remotePatterns: [
             {
@@ -11,9 +10,22 @@ const nextConfig: NextConfig = {
                 protocol: 'https',
                 hostname: 'i.pinimg.com',
             },
+            {
+                protocol: "https",
+                hostname: "job-compass-store.s3.ap-southeast-1.amazonaws.com",
+                pathname: "/uploads/**", 
+              },
         ],
     },
-    output: "standalone",
+    output: 'standalone',
+    async rewrites() {
+        return [
+            {
+                source: '/api/:path*',
+                destination: 'http://localhost:3001/:path*',
+            },
+        ];
+    },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

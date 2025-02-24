@@ -2,6 +2,7 @@ import React from 'react';
 import { FormSignIn } from '@/components/custom-ui/form-sign-in';
 import Link from 'next/link';
 import { routes } from '@/configs/routes';
+import FileUploader from '@/components/FileUploader';
 
 export default function SignIn() {
     return (
@@ -14,6 +15,7 @@ export default function SignIn() {
                 </Link>
             </div>
             <FormSignIn />
+            <FileUploader />
         </div>
     );
 }
