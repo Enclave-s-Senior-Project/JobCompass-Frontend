@@ -42,21 +42,11 @@ export interface Enterprise {
     expiredPremium: string;
 }
 
-export interface profile {
+export interface CV {
     createdAt: string;
     updatedAt: string;
     isActive: boolean;
-    profileId: string;
-    fullName: string;
-    avatarUrl: string;
-    pageUrl: string;
-    introduction: any;
-    phone: any;
-    view: number;
-    gender: string;
-    education: any;
-    isPremium: boolean;
-    expiredPremium: any;
-    experience: any;
-    account_id: string;
+    cvId: string;
+    cvUrl: string;
+    cvName: string;
 }

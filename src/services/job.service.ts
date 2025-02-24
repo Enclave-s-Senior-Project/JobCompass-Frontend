@@ -9,7 +9,7 @@ const authAxios = new AuthAxios('job');
 export class JobService {
     public static async getAllJobs(data: DetailedRequest.ParamListJobsCredentials) {
         try {
-            const temp = await authAxios.get<ApiResponse<DetailedResponse.GetAllJobs>>('favorite', { params: data });
+            const temp = await axios.get<ApiResponse<DetailedResponse.GetAllJobs>>('', { params: data });
             return temp.payload.value;
         } catch (err) {
             if (err instanceof AxiosError) {

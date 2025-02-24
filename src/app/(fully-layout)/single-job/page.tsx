@@ -46,7 +46,7 @@ export default function SingleJob() {
                 const temp = await services.JobService.getAllJobs(
                     queryKey[1] as DetailedRequest.ParamListJobsCredentials
                 );
-                return temp.value;
+                return temp;
             } catch (error) {
                 console.log(error);
             }

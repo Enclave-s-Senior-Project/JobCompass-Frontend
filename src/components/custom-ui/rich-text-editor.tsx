@@ -20,7 +20,7 @@ export default function RichTextEditor({ onChange, initialContent }: TextEditorP
         },
         editorProps: {
             attributes: {
-                class: 'min-h-[150px] cursor-text rounded-md border p-5 ring-offset-background focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 tiptap', // Thêm class "tiptap"
+                class: 'min-h-[150px] max-h-[300px] h-[300px] overflow-auto cursor-text rounded-md border p-5 ring-offset-background focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 tiptap',
             },
         },
         immediatelyRender: false,

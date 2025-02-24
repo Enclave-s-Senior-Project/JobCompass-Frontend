@@ -1,6 +1,5 @@
-import { RiBold, RiItalic, RiStrikethrough, RiCodeSSlashLine, RiListOrdered2 } from 'react-icons/ri';
+import { RiBold, RiItalic, RiStrikethrough, RiListOrdered2 } from 'react-icons/ri';
 import { Editor } from '@tiptap/react';
-import { AiOutlineRedo, AiOutlineUndo } from 'react-icons/ai';
 import { BsTypeUnderline } from 'react-icons/bs';
 import { IoListOutline } from 'react-icons/io5';
 

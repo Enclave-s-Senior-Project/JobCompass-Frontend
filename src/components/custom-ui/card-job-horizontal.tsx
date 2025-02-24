@@ -15,6 +15,7 @@ export default function CardJobHorizontal(props: {
     mark?: boolean;
     handleUnMark?: () => void;
     handleMark?: () => void;
+    showMarkButton?: boolean;
 }) {
     const { job } = props;
     const addresses = `${props.job.addresses[0]?.city}, ${props.job.addresses[0]?.country}`;
@@ -79,7 +80,13 @@ export default function CardJobHorizontal(props: {
                     </div>
                 </div>
                 <div className="flex-1 flex items-center justify-end gap-3">
-                    <ButtonMark handleUnMark={props.handleUnMark} handleMark={props.handleMark} mark={!!props.mark} />
+                    {props.showMarkButton && (
+                        <ButtonMark
+                            handleUnMark={props.handleUnMark}
+                            handleMark={props.handleMark}
+                            mark={!!props.mark}
+                        />
+                    )}
                     <Button className="group" variant="third" size="lg">
                         Apply Now <LuArrowRight className="group-hover:translate-x-2 transition-all" />
                     </Button>

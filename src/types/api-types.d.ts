@@ -56,6 +56,8 @@ export namespace DetailedResponse {
     }
 
     export interface FavoriteJobs extends GetAllJobs {}
+
+    export type GetAllCvByIdProfile = CV[];
 }
 
 export namespace DetailedRequest {

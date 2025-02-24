@@ -6,6 +6,7 @@ import { useMutation } from '@tanstack/react-query';
 import { JobService } from '@/services/job.service';
 import { handleErrorToast } from '@/lib/utils';
 import { toast } from 'react-toastify';
+import { Separator } from '@/components/ui/separator';
 
 export function JobCardTwoType(props: {
     job: Job;
@@ -49,12 +50,16 @@ export function JobCardTwoType(props: {
         },
     });
     return viewType === 'list' ? (
-        <CardJobHorizontal
-            job={job}
-            handleUnMark={() => removeFavoriteJobMutation.mutate({ jobId: job.jobId })}
-            handleMark={() => addFavoriteJobMutation.mutate({ jobId: job.jobId })}
-            mark={job.isFavorite || false}
-        />
+        <>
+            <CardJobHorizontal
+                job={job}
+                handleUnMark={() => removeFavoriteJobMutation.mutate({ jobId: job.jobId })}
+                handleMark={() => addFavoriteJobMutation.mutate({ jobId: job.jobId })}
+                mark={job.isFavorite || false}
+                showMarkButton={false}
+            />
+            <Separator className="my-4" /> {/* 👈 Thêm Separator ở đây */}
+        </>
     ) : (
         <CardJob job={job} />
     );

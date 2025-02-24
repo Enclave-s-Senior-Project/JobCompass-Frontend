@@ -5,7 +5,7 @@ import { JobCardTwoType } from './card-job-two-type';
 import { useState } from 'react';
 import * as services from '@/services/job.service';
 import { useQuery } from '@tanstack/react-query';
-import { ChevronLeft, ChevronRight, FileX } from 'lucide-react';
+import { FileX } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
 import { useSearchParams } from 'next/navigation';
 import { queryKey } from '@/lib/react-query/keys';

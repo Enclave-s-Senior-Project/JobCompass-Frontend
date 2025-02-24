@@ -92,6 +92,7 @@ function PageContent() {
                                       job={job}
                                       handleUnMark={() => removeFavoriteJobMutation.mutate({ jobId: job.jobId })}
                                       mark={true}
+                                      showMarkButton={true}
                                   />
                                   <Separator />
                               </Fragment>
