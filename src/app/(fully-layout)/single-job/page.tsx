@@ -261,7 +261,7 @@ export default function SingleJob() {
                             </Button>
                         </nav>
                     </div>
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-8">
+                    {/* <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-8">
                         {isLoading ? (
                             <div className="col-span-full flex items-center justify-center min-h-[50vh]">
                                 <Skeleton className="w-[424px] h-[204px] rounded-full" />
@@ -278,7 +278,7 @@ export default function SingleJob() {
                         ) : (
                             jobCards.data.map((job, index) => <CardJob key={index} job={job} />)
                         )}
-                    </div>
+                    </div> */}
                 </div>
             </main>
         </div>

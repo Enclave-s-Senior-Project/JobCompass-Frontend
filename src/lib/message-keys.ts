@@ -10,6 +10,7 @@ const errorKeyMessage = {
 const successKeyMessage = {
     FORGET_PASSWORD: 'Check your email to reset your password.',
     RESET_PASSWORD: 'Your password has been reset.',
+    APPLY_JOB_SUCCESSFULL: ' Apply job successfully',
 };
 
 export { errorKeyMessage, successKeyMessage };

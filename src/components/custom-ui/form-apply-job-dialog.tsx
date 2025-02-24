@@ -1,5 +1,5 @@
 'use client';
-import { useActionState, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import { ChevronRight } from 'lucide-react';
 import RichTextEditor from './rich-text-editor';
@@ -8,11 +8,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import { CVService } from '@/services/cv.service';
-import { handleErrorToast } from '@/lib/utils';
-import { cva } from 'class-variance-authority';
-import { SelectGroup } from '@radix-ui/react-select';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
+import { successKeyMessage } from '@/lib/message-keys';
 
 export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void }) {
+    const router = useRouter();
     const { setOpen } = props;
     const [state, onSubmit, isPending] = useActionState(applyJob, {
         coverLetter: '',
@@ -20,6 +21,8 @@ export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void })
         errors: {},
         success: false,
     });
+    const [selectedCv, setSelectedCv] = useState(state.selectedCv);
+    const [coverLetter, setCoverLetter] = useState(state.coverLetter);
     const {
         refetch,
         data: resultQuery,
@@ -39,36 +42,52 @@ export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void })
         retry: 2,
         enabled: true,
     });
-    // Hàm xử lý khi nội dung của RichTextEditor thay đổi
     const handleCoverLetterChange = (content: string) => {
-        state.coverLetter = content; // Cập nhật giá trị coverLetter trong state
+        setCoverLetter(content);
     };
+    useEffect(() => {
+        if (state.errors?.code) {
+            toast.error(state.errors.code[0]);
+        }
+        if (state.success) {
+            toast.success(successKeyMessage.APPLY_JOB_SUCCESSFULL);
+            router.push('/single-job');
+        }
+    }, [state.success, state.errors, router, state.email]);
 
     return (
-        <form className="space-y-6 p-2" action={onSubmit}>
+        <form
+            className="space-y-6 p-2"
+            action={(formData) => {
+                formData.set('coverLetter', coverLetter);
+                return onSubmit(formData);
+            }}
+        >
             <div className="space-y-2">
                 <label className="text-[#18191C] text-[14px]">Choose Resume</label>
                 <Select
-                    value={state.selectedCv}
-                    onValueChange={(value) => (state.selectedCv = value)} // Cập nhật state trực tiếp
+                    value={selectedCv}
+                    onValueChange={(value) => {
+                        setSelectedCv(value);
+                        state.selectedCv = value; // Cập nhật vào state ban đầu nếu cần
+                    }}
+                    name="selectedCv"
                 >
                     <SelectTrigger>
                         <SelectValue placeholder="Select..." />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectGroup>
-                            {resultQuery?.map((cv) => (
-                                <SelectItem key={cv.id} value={cv.id}>
-                                    {cv.cvName}
-                                </SelectItem>
-                            ))}
-                        </SelectGroup>
+                        {resultQuery?.map((cv) => (
+                            <SelectItem key={cv.cvId} value={cv.cvId}>
+                                {cv.cvName}
+                            </SelectItem>
+                        ))}
                     </SelectContent>
                 </Select>
             </div>
 
             <div>
-                <RichTextEditor onChange={handleCoverLetterChange} initialContent={state.coverLetter} />
+                <RichTextEditor onChange={handleCoverLetterChange} initialContent={coverLetter} />
             </div>
 
             <div className="flex justify-between gap-3">
@@ -79,7 +98,12 @@ export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void })
                 >
                     Cancel
                 </Button>
-                <Button type="submit" isPending={isPending} className="w-[168px] h-[48px] bg-[#0A65CC] text-[#FFFFFF]">
+                <Button
+                    type="submit"
+                    isPending={isPending}
+                    onClick={() => setOpen(false)}
+                    className="w-[168px] h-[48px] bg-[#0A65CC] text-[#FFFFFF]"
+                >
                     Apply Now
                     <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>

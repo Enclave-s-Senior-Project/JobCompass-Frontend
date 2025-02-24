@@ -70,19 +70,4 @@ export class JobService {
             throw err;
         }
     }
-
-    public static async applyJobCoverLetter(data: { coverLetter: string }) {
-        try {
-            const dataResponse = await authAxios.delete<ApiResponse<null>>(`/wishlist/${data.coverLetter}`);
-            return dataResponse.payload.value;
-        } catch (err) {
-            if (err instanceof AxiosError) {
-                throw new NextError({
-                    statusCode: Number(err.status || err.response?.status),
-                    title: err.response?.data.message,
-                });
-            }
-            throw err;
-        }
-    }
 }

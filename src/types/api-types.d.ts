@@ -107,4 +107,9 @@ export namespace DetailedRequest {
     }
     export interface ParamListJobsCredentials extends Pagination {}
     export interface FavoriteJobs extends Pagination {}
+    export interface ApplyJobCoverLette {
+        cvId: string;
+        coverLetter: string;
+        jobId: string;
+    }
 }

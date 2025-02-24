@@ -12,6 +12,8 @@ import {
     verifySignInSchema,
 } from './zod-schemas';
 import { handleErrorToast } from './utils';
+import { JobService } from '@/services/job.service';
+import { ApplyJobService } from '@/services/applyJob.service';
 
 export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, formData: FormData) => {
     const username = formData.get('username')?.toString() ?? '';
@@ -171,20 +173,22 @@ export const resetPassword = async (currentState: any, formData: FormData) => {
 };
 
 export const applyJob = async (currentState: any, formData: FormData) => {
-    console.log('currentState', currentState);
+    currentState.selectedCv = formData.get('selectedCv')?.toString() ?? '';
     currentState.coverLetter = formData.get('coverLetter')?.toString() ?? '';
+
+    console.log('Selected CV:', currentState.selectedCv);
+    console.log('Cover Letter:', currentState.coverLetter);
     const validation = applyJobCoverLetterSchema.safeParse(currentState);
     if (!validation.success) {
         return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
     }
     try {
-        const dataResponse = await Services.AuthService.resetPassword({
-            email: currentState.email,
-            newPassword: currentState.newPassword,
-            iv: currentState.iv,
-            token: currentState.token,
+        const applyJob = await ApplyJobService.applyJobCoverLetter({
+            cvId: currentState.selectedCv,
+            coverLetter: currentState.coverLetter,
+            jobId: '95117f99-2282-4657-938a-2ad500f70612',
         });
-        return { ...currentState, errors: {}, success: true, data: dataResponse.value };
+        return { ...currentState, errors: {}, success: true, data: applyJob };
     } catch (error: any) {
         handleErrorToast(error);
     }
