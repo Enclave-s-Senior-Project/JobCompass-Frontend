@@ -1,5 +1,4 @@
 import { BaseAxios } from './axios';
-import * as Services from '@/services';
 import { DetailedRequest } from '@/types';
 import { toast } from 'react-toastify';
 import { errorKeyMessage } from './message-keys';
@@ -8,12 +7,15 @@ import {
     forgetPasswordSchema,
     resetPasswordSchema,
     signUpSchema,
+    updatePersonalProfile,
     verifyEmailSchema,
     verifySignInSchema,
 } from './zod-schemas';
 import { handleErrorToast } from './utils';
-import { JobService } from '@/services/job.service';
 import { ApplyJobService } from '@/services/applyJob.service';
+import { AuthService } from '@/services/auth.service';
+import { UploadService } from '@/services/upload.service';
+import { UserService } from '@/services/user.service';
 
 export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, formData: FormData) => {
     const username = formData.get('username')?.toString() ?? '';
@@ -36,7 +38,7 @@ export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, 
     }
 
     try {
-        const res = await Services.AuthService.login(data);
+        const res = await AuthService.login(data);
         if (res.value)
             axios.storeTokenInfo(res.value?.accessToken, res.value?.tokenType, res.value?.accessTokenExpires);
         return {
@@ -80,7 +82,7 @@ export const signUpSubmit = async (currentState: DetailedRequest.SignUpRequest, 
         };
     }
     try {
-        const temp = await Services.AuthService.register(formValue);
+        const temp = await AuthService.register(formValue);
         if (temp.code >= 200 && temp.code <= 299) {
             return {
                 ...currentState,
@@ -109,7 +111,7 @@ export const forgetPasswordSubmit = async (currentState: any, formData: FormData
     }
 
     try {
-        const data = await Services.AuthService.forgetPassword({ email: currentState.email });
+        const data = await AuthService.forgetPassword({ email: currentState.email });
         return { ...currentState, errors: {}, success: true, data };
     } catch (error: any) {
         if (error.props.title) {
@@ -134,7 +136,7 @@ export const verifyEmail = async (currentState: any, formData: FormData) => {
         };
     }
     try {
-        const temp = await Services.AuthService.verifyEmail(formValue);
+        const temp = await AuthService.verifyEmail(formValue);
         if (temp.code >= 200 && temp.code <= 299) {
             return {
                 ...currentState,
@@ -158,7 +160,7 @@ export const resetPassword = async (currentState: any, formData: FormData) => {
     }
 
     try {
-        const dataResponse = await Services.AuthService.resetPassword({
+        const dataResponse = await AuthService.resetPassword({
             email: currentState.email,
             newPassword: currentState.newPassword,
             iv: currentState.iv,
@@ -194,4 +196,63 @@ export const applyJob = async (currentState: any, formData: FormData) => {
     }
 
     return { ...currentState, errors: {}, success: false, data: null };
+};
+
+export const settingPersonalProfile = async (currentState: any, formData: FormData) => {
+    const uploadPromises = [];
+    const avatarFile = formData.get('avatar') as File
+    if (avatarFile) {
+        const uploadAvatar = (async () => await UploadService.uploadFile(avatarFile))()
+        uploadPromises.push(uploadAvatar);
+    }
+
+    const backgroundFile = formData.get('background') as File
+    if (avatarFile) {
+        const uploadBackground = (async () => await UploadService.uploadFile(backgroundFile))()
+        uploadPromises.push(uploadBackground);
+    }
+
+    const fullname = formData.get('fullname')?.toString() ?? ''
+    const phone = "+" + (formData.get('phone')?.toString() ?? '')
+    const education = formData.get('education')?.toString() ?? ''
+    const experience = formData.get('experience')?.toString() ?? ''
+
+    const validation = updatePersonalProfile.safeParse({ fullname, phone });
+
+    if (!validation.success) {
+        return {
+            ...currentState,
+            errors: validation.error.flatten().fieldErrors,
+            success: false,
+            data: {},
+        };
+    }
+    
+    try {
+        const [avatar, background]= await Promise.all(uploadPromises)
+
+        const updatedProfile = await UserService.updatePersonalProfile({
+            fullName: fullname,
+            phone: phone,
+            education: education,
+            experience: experience,
+            pageUrl: avatar.fileUrl || currentState.avatarUrl,
+            profileUrl: background.fileUrl || currentState.backgroundUrl
+        })
+
+        currentState.avatarUrl = updatedProfile?.pageUrl;
+        currentState.backgroundUrl = updatedProfile?.profileUrl;
+        currentState.fullname = updatedProfile?.fullName
+        currentState.phone =  updatedProfile?.phone
+        currentState.education = updatedProfile?.education
+        currentState.experience = updatedProfile?.experience;
+
+        console.log(updatedProfile)
+
+        return {...currentState, success: true, errors: {}}
+
+    } catch (error) {
+        console.error(error);
+    }
+    return currentState;
 };

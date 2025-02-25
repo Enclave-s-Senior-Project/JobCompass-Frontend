@@ -1,28 +1,10 @@
-import { RiBold, RiItalic, RiStrikethrough, RiListOrdered2, RiLink } from 'react-icons/ri';
 import { Editor } from '@tiptap/react';
-import { BsTypeUnderline } from 'react-icons/bs';
+import { Button } from '../ui/button';
+import { Fragment } from 'react';
+import { Separator } from '../ui/separator';
+import { ALargeSmall, Bold, Italic, Link, Strikethrough, Underline } from 'lucide-react';
+import { PiListNumbers } from 'react-icons/pi';
 import { IoListOutline } from 'react-icons/io5';
-
-const Button = ({
-    onClick,
-    isActive,
-    disabled,
-    children,
-}: {
-    onClick: () => void;
-    isActive: boolean;
-    disabled?: boolean;
-    children: React.ReactNode;
-}) => (
-    <button
-        type="button"
-        onClick={onClick}
-        disabled={disabled}
-        className={`p-2 ${isActive ? 'bg-violet-500 text-white rounded-md' : ''}`}
-    >
-        {children}
-    </button>
-);
 
 export default function TextEditorMenuBar({ editor }: { editor: Editor | null }) {
     if (!editor) return null;
@@ -40,24 +22,31 @@ export default function TextEditorMenuBar({ editor }: { editor: Editor | null })
 
     const buttons = [
         {
-            icon: <RiBold className="size-5" />,
+            icon: <Bold className="size-5" />,
             onClick: () => editor.chain().focus().toggleBold().run(),
             isActive: editor.isActive('bold'),
         },
         {
-            icon: <BsTypeUnderline className="size-5" />,
-            onClick: () => editor.chain().focus().toggleUnderline().run(),
-            isActive: editor.isActive('underline'),
-        },
-        {
-            icon: <RiItalic className="size-5" />,
+            icon: <Italic className="size-5" />,
             onClick: () => editor.chain().focus().toggleItalic().run(),
             isActive: editor.isActive('italic'),
         },
         {
-            icon: <RiStrikethrough className="size-5" />,
+            icon: <Underline className="size-5" />,
+            onClick: () => editor.chain().focus().toggleUnderline().run(),
+            isActive: editor.isActive('underline'),
+        },
+        {
+            icon: <Strikethrough className="size-5" />,
             onClick: () => editor.chain().focus().toggleStrike().run(),
             isActive: editor.isActive('strike'),
+            isSeparate: true,
+        },
+        {
+            icon: <Link className="size-5" />,
+            onClick: toggleLink,
+            isActive: editor.isActive('link'),
+            isSeparate: true,
         },
         {
             icon: <IoListOutline className="size-5" />,
@@ -65,23 +54,33 @@ export default function TextEditorMenuBar({ editor }: { editor: Editor | null })
             isActive: editor.isActive('bulletList'),
         },
         {
-            icon: <RiListOrdered2 className="size-5" />,
+            icon: <PiListNumbers className="size-5" />,
             onClick: () => editor.chain().focus().toggleOrderedList().run(),
             isActive: editor.isActive('orderedList'),
         },
         {
-            icon: <RiLink className="size-5" />,
-            onClick: toggleLink,
-            isActive: editor.isActive('link'),
+            icon: <ALargeSmall className="size-5" />,
+            onClick: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
+            isActive: editor.isActive('heading', { level: 1 }),
         },
     ];
 
     return (
-        <div className="mb-2 flex space-x-2">
-            {buttons.map(({ icon, onClick, isActive }, index) => (
-                <Button key={index} onClick={onClick} isActive={isActive}>
-                    {icon}
-                </Button>
+        <div className="m-0.5 flex items-center gap-0.5">
+            {buttons.map(({ icon, onClick, isActive, isSeparate }, index) => (
+                <Fragment key={index}>
+                    <Button
+                        type="button"
+                        key={index}
+                        onClick={onClick}
+                        variant={isActive ? 'primary' : 'ghost'}
+                        size="icon-md"
+                        className="shadow-none"
+                    >
+                        {icon}
+                    </Button>
+                    {isSeparate && <Separator orientation="vertical" className="h-5 " />}
+                </Fragment>
             ))}
         </div>
     );

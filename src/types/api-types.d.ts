@@ -112,4 +112,13 @@ export namespace DetailedRequest {
         coverLetter: string;
         jobId: string;
     }
+
+    export interface UpdatePersonalProfile {
+        profileUrl: string;
+        pageUrl: string;
+        fullName: string;
+        phone?: string;
+        education?: string;
+        experience?: string;
+    }
 }

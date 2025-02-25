@@ -25,7 +25,7 @@ export function SidebarDashboardCandidate() {
             badge: '09',
         },
         {
-            href: '/settings',
+            href: '/candidate-dashboard/settings',
             label: 'Settings',
             icon: <Settings />,
         },

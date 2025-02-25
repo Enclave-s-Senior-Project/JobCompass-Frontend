@@ -5,7 +5,7 @@ import NextError from 'next/error';
 
 const axios = new BaseAxios('auth');
 
-export default class AuthService {
+export class AuthService {
     public static async login(data: DetailedRequest.SignInRequest) {
         try {
             const temp = await axios.post<ApiResponse<DetailedResponse.SignIn>>('/login', data);

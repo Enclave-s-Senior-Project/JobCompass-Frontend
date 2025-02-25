@@ -63,6 +63,11 @@ const applyJobCoverLetterSchema = z.object({
     coverLetter: z.string().min(1, 'Cover letter is required'),
 });
 
+const updatePersonalProfile = z.object({
+    fullname: z.string().min(1, 'Full name is required'),
+    phone: z.string().regex(/^\+(?:[0-9]\x20?){6,14}[0-9]$/, 'Phone is invalid'),
+})
+
 export {
     signUpSchema,
     verifySignInSchema,
@@ -70,4 +75,5 @@ export {
     forgetPasswordSchema,
     resetPasswordSchema,
     applyJobCoverLetterSchema,
+    updatePersonalProfile
 };

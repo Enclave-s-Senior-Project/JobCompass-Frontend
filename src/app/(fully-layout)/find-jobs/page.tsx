@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { LayoutGrid, List } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SearchForm from '@/components/custom-ui/search-bar';
@@ -97,7 +97,9 @@ export default function Page() {
             </div>
 
             <div className="mx-auto container max-w-screen-xl">
-                <ListCardJobs viewType={viewType} />
+                <Suspense fallback={<span>Loading...</span>}>
+                    <ListCardJobs viewType={viewType} />
+                </Suspense>
             </div>
         </main>
     );

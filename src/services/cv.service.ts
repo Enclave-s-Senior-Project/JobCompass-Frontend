@@ -1,5 +1,5 @@
 import { AuthAxios } from '@/lib/axios';
-import { ApiResponse, DetailedRequest, DetailedResponse } from '@/types';
+import { ApiResponse, DetailedResponse } from '@/types';
 import { AxiosError } from 'axios';
 import NextError from 'next/error';
 

@@ -7,9 +7,7 @@ import {
     ChevronRight,
     Phone,
     Bookmark,
-    Map,
     NotepadText,
-    CircleUserRound,
     Link2,
     Clock8,
     BriefcaseBusiness,
@@ -17,7 +15,6 @@ import {
     MapPin,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { PiCake } from 'react-icons/pi';
 import ShareProfile from '@/components/custom-ui/share-profile';
 import { FaFacebookF, FaInstagram, FaXTwitter, FaYoutube } from 'react-icons/fa6';
 import { DialogApplyJob } from '@/components/custom-ui/dialog-apply-job';

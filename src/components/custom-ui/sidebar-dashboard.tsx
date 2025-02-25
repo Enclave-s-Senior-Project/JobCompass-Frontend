@@ -28,7 +28,7 @@ export function SidebarDashboard({ items, title }: { title: string; items: Sideb
                             href={item.href}
                             className={clsx(
                                 'col-span-1 md:col-span-2 group transition-all relative px-5 py-2 flex items-center border-l-[3px] gap-4 [&_svg]:size-6 text-sm font-medium hover:text-primary hover:bg-primary-50',
-                                pathname === item.href
+                                pathname.startsWith(item.href)
                                     ? 'text-primary border-l-primary bg-primary-50'
                                     : 'text-gray-500 border-l-white bg-white'
                             )}
