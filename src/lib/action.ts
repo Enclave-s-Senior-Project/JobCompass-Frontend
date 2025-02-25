@@ -11,7 +11,7 @@ import {
     updatePersonalProfile,
     verifyEmailSchema,
     verifySignInSchema,
-    updateCandidateProfile as updateCandidateProfileZ
+    updateCandidateProfile as updateCandidateProfileZ,
 } from './zod-schemas';
 import { handleErrorToast } from './utils';
 import { ApplyJobService } from '@/services/applyJob.service';
@@ -258,11 +258,11 @@ export const settingPersonalProfile = async (currentState: any, formData: FormDa
 };
 
 export const updateCandidateProfile = async (currentState: any, formData: FormData) => {
-    currentState.nationality = formData.get('nationality')?.toString() ?? ''
-    currentState.dateOfBirth = formData.get('dateOfBirth')?.toString() ?? ''
-    currentState.gender = formData.get('gender')?.toString() ?? ''
-    currentState.maritalStatus = formData.get('maritalStatus')?.toString() ?? ''
-    currentState.introduction = formData.get('introduction')?.toString() ?? ''
+    currentState.nationality = formData.get('nationality')?.toString() ?? '';
+    currentState.dateOfBirth = formData.get('dateOfBirth')?.toString() ?? '';
+    currentState.gender = formData.get('gender')?.toString() ?? '';
+    currentState.maritalStatus = formData.get('maritalStatus')?.toString() ?? '';
+    currentState.introduction = formData.get('introduction')?.toString() ?? '';
 
     const validation = updateCandidateProfileZ.safeParse(currentState);
 
@@ -276,7 +276,6 @@ export const updateCandidateProfile = async (currentState: any, formData: FormDa
     }
 
     try {
-        
         const updatedProfile = await UserService.updateCandidateProfile({
             nationality: currentState.nationality,
             dateOfBirth: currentState.dateOfBirth,
@@ -285,11 +284,11 @@ export const updateCandidateProfile = async (currentState: any, formData: FormDa
             introduction: currentState.introduction,
         });
 
-        currentState.nationality = updatedProfile?.nationality ?? currentState.nationality
-        currentState.dateOfBirth = updatedProfile?.dateOfBirth ?? currentState.dateOfBirth
-        currentState.gender = updatedProfile?.gender ?? currentState.gender
-        currentState.maritalStatus = updatedProfile?.maritalStatus ?? currentState.maritalStatus
-        currentState.introduction = updatedProfile?.introduction ?? currentState.introduction
+        currentState.nationality = updatedProfile?.nationality ?? currentState.nationality;
+        currentState.dateOfBirth = updatedProfile?.dateOfBirth ?? currentState.dateOfBirth;
+        currentState.gender = updatedProfile?.gender ?? currentState.gender;
+        currentState.maritalStatus = updatedProfile?.maritalStatus ?? currentState.maritalStatus;
+        currentState.introduction = updatedProfile?.introduction ?? currentState.introduction;
 
         return { ...currentState, success: true, errors: {} };
     } catch (error) {
