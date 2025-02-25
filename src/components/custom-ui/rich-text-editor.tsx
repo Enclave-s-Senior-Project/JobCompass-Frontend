@@ -4,6 +4,7 @@ import Underline from '@tiptap/extension-underline';
 import BulletList from '@tiptap/extension-bullet-list';
 import OrderedList from '@tiptap/extension-ordered-list';
 import ListItem from '@tiptap/extension-list-item';
+import Link from '@tiptap/extension-link';
 import TextEditorMenuBar from './text-editor-apply-job';
 
 type TextEditorProps = {
@@ -13,7 +14,21 @@ type TextEditorProps = {
 
 export default function RichTextEditor({ onChange, initialContent }: TextEditorProps) {
     const editor = useEditor({
-        extensions: [StarterKit, Underline, BulletList, OrderedList, ListItem],
+        extensions: [
+            StarterKit,
+            Underline,
+            BulletList,
+            OrderedList,
+            ListItem,
+            Link.configure({
+                openOnClick: true, // Mở link trong tab mới khi click
+                autolink: true, // Tự động chuyển đổi URL thành link
+                linkOnPaste: true, // Tự động tạo link khi dán URL
+                HTMLAttributes: {
+                    class: 'text-blue-500 underline',
+                },
+            }),
+        ],
         content: initialContent,
         onUpdate: ({ editor }) => {
             onChange(editor.getHTML());

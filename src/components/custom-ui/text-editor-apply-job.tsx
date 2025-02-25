@@ -1,4 +1,4 @@
-import { RiBold, RiItalic, RiStrikethrough, RiListOrdered2 } from 'react-icons/ri';
+import { RiBold, RiItalic, RiStrikethrough, RiListOrdered2, RiLink } from 'react-icons/ri';
 import { Editor } from '@tiptap/react';
 import { BsTypeUnderline } from 'react-icons/bs';
 import { IoListOutline } from 'react-icons/io5';
@@ -26,6 +26,17 @@ const Button = ({
 
 export default function TextEditorMenuBar({ editor }: { editor: Editor | null }) {
     if (!editor) return null;
+
+    const toggleLink = () => {
+        if (editor.isActive('link')) {
+            editor.chain().focus().unsetLink().run(); // Gỡ bỏ link nếu đã có
+        } else {
+            const url = prompt('Enter the URL'); // Hiển thị prompt để nhập link mới
+            if (url) {
+                editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+            }
+        }
+    };
 
     const buttons = [
         {
@@ -57,6 +68,11 @@ export default function TextEditorMenuBar({ editor }: { editor: Editor | null })
             icon: <RiListOrdered2 className="size-5" />,
             onClick: () => editor.chain().focus().toggleOrderedList().run(),
             isActive: editor.isActive('orderedList'),
+        },
+        {
+            icon: <RiLink className="size-5" />,
+            onClick: toggleLink,
+            isActive: editor.isActive('link'),
         },
     ];
 
