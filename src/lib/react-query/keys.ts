@@ -4,4 +4,5 @@ export const queryKey = {
     listCvofProfile: 'list-cvof-profile',
     me: 'me',
     candidateSocialLinks: 'candidate-social-links',
+    listTag: 'list-tag',
 };

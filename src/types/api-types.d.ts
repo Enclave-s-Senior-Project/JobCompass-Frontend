@@ -59,6 +59,7 @@ export namespace DetailedResponse {
     export interface FavoriteJobs extends GetAllJobs {}
 
     export type GetAllCvByIdProfile = CV[];
+    export type GetAllTag = Tag[];
 }
 
 export namespace DetailedRequest {
@@ -132,4 +133,20 @@ export namespace DetailedRequest {
     }
 
     export type UpdateCandidateSocialLinks = SocialLink[];
+    export interface postJobCredentials {
+        name: string;
+        lowestWage: number;
+        highestWage: number;
+        description: string;
+        responsibility: string;
+        type: string;
+        experience: number;
+        deadline: string;
+        introImg: string;
+        status: boolean;
+        enterpriseId: string;
+        tagIds: string[];
+        categoryIds: string[];
+        address: string[];
+    }
 }

@@ -96,6 +96,39 @@ const updateCandidateProfile = z.object({
     introduction: z.string().min(1, 'Introduction is required'),
 });
 
+const postJobSchema = z.object({
+    name: z.string().min(1, 'Job name is required').max(255, 'Job name must be at most 255 characters'),
+    minSalary: z.coerce.number().min(0, 'Minimum salary must be a positive number').optional().nullable(),
+    maxSalary: z
+        .union([z.coerce.number().min(0, 'Maximum salary must be a positive number'), z.null()])
+        .optional()
+        .superRefine((value, ctx) => {
+            if (value === undefined) return; // Skip if value is undefined
+            const minSalary = ctx.parent.minSalary ?? 0; // Access minSalary from context
+            if (value !== null && value < minSalary) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: 'Maximum salary must be greater than or equal to the minimum salary',
+                    path: ['maxSalary'],
+                });
+            }
+        }),
+    description: z.string().min(1, 'Description is required'),
+    responsibility: z.string().min(1, 'Responsibility is required'),
+    type: z.string().max(50).optional(),
+    experience: z.coerce.number().min(0, 'Experience must be a positive number'),
+    deadline: z
+        .string()
+        .optional()
+        .refine((date) => !date || !isNaN(Date.parse(date)), {
+            message: 'Invalid date format',
+        }),
+    tagIds: z.array(z.string()).optional(),
+    // categoryIds: z.array(z.string()).optional(),
+    // address: z.array(z.string()).optional(),
+});
+
+
 export {
     signUpSchema,
     verifySignInSchema,
@@ -105,4 +138,5 @@ export {
     applyJobCoverLetterSchema,
     updatePersonalProfile,
     updateCandidateProfile,
+    postJobSchema,
 };

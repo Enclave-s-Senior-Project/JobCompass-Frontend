@@ -101,8 +101,6 @@ export interface User {
 }
 
 export interface Tag {
-    createdAt: string;
-    updatedAt: string;
     isActive: boolean;
     tagId: string;
     name: string;

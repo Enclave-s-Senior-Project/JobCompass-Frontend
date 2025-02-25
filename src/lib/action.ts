@@ -1,10 +1,11 @@
 import { BaseAxios } from './axios';
-import { DetailedRequest, SocialLink, SocialType } from '@/types';
+import { DetailedRequest, SocialLink, SocialType, Tag } from '@/types';
 import { toast } from 'react-toastify';
 import { errorKeyMessage } from './message-keys';
 import {
     applyJobCoverLetterSchema,
     forgetPasswordSchema,
+    postJobSchema,
     resetPasswordSchema,
     signUpSchema,
     updatePersonalProfile,
@@ -346,20 +347,40 @@ export const updateCandidateSocialLinks = async (currentState: any, formData: Fo
 };
 
 export const postJob = async (currentState: any, formData: FormData) => {
-    currentState.selectedCv = formData.get('selectedCv')?.toString() ?? '';
-    currentState.coverLetter = formData.get('coverLetter')?.toString() ?? '';
-
-    console.log('Selected CV:', currentState.selectedCv);
-    console.log('Cover Letter:', currentState.coverLetter);
-    const validation = applyJobCoverLetterSchema.safeParse(currentState);
+    currentState.title = formData.get('title')?.toString() ?? '';
+    currentState.tags = formData.getAll('tags[]');
+    currentState.minSalary = formData.get('minSalary');
+    currentState.maxSalary = formData.get('maxSalary');
+    currentState.education = formData.get('education')?.toString() ?? '';
+    currentState.experience = Number(formData.get('experience'));
+    currentState.jobType = formData.get('jobType')?.toString() ?? '';
+    currentState.expirationDate = formData.get('expirationDate')?.toString() ?? '';
+    currentState.jobLevel = formData.get('jobLevel')?.toString() ?? '';
+    currentState.description = formData.get('description')?.toString() ?? '';
+    currentState.responsibilities = formData.get('responsibilities')?.toString() ?? '';
+    const validation = postJobSchema.safeParse(currentState);
     if (!validation.success) {
+        console.log('that bai');
+        console.log(validation.error.flatten().fieldErrors);
         return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
     }
+    console.log('expirationDate from formData:', currentState.tags);
     try {
-        const applyJob = await ApplyJobService.applyJobCoverLetter({
-            cvId: currentState.selectedCv,
-            coverLetter: currentState.coverLetter,
-            jobId: '95117f99-2282-4657-938a-2ad500f70612',
+        const postJob = await JobService.postJob({
+            name: currentState.title,
+            lowestWage: currentState.minSalary,
+            highestWage: currentState.maxSalary,
+            description: currentState.description,
+            responsibility: currentState.responsibilities,
+            type: currentState.jobType,
+            experience: currentState.experience,
+            deadline: currentState.expirationDate,
+            introImg: '',
+            status: false,
+            tagIds: currentState.tags,
+            enterpriseId: 'f9a74c91-6ebf-4d92-8b57-d4d9cacf8abc',
+            categoryIds: ['c1d2e3f4-5678-90ab-cdef-0987654321ba'],
+            address: ['b1c2d3e4-5678-90ab-cdef-abcdefabcdef'],
         });
         return { ...currentState, errors: {}, success: true, data: applyJob };
     } catch (error: any) {
