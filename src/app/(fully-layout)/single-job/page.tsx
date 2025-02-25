@@ -11,50 +11,19 @@ import {
     NotepadText,
     CircleUserRound,
     Link2,
-    FileX,
+    Clock8,
+    BriefcaseBusiness,
+    Wallet,
+    MapPin,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { PiCake } from 'react-icons/pi';
 import ShareProfile from '@/components/custom-ui/share-profile';
-import { FaFacebookF, FaXTwitter } from 'react-icons/fa6';
+import { FaFacebookF, FaInstagram, FaXTwitter, FaYoutube } from 'react-icons/fa6';
 import { DialogApplyJob } from '@/components/custom-ui/dialog-apply-job';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
-import { DetailedRequest } from '@/types';
-import * as services from '@/services/job.service';
-import CardJob from '@/components/custom-ui/card-job';
-import { Skeleton } from '@/components/ui/skeleton';
+import { routes } from '@/configs/routes';
 export default function SingleJob() {
-    const take = 6;
-    const {
-        isLoading,
-        data: jobCards = {
-            data: [],
-            meta: {
-                page: '0',
-                take: '0',
-                itemCount: 0,
-                pageCount: 0,
-                hasPreviousPage: false,
-                hasNextPage: false,
-            },
-        },
-    } = useQuery({
-        queryKey: ['list-card', { order: 'DESC', page: 1, take, option: '' }],
-        queryFn: async ({ queryKey }) => {
-            try {
-                const temp = await services.JobService.getAllJobs(
-                    queryKey[1] as DetailedRequest.ParamListJobsCredentials
-                );
-                return temp;
-            } catch (error) {
-                console.log(error);
-            }
-        },
-        staleTime: 1 * 60 * 1000,
-        enabled: true,
-        retry: 2,
-    });
     return (
         <div className="min-h-screen ">
             <div className="w-full h-[76px] bg-[#F1F2F4] flex items-center">
@@ -155,28 +124,42 @@ export default function SingleJob() {
                         </div>
                     </div>
                     <div className="col-span-12 md:col-span-5 space-y-6">
-                        <div className="p-6 flex items-center justify-center flex-wrap gap-y-6 rounded-md border-2 border-primary-50">
-                            <div className="basis-1/2 w-1/2">
-                                <PiCake className="mb-3 size-6 text-primary" />
-                                <p className="mb-1 uppercase text-gray-500 text-[12px]">date of birth</p>
-                                <p className="text-sm font-medium">14 June, 2003</p>
-                            </div>
-                            <div className="basis-1/2 w-1/2">
-                                <Map className="mb-3 size-6 text-primary" />
-                                <p className="mb-1 uppercase text-gray-500 text-[12px]">nationality</p>
-                                <p className="text-sm">American</p>
-                            </div>
-                            <div className="basis-1/2 w-1/2">
-                                <NotepadText className="mb-3 size-6 text-primary" />
-                                <p className="mb-1 uppercase text-gray-500 text-[12px]">marital status</p>
-                                <p className="text-sm font-medium">Single</p>
-                            </div>
-                            <div className="basis-1/2 w-1/2">
-                                <CircleUserRound className="mb-3 size-6 text-primary" />
-                                <p className="mb-1 uppercase text-gray-700 text-[12px]">gender</p>
-                                <p className="text-sm font-medium">Male</p>
+                        <div className="p-6 flex flex-col gap-y-6 rounded-md border-2 border-primary-50">
+                            <h1 className="text-2xl mb-4">Job Overview</h1>
+                            <div className="w-full grid grid-cols-3 gap-y-6">
+                                <div className="flex flex-col items-start">
+                                    <NotepadText className="mb-3 size-6 text-primary" />
+                                    <p className="mb-1 uppercase text-gray-500 text-[12px]">JOB POSTED:</p>
+                                    <p className="text-sm font-medium">14 June, 2003</p>
+                                </div>
+                                <div className="flex flex-col items-start">
+                                    <Clock8 className="mb-3 size-6 text-primary" />
+                                    <p className="mb-1 uppercase text-gray-500 text-[12px]">JOB EXPIRE IN:</p>
+                                    <p className="text-sm font-medium">14 June, 2003</p>
+                                </div>
+                                <div className="flex flex-col items-start">
+                                    <BriefcaseBusiness className="mb-3 size-6 text-primary" />
+                                    <p className="mb-1 uppercase text-gray-500 text-[12px]">EDUCATION:</p>
+                                    <p className="text-sm font-medium">Graduation</p>
+                                </div>
+                                <div className="flex flex-col items-start">
+                                    <Wallet className="mb-3 size-6 text-primary" />
+                                    <p className="mb-1 uppercase text-gray-500 text-[12px]">SALARY:</p>
+                                    <p className="text-sm">$50k-80k/month</p>
+                                </div>
+                                <div className="flex flex-col items-start">
+                                    <MapPin className="mb-3 size-6 text-primary" />
+                                    <p className="mb-1 uppercase text-gray-500 text-[12px]">LOCATION:</p>
+                                    <p className="text-sm font-medium">New York, USA</p>
+                                </div>
+                                <div className="flex flex-col items-start">
+                                    <BriefcaseBusiness className="mb-3 size-6 text-primary" />
+                                    <p className="mb-1 uppercase text-gray-700 text-[12px]">JOB TYPE:</p>
+                                    <p className="text-sm font-medium">Full time</p>
+                                </div>
                             </div>
                         </div>
+
                         {/* Contact information */}
                         <Card className="max-w-2xl mx-auto border-primary-50 border-2 shadow-none">
                             <CardHeader className="space-y-2">
@@ -222,22 +205,26 @@ export default function SingleJob() {
                                     </div>
                                 </div>
                                 <div className="flex gap-2 pt-4">
-                                    <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#1877F2] text-white hover:bg-[#1877F2]/90">
-                                        <FaFacebookF size={20} />
-                                        <span className="sr-only">Facebook</span>
-                                    </div>
-                                    <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#1DA1F2] text-white hover:bg-[#1DA1F2]/90">
-                                        <FaXTwitter size={20} />
-                                        <span className="sr-only">Twitter</span>
-                                    </div>
-                                    <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#FF008C] to-[#FFCD1E] text-white hover:opacity-90">
-                                        <FaXTwitter size={20} />
-                                        <span className="sr-only">Instagram</span>
-                                    </div>
-                                    <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#FF0000] text-white hover:bg-[#FF0000]/90">
-                                        <FaXTwitter size={20} />
-                                        <span className="sr-only">YouTube</span>
-                                    </div>
+                                    <Button size="icon-lg" variant="third" className="size-12">
+                                        <Link href={routes.home}>
+                                            <FaFacebookF />
+                                        </Link>
+                                    </Button>
+                                    <Button size="icon-lg" variant="third" className="size-12">
+                                        <Link href={routes.home}>
+                                            <FaXTwitter />
+                                        </Link>
+                                    </Button>
+                                    <Button size="icon-lg" variant="third" className="size-12">
+                                        <Link href={routes.home}>
+                                            <FaInstagram />
+                                        </Link>
+                                    </Button>
+                                    <Button size="icon-lg" variant="third" className="size-12">
+                                        <Link href={routes.home}>
+                                            <FaYoutube />
+                                        </Link>
+                                    </Button>
                                 </div>
                             </CardContent>
                         </Card>
