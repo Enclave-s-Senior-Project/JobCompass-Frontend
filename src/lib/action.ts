@@ -344,3 +344,27 @@ export const updateCandidateSocialLinks = async (currentState: any, formData: Fo
         errors,
     };
 };
+
+export const postJob = async (currentState: any, formData: FormData) => {
+    currentState.selectedCv = formData.get('selectedCv')?.toString() ?? '';
+    currentState.coverLetter = formData.get('coverLetter')?.toString() ?? '';
+
+    console.log('Selected CV:', currentState.selectedCv);
+    console.log('Cover Letter:', currentState.coverLetter);
+    const validation = applyJobCoverLetterSchema.safeParse(currentState);
+    if (!validation.success) {
+        return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
+    }
+    try {
+        const applyJob = await ApplyJobService.applyJobCoverLetter({
+            cvId: currentState.selectedCv,
+            coverLetter: currentState.coverLetter,
+            jobId: '95117f99-2282-4657-938a-2ad500f70612',
+        });
+        return { ...currentState, errors: {}, success: true, data: applyJob };
+    } catch (error: any) {
+        handleErrorToast(error);
+    }
+
+    return { ...currentState, errors: {}, success: false, data: null };
+};

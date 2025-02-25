@@ -99,3 +99,13 @@ export interface User {
     experience?: string;
     account_id: string;
 }
+
+export interface Tag {
+    createdAt: string;
+    updatedAt: string;
+    isActive: boolean;
+    tagId: string;
+    name: string;
+    color: string;
+    backgroundColor: string;
+}

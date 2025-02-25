@@ -65,7 +65,7 @@ export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void })
                     value={selectedCv}
                     onValueChange={(value) => {
                         setSelectedCv(value);
-                        state.selectedCv = value; // Cập nhật vào state ban đầu nếu cần
+                        state.selectedCv = value;
                     }}
                     name="selectedCv"
                 >
