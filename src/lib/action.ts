@@ -5,6 +5,7 @@ import { errorKeyMessage } from './message-keys';
 import {
     applyJobCoverLetterSchema,
     forgetPasswordSchema,
+    postJobSchema,
     resetPasswordSchema,
     signUpSchema,
     updatePersonalProfile,
