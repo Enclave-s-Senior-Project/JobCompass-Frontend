@@ -150,4 +150,13 @@ export namespace DetailedRequest {
         categoryIds: string[];
         address: string[];
     }
+
+    export interface UpdatePersonalProfile {
+        profileUrl: string;
+        pageUrl: string;
+        fullName: string;
+        phone?: string;
+        education?: string;
+        experience?: string;
+    }
 }
