@@ -1,53 +1,85 @@
 'use client';
-
 import type React from 'react';
-
-import { useState } from 'react';
+import { useActionState, useState } from 'react';
 import { Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { LuArrowRight } from 'react-icons/lu';
+import RichTextEditor from '@/components/custom-ui/rich-text-editor';
+import { postJob } from '@/lib/action';
+import { SelectTag } from '@/components/custom-ui/select-tag';
+import { Tag } from '@/types';
 
+const defaultTags: Tag[] = [
+    {
+        tagId: '1',
+        name: 'React',
+        color: '#000000',
+        backgroundColor: '#61DAFB',
+        createdAt: '2025-02-25T00:00:00Z',
+        updatedAt: '2025-02-25T00:00:00Z',
+        isActive: true,
+    },
+    {
+        tagId: '2',
+        name: 'JavaScript',
+        color: '#000000',
+        backgroundColor: '#F7DF1E',
+        createdAt: '2025-02-25T00:00:00Z',
+        updatedAt: '2025-02-25T00:00:00Z',
+        isActive: true,
+    },
+    {
+        tagId: '3',
+        name: 'TypeScript',
+        color: '#FFFFFF',
+        backgroundColor: '#3178C6',
+        createdAt: '2025-02-25T00:00:00Z',
+        updatedAt: '2025-02-25T00:00:00Z',
+        isActive: true,
+    },
+    {
+        tagId: '4',
+        name: 'Node.js',
+        color: '#FFFFFF',
+        backgroundColor: '#339933',
+        createdAt: '2025-02-25T00:00:00Z',
+        updatedAt: '2025-02-25T00:00:00Z',
+        isActive: true,
+    },
+];
 export default function PostJobForm() {
-    const [jobData, setJobData] = useState({
+    const [state, onSubmit, isPending] = useActionState(postJob, {
         title: '',
-        tags: '',
+        tags: [] as Tag[],
         minSalary: '',
         maxSalary: '',
         description: '',
         responsibilities: '',
     });
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log(jobData);
+    const [description, setDescription] = useState(state.description);
+    const handleDescription = (content: string) => {
+        setDescription(content);
     };
 
     return (
         <div className="container mx-auto p-6 ">
             <h1 className="text-2xl font-bold mb-6">Post a job</h1>
-            <form onSubmit={handleSubmit} className="space-y-4 bg-white  ">
+            <form action={onSubmit} className="space-y-4 bg-white">
                 <div className="flex flex-col gap-y-2">
                     <h1>Job Title</h1>
                     <Input
                         className="h-12 focus-visible:border-primary focus-visible:ring-primary"
-                        id="jobTitle"
                         placeholder="Add job title, role, vacancies etc"
-                        value={jobData.title}
-                        onChange={(e) => setJobData({ ...jobData, title: e.target.value })}
+                        defaultValue={state.title}
+                        name="title"
                     />
                 </div>
 
                 <div className="flex flex-col gap-y-2">
                     <h1>Tags</h1>
-                    <Input
-                        className="h-12 focus-visible:border-primary focus-visible:ring-primary"
-                        id="tags"
-                        placeholder="Job keyword, tags etc..."
-                        value={jobData.tags}
-                        onChange={(e) => setJobData({ ...jobData, tags: e.target.value })}
-                    />
+                    <SelectTag defaultTags={defaultTags} />
                 </div>
 
                 <div>
@@ -57,22 +89,20 @@ export default function PostJobForm() {
                             <h1>Min Salary</h1>
                             <Input
                                 className="h-12 focus-visible:border-primary focus-visible:ring-primary"
-                                id="minSalary"
                                 type="number"
                                 placeholder="Minimum salary..."
-                                value={jobData.minSalary}
-                                onChange={(e) => setJobData({ ...jobData, minSalary: e.target.value })}
+                                defaultValue={state.minSalary}
+                                name="minSalary"
                             />
                         </div>
                         <div className="flex flex-col gap-y-2">
                             <h1>Max Salary</h1>
                             <Input
                                 className="h-12 focus-visible:border-primary focus-visible:ring-primary"
-                                id="maxSalary"
                                 type="number"
                                 placeholder="Maximum salary..."
-                                value={jobData.maxSalary}
-                                onChange={(e) => setJobData({ ...jobData, maxSalary: e.target.value })}
+                                defaultValue={state.maxSalary}
+                                name="maxSalary"
                             />
                         </div>
                     </div>
@@ -151,73 +181,15 @@ export default function PostJobForm() {
                     <div className="space-y-6">
                         <div className="flex flex-col gap-y-2">
                             <h1>Description</h1>
-                            <div className="border rounded-md">
-                                <textarea
-                                    id="description"
-                                    className="min-h-[100px] w-full rounded-t-md border-b border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                    placeholder="Add your job description..."
-                                    value={jobData.description}
-                                    onChange={(e) => setJobData({ ...jobData, description: e.target.value })}
-                                />
-                                <div className="flex items-center gap-1 p-2 border-t">
-                                    <button type="button" className="p-2 hover:bg-gray-100 rounded-md">
-                                        <span className="font-bold">B</span>
-                                    </button>
-                                    <button type="button" className="p-2 hover:bg-gray-100 rounded-md">
-                                        <span className="italic">I</span>
-                                    </button>
-                                    <button type="button" className="p-2 hover:bg-gray-100 rounded-md">
-                                        <span className="underline">U</span>
-                                    </button>
-                                    <button type="button" className="p-2 hover:bg-gray-100 rounded-md">
-                                        <span className="line-through">S</span>
-                                    </button>
-                                    <button type="button" className="p-2 hover:bg-gray-100 rounded-md">
-                                        <span>🔗</span>
-                                    </button>
-                                    <button type="button" className="p-2 hover:bg-gray-100 rounded-md">
-                                        <span>≡</span>
-                                    </button>
-                                    <button type="button" className="p-2 hover:bg-gray-100 rounded-md">
-                                        <span>•</span>
-                                    </button>
-                                </div>
+                            <div className="focus-visible:border-primary focus-visible:ring-primary">
+                                <RichTextEditor onChange={handleDescription} initialContent={description} />
                             </div>
                         </div>
 
                         <div className="flex flex-col gap-y-2">
                             <h1>Responsibilities</h1>
-                            <div className="border rounded-md">
-                                <textarea
-                                    id="responsibilities"
-                                    className="min-h-[100px] w-full rounded-t-md border-b border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                    placeholder="Add your job responsibilities..."
-                                    value={jobData.responsibilities}
-                                    onChange={(e) => setJobData({ ...jobData, responsibilities: e.target.value })}
-                                />
-                                <div className="flex items-center gap-1 p-2 border-t">
-                                    <button type="button" className="p-2 hover:bg-gray-100 rounded-md">
-                                        <span className="font-bold">B</span>
-                                    </button>
-                                    <button type="button" className="p-2 hover:bg-gray-100 rounded-md">
-                                        <span className="italic">I</span>
-                                    </button>
-                                    <button type="button" className="p-2 hover:bg-gray-100 rounded-md">
-                                        <span className="underline">U</span>
-                                    </button>
-                                    <button type="button" className="p-2 hover:bg-gray-100 rounded-md">
-                                        <span className="line-through">S</span>
-                                    </button>
-                                    <button type="button" className="p-2 hover:bg-gray-100 rounded-md">
-                                        <span>🔗</span>
-                                    </button>
-                                    <button type="button" className="p-2 hover:bg-gray-100 rounded-md">
-                                        <span>≡</span>
-                                    </button>
-                                    <button type="button" className="p-2 hover:bg-gray-100 rounded-md">
-                                        <span>•</span>
-                                    </button>
-                                </div>
+                            <div className=" rounded-md">
+                                <RichTextEditor onChange={handleDescription} initialContent={description} />
                             </div>
                         </div>
                     </div>
