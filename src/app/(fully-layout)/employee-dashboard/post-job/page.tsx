@@ -9,10 +9,15 @@ import { LuArrowRight } from 'react-icons/lu';
 import RichTextEditor from '@/components/custom-ui/rich-text-editor';
 import { postJob } from '@/lib/action';
 import { Tag } from '@/types';
-import SelectTag from '@/components/custom-ui/select-tag';
+import MultiSelectSearchInput from '@/components/custom-ui/selected-tags';
+import { DialogApplyJob } from '@/components/custom-ui/dialog-apply-job';
+import { DialogAddTag } from '@/components/custom-ui/dialog-add-tag';
+import { useQuery } from '@tanstack/react-query';
+import { queryKey } from '@/lib/react-query/keys';
+import { CategoryService } from '@/services/categories.service';
 
 export default function PostJobForm() {
-    const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [state, onSubmit, isPending] = useActionState(postJob, {
         title: '',
         tags: [] as Tag[],
@@ -23,9 +28,26 @@ export default function PostJobForm() {
     });
     const [description, setDescription] = useState(state.description);
     const [responsibilities, setResponsibility] = useState(state.responsibilities);
-    const handleSelectTags = (tags: Tag[]) => {
-        setSelectedTags(tags);
-    };
+    const [categories, setCategories] = useState(state.categories);
+    const {
+        refetch,
+        data: resultQuery,
+        isLoading,
+    } = useQuery({
+        queryKey: [queryKey.listCategory],
+        queryFn: async () => {
+            try {
+                const payload = await CategoryService.getAllCategories();
+                return payload;
+            } catch (error: any) {
+                console.log(error);
+            }
+        },
+        staleTime: 1000 * 60,
+        refetchInterval: 1000 * 60,
+        retry: 2,
+        enabled: true,
+    });
     const handleDescription = (content: string) => {
         setDescription(content);
     };
@@ -40,10 +62,9 @@ export default function PostJobForm() {
                 action={(formData) => {
                     formData.set('description', description);
                     formData.set('responsibilities', responsibilities);
-                    const tagIds = selectedTags.map((tag) => tag.tagId);
-                    formData.delete('tags');
-                    tagIds.forEach((id) => {
-                        formData.append('tags[]', id);
+                    selectedTags.forEach((tagId) => {
+                        console.log('Tag ID:', tagId);
+                        formData.append('tags[]', tagId);
                     });
                     return onSubmit(formData);
                 }}
@@ -60,8 +81,13 @@ export default function PostJobForm() {
                 </div>
 
                 <div className="flex flex-col gap-y-2">
-                    <h1>Tags</h1>
-                    <SelectTag value={selectedTags} onChange={handleSelectTags} options={selectedTags} />
+                    <h1>Tag</h1>
+                    <div className="flex flex-grow gap-x-2">
+                        <MultiSelectSearchInput onChange={(newTagIds: string[]) => setSelectedTags(newTagIds)} />
+                        <div className="flex-grow basis-1/3 max-w-[30%]">
+                            <DialogAddTag nameJob="Senior UX Designer" />
+                        </div>
+                    </div>
                 </div>
 
                 <div>
@@ -151,6 +177,28 @@ export default function PostJobForm() {
                                     <SelectItem value="junior">Junior</SelectItem>
                                     <SelectItem value="mid">Mid-Level</SelectItem>
                                     <SelectItem value="senior">Senior</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="flex flex-col gap-y-2">
+                            <h1>Category</h1>
+                            <Select
+                                value={categories}
+                                onValueChange={(value) => {
+                                    setCategories(value);
+                                    state.categories = value;
+                                }}
+                                name="category"
+                            >
+                                <SelectTrigger className="h-12 border border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary">
+                                    <SelectValue placeholder="Select..." />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {resultQuery?.map((categories) => (
+                                        <SelectItem key={categories.categoryId} value={categories.categoryId}>
+                                            {categories.categoryName}
+                                        </SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                         </div>

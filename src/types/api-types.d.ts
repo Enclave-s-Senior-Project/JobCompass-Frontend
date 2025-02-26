@@ -1,4 +1,4 @@
-import { Job } from './entities';
+import { Category, Job } from './entities';
 
 export interface ApiResponse<T> {
     payload: {
@@ -59,6 +59,7 @@ export namespace DetailedResponse {
 
     export type GetAllCvByIdProfile = CV[];
     export type GetAllTag = Tag[];
+    export type GetCategories = Category[];
 }
 
 export namespace DetailedRequest {
