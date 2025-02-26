@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
 import { TagService } from '@/services/tag.service';
 import { useQuery } from '@tanstack/react-query';
-import { useDebounce } from 'use-debounce'; // Thêm debounce
+import { useDebounce } from 'use-debounce';
 import { Tag } from '@/types';
+import clsx from 'clsx';
 
 interface MultiSelectSearchInputProps {
-    onChange: (selectedItems: string[]) => void; // Chuyển từ string thành string[]
+    onChange: (selectedItems: string[]) => void;
+    error?: string;
 }
 
-const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChange }) => {
+const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChange, error }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedItems, setSelectedItems] = useState<{ tagId: string; name: string }[]>([]);
     const [showDropdown, setShowDropdown] = useState(false);
@@ -35,7 +36,7 @@ const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChang
         if (!selectedItems.find((i) => i.tagId === item.tagId)) {
             const updatedItems = [...selectedItems, { tagId: item.tagId, name: item.name }];
             setSelectedItems(updatedItems);
-            onChange(updatedItems.map((i) => i.tagId)); // Trả về mảng ID cho `onChange`
+            onChange(updatedItems.map((i) => i.tagId));
         }
         setShowDropdown(false);
         setSearchTerm('');
@@ -64,7 +65,14 @@ const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChang
 
     return (
         <div className="relative w-full" ref={dropdownRef}>
-            <div className="flex items-center flex-wrap gap-1 border rounded-md p-2 bg-white focus-within:ring-2 ring-primary-500 h-12">
+            <div
+                className={clsx(
+                    'flex items-center flex-wrap gap-1 border-2 rounded-md p-2 bg-white h-12',
+                    error
+                        ? 'border-danger ring-danger'
+                        : 'border-gray-200 focus-within:border-primary focus-within:ring-primary'
+                )}
+            >
                 {selectedItems.map((item) => (
                     <div key={item.tagId} className="flex items-center bg-gray-100 px-2 py-1 rounded-md text-sm">
                         <span className="mr-1 truncate max-w-[100px]">{item.name}</span>
@@ -74,7 +82,7 @@ const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChang
                     </div>
                 ))}
                 <input
-                    className="flex-1 border-none outline-none min-w-[200px]"
+                    className="flex-1 border-none outline-none min-w-[200px] "
                     placeholder="Search..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}

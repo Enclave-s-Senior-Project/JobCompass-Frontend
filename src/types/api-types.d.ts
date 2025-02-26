@@ -60,7 +60,7 @@ export namespace DetailedResponse {
 
     export type GetAllCvByIdProfile = CV[];
     export type GetAllTag = Tag[];
-    export type GetCategories = Category[];
+    export type GetCategories = Categories[];
 }
 
 export namespace DetailedRequest {

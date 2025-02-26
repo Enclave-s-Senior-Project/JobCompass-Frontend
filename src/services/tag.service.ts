@@ -1,10 +1,9 @@
-import { AuthAxios, BaseAxios } from '@/lib/axios';
+import { BaseAxios } from '@/lib/axios';
 import { ApiResponse, DetailedResponse, Tag } from '@/types';
 import { AxiosError } from 'axios';
 import NextError from 'next/error';
 
 const axios = new BaseAxios('tag');
-const authAxios = new AuthAxios('tag');
 
 export class TagService {
     public static async getAllTags() {

@@ -3,15 +3,15 @@ import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { ChevronRight } from 'lucide-react';
-import { TextEditorApplyJob } from './form-apply-job-dialog';
 import { ContentAddTag } from './content-dialog-add-tag';
 
-export function DialogAddTag(props: { nameJob: string }) {
+export function DialogAddTag() {
     const [open, setOpen] = useState(false);
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <Button
+                type="button"
                 onClick={() => setOpen(true)}
                 className="flex-1 md:flex-none w-[248px] h-12 text-[16px]"
                 variant="outline"
