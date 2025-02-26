@@ -3,6 +3,7 @@ import { DetailedRequest } from '@/types';
 import { toast } from 'react-toastify';
 import { errorKeyMessage } from './message-keys';
 import {
+    addTagSchema,
     applyJobCoverLetterSchema,
     forgetPasswordSchema,
     postJobSchema,

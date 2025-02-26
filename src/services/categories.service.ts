@@ -1,10 +1,9 @@
-import { AuthAxios, BaseAxios } from '@/lib/axios';
-import { ApiResponse, DetailedResponse, Tag } from '@/types';
+import { BaseAxios } from '@/lib/axios';
+import { ApiResponse, DetailedResponse } from '@/types';
 import { AxiosError } from 'axios';
 import NextError from 'next/error';
 
 const axios = new BaseAxios('Category');
-const authAxios = new AuthAxios('Category');
 
 export class CategoryService {
     public static async getAllCategories() {

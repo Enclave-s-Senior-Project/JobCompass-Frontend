@@ -5,7 +5,6 @@ import { TagService } from '@/services/tag.service';
 import { useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import { Tag } from '@/types';
-import { ActionMeta } from 'react-select';
 
 const CreatableSelect = dynamic(() => import('react-select/creatable'), { ssr: false });
 
@@ -54,8 +53,8 @@ const SelectTag = ({ value, onChange, options }: SelectTagProps) => {
         onChange(updatedTags);
     };
 
-    const handleChange = (newValue: unknown, _actionMeta: ActionMeta<unknown>) => {
-        onChange(newValue as Tag[]); // Ép kiểu Tag[] để tránh lỗi unknown
+    const handleChange = (newValue: unknown) => {
+        onChange(newValue as Tag[]);
     };
 
     return (

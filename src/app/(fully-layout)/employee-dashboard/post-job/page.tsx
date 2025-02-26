@@ -1,7 +1,6 @@
 'use client';
 import type React from 'react';
 import { useActionState, useState } from 'react';
-import { Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -10,15 +9,15 @@ import RichTextEditor from '@/components/custom-ui/rich-text-editor';
 import { postJob } from '@/lib/action';
 import { Tag } from '@/types';
 import MultiSelectSearchInput from '@/components/custom-ui/selected-tags';
-import { DialogApplyJob } from '@/components/custom-ui/dialog-apply-job';
 import { DialogAddTag } from '@/components/custom-ui/dialog-add-tag';
 import { useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import { CategoryService } from '@/services/categories.service';
+import clsx from 'clsx';
 
 export default function PostJobForm() {
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
-    const [state, onSubmit, isPending] = useActionState(postJob, {
+    const [state, onSubmit] = useActionState(postJob, {
         title: '',
         tags: [] as Tag[],
         minSalary: '',
@@ -29,11 +28,7 @@ export default function PostJobForm() {
     const [description, setDescription] = useState(state.description);
     const [responsibilities, setResponsibility] = useState(state.responsibilities);
     const [categories, setCategories] = useState(state.categories);
-    const {
-        refetch,
-        data: resultQuery,
-        isLoading,
-    } = useQuery({
+    const { data: resultQuery } = useQuery({
         queryKey: [queryKey.listCategory],
         queryFn: async () => {
             try {
@@ -63,7 +58,6 @@ export default function PostJobForm() {
                     formData.set('description', description);
                     formData.set('responsibilities', responsibilities);
                     selectedTags.forEach((tagId) => {
-                        console.log('Tag ID:', tagId);
                         formData.append('tags[]', tagId);
                     });
                     return onSubmit(formData);
@@ -73,21 +67,36 @@ export default function PostJobForm() {
                 <div className="flex flex-col gap-y-2">
                     <h1>Job Title</h1>
                     <Input
-                        className="h-12 focus-visible:border-primary focus-visible:ring-primary"
+                        className={clsx(
+                            'h-12 rounded-sm',
+                            state.errors?.title
+                                ? 'border-2 border-danger ring-danger'
+                                : ' focus-visible:border-primary focus-visible:ring-primary'
+                        )}
                         placeholder="Add job title, role, vacancies etc"
                         defaultValue={state.title}
                         name="title"
                     />
+                    <p className=" text-red-500 text-[12px] font-medium ">
+                        {state.errors?.title && state.errors.title[0]}
+                    </p>
                 </div>
 
                 <div className="flex flex-col gap-y-2">
                     <h1>Tag</h1>
                     <div className="flex flex-grow gap-x-2">
-                        <MultiSelectSearchInput onChange={(newTagIds: string[]) => setSelectedTags(newTagIds)} />
+                        <MultiSelectSearchInput
+                            onChange={(newTagIds: string[]) => setSelectedTags(newTagIds)}
+                            error={state.errors?.tags}
+                        />
+
                         <div className="flex-grow basis-1/3 max-w-[30%]">
-                            <DialogAddTag nameJob="Senior UX Designer" />
+                            <DialogAddTag />
                         </div>
                     </div>
+                    <p className=" text-red-500 text-[12px] font-medium ">
+                        {state.errors?.tags && state.errors.tags[0]}
+                    </p>
                 </div>
 
                 <div>
@@ -96,22 +105,38 @@ export default function PostJobForm() {
                         <div className="flex flex-col gap-y-2">
                             <h1>Min Salary</h1>
                             <Input
-                                className="h-12 focus-visible:border-primary focus-visible:ring-primary"
+                                className={clsx(
+                                    'h-12 rounded-sm',
+                                    state.errors?.title
+                                        ? 'border-2 border-danger ring-danger'
+                                        : 'focus-visible:border-primary focus-visible:ring-primary'
+                                )}
                                 type="number"
                                 placeholder="Minimum salary..."
                                 defaultValue={state.minSalary}
                                 name="minSalary"
                             />
+                            <p className=" text-red-500 text-[12px] font-medium ">
+                                {state.errors?.minSalary && state.errors.minSalary[0]}
+                            </p>
                         </div>
                         <div className="flex flex-col gap-y-2">
                             <h1>Max Salary</h1>
                             <Input
-                                className="h-12 focus-visible:border-primary focus-visible:ring-primary"
+                                className={clsx(
+                                    'h-12 rounded-sm',
+                                    state.errors?.maxSalary
+                                        ? 'border-2 border-danger ring-danger'
+                                        : 'focus-visible:border-primary focus-visible:ring-primary'
+                                )}
                                 type="number"
                                 placeholder="Maximum salary..."
                                 defaultValue={state.maxSalary}
                                 name="maxSalary"
                             />
+                            <p className=" text-red-500 text-[12px] font-medium ">
+                                {state.errors?.maxSalary && state.errors.maxSalary[0]}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -122,30 +147,51 @@ export default function PostJobForm() {
                         <div className="flex flex-col gap-y-2">
                             <h1>Education</h1>
                             <Select name="education">
-                                <SelectTrigger className="h-12 border border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary">
+                                <SelectTrigger
+                                    className={clsx(
+                                        'flex h-12 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-input disabled:cursor-not-allowed disabled:opacity-50',
+                                        state.errors?.education ? 'border-2 border-danger ring-danger' : 'border-input'
+                                    )}
+                                >
                                     <SelectValue placeholder="Select..." className="text-[#767F8C]" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="bachelor">Bachelor's Degree</SelectItem>
-                                    <SelectItem value="master">Master's Degree</SelectItem>
+                                    <SelectItem value="bachelor">Bachelors Degree</SelectItem>
+                                    <SelectItem value="master">Masters Degree</SelectItem>
                                     <SelectItem value="phd">Ph.D.</SelectItem>
                                 </SelectContent>
                             </Select>
+                            <p className="text-red-500 text-[12px] font-medium">
+                                {state.errors?.education && state.errors.education[0]}
+                            </p>
                         </div>
                         <div className="flex flex-col gap-y-2">
                             <h1>Experience</h1>
                             <Input
-                                className="h-12 focus-visible:border-primary focus-visible:ring-primary"
+                                className={clsx(
+                                    'h-12 rounded-sm',
+                                    state.errors?.experience
+                                        ? 'border-2 border-danger ring-danger'
+                                        : 'focus-visible:border-primary focus-visible:ring-primary'
+                                )}
                                 type="number"
                                 placeholder="Maximum salary..."
                                 defaultValue={state.experience}
                                 name="experience"
                             />
+                            <p className=" text-red-500 text-[12px] font-medium ">
+                                {state.errors?.experience && state.errors.experience[0]}
+                            </p>
                         </div>
                         <div className="flex flex-col gap-y-2">
                             <h1>Job Type</h1>
                             <Select name="jobType">
-                                <SelectTrigger className="h-12 border border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary">
+                                <SelectTrigger
+                                    className={clsx(
+                                        'flex h-12 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-input disabled:cursor-not-allowed disabled:opacity-50',
+                                        state.errors?.education ? 'border-2 border-danger ring-danger' : 'border-input'
+                                    )}
+                                >
                                     <SelectValue placeholder="Select..." />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -154,23 +200,38 @@ export default function PostJobForm() {
                                     <SelectItem value="contract">Contract</SelectItem>
                                 </SelectContent>
                             </Select>
+                            <p className=" text-red-500 text-[12px] font-medium ">
+                                {state.errors?.jobType && state.errors.jobType[0]}
+                            </p>
                         </div>
                         <div className="flex flex-col gap-y-2">
                             <h1>Expiration Date</h1>
                             <div className="relative">
                                 <Input
                                     type="date"
-                                    className="pl-10 h-12 focus-visible:border-primary focus-visible:ring-primary"
+                                    className={clsx(
+                                        'h-12 rounded-sm',
+                                        state.errors?.expirationDate
+                                            ? 'border-2 border-danger ring-danger'
+                                            : 'focus-visible:border-primary focus-visible:ring-primary'
+                                    )}
                                     name="expirationDate"
                                     defaultValue={state.expirationDate}
                                 />
-                                <Calendar className="absolute left-3 top-2.5 h-5 w-5 text-gray-500" />
                             </div>
+                            <p className=" text-red-500 text-[12px] font-medium ">
+                                {state.errors?.expirationDate && state.errors.expirationDate[0]}
+                            </p>
                         </div>
                         <div className="flex flex-col gap-y-2">
                             <h1>Job Level</h1>
                             <Select name="jobLevel">
-                                <SelectTrigger className="h-12 border border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary">
+                                <SelectTrigger
+                                    className={clsx(
+                                        'flex h-12 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-input disabled:cursor-not-allowed disabled:opacity-50',
+                                        state.errors?.education ? 'border-2 border-danger ring-danger' : 'border-input'
+                                    )}
+                                >
                                     <SelectValue placeholder="Select..." />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -179,6 +240,9 @@ export default function PostJobForm() {
                                     <SelectItem value="senior">Senior</SelectItem>
                                 </SelectContent>
                             </Select>
+                            <p className=" text-red-500 text-[12px] font-medium ">
+                                {state.errors?.jobLevel && state.errors.jobLevel[0]}
+                            </p>
                         </div>
                         <div className="flex flex-col gap-y-2">
                             <h1>Category</h1>
@@ -190,7 +254,12 @@ export default function PostJobForm() {
                                 }}
                                 name="category"
                             >
-                                <SelectTrigger className="h-12 border border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary">
+                                <SelectTrigger
+                                    className={clsx(
+                                        'flex h-12 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-input disabled:cursor-not-allowed disabled:opacity-50',
+                                        state.errors?.education ? 'border-2 border-danger ring-danger' : 'border-input'
+                                    )}
+                                >
                                     <SelectValue placeholder="Select..." />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -201,6 +270,9 @@ export default function PostJobForm() {
                                     ))}
                                 </SelectContent>
                             </Select>
+                            <p className=" text-red-500 text-[12px] font-medium ">
+                                {state.errors?.category && state.errors.category[0]}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -213,6 +285,9 @@ export default function PostJobForm() {
                             <div className="focus-visible:border-primary focus-visible:ring-primary">
                                 <RichTextEditor onChange={handleDescription} initialContent={description} />
                             </div>
+                            <p className=" text-red-500 text-[12px] font-medium ">
+                                {state.errors?.title && state.errors.title[0]}
+                            </p>
                         </div>
 
                         <div className="flex flex-col gap-y-2">
@@ -220,6 +295,9 @@ export default function PostJobForm() {
                             <div className=" rounded-md">
                                 <RichTextEditor onChange={handleResponsibility} initialContent={description} />
                             </div>
+                            <p className=" text-red-500 text-[12px] font-medium ">
+                                {state.errors?.title && state.errors.title[0]}
+                            </p>
                         </div>
                     </div>
                 </div>
