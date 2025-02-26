@@ -19,7 +19,7 @@ export function NavigationSettingProfileBar({
 }) {
     const pathname = usePathname();
     return (
-        <div className="mt-4 flex items-center gap-3 border-b">
+        <div className="mt-4 flex flex-wrap items-center gap-3 border-b">
             {subPages.map((sub) => (
                 <Link
                     key={sub.href}

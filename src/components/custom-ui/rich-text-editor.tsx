@@ -55,7 +55,7 @@ export default function RichTextEditor({
         editorProps: {
             attributes: {
                 class: cn(
-                    'min-h-[150px] max-h-[300px] h-[300px] overflow-auto cursor-text rounded-md border py-2 px-3 ring-offset-background focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 tiptap',
+                    'focus-visible:ring-primary min-h-[150px] max-h-[300px] h-[300px] overflow-auto cursor-text rounded-md border py-2 px-3 ring-offset-background focus-within:outline-none focus-within:ring-2',
                     placement === 'inside-top' ? 'pt-10' : placement === 'inside-bottom' ? 'pb-10' : '',
                     className
                 ),

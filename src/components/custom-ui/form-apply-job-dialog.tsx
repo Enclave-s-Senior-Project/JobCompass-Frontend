@@ -23,9 +23,7 @@ export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void })
     });
     const [selectedCv, setSelectedCv] = useState(state.selectedCv);
     const [coverLetter, setCoverLetter] = useState(state.coverLetter);
-    const {
-        data: resultQuery,
-    } = useQuery({
+    const { data: resultQuery } = useQuery({
         queryKey: [queryKey.listCvofProfile],
         queryFn: async () => {
             try {

@@ -121,4 +121,12 @@ export namespace DetailedRequest {
         education?: string;
         experience?: string;
     }
+
+    export interface UpdateCandidateProfile {
+        nationality:string,
+        dateOfBirth:string,
+        gender:string,
+        maritalStatus:string,
+        introduction:string
+    }
 }

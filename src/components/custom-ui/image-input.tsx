@@ -41,7 +41,7 @@ export function ImageInput({ name, initImage, isAvatar = false }: Props) {
         <div className="relative w-full pb-5">
             <div
                 className={clsx(
-                    'h-60 flex items-center flex-col justify-center text-center bg-gray-50/70 rounded-md border-2',
+                    'h-24 md:h-40 lg:h-60 flex items-center flex-col justify-center text-center bg-gray-50/70 rounded-md border-2',
                     image.url ? 'border-primary-500' : 'border-dashed'
                 )}
                 onClick={handleSelectFile}
@@ -54,7 +54,7 @@ export function ImageInput({ name, initImage, isAvatar = false }: Props) {
                         alt="Profile Picture"
                         className={clsx(
                             'rounded-sm object-cover object-center overflow-hidden',
-                            isAvatar ? 'size-60' : 'h-60 w-full'
+                            isAvatar ? 'size-24 md:size-40 lg:size-60' : 'h-24 md:h-40 lg:h-60 w-full'
                         )}
                     />
                 )}
@@ -69,10 +69,10 @@ export function ImageInput({ name, initImage, isAvatar = false }: Props) {
                 accept="image/jpg, image/png, image/jpeg"
             />
             {image.size > 0 && (
-                <div className="absolute bottom-0 flex items-center gap-3 text-[12px]">
+                <div className="absolute bottom-0 flex items-center gap-3 text-[10px] md:text-[12px]">
                     <span className="text-gray-600">{image.size} MB</span>
                     <span className="text-gray-900 hover:underline cursor-pointer">Remove</span>
-                    <span className="text-primary font-medium hover:underline cursor-pointer">Replace</span>
+                    <span className="hidden lg:block text-primary font-medium hover:underline cursor-pointer">Replace</span>
                 </div>
             )}
         </div>

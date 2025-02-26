@@ -12,8 +12,8 @@ export function FormPersonalProfile() {
     const [state, onSubmit, isPending] = useActionState(settingPersonalProfile, {
         avatarFile: null,
         backgroundFile: null,
-        avatarUrl: '',
-        backgroundUrl: '',
+        avatarUrl: null,
+        backgroundUrl: null,
         fullname: 'Dang Tran Hoai An',
         phone: '08888888888',
         education: '<strong>123</strong>',
@@ -26,7 +26,7 @@ export function FormPersonalProfile() {
         <form action={onSubmit} className="space-y-8">
             <div className="space-y-4">
                 <div className="flex items-center gap-4 select-none">
-                    <div className="w-60">
+                    <div className="w-24 md:w-40 lg:w-60">
                         <label className="text-sm text-gray-900 cursor-default">Profile Picture</label>
                         <ImageInput name="avatar" initImage="" isAvatar={true} />
                     </div>
@@ -36,7 +36,7 @@ export function FormPersonalProfile() {
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4 select-none">
-                    <div className="relative col-span-1">
+                    <div className="relative col-span-2 lg:col-span-1">
                         <label htmlFor="" className="text-sm text-gray-900 cursor-default">
                             Full name
                         </label>
@@ -56,7 +56,7 @@ export function FormPersonalProfile() {
                             {state.errors?.fullname && state.errors.fullname[0]}
                         </p>
                     </div>
-                    <div className="relative col-span-1">
+                    <div className="relative col-span-2 lg:col-span-1">
                         <label htmlFor="" className="text-sm text-gray-900 cursor-default">
                             Phone
                         </label>
@@ -76,26 +76,24 @@ export function FormPersonalProfile() {
                             {state.errors?.phone && state.errors.phone[0]}
                         </p>
                     </div>
-                    <div className="col-span-1">
+                    <div className="col-span-2 lg:col-span-1">
                         <label htmlFor="" className="text-sm text-gray-900 cursor-default">
                             Education
                         </label>
                         <RichTextEditor
                             name="education"
                             initialContent={state.education}
-                            onChange={() => {}}
                             placement="inside-bottom"
                             className="px-3 rounded-sm shadow-sm"
                         />
                     </div>
-                    <div className="col-span-1">
+                    <div className="col-span-2 lg:col-span-1">
                         <label htmlFor="" className="text-sm text-gray-900 cursor-default">
                             Experience
                         </label>
                         <RichTextEditor
                             name="experience"
                             initialContent={state.experience}
-                            onChange={() => {}}
                             placement="inside-bottom"
                             className="px-3 rounded-sm shadow-sm"
                         />
@@ -103,7 +101,9 @@ export function FormPersonalProfile() {
                 </div>
             </div>
             <div>
-                <Button size="xl" isPending={isPending}>Save Changes</Button>
+                <Button size="xl" isPending={isPending}>
+                    Save Changes
+                </Button>
             </div>
         </form>
     );
