@@ -414,3 +414,45 @@ export const addTag = async (currentState: any, formData: FormData) => {
     }
     return { ...currentState, errors: {}, success: false, data: null };
 };
+
+export const updateCandidateProfile = async (currentState: any, formData: FormData) => {
+    currentState.nationality = formData.get('nationality')?.toString() ?? ''
+    currentState.dateOfBirth = formData.get('dateOfBirth')?.toString() ?? ''
+    currentState.gender = formData.get('gender')?.toString() ?? ''
+    currentState.maritalStatus = formData.get('maritalStatus')?.toString() ?? ''
+    currentState.introduction = formData.get('introduction')?.toString() ?? ''
+
+    const validation = updateCandidateProfileZ.safeParse(currentState);
+
+    if (!validation.success) {
+        return {
+            ...currentState,
+            errors: validation.error.flatten().fieldErrors,
+            success: false,
+            data: {},
+        };
+    }
+
+    try {
+        
+        const updatedProfile = await UserService.updateCandidateProfile({
+            nationality: currentState.nationality,
+            dateOfBirth: currentState.dateOfBirth,
+            gender: currentState.gender,
+            maritalStatus: currentState.maritalStatus,
+            introduction: currentState.introduction,
+        });
+
+        currentState.nationality = updatedProfile?.nationality ?? currentState.nationality
+        currentState.dateOfBirth = updatedProfile?.dateOfBirth ?? currentState.dateOfBirth
+        currentState.gender = updatedProfile?.gender ?? currentState.gender
+        currentState.maritalStatus = updatedProfile?.maritalStatus ?? currentState.maritalStatus
+        currentState.introduction = updatedProfile?.introduction ?? currentState.introduction
+
+        return { ...currentState, success: true, errors: {} };
+    } catch (error) {
+        handleErrorToast(error);
+    }
+
+    return currentState;
+};

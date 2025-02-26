@@ -115,24 +115,24 @@ export interface Categories {
     parent: any;
 }
 
-export interface UserProfile  {
-    createdAt: string
-    updatedAt: string
-    isActive: boolean
-    profileId: string
-    fullName: string
-    profileUrl: string
-    pageUrl: string
-    introduction: string| null
-    phone: string
-    view: number
-    gender: string
-    education: string | null
-    nationality: string
-    dateOfBirth: string
-    maritalStatus: string | null
-    isPremium: boolean
-    expiredPremium: any
-    experience: string | null
-    account_id: string
-  }
+export interface UserProfile {
+    createdAt: string;
+    updatedAt: string;
+    isActive: boolean;
+    profileId: string;
+    fullName: string;
+    profileUrl: string;
+    pageUrl: string;
+    introduction: string | null;
+    phone: string;
+    view: number;
+    gender: string;
+    education: string | null;
+    nationality: string;
+    dateOfBirth: string;
+    maritalStatus: string | null;
+    isPremium: boolean;
+    expiredPremium: any;
+    experience: string | null;
+    account_id: string;
+}
