@@ -137,7 +137,7 @@ export interface UserProfile {
     account_id: string;
 }
 
-export interface Category {
+export interface Categories {
     isActive: any;
     categoryId: string;
     categoryName: string;
