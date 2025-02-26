@@ -136,3 +136,10 @@ export interface UserProfile {
     experience: string | null;
     account_id: string;
 }
+
+export interface Category {
+    isActive: any;
+    categoryId: string;
+    categoryName: string;
+    parent: any;
+}
