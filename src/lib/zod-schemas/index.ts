@@ -70,28 +70,31 @@ const updatePersonalProfile = z.object({
 
 const updateCandidateProfile = z.object({
     nationality: z.string().min(1, 'Nationality is required'),
-    dateOfBirth: z.string().refine((date) => {
-        const today = new Date();
-        const birthDate = new Date(date);
-        
-        // Calculate age
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const monthDiff = today.getMonth() - birthDate.getMonth();
-        const dayDiff = today.getDate() - birthDate.getDate();
-    
-        // Adjust age if birthday hasn't occurred this year
-        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-            age--;
+    dateOfBirth: z.string().refine(
+        (date) => {
+            const today = new Date();
+            const birthDate = new Date(date);
+
+            // Calculate age
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            const dayDiff = today.getDate() - birthDate.getDate();
+
+            // Adjust age if birthday hasn't occurred this year
+            if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+                age--;
+            }
+
+            return age >= 18;
+        },
+        {
+            message: 'You must be at least 18 years old',
         }
-    
-        return age >= 18;
-    }, {
-        message: "You must be at least 18 years old",
-    }),
-    gender: z.enum(['FEMALE', 'MALE'], {message: 'Gender is required'}),
-    maritalStatus: z.enum(['ALONE', 'MARRIED'], {message: 'Marital status is required'}),
+    ),
+    gender: z.enum(['FEMALE', 'MALE'], { message: 'Gender is required' }),
+    maritalStatus: z.enum(['ALONE', 'MARRIED'], { message: 'Marital status is required' }),
     introduction: z.string().min(1, 'Introduction is required'),
-})
+});
 
 export {
     signUpSchema,
@@ -101,5 +104,5 @@ export {
     resetPasswordSchema,
     applyJobCoverLetterSchema,
     updatePersonalProfile,
-    updateCandidateProfile
+    updateCandidateProfile,
 };

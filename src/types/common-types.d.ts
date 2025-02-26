@@ -22,3 +22,5 @@ export interface UserType {
     status: string;
     roles: string[];
 }
+
+export type SocialType = 'FACEBOOK' | 'TWITTER' | 'INSTAGRAM' | 'YOUTUBE' | 'LINKEDIN';

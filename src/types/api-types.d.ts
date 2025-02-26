@@ -123,10 +123,10 @@ export namespace DetailedRequest {
     }
 
     export interface UpdateCandidateProfile {
-        nationality:string,
-        dateOfBirth:string,
-        gender:string,
-        maritalStatus:string,
-        introduction:string
+        nationality: string;
+        dateOfBirth: string;
+        gender: string;
+        maritalStatus: string;
+        introduction: string;
     }
 }
