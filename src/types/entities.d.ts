@@ -107,3 +107,10 @@ export interface Tag {
     color: string;
     backgroundColor: string;
 }
+
+export interface Category {
+    isActive: any;
+    categoryId: string;
+    categoryName: string;
+    parent: any;
+}

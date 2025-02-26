@@ -19,6 +19,7 @@ import { AuthService } from '@/services/auth.service';
 import { UploadService } from '@/services/upload.service';
 import { UserService } from '@/services/user.service';
 import { WebsiteService } from '@/services/website.service';
+import { TagService } from '@/services/tag.service';
 
 export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, formData: FormData) => {
     const username = formData.get('username')?.toString() ?? '';
@@ -358,12 +359,13 @@ export const postJob = async (currentState: any, formData: FormData) => {
     currentState.jobLevel = formData.get('jobLevel')?.toString() ?? '';
     currentState.description = formData.get('description')?.toString() ?? '';
     currentState.responsibilities = formData.get('responsibilities')?.toString() ?? '';
-    const validation = postJobSchema.safeParse(currentState);
-    if (!validation.success) {
-        console.log('that bai');
-        console.log(validation.error.flatten().fieldErrors);
-        return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
-    }
+    currentState.category = formData.get('category')?.toString() ?? '';
+    // const validation = postJobSchema.safeParse(currentState);
+    // if (!validation.success) {
+    //     console.log('that bai');
+    //     console.log(validation.error.flatten().fieldErrors);
+    //     return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
+    // }
     console.log('expirationDate from formData:', currentState.tags);
     try {
         const postJob = await JobService.postJob({
@@ -379,7 +381,7 @@ export const postJob = async (currentState: any, formData: FormData) => {
             status: false,
             tagIds: currentState.tags,
             enterpriseId: 'f9a74c91-6ebf-4d92-8b57-d4d9cacf8abc',
-            categoryIds: ['c1d2e3f4-5678-90ab-cdef-0987654321ba'],
+            categoryIds: currentState.category,
             address: ['b1c2d3e4-5678-90ab-cdef-abcdefabcdef'],
         });
         return { ...currentState, errors: {}, success: true, data: applyJob };
@@ -387,5 +389,23 @@ export const postJob = async (currentState: any, formData: FormData) => {
         handleErrorToast(error);
     }
 
+    return { ...currentState, errors: {}, success: false, data: null };
+};
+
+export const addTag = async (currentState: any, formData: FormData) => {
+    currentState.name = formData.get('tag')?.toString() ?? '';
+    const temp = [
+        {
+            name: currentState.name,
+            color: '#00000',
+            backgroundColor: '#fffff',
+        },
+    ];
+    try {
+        const postJob = await TagService.addTag(temp);
+        return { ...currentState, errors: {}, success: true, data: applyJob };
+    } catch (error: any) {
+        handleErrorToast(error);
+    }
     return { ...currentState, errors: {}, success: false, data: null };
 };

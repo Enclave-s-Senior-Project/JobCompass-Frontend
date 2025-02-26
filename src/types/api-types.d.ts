@@ -1,5 +1,5 @@
 import { UserType } from './common-types';
-import { Job, SocialLink } from './entities';
+import { Category, Job, SocialLink } from './entities';
 
 export interface ApiResponse<T> {
     payload: {
@@ -60,6 +60,7 @@ export namespace DetailedResponse {
 
     export type GetAllCvByIdProfile = CV[];
     export type GetAllTag = Tag[];
+    export type GetCategories = Category[];
 }
 
 export namespace DetailedRequest {
