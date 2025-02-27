@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useActionState, useState } from 'react';
 import { InputSocialLink } from './input-social-link';
 import { Button } from '../ui/button';
 import { CirclePlus } from 'lucide-react';
@@ -8,29 +8,39 @@ import { SocialType } from '@/types';
 import clsx from 'clsx';
 
 export function FormSocialLinks() {
-    const [socialLinks, setSocialLinks] = useState<Array<{ type: SocialType; link: string, order: number }>>([]);
+    const [socialLinks, setSocialLinks] = useState<Array<{ type: SocialType; link: string; id: number }>>([]);
+
+    const [state, onSubmit, isPending] = useActionState(
+        (currentState: any, formData: FormData) => {
+            console.log(formData.getAll('link'))
+            return currentState;
+        },
+        { success: false, errors: {} }
+    );
 
     const handleAddSocialLink = () => {
-        if (socialLinks.length < 7) setSocialLinks((prev) => [...prev, { type: 'FACEBOOK', link: '', order: prev.length > 0 ? prev.length + 1: 1 }]);
+        if (socialLinks.length < 7) {
+            setSocialLinks((prev) => [...prev, { type: 'FACEBOOK', link: '', id: Math.random() }]);
+        }
     };
 
-    const handleRemoveSocialLink = (index: number) => {
-        setSocialLinks((prev) => prev.filter((social) => social.order !== index));
+    const handleRemoveSocialLink = (id: number) => {
+        setSocialLinks((prev) => prev.filter((social) => social.id !== id));
     };
 
     return (
-        <form className="space-y-6">
+        <form className="space-y-6" action={onSubmit}>
             <div className="space-y-4">
                 {socialLinks.map((socialLink, index) => (
-                    <div key={index}>
-                        <label className="text-sm text-gray-900 cursor-default">Social Link {socialLink.order}</label>
+                    <div key={socialLink.id}>
+                        <label className="text-sm text-gray-900 cursor-default">Social Link {index + 1}</label>
                         <InputSocialLink
-                            name="link1"
+                            name="link"
                             defaultSocial={socialLink.type}
-                            handleRemove={() => handleRemoveSocialLink(socialLink.order)}
+                            handleRemove={() => handleRemoveSocialLink(socialLink.id)}
                         />
                         <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
-                            {/* {state.errors?.nationality && state.errors.nationality[0]} */}
+                            {/* Error messages */}
                         </p>
                     </div>
                 ))}

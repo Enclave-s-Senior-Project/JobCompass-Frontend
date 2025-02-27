@@ -23,7 +23,7 @@ const socials: Array<{ key: SocialType; value: string; icon: React.ReactElement 
     { key: 'LINKEDIN', value: 'LinkedIn', icon: <FaLinkedin className="text-primary size-5" /> },
 ];
 
-export function InputSocialLink({ name, error, defaultSocial, handleRemove }: Props) {
+export function InputSocialLink({ name, error, defaultSocial = 'FACEBOOK', handleRemove }: Props) {
     const defaultSocialChose = socials.find((social) => social.key === defaultSocial);
     return (
         <div className="flex items-center gap-3">
@@ -49,10 +49,10 @@ export function InputSocialLink({ name, error, defaultSocial, handleRemove }: Pr
                             }
                         />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent defaultValue={defaultSocial}>
                         <SelectGroup>
                             {socials.map((social) => (
-                                <SelectItem key={social.key} value={social.key}>
+                                <SelectItem key={social.key} value={social.key} defaultChecked={social.key ==='TWITTER'}>
                                     <div className="flex items-center gap-2 text-sm">
                                         {social.icon} {social.value}
                                     </div>
@@ -62,7 +62,7 @@ export function InputSocialLink({ name, error, defaultSocial, handleRemove }: Pr
                     </SelectContent>
                 </Select>
                 <Separator orientation="vertical" className="h-8" />
-                <Input className="h-12 border-0 ring-0 focus:ring-0 focus-within:ring-0 focus-visible:ring-0" />
+                <Input name={name} className="h-12 border-0 ring-0 focus:ring-0 focus-within:ring-0 focus-visible:ring-0" />
             </div>
             <Button
                 size="icon-lg"
