@@ -1,4 +1,5 @@
-import { Job } from './entities';
+import { UserType } from './common-types';
+import { Job, SocialLink } from './entities';
 
 export interface ApiResponse<T> {
     payload: {
@@ -129,4 +130,6 @@ export namespace DetailedRequest {
         maritalStatus: string;
         introduction: string;
     }
+
+    export type UpdateCandidateSocialLinks = SocialLink[];
 }

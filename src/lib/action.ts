@@ -1,5 +1,5 @@
 import { BaseAxios } from './axios';
-import { DetailedRequest } from '@/types';
+import { DetailedRequest, SocialLink, SocialType } from '@/types';
 import { toast } from 'react-toastify';
 import { errorKeyMessage } from './message-keys';
 import {
@@ -17,6 +17,7 @@ import { ApplyJobService } from '@/services/applyJob.service';
 import { AuthService } from '@/services/auth.service';
 import { UploadService } from '@/services/upload.service';
 import { UserService } from '@/services/user.service';
+import { WebsiteService } from '@/services/website.service';
 
 export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, formData: FormData) => {
     const username = formData.get('username')?.toString() ?? '';
@@ -295,4 +296,51 @@ export const updateCandidateProfile = async (currentState: any, formData: FormDa
     }
 
     return currentState;
+};
+
+const regex = {
+    FACEBOOK: /^(https?:\/\/)?(www\.)?(m\.)?(facebook|fb)\.com\/[A-Za-z0-9._-]+(\/)?$/,
+    YOUTUBE:
+        /^(https?:\/\/)?(www\.)?(youtube\.com\/(@[A-Za-z0-9_-]+|channel\/[A-Za-z0-9_-]+|watch\?v=[A-Za-z0-9_-]+)|youtu\.be\/[A-Za-z0-9_-]+)(\/)?$/,
+    INSTAGRAM: /^(https?:\/\/)?(www\.)?(instagram\.com\/[A-Za-z0-9._-]+(\/)?)$/,
+    LINKEDIN: /^(https?:\/\/)?(www\.)?(linkedin\.com\/(in|company)\/[A-Za-z0-9_-]+(\/)?)$/,
+    TWITTER: /^(https?:\/\/)?(www\.)?(x|twitter)\.com\/[A-Za-z0-9_]+(\/)?$/,
+};
+
+export const updateCandidateSocialLinks = async (currentState: any, formData: FormData) => {
+    let success = true;
+    const socialLinks = formData.getAll('link') as string[];
+    const socialTypes = formData.getAll('typeSocial') as SocialType[];
+
+    const errors = [];
+    const links: SocialLink[] = [];
+    for (let i = 0; i < socialLinks.length; i++) {
+        links.push({ socialLink: socialLinks[i], socialType: socialTypes[i] });
+        const link = socialLinks[i];
+        if (!link) {
+            errors.push(['This field is required']);
+            success = false;
+        } else if (!regex[socialTypes[i]].test(link)) {
+            errors.push([`This ${socialTypes[i].toLowerCase()} url is not a valid`]);
+        } else {
+            errors.push(null);
+        }
+    }
+
+    if (success) {
+        try {
+            await WebsiteService.updateCandidateSocialLinks(links);
+        } catch (error) {
+            handleErrorToast(error);
+        }
+    }
+
+    currentState.socialLinks = socialLinks;
+    currentState.socialTypes = socialTypes;
+
+    return {
+        ...currentState,
+        success,
+        errors,
+    };
 };

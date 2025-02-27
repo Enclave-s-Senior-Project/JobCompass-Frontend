@@ -9,9 +9,11 @@ import { cn } from '@/lib/utils';
 import { SocialType } from '@/types';
 
 type Props = {
-    name: string;
+    nameSelect?: string;
+    nameInput?: string;
     error?: string | null;
     defaultSocial?: SocialType;
+    defaultValue?: string;
     handleRemove?: () => void;
 };
 
@@ -23,8 +25,14 @@ const socials: Array<{ key: SocialType; value: string; icon: React.ReactElement 
     { key: 'LINKEDIN', value: 'LinkedIn', icon: <FaLinkedin className="text-primary size-5" /> },
 ];
 
-export function InputSocialLink({ name, error, defaultSocial = 'FACEBOOK', handleRemove }: Props) {
-    const defaultSocialChose = socials.find((social) => social.key === defaultSocial);
+export function InputSocialLink({
+    nameInput,
+    nameSelect,
+    error,
+    defaultSocial = 'FACEBOOK',
+    defaultValue = '',
+    handleRemove,
+}: Props) {
     return (
         <div className="flex items-center gap-3">
             <div
@@ -35,16 +43,18 @@ export function InputSocialLink({ name, error, defaultSocial = 'FACEBOOK', handl
                         : 'focus-within:border-primary focus-within:ring-primary focus-within:border focus-within:ring-1'
                 )}
             >
-                <Select name={name}>
+                <Select name={nameSelect} defaultValue={defaultSocial}>
                     <SelectTrigger
                         className={clsx(
                             'h-12 max-w-52 text-base border-0 ring-0 focus:ring-0 focus-within:ring-0 focus-visible:ring-0'
                         )}
                     >
                         <SelectValue
+                            defaultValue={defaultSocial}
                             placeholder={
                                 <div className="flex items-center gap-2 text-sm">
-                                    {defaultSocialChose?.icon} {defaultSocialChose?.value}
+                                    {socials.find((social) => social.key === defaultSocial)?.icon}{' '}
+                                    {socials.find((social) => social.key === defaultSocial)?.value}
                                 </div>
                             }
                         />
@@ -52,7 +62,11 @@ export function InputSocialLink({ name, error, defaultSocial = 'FACEBOOK', handl
                     <SelectContent defaultValue={defaultSocial}>
                         <SelectGroup>
                             {socials.map((social) => (
-                                <SelectItem key={social.key} value={social.key} defaultChecked={social.key ==='TWITTER'}>
+                                <SelectItem
+                                    key={social.key}
+                                    value={social.key}
+                                    defaultChecked={social.key === 'TWITTER'}
+                                >
                                     <div className="flex items-center gap-2 text-sm">
                                         {social.icon} {social.value}
                                     </div>
@@ -62,7 +76,11 @@ export function InputSocialLink({ name, error, defaultSocial = 'FACEBOOK', handl
                     </SelectContent>
                 </Select>
                 <Separator orientation="vertical" className="h-8" />
-                <Input name={name} className="h-12 border-0 ring-0 focus:ring-0 focus-within:ring-0 focus-visible:ring-0" />
+                <Input
+                    name={nameInput}
+                    defaultValue={defaultValue}
+                    className="h-12 border-0 ring-0 focus:ring-0 focus-within:ring-0 focus-visible:ring-0"
+                />
             </div>
             <Button
                 size="icon-lg"

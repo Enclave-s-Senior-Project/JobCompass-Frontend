@@ -1,4 +1,4 @@
-import { Address } from './common-types';
+import { Address, SocialType } from './common-types';
 
 export interface Job {
     createdAt: string;
@@ -69,5 +69,32 @@ export interface UserProfile {
     isPremium: boolean;
     expiredPremium: any;
     experience: string | null;
+    account_id: string;
+}
+
+export interface SocialLink {
+    socialType: SocialType;
+    socialLink: string;
+}
+
+export interface User {
+    createdAt: string;
+    updatedAt: string;
+    isActive: boolean;
+    profileId: string;
+    fullName: string;
+    profileUrl?: string;
+    pageUrl?: string;
+    introduction?: string;
+    phone?: string;
+    view: number;
+    gender?: string;
+    education?: string;
+    nationality?: string;
+    dateOfBirth?: string;
+    maritalStatus?: string;
+    isPremium: boolean;
+    expiredPremium?: any;
+    experience?: string;
     account_id: string;
 }
