@@ -61,16 +61,18 @@ const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChang
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Escape') setShowDropdown(false);
+        if (e.key === 'Backspace' && searchTerm === '' && selectedItems.length > 0) {
+            const lastItem = selectedItems[selectedItems.length - 1];
+            handleRemove(lastItem.tagId);
+        }
     };
 
     return (
         <div className="relative w-full" ref={dropdownRef}>
             <div
                 className={clsx(
-                    'flex items-center flex-wrap gap-1 border-2 rounded-md p-2 bg-white h-12',
-                    error
-                        ? 'border-danger ring-danger'
-                        : 'border-gray-200 focus-within:border-primary focus-within:ring-primary'
+                    'flex items-center flex-wrap gap-1 border-[1px] rounded-md p-2 bg-white h-12',
+                    error ? 'border-danger ring-danger' : ' focus-within:border-primary focus-within:ring-primary'
                 )}
             >
                 {selectedItems.map((item) => (
