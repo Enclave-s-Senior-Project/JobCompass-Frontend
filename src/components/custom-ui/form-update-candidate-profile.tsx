@@ -4,7 +4,7 @@ import React, { useActionState } from 'react';
 import { Input } from '../ui/input';
 import clsx from 'clsx';
 import { updateCandidateProfile } from '@/lib/action';
-import { Select, SelectContent, SelectGroup, SelectItem,  SelectTrigger, SelectValue } from '../ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import RichTextEditor from './rich-text-editor';
 import { Button } from '../ui/button';
 import { languagesData } from '@/lib/data/languages.data';
@@ -17,18 +17,23 @@ export function FormUpdateCandidateProfile() {
         maritalStatus: null,
         introduction: '',
         success: false,
-        errors: {}
-    })
+        errors: {},
+    });
 
     return (
-        <form action={onSubmit} className='space-y-8'>
+        <form action={onSubmit} className="space-y-8">
             <div className="grid grid-cols-2 gap-4">
                 <div className="relative col-span-1">
-                <label className="text-sm text-gray-900 cursor-default">Nationality</label>
-                    <Select name='nationality'>
-                        <SelectTrigger className={clsx("h-12 text-base rounded-sm", state.errors?.nationality
-                                ? 'border-2 border-danger focus:border-danger focus:ring-0'
-                                : 'focus:border-primary focus:ring-primary')}>
+                    <label className="text-sm text-gray-900 cursor-default">Nationality</label>
+                    <Select name="nationality">
+                        <SelectTrigger
+                            className={clsx(
+                                'h-12 text-base rounded-sm',
+                                state.errors?.nationality
+                                    ? 'border-2 border-danger focus:border-danger focus:ring-0'
+                                    : 'focus:border-primary focus:ring-primary'
+                            )}
+                        >
                             <SelectValue placeholder="Select..." />
                         </SelectTrigger>
                         <SelectContent>
@@ -38,7 +43,7 @@ export function FormUpdateCandidateProfile() {
                                         <SelectItem key={abb} value={country.title}>
                                             {country.title}
                                         </SelectItem>
-                                    )
+                                    );
                                 })}
                             </SelectGroup>
                         </SelectContent>
@@ -67,10 +72,15 @@ export function FormUpdateCandidateProfile() {
                 </div>
                 <div className="relative col-span-1">
                     <label className="text-sm text-gray-900 cursor-default">Gender</label>
-                    <Select name='gender'>
-                        <SelectTrigger className={clsx("h-12 text-base rounded-sm", state.errors?.gender
-                                ? 'border-2 border-danger focus:border-danger focus:ring-0'
-                                : 'focus:border-primary focus:ring-primary')}>
+                    <Select name="gender">
+                        <SelectTrigger
+                            className={clsx(
+                                'h-12 text-base rounded-sm',
+                                state.errors?.gender
+                                    ? 'border-2 border-danger focus:border-danger focus:ring-0'
+                                    : 'focus:border-primary focus:ring-primary'
+                            )}
+                        >
                             <SelectValue placeholder="Select..." />
                         </SelectTrigger>
                         <SelectContent>
@@ -86,10 +96,15 @@ export function FormUpdateCandidateProfile() {
                 </div>
                 <div className="relative col-span-1">
                     <label className="text-sm text-gray-900 cursor-default">Marital Status</label>
-                    <Select name='maritalStatus'>
-                        <SelectTrigger className={clsx("h-12 text-base rounded-sm", state.errors?.maritalStatus
-                                ? 'border-2 border-danger focus:border-danger focus:ring-0'
-                                : 'focus:border-primary focus:ring-primary')}>
+                    <Select name="maritalStatus">
+                        <SelectTrigger
+                            className={clsx(
+                                'h-12 text-base rounded-sm',
+                                state.errors?.maritalStatus
+                                    ? 'border-2 border-danger focus:border-danger focus:ring-0'
+                                    : 'focus:border-primary focus:ring-primary'
+                            )}
+                        >
                             <SelectValue placeholder="Select..." />
                         </SelectTrigger>
                         <SelectContent>
@@ -105,11 +120,13 @@ export function FormUpdateCandidateProfile() {
                 </div>
                 <div className="relative col-span-2">
                     <label className="text-sm text-gray-900 cursor-default">Introduction (Bio)</label>
-                    <RichTextEditor placement="inside-bottom" name='introduction' />
+                    <RichTextEditor placement="inside-bottom" name="introduction" />
                 </div>
             </div>
             <div>
-                <Button size='xl' variant='primary' type='submit' isPending={isPending}>Save changes</Button>
+                <Button size="xl" variant="primary" type="submit" isPending={isPending}>
+                    Save changes
+                </Button>
             </div>
         </form>
     );

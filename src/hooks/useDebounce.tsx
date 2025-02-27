@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 /**
  * How to use: const debouncedSearch = useDebounce(search, 1000)

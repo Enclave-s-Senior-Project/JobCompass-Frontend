@@ -19,6 +19,9 @@ import { ApplyJobService } from '@/services/applyJob.service';
 import { AuthService } from '@/services/auth.service';
 import { UploadService } from '@/services/upload.service';
 import { UserService } from '@/services/user.service';
+import { JobService } from '@/services/job.service';
+import { getBackgroundColor, getRandomColor } from './random-color';
+import { TagService } from '@/services/tag.service';
 
 export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, formData: FormData) => {
     const username = formData.get('username')?.toString() ?? '';
@@ -297,4 +300,69 @@ export const updateCandidateProfile = async (currentState: any, formData: FormDa
     }
 
     return currentState;
+};
+export const postJob = async (currentState: any, formData: FormData) => {
+    currentState.title = formData.get('title')?.toString() ?? '';
+    currentState.tags = formData.getAll('tags[]');
+    currentState.minSalary = formData.get('minSalary');
+    currentState.maxSalary = formData.get('maxSalary');
+    currentState.education = formData.get('education')?.toString() ?? '';
+    currentState.experience = Number(formData.get('experience'));
+    currentState.jobType = formData.get('jobType')?.toString() ?? '';
+    currentState.expirationDate = formData.get('expirationDate')?.toString() ?? '';
+    currentState.jobLevel = formData.get('jobLevel')?.toString() ?? '';
+    currentState.description = formData.get('description')?.toString() ?? '';
+    currentState.responsibilities = formData.get('responsibilities')?.toString() ?? '';
+    currentState.category = formData.get('category')?.toString() ?? '';
+    const validation = postJobSchema.safeParse(currentState);
+    if (!validation.success) {
+        return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
+    }
+    try {
+        await JobService.postJob({
+            name: currentState.title,
+            lowestWage: currentState.minSalary,
+            highestWage: currentState.maxSalary,
+            description: currentState.description,
+            responsibility: currentState.responsibilities,
+            type: currentState.jobType,
+            experience: currentState.experience,
+            deadline: currentState.expirationDate,
+            introImg: '',
+            status: false,
+            tagIds: currentState.tags,
+            enterpriseId: 'f9a74c91-6ebf-4d92-8b57-d4d9cacf8abc',
+            categoryIds: [currentState.category],
+            address: ['b1c2d3e4-5678-90ab-cdef-abcdefabcdef'],
+        });
+        return { ...currentState, errors: {}, success: true, data: applyJob };
+    } catch (error: any) {
+        handleErrorToast(error);
+    }
+
+    return { ...currentState, errors: {}, success: false, data: null };
+};
+
+export const addTag = async (currentState: any, formData: FormData) => {
+    currentState.name = formData.get('tag')?.toString() ?? '';
+    const validation = addTagSchema.safeParse(currentState);
+    if (!validation.success) {
+        return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
+    }
+    try {
+        const colorRandom = getRandomColor();
+        const backgroundColorRandom = getBackgroundColor(colorRandom);
+        const temp = [
+            {
+                name: currentState.name,
+                color: colorRandom,
+                backgroundColor: backgroundColorRandom,
+            },
+        ];
+        await TagService.addTag(temp);
+        return { ...currentState, errors: {}, success: true, data: applyJob };
+    } catch (error: any) {
+        handleErrorToast(error);
+    }
+    return { ...currentState, errors: {}, success: false, data: null };
 };

@@ -72,7 +72,9 @@ export function ImageInput({ name, initImage, isAvatar = false }: Props) {
                 <div className="absolute bottom-0 flex items-center gap-3 text-[10px] md:text-[12px]">
                     <span className="text-gray-600">{image.size} MB</span>
                     <span className="text-gray-900 hover:underline cursor-pointer">Remove</span>
-                    <span className="hidden lg:block text-primary font-medium hover:underline cursor-pointer">Replace</span>
+                    <span className="hidden lg:block text-primary font-medium hover:underline cursor-pointer">
+                        Replace
+                    </span>
                 </div>
             )}
         </div>

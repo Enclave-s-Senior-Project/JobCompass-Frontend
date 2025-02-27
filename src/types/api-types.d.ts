@@ -125,10 +125,26 @@ export namespace DetailedRequest {
     }
 
     export interface UpdateCandidateProfile {
-        nationality:string,
-        dateOfBirth:string,
-        gender:string,
-        maritalStatus:string,
-        introduction:string
+        nationality: string;
+        dateOfBirth: string;
+        gender: string;
+        maritalStatus: string;
+        introduction: string;
+    }
+    export interface postJobCredentials {
+        name: string;
+        lowestWage: number;
+        highestWage: number;
+        description: string;
+        responsibility: string;
+        type: string;
+        experience: number;
+        deadline: string;
+        introImg: string;
+        status: boolean;
+        enterpriseId: string;
+        tagIds: string[];
+        categoryIds: string[];
+        address: string[];
     }
 }

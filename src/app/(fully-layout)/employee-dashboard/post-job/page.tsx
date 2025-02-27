@@ -149,8 +149,10 @@ export default function PostJobForm() {
                             <Select name="education">
                                 <SelectTrigger
                                     className={clsx(
-                                        'flex h-12 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-input disabled:cursor-not-allowed disabled:opacity-50',
-                                        state.errors?.education ? 'border-2 border-danger ring-danger' : 'border-input'
+                                        'h-12 text-base rounded-sm',
+                                        state.errors?.education
+                                            ? 'border-2 border-danger focus:border-danger focus:ring-0'
+                                            : 'focus:border-primary focus:ring-primary'
                                     )}
                                 >
                                     <SelectValue placeholder="Select..." className="text-[#767F8C]" />
@@ -188,8 +190,10 @@ export default function PostJobForm() {
                             <Select name="jobType">
                                 <SelectTrigger
                                     className={clsx(
-                                        'flex h-12 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-input disabled:cursor-not-allowed disabled:opacity-50',
-                                        state.errors?.education ? 'border-2 border-danger ring-danger' : 'border-input'
+                                        'h-12 text-base rounded-sm',
+                                        state.errors?.jobType
+                                            ? 'border-2 border-danger focus:border-danger focus:ring-0'
+                                            : 'focus:border-primary focus:ring-primary'
                                     )}
                                 >
                                     <SelectValue placeholder="Select..." />
@@ -228,8 +232,10 @@ export default function PostJobForm() {
                             <Select name="jobLevel">
                                 <SelectTrigger
                                     className={clsx(
-                                        'flex h-12 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-input disabled:cursor-not-allowed disabled:opacity-50',
-                                        state.errors?.education ? 'border-2 border-danger ring-danger' : 'border-input'
+                                        'h-12 text-base rounded-sm',
+                                        state.errors?.jobLevel
+                                            ? 'border-2 border-danger focus:border-danger focus:ring-0'
+                                            : 'focus:border-primary focus:ring-primary'
                                     )}
                                 >
                                     <SelectValue placeholder="Select..." />
@@ -256,8 +262,10 @@ export default function PostJobForm() {
                             >
                                 <SelectTrigger
                                     className={clsx(
-                                        'flex h-12 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-input disabled:cursor-not-allowed disabled:opacity-50',
-                                        state.errors?.education ? 'border-2 border-danger ring-danger' : 'border-input'
+                                        'h-12 text-base rounded-sm',
+                                        state.errors?.category
+                                            ? 'border-2 border-danger focus:border-danger focus:ring-0'
+                                            : 'focus:border-primary focus:ring-primary'
                                     )}
                                 >
                                     <SelectValue placeholder="Select..." />
@@ -286,7 +294,7 @@ export default function PostJobForm() {
                                 <RichTextEditor onChange={handleDescription} initialContent={description} />
                             </div>
                             <p className=" text-red-500 text-[12px] font-medium ">
-                                {state.errors?.description && state.errors.description[0]}
+                                {state.errors?.title && state.errors.title[0]}
                             </p>
                         </div>
 
@@ -296,7 +304,7 @@ export default function PostJobForm() {
                                 <RichTextEditor onChange={handleResponsibility} initialContent={description} />
                             </div>
                             <p className=" text-red-500 text-[12px] font-medium ">
-                                {state.errors?.responsibilities && state.errors.responsibilities[0]}
+                                {state.errors?.title && state.errors.title[0]}
                             </p>
                         </div>
                     </div>
