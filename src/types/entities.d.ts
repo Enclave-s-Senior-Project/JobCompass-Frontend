@@ -73,6 +73,7 @@ export interface UserProfile {
 }
 
 export interface SocialLink {
+    websiteId?: string;
     socialType: SocialType;
     socialLink: string;
 }

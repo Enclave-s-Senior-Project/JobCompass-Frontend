@@ -3,4 +3,5 @@ export const queryKey = {
     favoriteJobs: 'favorite-jobs',
     listCvofProfile: 'list-cvof-profile',
     me: 'me',
+    candidateSocialLinks: 'candidate-social-links',
 };

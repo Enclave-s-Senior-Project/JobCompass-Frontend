@@ -1,15 +1,22 @@
 'use client';
 
-import React, { useActionState, useState } from 'react';
+import React, { useActionState, useContext, useState } from 'react';
 import { InputSocialLink } from './input-social-link';
 import { Button } from '../ui/button';
 import { CirclePlus } from 'lucide-react';
-import { SocialType } from '@/types';
+import { SocialLink } from '@/types';
 import clsx from 'clsx';
 import { updateCandidateSocialLinks } from '@/lib/action';
+import { useQuery } from '@tanstack/react-query';
+import { queryKey } from '@/lib/react-query/keys';
+import { UserContext } from '@/contexts/user-context';
+import { WebsiteService } from '@/services/website.service';
+import { handleErrorToast } from '@/lib/utils';
 
 export function FormSocialLinks() {
-    const [socialLinks, setSocialLinks] = useState<Array<{ type: SocialType; id: number }>>([]);
+    const { userInfo } = useContext(UserContext);
+
+    const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
 
     const [state, onSubmit, isPending] = useActionState(updateCandidateSocialLinks, {
         success: false,
@@ -18,14 +25,34 @@ export function FormSocialLinks() {
         socialTypes: [],
     });
 
+    useQuery({
+        queryKey: [queryKey.candidateSocialLinks, userInfo?.profileId],
+        queryFn: async ({ queryKey }) => {
+            try {
+                if (queryKey[1]) {
+                    const data = await WebsiteService.getCandidateSocialLinks({ profileId: queryKey[1] });
+                    setSocialLinks(data as SocialLink[]);
+                    return data;
+                }
+                return null;
+            } catch (error) {
+                handleErrorToast(error);
+            }
+        },
+        retry: 2,
+    });
+
     const handleAddSocialLink = () => {
         if (socialLinks.length < 7) {
-            setSocialLinks((prev) => [...prev, { type: 'FACEBOOK', link: '', id: Math.random() }]);
+            setSocialLinks((prev) => [
+                ...prev,
+                { socialType: 'FACEBOOK', socialLink: '', websiteId: Math.random().toString() },
+            ]);
         }
     };
 
-    const handleRemoveSocialLink = (id: number) => {
-        setSocialLinks((prev) => prev.filter((social) => social.id !== id));
+    const handleRemoveSocialLink = (id: string) => {
+        setSocialLinks((prev) => prev.filter((social) => social.websiteId !== id));
     };
 
     return (
@@ -33,15 +60,15 @@ export function FormSocialLinks() {
             <div className="space-y-4">
                 {socialLinks.map((socialLink, index) => {
                     return (
-                        <div key={socialLink.id} className="relative">
+                        <div key={socialLink.websiteId} className="relative">
                             <label className="text-sm text-gray-900 cursor-default">Social Link {index + 1}</label>
                             <InputSocialLink
-                                defaultValue={state.socialLinks[index]}
+                                defaultValue={state.socialLinks[index] ?? socialLink.socialLink}
                                 nameInput="link"
                                 nameSelect="typeSocial"
-                                defaultSocial={state.socialTypes[index] || socialLink.type}
+                                defaultSocial={state.socialTypes[index] || socialLink.socialType}
                                 error={state.errors?.[index]?.[0]}
-                                handleRemove={() => handleRemoveSocialLink(socialLink.id)}
+                                handleRemove={() => handleRemoveSocialLink(socialLink.websiteId ?? '')}
                             />
                             {state.errors?.[index]?.[0] && (
                                 <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
