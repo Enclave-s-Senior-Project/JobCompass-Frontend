@@ -16,7 +16,7 @@ export interface Job {
     status: boolean;
     enterprise: Enterprise;
     addresses: Address[];
-    profiles: UserProfile[] | null;
+    profiles: profile[] | null;
     isFavorite: boolean | null;
 }
 
@@ -115,26 +115,12 @@ export interface Categories {
     parent: any;
 }
 
-export interface UserProfile {
-    createdAt: string;
-    updatedAt: string;
+export interface Tag {
     isActive: boolean;
-    profileId: string;
-    fullName: string;
-    profileUrl: string;
-    pageUrl: string;
-    introduction: string | null;
-    phone: string;
-    view: number;
-    gender: string;
-    education: string | null;
-    nationality: string;
-    dateOfBirth: string;
-    maritalStatus: string | null;
-    isPremium: boolean;
-    expiredPremium: any;
-    experience: string | null;
-    account_id: string;
+    tagId: string;
+    name: string;
+    color: string;
+    backgroundColor: string;
 }
 
 export interface Categories {
