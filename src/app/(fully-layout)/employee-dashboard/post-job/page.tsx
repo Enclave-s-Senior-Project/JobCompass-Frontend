@@ -286,7 +286,7 @@ export default function PostJobForm() {
                                 <RichTextEditor onChange={handleDescription} initialContent={description} />
                             </div>
                             <p className=" text-red-500 text-[12px] font-medium ">
-                                {state.errors?.title && state.errors.title[0]}
+                                {state.errors?.description && state.errors.description[0]}
                             </p>
                         </div>
 
@@ -296,7 +296,7 @@ export default function PostJobForm() {
                                 <RichTextEditor onChange={handleResponsibility} initialContent={description} />
                             </div>
                             <p className=" text-red-500 text-[12px] font-medium ">
-                                {state.errors?.title && state.errors.title[0]}
+                                {state.errors?.responsibilities && state.errors.responsibilities[0]}
                             </p>
                         </div>
                     </div>
