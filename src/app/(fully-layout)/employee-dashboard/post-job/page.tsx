@@ -14,6 +14,7 @@ import { useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import { CategoryService } from '@/services/categories.service';
 import clsx from 'clsx';
+import { AddressService } from '@/services/address.Service';
 
 export default function PostJobForm() {
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -33,7 +34,8 @@ export default function PostJobForm() {
         queryFn: async () => {
             try {
                 const payload = await CategoryService.getAllCategories();
-                return payload;
+                const address = await AddressService.getAllAddressByEnterprise();
+                return { payload, address };
             } catch (error: any) {
                 console.log(error);
             }
@@ -96,6 +98,38 @@ export default function PostJobForm() {
                     </div>
                     <p className=" text-red-500 text-[12px] font-medium ">
                         {state.errors?.tags && state.errors.tags[0]}
+                    </p>
+                </div>
+                <div className="flex flex-col gap-y-2">
+                    <h1>Address</h1>
+                    <Select
+                        value={categories}
+                        onValueChange={(value) => {
+                            setCategories(value);
+                            state.categories = value;
+                        }}
+                        name="category"
+                    >
+                        <SelectTrigger
+                            className={clsx(
+                                'h-12 text-base rounded-sm',
+                                state.errors?.category
+                                    ? 'border-2 border-danger focus:border-danger focus:ring-0'
+                                    : 'focus:border-primary focus:ring-primary'
+                            )}
+                        >
+                            <SelectValue placeholder="Select..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {resultQuery?.payload?.map((categories) => (
+                                <SelectItem key={categories.categoryId} value={categories.categoryId}>
+                                    {categories.categoryName}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    <p className=" text-red-500 text-[12px] font-medium ">
+                        {state.errors?.category && state.errors.category[0]}
                     </p>
                 </div>
 
@@ -271,7 +305,7 @@ export default function PostJobForm() {
                                     <SelectValue placeholder="Select..." />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {resultQuery?.map((categories) => (
+                                    {resultQuery?.payload?.map((categories) => (
                                         <SelectItem key={categories.categoryId} value={categories.categoryId}>
                                             {categories.categoryName}
                                         </SelectItem>
@@ -291,20 +325,28 @@ export default function PostJobForm() {
                         <div className="flex flex-col gap-y-2">
                             <h1>Description</h1>
                             <div className="focus-visible:border-primary focus-visible:ring-primary">
-                                <RichTextEditor onChange={handleDescription} initialContent={description} />
+                                <RichTextEditor
+                                    onChange={handleDescription}
+                                    initialContent={description}
+                                    hasError={!!state.errors?.description}
+                                />
+                                <p className=" text-red-500 text-[12px] font-medium ">
+                                    {state.errors?.description && state.errors.description[0]}
+                                </p>
                             </div>
-                            <p className=" text-red-500 text-[12px] font-medium ">
-                                {state.errors?.title && state.errors.title[0]}
-                            </p>
                         </div>
 
                         <div className="flex flex-col gap-y-2">
                             <h1>Responsibilities</h1>
-                            <div className=" rounded-md">
-                                <RichTextEditor onChange={handleResponsibility} initialContent={description} />
+                            <div className="focus-visible:border-primary focus-visible:ring-primary">
+                                <RichTextEditor
+                                    onChange={handleResponsibility}
+                                    initialContent={responsibilities}
+                                    hasError={!!state.errors?.responsibilities}
+                                />
                             </div>
                             <p className=" text-red-500 text-[12px] font-medium ">
-                                {state.errors?.title && state.errors.title[0]}
+                                {state.errors?.responsibilities && state.errors.responsibilities[0]}
                             </p>
                         </div>
                     </div>

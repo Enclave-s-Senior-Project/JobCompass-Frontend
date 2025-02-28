@@ -121,8 +121,8 @@ const postJobSchema = z
             .refine((val) => !isNaN(Number(val)) && Number(val) >= 1, {
                 message: 'Maximum salary must be a positive number',
             }),
-        description: z.string().min(1, 'Description is required'),
-        responsibilities: z.string().min(1, 'Responsibility is required'),
+        description: z.string().min(20, 'Description is required and must be at least 20 characters'),
+        responsibilities: z.string().min(20, 'Responsibility is required and must be at least 20 characters'),
         type: z.string().max(50).optional(),
         experience: z.coerce.number().min(1, 'Experience must be a positive number'),
         deadline: z
@@ -161,7 +161,7 @@ const postJobSchema = z
     });
 
 const addTagSchema = z.object({
-    tag: z.string().min(1, 'required'),
+    name: z.string().min(1, 'required'),
 });
 
 export {
