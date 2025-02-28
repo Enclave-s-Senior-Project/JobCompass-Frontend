@@ -504,6 +504,7 @@ export const addTag = async (currentState: any, formData: FormData) => {
     currentState.name = formData.get('tag')?.toString() ?? '';
     const validation = addTagSchema.safeParse(currentState);
     if (!validation.success) {
+        console.log('Error', validation.error.flatten().fieldErrors);
         return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
     }
     try {

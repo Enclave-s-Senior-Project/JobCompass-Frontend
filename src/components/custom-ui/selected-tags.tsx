@@ -71,7 +71,7 @@ const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChang
         <div className="relative w-full" ref={dropdownRef}>
             <div
                 className={clsx(
-                    'flex items-center flex-wrap gap-1 border-[1px] rounded-md p-2 bg-white h-12',
+                    'flex items-center flex-wrap gap-1 border-2 rounded-md p-2 bg-white h-12',
                     error
                         ? 'border-2 border-danger ring-danger'
                         : ' focus-within:border-primary focus-within:ring-primary'
