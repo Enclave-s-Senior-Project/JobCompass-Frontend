@@ -9,7 +9,7 @@ export default function CardJob(props: { job: Job }) {
     const { job } = props;
     const addresses = `${props.job.addresses[0]?.city}, ${props.job.addresses[0]?.country}`;
     return (
-        <Link href={'/'}>
+        <Link href={`/single-job?id=${job.jobId}`}>
             <motion.div
                 className="bg-white rounded-3xl p-6 border hover:border-[#0A65CC] transition-shadow flex flex-col justify-center xl:w-[424px] xl:h-[204px]"
                 variants={motionVariant.cardVariants}

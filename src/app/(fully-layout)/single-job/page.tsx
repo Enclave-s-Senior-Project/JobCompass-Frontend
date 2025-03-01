@@ -20,7 +20,26 @@ import { FaFacebookF, FaInstagram, FaXTwitter, FaYoutube } from 'react-icons/fa6
 import { DialogApplyJob } from '@/components/custom-ui/dialog-apply-job';
 import Link from 'next/link';
 import { routes } from '@/configs/routes';
+import { useSearchParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import { queryKey } from '@/lib/react-query/keys';
+import { JobService } from '@/services/job.service';
+import moment from 'moment';
+import DOMPurify from 'dompurify';
 export default function SingleJob() {
+    const jobId = useSearchParams();
+    const id = jobId.get('id') || '';
+    const { data: resultQuery } = useQuery({
+        queryKey: [queryKey.detailJob],
+        queryFn: async () => {
+            try {
+                const payload = await JobService.detailJob(id);
+                return payload;
+            } catch (error: any) {
+                console.log(error);
+            }
+        },
+    });
     return (
         <div className="min-h-screen ">
             <div className="w-full h-[76px] bg-[#F1F2F4] flex items-center">
@@ -40,36 +59,39 @@ export default function SingleJob() {
                     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
                             <div className="relative w-[96px] h-[96px] rounded-full overflow-hidden bg-gradient-to-br from-pink-500 to-orange-400">
-                                <img src="/placeholder.svg" alt="Company logo" />
+                                <img src={resultQuery?.introImg} alt="Company logo" />
                             </div>
                             <div>
                                 <div className="flex items-center gap-2">
-                                    <h1 className="text-xl">Senior UX Designer</h1>
-                                    <Badge
-                                        variant="secondary"
-                                        className="h-[26px] w-[83px] font-normal bg-[#FFEDED] text-[#FF4F4F] text-[14px]"
-                                    >
-                                        Featured
-                                    </Badge>
-                                    <Badge
-                                        variant="secondary"
-                                        className="h-[26px] px-3 font-normal bg-[#E8F1FF] text-[#0066FF] text-[14px] whitespace-nowrap"
-                                    >
-                                        Full Time
-                                    </Badge>
+                                    <h1 className="text-xl">{resultQuery?.name}</h1>
+                                    {resultQuery?.tags?.map((temp) => {
+                                        return (
+                                            <Badge
+                                                key={temp.tagId}
+                                                variant="secondary"
+                                                className={`h-[26px] px-3 font-normal text-[14px] whitespace-nowrap`}
+                                                style={{
+                                                    backgroundColor: temp.backgroundColor || '#E8F1FF',
+                                                    color: temp.color || '#0066FF',
+                                                }}
+                                            >
+                                                {temp.name}
+                                            </Badge>
+                                        );
+                                    })}
                                 </div>
                                 <div className="flex flex-wrap gap-5 text-sm text-muted-foreground mt-2">
                                     <span className="flex flex-row gap-1 text-[#474C54]">
                                         <Link2 className="w-5 h-5 text-[#0066FF]" />
-                                        https://instagram.com
+                                        {resultQuery?.enterprise.bio}
                                     </span>
                                     <span className="flex flex-row gap-1 text-[#474C54]">
                                         <Phone className="w-5 h-5 text-[#0066FF] " />
-                                        (406) 555-0120
+                                        {resultQuery?.enterprise.phone}
                                     </span>
                                     <span className="flex flex-row gap-1 text-[#474C54]">
                                         <Mail className="w-5 h-5 text-[#0066FF]" />
-                                        career@instagram.com
+                                        {resultQuery?.enterprise.email}
                                     </span>
                                 </div>
                             </div>
@@ -87,33 +109,19 @@ export default function SingleJob() {
                 <div className="px-2 sm:px-0 grid grid-cols-12 gap-4 md:gap-8 lg:gap-14">
                     <div className="col-span-12 md:col-span-7 space-y-9">
                         <div className="space-y-4">
-                            <article className="text-gray-700 break-normal">
-                                Fusce et erat at nibh maximus fermentum. Mauris ac justo nibh. Praesent nec lorem lorem.
-                                Donec ullamcorper lacus mollis tortor pretium malesuada. In quis porta nisi, quis
-                                fringilla orci. Donec porttitor, odio a efficitur blandit, orci nisl porta elit, eget
-                                vulputate quam nibh ut tellus. Sed ut posuere risus, vitae commodo velit. Nullam in
-                                lorem dolor.
-                            </article>
+                            <article
+                                className="text-gray-700 break-normal"
+                                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(resultQuery?.description || '') }}
+                            ></article>
                         </div>
                         <div className="space-y-4">
                             <p className="text-xl font-medium">Education</p>
-                            <article className="text-gray-700 break-normal">
-                                Fusce et erat at nibh maximus fermentum. Mauris ac justo nibh. Praesent nec lorem lorem.
-                                Donec ullamcorper lacus mollis tortor pretium malesuada. In quis porta nisi, quis
-                                fringilla orci. Donec porttitor, odio a efficitur blandit, orci nisl porta elit, eget
-                                vulputate quam nibh ut tellus. Sed ut posuere risus, vitae commodo velit. Nullam in
-                                lorem dolor.
-                            </article>
-                        </div>
-                        <div className="space-y-4">
-                            <p className="text-xl font-medium">Experience</p>
-                            <article className="text-gray-700 break-normal">
-                                Fusce et erat at nibh maximus fermentum. Mauris ac justo nibh. Praesent nec lorem lorem.
-                                Donec ullamcorper lacus mollis tortor pretium malesuada. In quis porta nisi, quis
-                                fringilla orci. Donec porttitor, odio a efficitur blandit, orci nisl porta elit, eget
-                                vulputate quam nibh ut tellus. Sed ut posuere risus, vitae commodo velit. Nullam in
-                                lorem dolor.
-                            </article>
+                            <article
+                                className="text-gray-700 break-normal"
+                                dangerouslySetInnerHTML={{
+                                    __html: DOMPurify.sanitize(resultQuery?.responsibility || ''),
+                                }}
+                            ></article>
                         </div>
                         {/* Share profile for breakpoint from md */}
                         <div className="hidden md:block">
@@ -127,32 +135,39 @@ export default function SingleJob() {
                                 <div className="flex flex-col items-start">
                                     <NotepadText className="mb-3 size-6 text-primary" />
                                     <p className="mb-1 uppercase text-gray-500 text-[12px]">JOB POSTED:</p>
-                                    <p className="text-sm font-medium">14 June, 2003</p>
+                                    <p className="text-sm font-medium">
+                                        {moment(resultQuery?.createdAt).format('YYYY-MM-DD')}
+                                    </p>
                                 </div>
                                 <div className="flex flex-col items-start">
                                     <Clock8 className="mb-3 size-6 text-primary" />
                                     <p className="mb-1 uppercase text-gray-500 text-[12px]">JOB EXPIRE IN:</p>
-                                    <p className="text-sm font-medium">14 June, 2003</p>
+                                    <p className="text-sm font-medium">{resultQuery?.deadline}</p>
                                 </div>
                                 <div className="flex flex-col items-start">
                                     <BriefcaseBusiness className="mb-3 size-6 text-primary" />
                                     <p className="mb-1 uppercase text-gray-500 text-[12px]">EDUCATION:</p>
-                                    <p className="text-sm font-medium">Graduation</p>
+                                    <p className="text-sm font-medium">{resultQuery?.education}</p>
                                 </div>
                                 <div className="flex flex-col items-start">
                                     <Wallet className="mb-3 size-6 text-primary" />
                                     <p className="mb-1 uppercase text-gray-500 text-[12px]">SALARY:</p>
-                                    <p className="text-sm">$50k-80k/month</p>
+                                    <p className="text-sm">
+                                        ${resultQuery?.lowestWage} - {resultQuery?.highestWage}
+                                    </p>
                                 </div>
                                 <div className="flex flex-col items-start">
                                     <MapPin className="mb-3 size-6 text-primary" />
                                     <p className="mb-1 uppercase text-gray-500 text-[12px]">LOCATION:</p>
-                                    <p className="text-sm font-medium">New York, USA</p>
+                                    <p className="text-sm font-medium">
+                                        {resultQuery?.addresses?.[0]?.country ?? 'Unknown Country'} -
+                                        {resultQuery?.addresses?.[0]?.city ?? 'Unknown City'}
+                                    </p>
                                 </div>
                                 <div className="flex flex-col items-start">
                                     <BriefcaseBusiness className="mb-3 size-6 text-primary" />
                                     <p className="mb-1 uppercase text-gray-700 text-[12px]">JOB TYPE:</p>
-                                    <p className="text-sm font-medium">Full time</p>
+                                    <p className="text-sm font-medium">{resultQuery?.type}</p>
                                 </div>
                             </div>
                         </div>
@@ -162,15 +177,17 @@ export default function SingleJob() {
                             <CardHeader className="space-y-2">
                                 <div className="flex items-center gap-4">
                                     <img
-                                        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-VgcKFFBPX6qxbUE9wWcn0O8kezjAsY.png"
+                                        src={resultQuery?.enterprise.logoUrl}
                                         alt="Instagram logo"
                                         width={56}
                                         height={56}
                                         className="rounded-xl"
                                     />
                                     <div>
-                                        <h2 className="text-[20px]">Instagram</h2>
-                                        <p className="text-[14px] text-[#767F8C]">Social networking service</p>
+                                        <h2 className="text-[20px]">{resultQuery?.enterprise.name}</h2>
+                                        <p className="text-[14px] text-[#767F8C]">
+                                            {resultQuery?.enterprise.description}
+                                        </p>
                                     </div>
                                 </div>
                             </CardHeader>
@@ -178,27 +195,27 @@ export default function SingleJob() {
                                 <div className="space-y-4">
                                     <div className="flex justify-between items-center">
                                         <p className="text-[16px] text-muted-foreground">Founded in:</p>
-                                        <p className="text-[16px]">March 21, 2006</p>
+                                        <p className="text-[16px]">{resultQuery?.enterprise.foundedIn}</p>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <p className="text-[16px] text-muted-foreground">Organization type:</p>
-                                        <p className="text-[16px]">Private Company</p>
+                                        <p className="text-[16px]">{resultQuery?.enterprise.industryType}</p>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <p className="text-[16px] text-muted-foreground">Company size:</p>
-                                        <p className="text-[16px]">120-300 Employers</p>
+                                        <p className="text-[16px]">{resultQuery?.enterprise.teamSize}</p>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <p className="text-[16px] text-muted-foreground">Phone:</p>
-                                        <p className="text-[16px]">(406) 555-0120</p>
+                                        <p className="text-[16px]">{resultQuery?.enterprise.phone}</p>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <p className="text-[16px] text-muted-foreground">Email:</p>
-                                        <p className="text-[16px]">twitter@gmail.com</p>
+                                        <p className="text-[16px]">{resultQuery?.enterprise.email}</p>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <p className="text-[16px] text-muted-foreground">Website:</p>
-                                        <p className="text-[16px]">twitter@gmail.com</p>
+                                        <p className="text-[16px]">{resultQuery?.enterprise.bio}</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-2 pt-4">

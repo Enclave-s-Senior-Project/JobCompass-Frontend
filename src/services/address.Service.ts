@@ -1,15 +1,16 @@
 import { AuthAxios } from '@/lib/axios';
-import { ApiResponse, DetailedRequest } from '@/types';
+import { Address, ApiResponse, DetailedRequest, DetailedResponse } from '@/types';
 import { AxiosError } from 'axios';
 import NextError from 'next/error';
 
-const authAxios = new AuthAxios('address');
+const authAxios = new AuthAxios('enterprise');
 
 export class AddressService {
     public static async getAllAddressByEnterprise() {
         try {
-            const dataResponse = await authAxios.get<ApiResponse<null>>('/enterprise/');
-            return dataResponse.payload;
+            const dataResponse =
+                await authAxios.get<ApiResponse<DetailedResponse.GetAddressByEnterprisesId>>('me/addresses');
+            return dataResponse?.payload.value?.addresses;
         } catch (err) {
             if (err instanceof AxiosError) {
                 throw new NextError({

@@ -1,4 +1,6 @@
 import { UserType } from './common-types';
+import { Enterprise } from './entities.d';
+import { Address } from './common-types';
 import { Category, Job, SocialLink } from './entities';
 
 export interface ApiResponse<T> {
@@ -61,6 +63,10 @@ export namespace DetailedResponse {
     export type GetAllCvByIdProfile = CV[];
     export type GetAllTag = Tag[];
     export type GetCategories = Categories[];
+    export type GetAddressByEnterprisesId = Enterprise & {
+        addresses: Address[];
+    };
+    export type GetDetailJob = Job;
 }
 
 export namespace DetailedRequest {
@@ -178,7 +184,6 @@ export namespace DetailedRequest {
         deadline: string;
         introImg: string;
         status: boolean;
-        enterpriseId: string;
         tagIds: string[];
         categoryIds: string[];
         address: string[];

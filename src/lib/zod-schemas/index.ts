@@ -154,15 +154,24 @@ const postJobSchema = z
                 required_error: 'Category is required',
             })
             .min(1, 'Category is required'),
-        // address: z.array(z.string()).optional(),
+        address: z
+            .string({
+                required_error: 'Address is required',
+            })
+            .min(1, 'Address is required'),
     })
     .refine((data) => Number(data.minSalary) <= Number(data.maxSalary), {
         message: 'Minimum salary must be less than or equal to maximum salary',
-        path: ['minSalary'], // Hoặc bạn có thể chỉ định 'maxSalary' hoặc cả 2
+        path: ['minSalary'],
     });
 
 const addTagSchema = z.object({
-    name: z.string().min(1, 'required'),
+    name: z
+        .string()
+        .min(1, 'required')
+        .refine((value) => /^[A-Z]/.test(value), {
+            message: 'Tag name must start with an uppercase letter',
+        }),
 });
 
 export {

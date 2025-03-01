@@ -9,13 +9,16 @@ export interface Job {
     lowestWage: string;
     highestWage: string;
     description: string;
+    responsibility: string;
     type: string;
     experience: number;
     deadline: string;
     introImg: string;
     status: boolean;
+    education: string;
     enterprise: Enterprise;
-    addresses: Address[];
+    tags: Tag[] | null;
+    addresses: Address[] | null;
     profiles: profile[] | null;
     isFavorite: boolean | null;
 }

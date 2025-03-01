@@ -471,6 +471,7 @@ export const postJob = async (currentState: any, formData: FormData) => {
     currentState.description = formData.get('description')?.toString() ?? '';
     currentState.responsibilities = formData.get('responsibilities')?.toString() ?? '';
     currentState.category = formData.get('category')?.toString() ?? '';
+    currentState.address = formData.get('address')?.toString() ?? '';
     const validation = postJobSchema.safeParse(currentState);
     if (!validation.success) {
         return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
@@ -488,10 +489,10 @@ export const postJob = async (currentState: any, formData: FormData) => {
             introImg: '',
             status: false,
             tagIds: currentState.tags,
-            enterpriseId: 'f9a74c91-6ebf-4d92-8b57-d4d9cacf8abc',
             categoryIds: [currentState.category],
-            address: ['b1c2d3e4-5678-90ab-cdef-abcdefabcdef'],
+            address: [currentState.address],
         });
+
         return { ...currentState, errors: {}, success: true, data: applyJob };
     } catch (error: any) {
         handleErrorToast(error);
@@ -501,7 +502,7 @@ export const postJob = async (currentState: any, formData: FormData) => {
 };
 
 export const addTag = async (currentState: any, formData: FormData) => {
-    currentState.name = formData.get('tag')?.toString() ?? '';
+    currentState.name = formData.get('name')?.toString() ?? '';
     const validation = addTagSchema.safeParse(currentState);
     if (!validation.success) {
         console.log('Error', validation.error.flatten().fieldErrors);
