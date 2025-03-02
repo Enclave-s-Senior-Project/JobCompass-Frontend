@@ -7,7 +7,11 @@ import { motionVariant } from '@/lib/motion-variants';
 
 export default function CardJob(props: { job: Job }) {
     const { job } = props;
-    const addresses = `${props.job.addresses[0]?.city}, ${props.job.addresses[0]?.country}`;
+    const addresses =
+        job.addresses?.[0]?.city && job.addresses?.[0]?.country
+            ? `${job.addresses[0].city}, ${job.addresses[0].country}`
+            : 'Unknown location';
+
     return (
         <Link href={`/single-job?id=${job.jobId}`}>
             <motion.div

@@ -5,9 +5,10 @@ import { Button } from '../ui/button';
 import { ChevronRight } from 'lucide-react';
 import { TextEditorApplyJob } from './form-apply-job-dialog';
 
-export function DialogApplyJob(props: { nameJob: string }) {
+export function DialogApplyJob(props: { nameJob: string; jobId: string }) {
     const [open, setOpen] = useState(false);
     const name = props.nameJob;
+    const temp = props.jobId;
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -22,7 +23,7 @@ export function DialogApplyJob(props: { nameJob: string }) {
                     </div>
                 </DialogHeader>
                 <div className="space-y-6 pt-4">
-                    <TextEditorApplyJob setOpen={setOpen} />
+                    <TextEditorApplyJob setOpen={setOpen} jobId={temp} />
                 </div>
             </DialogContent>
         </Dialog>

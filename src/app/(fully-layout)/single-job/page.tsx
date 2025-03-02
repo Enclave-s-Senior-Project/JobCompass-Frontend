@@ -26,7 +26,16 @@ import { queryKey } from '@/lib/react-query/keys';
 import { JobService } from '@/services/job.service';
 import moment from 'moment';
 import DOMPurify from 'dompurify';
+import { Suspense } from 'react';
+
 export default function SingleJob() {
+    return (
+        <Suspense fallback={<span>Loading...</span>}>
+            <PageContentOfSingleJob />
+        </Suspense>
+    );
+}
+function PageContentOfSingleJob() {
     const jobId = useSearchParams();
     const id = jobId.get('id') || '';
     const { data: resultQuery } = useQuery({
@@ -59,7 +68,7 @@ export default function SingleJob() {
                     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
                             <div className="relative w-[96px] h-[96px] rounded-full overflow-hidden bg-gradient-to-br from-pink-500 to-orange-400">
-                                <img src={resultQuery?.introImg} alt="Company logo" />
+                                <img src={resultQuery?.enterprise.logoUrl} alt="Company logo" />
                             </div>
                             <div>
                                 <div className="flex items-center gap-2">
@@ -100,7 +109,7 @@ export default function SingleJob() {
                             <Button variant="outline" size="icon-lg" className="h-[56px] w-[56px] hover:bg-[#E7F0FA]">
                                 <Bookmark className="h-[24px] w-[24px]" />
                             </Button>
-                            <DialogApplyJob nameJob="Senior UX Designer" />
+                            <DialogApplyJob nameJob="Senior UX Designer" jobId={id} />
                         </div>
                     </div>
                 </div>

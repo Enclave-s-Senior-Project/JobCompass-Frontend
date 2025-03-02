@@ -151,7 +151,7 @@ export namespace DetailedRequest {
         deadline: string;
         introImg: string;
         status: boolean;
-        enterpriseId: string;
+        education: string;
         tagIds: string[];
         categoryIds: string[];
         address: string[];
@@ -172,20 +172,5 @@ export namespace DetailedRequest {
         gender: string;
         maritalStatus: string;
         introduction: string;
-    }
-    export interface postJobCredentials {
-        name: string;
-        lowestWage: number;
-        highestWage: number;
-        description: string;
-        responsibility: string;
-        type: string;
-        experience: number;
-        deadline: string;
-        introImg: string;
-        status: boolean;
-        tagIds: string[];
-        categoryIds: string[];
-        address: string[];
     }
 }
