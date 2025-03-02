@@ -1,7 +1,6 @@
 import { UserType } from './common-types';
-import { Enterprise } from './entities.d';
 import { Address } from './common-types';
-import { Category, Job, SocialLink } from './entities';
+import { CV, Categories, Enterprise, Job, SocialLink, Tag } from './entities';
 
 export interface ApiResponse<T> {
     payload: {

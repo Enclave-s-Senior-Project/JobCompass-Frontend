@@ -124,7 +124,6 @@ function PageContentOfSingleJob() {
                             ></article>
                         </div>
                         <div className="space-y-4">
-                            <p className="text-xl font-medium">Education</p>
                             <article
                                 className="text-gray-700 break-normal"
                                 dangerouslySetInnerHTML={{
