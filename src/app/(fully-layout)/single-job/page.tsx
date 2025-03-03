@@ -24,7 +24,6 @@ import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import { JobService } from '@/services/job.service';
-import moment from 'moment';
 import DOMPurify from 'dompurify';
 import { Suspense } from 'react';
 
