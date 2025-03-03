@@ -11,6 +11,8 @@ import {
     verifyEmailSchema,
     verifySignInSchema,
     updateCandidateProfile as updateCandidateProfileZ,
+    postJobSchema,
+    addTagSchema,
 } from './zod-schemas';
 import { handleErrorToast } from './utils';
 import { ApplyJobService } from '@/services/applyJob.service';
@@ -18,6 +20,9 @@ import { AuthService } from '@/services/auth.service';
 import { UploadService } from '@/services/upload.service';
 import { UserService } from '@/services/user.service';
 import { WebsiteService } from '@/services/website.service';
+import { getBackgroundColor, getRandomColor } from './random-color';
+import { TagService } from '@/services/tag.service';
+import { JobService } from '@/services/job.service';
 
 export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, formData: FormData) => {
     const username = formData.get('username')?.toString() ?? '';
@@ -176,12 +181,9 @@ export const resetPassword = async (currentState: any, formData: FormData) => {
     return { ...currentState, errors: {}, success: false, data: null };
 };
 
-export const applyJob = async (currentState: any, formData: FormData) => {
+export const applyJob = async (currentState: any, formData: FormData, temp: string) => {
     currentState.selectedCv = formData.get('selectedCv')?.toString() ?? '';
     currentState.coverLetter = formData.get('coverLetter')?.toString() ?? '';
-
-    console.log('Selected CV:', currentState.selectedCv);
-    console.log('Cover Letter:', currentState.coverLetter);
     const validation = applyJobCoverLetterSchema.safeParse(currentState);
     if (!validation.success) {
         return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
@@ -190,7 +192,7 @@ export const applyJob = async (currentState: any, formData: FormData) => {
         const applyJob = await ApplyJobService.applyJobCoverLetter({
             cvId: currentState.selectedCv,
             coverLetter: currentState.coverLetter,
-            jobId: '95117f99-2282-4657-938a-2ad500f70612',
+            jobId: temp,
         });
         return { ...currentState, errors: {}, success: true, data: applyJob };
     } catch (error: any) {
@@ -343,4 +345,74 @@ export const updateCandidateSocialLinks = async (currentState: any, formData: Fo
         success,
         errors,
     };
+};
+
+export const postJob = async (currentState: any, formData: FormData) => {
+    currentState.title = formData.get('title')?.toString() ?? '';
+    currentState.tags = formData.getAll('tags[]');
+    currentState.minSalary = formData.get('minSalary');
+    currentState.maxSalary = formData.get('maxSalary');
+    currentState.education = formData.get('education')?.toString() ?? '';
+    currentState.experience = Number(formData.get('experience'));
+    currentState.jobType = formData.get('jobType')?.toString() ?? '';
+    currentState.expirationDate = formData.get('expirationDate')?.toString() ?? '';
+    currentState.jobLevel = formData.get('jobLevel')?.toString() ?? '';
+    currentState.description = formData.get('description')?.toString() ?? '';
+    currentState.responsibilities = formData.get('responsibilities')?.toString() ?? '';
+    currentState.category = formData.get('category')?.toString() ?? '';
+    currentState.address = formData.get('address')?.toString() ?? '';
+    currentState.education = formData.get('education')?.toString() ?? '';
+    const validation = postJobSchema.safeParse(currentState);
+    if (!validation.success) {
+        return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
+    }
+    try {
+        await JobService.postJob({
+            name: currentState.title,
+            lowestWage: currentState.minSalary,
+            highestWage: currentState.maxSalary,
+            description: currentState.description,
+            responsibility: currentState.responsibilities,
+            type: currentState.jobType,
+            experience: currentState.experience,
+            deadline: currentState.expirationDate,
+            introImg: '',
+            status: false,
+            education: currentState.education,
+            tagIds: currentState.tags,
+            categoryIds: [currentState.category],
+            address: [currentState.address],
+        });
+
+        return { ...currentState, errors: {}, success: true, data: applyJob };
+    } catch (error: any) {
+        handleErrorToast(error);
+    }
+
+    return { ...currentState, errors: {}, success: false, data: null };
+};
+
+export const addTag = async (currentState: any, formData: FormData) => {
+    currentState.name = formData.get('name')?.toString() ?? '';
+    const validation = addTagSchema.safeParse(currentState);
+    if (!validation.success) {
+        console.log('Error', validation.error.flatten().fieldErrors);
+        return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
+    }
+    try {
+        const colorRandom = getRandomColor();
+        const backgroundColorRandom = getBackgroundColor(colorRandom);
+        const temp = [
+            {
+                name: currentState.name,
+                color: colorRandom,
+                backgroundColor: backgroundColorRandom,
+            },
+        ];
+        await TagService.addTag(temp);
+        return { ...currentState, errors: {}, success: true, data: applyJob };
+    } catch (error: any) {
+        handleErrorToast(error);
+    }
+    return { ...currentState, errors: {}, success: false, data: null };
 };

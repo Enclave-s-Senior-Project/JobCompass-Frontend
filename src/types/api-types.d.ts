@@ -1,5 +1,5 @@
 import { UserType } from './common-types';
-import { Job, SocialLink } from './entities';
+import { Enterprise, Job, SocialLink } from './entities';
 
 export interface ApiResponse<T> {
     payload: {
@@ -59,6 +59,12 @@ export namespace DetailedResponse {
     export interface FavoriteJobs extends GetAllJobs {}
 
     export type GetAllCvByIdProfile = CV[];
+    export type GetAllTag = Tag[];
+    export type GetCategories = Categories[];
+    export type GetAddressByEnterprisesId = Enterprise & {
+        addresses: Address[];
+    };
+    export type GetDetailJob = Job;
 }
 
 export namespace DetailedRequest {
@@ -132,4 +138,20 @@ export namespace DetailedRequest {
     }
 
     export type UpdateCandidateSocialLinks = SocialLink[];
+    export interface postJobCredentials {
+        name: string;
+        lowestWage: number;
+        highestWage: number;
+        description: string;
+        responsibility: string;
+        type: string;
+        experience: number;
+        deadline: string;
+        introImg: string;
+        status: boolean;
+        education: string;
+        tagIds: string[];
+        categoryIds: string[];
+        address: string[];
+    }
 }
