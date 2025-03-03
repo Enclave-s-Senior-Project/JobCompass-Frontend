@@ -154,4 +154,18 @@ export namespace DetailedRequest {
         categoryIds: string[];
         address: string[];
     }
+    export interface PostEnterprisesCredentials {
+        name: string;
+        email: string;
+        phone: string;
+        description: string;
+        enterpriseBenefits: string;
+        companyVision: string;
+        logoUrl: string;
+        foundedIn: string;
+        organizationType: string;
+        teamSize: string;
+        industryType: string;
+        bio: string;
+    }
 }

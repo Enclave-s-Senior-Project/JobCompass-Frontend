@@ -173,6 +173,49 @@ const addTagSchema = z.object({
         }),
 });
 
+const addEnterpriseSchema = z.object({
+    name: z
+        .string()
+        .min(1, 'Name is required.')
+        .max(255, 'Name must be between 1 and 255 characters.')
+        .refine((value) => /^[A-Z]/.test(value), {
+            message: 'name must start with an uppercase letter',
+        }),
+    email: z
+        .string()
+        .min(1, 'Email is required.')
+        .max(255, 'Email must be at most 255 characters.')
+        .email('Email format is invalid.')
+        .regex(
+            /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|net|org|edu|gov|mil|biz|info|io|vn|us|uk|fr|de|ca|au|jp|kr)$/,
+            'Email format is invalid.'
+        ),
+
+    phone: z.string().regex(/^\+?\d{7,15}$/, 'Phone must be a valid phone number.'),
+    description: z.string().min(20, 'Description is required and must be at least 20 characters'),
+    vision: z.string().min(1, 'vision is required '),
+    // logoUrl: z.string().max(255, 'Logo URL must be at most 255 characters.').optional(),
+    organizationType: z.string().min(1, 'Organization type is required'),
+    size: z.string().min(1, 'Team size is required '),
+    industryType: z
+        .string()
+        .min(1, 'Industry is require')
+        .max(255, 'Industry type must be at most 255 characters.')
+        .optional(),
+    bio: z
+        .string()
+        .min(1, 'Bio is required.')
+        .max(255, 'Bio must be at most 255 characters.')
+        .regex(/^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-./?%&=]*)?$/, 'Bio must be a valid URL.'),
+
+    enterpriseBenefits: z.string().min(20, 'Benefit is required and must be at least 20 characters'),
+    foundedIn: z
+        .string({
+            required_error: 'Founded in date is required',
+        })
+        .nonempty('Founded in date cannot be empty'),
+});
+
 export {
     signUpSchema,
     verifySignInSchema,
@@ -184,4 +227,5 @@ export {
     updateCandidateProfile,
     postJobSchema,
     addTagSchema,
+    addEnterpriseSchema,
 };

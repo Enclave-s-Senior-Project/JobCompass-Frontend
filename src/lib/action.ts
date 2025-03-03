@@ -13,6 +13,7 @@ import {
     updateCandidateProfile as updateCandidateProfileZ,
     postJobSchema,
     addTagSchema,
+    addEnterpriseSchema,
 } from './zod-schemas';
 import { handleErrorToast } from './utils';
 import { ApplyJobService } from '@/services/applyJob.service';
@@ -23,6 +24,7 @@ import { WebsiteService } from '@/services/website.service';
 import { getBackgroundColor, getRandomColor } from './random-color';
 import { TagService } from '@/services/tag.service';
 import { JobService } from '@/services/job.service';
+import { EnterpriseService } from '@/services/enterprises.service';
 
 export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, formData: FormData) => {
     const username = formData.get('username')?.toString() ?? '';
@@ -383,8 +385,7 @@ export const postJob = async (currentState: any, formData: FormData) => {
             categoryIds: [currentState.category],
             address: [currentState.address],
         });
-
-        return { ...currentState, errors: {}, success: true, data: applyJob };
+        return { ...currentState, errors: {}, success: true };
     } catch (error: any) {
         handleErrorToast(error);
     }
@@ -411,6 +412,65 @@ export const addTag = async (currentState: any, formData: FormData) => {
         ];
         await TagService.addTag(temp);
         return { ...currentState, errors: {}, success: true, data: applyJob };
+    } catch (error: any) {
+        handleErrorToast(error);
+    }
+    return { ...currentState, errors: {}, success: false, data: null };
+};
+
+export const addEnterprises = async (currentState: any, formData: FormData) => {
+    const errors: Record<string, any> = {};
+    const uploadPromises = [];
+    const logoFile = formData.get('logo') as File;
+    if (!logoFile || logoFile.size === 0) {
+        errors.logo = 'Profile picture is required';
+    } else {
+        const uploadLogo = (async () => await UploadService.uploadFile(logoFile))();
+        uploadPromises.push(uploadLogo);
+    }
+    currentState.name = formData.get('name')?.toString() ?? '';
+    currentState.phone = formData.get('phone')?.toString() ?? '';
+    currentState.email = formData.get('email')?.toString() ?? '';
+    currentState.vision = formData.get('vision')?.toString() ?? '';
+    currentState.size = formData.get('size')?.toString() ?? '';
+    currentState.foundedIn = formData.get('foundedIn')?.toString() ?? '';
+    currentState.organizationType = formData.get('organizationType')?.toString() ?? '';
+    currentState.industryType = formData.get('industryType')?.toString() ?? '';
+    currentState.bio = formData.get('bio')?.toString() ?? '';
+    currentState.enterpriseBenefits = formData.get('enterpriseBenefits')?.toString() ?? '';
+    currentState.description = formData.get('description')?.toString() ?? '';
+    const validation = addEnterpriseSchema.safeParse(currentState);
+    if (!validation.success) {
+        Object.assign(errors, validation.error.flatten().fieldErrors);
+    }
+
+    // Nếu có lỗi, trả về tất cả lỗi cùng lúc
+    if (Object.keys(errors).length > 0) {
+        return {
+            ...currentState,
+            errors,
+            success: false,
+            data: {},
+        };
+    }
+    try {
+        const [logoFile] = await Promise.all(uploadPromises);
+        await EnterpriseService.postEnterprise({
+            name: currentState.name,
+            email: currentState.email,
+            phone: currentState.phone,
+            description: currentState.description,
+            enterpriseBenefits: currentState.enterpriseBenefits,
+            companyVision: currentState.vision,
+            logoUrl: logoFile?.fileUrl || currentState.logoUrl,
+            foundedIn: currentState.foundedIn,
+            organizationType: currentState.organizationType,
+            teamSize: currentState.size,
+            industryType: currentState.industryType,
+            bio: currentState.bio,
+        });
+
+        return { ...currentState, success: true, errors: {} };
     } catch (error: any) {
         handleErrorToast(error);
     }
