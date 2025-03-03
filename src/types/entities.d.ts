@@ -20,6 +20,8 @@ export interface Job {
     tags: Tag[] | null;
     addresses: Address[] | null;
     profiles: profile[] | null;
+    addresses: Address[];
+    profiles: User[] | null;
     isFavorite: boolean | null;
 }
 
@@ -53,33 +55,13 @@ export interface CV {
     cvName: string;
 }
 
-export interface UserProfile {
-    createdAt: string;
-    updatedAt: string;
-    isActive: boolean;
-    profileId: string;
-    fullName: string;
-    profileUrl: string;
-    pageUrl: string;
-    introduction: string | null;
-    phone: string;
-    view: number;
-    gender: string;
-    education: string | null;
-    nationality: string;
-    dateOfBirth: string;
-    maritalStatus: string | null;
-    isPremium: boolean;
-    expiredPremium: any;
-    experience: string | null;
-    account_id: string;
-}
-
 export interface SocialLink {
     websiteId?: string;
     socialType: SocialType;
     socialLink: string;
 }
+
+export type Role = 'USER' | 'ENTERPRISE' | 'ADMIN';
 
 export interface User {
     createdAt: string;
@@ -101,6 +83,7 @@ export interface User {
     expiredPremium?: any;
     experience?: string;
     account_id: string;
+    roles: Role[];
 }
 export interface Tag {
     isActive: boolean;

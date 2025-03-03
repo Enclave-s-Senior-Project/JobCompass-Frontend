@@ -14,10 +14,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { PiUserCircle, PiTimer, PiUsers, PiSignOutFill, PiBuilding } from 'react-icons/pi';
 import { routes } from '@/configs/routes';
+import { useContext } from 'react';
+import { UserContext } from '@/contexts/user-context';
+import { hasPermission } from '@/lib/auth';
 
 export function SwitchSignIn() {
-    const isLogged = false; // replace with actual logic
-    return isLogged ? (
+    const { userInfo } = useContext(UserContext);
+
+    return userInfo ? (
         <div className="flex items-center justify-between lg:justify-normal gap-2 lg:gap-6">
             <div className="relative">
                 {/*notification*/}
@@ -25,24 +29,28 @@ export function SwitchSignIn() {
                 <Badge className={clsx(badgeVariants({ variant: 'notify' }), 'absolute top-0 right-0 size-2.5')} />
             </div>
             {/*if there is enterprise role, this will be shown*/}
-            <Link href={routes.home}>
-                <Button variant="outline" size="lg">
-                    Post a Job
-                </Button>
-            </Link>
+            {hasPermission(userInfo, 'job', 'create') && (
+                <Link href={routes.home}>
+                    <Button variant="outline" size="lg">
+                        Post a Job
+                    </Button>
+                </Link>
+            )}
             {/**/}
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Avatar className="size-10 lg:size-12">
-                        <AvatarImage src="https://github.com/shadcn.png" />
-                        <AvatarFallback>Name</AvatarFallback>
+                        <AvatarImage className="object-cover object-center" src={userInfo?.profileUrl} />
+                        <AvatarFallback>{userInfo?.fullName}</AvatarFallback>
                     </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="rounded-sm" side="bottom" align="end">
                     <DropdownMenuLabel>Your Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className="pr-3 py-2 [&_svg]:size-5">
-                        <PiUserCircle /> Profile
+                    <DropdownMenuItem className="pr-3 py-2 [&_svg]:size-5" asChild>
+                        <Link href="/candidate-dashboard/settings/personal-profile">
+                            <PiUserCircle /> Profile
+                        </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="pr-3 py-2 [&_svg]:size-5">
                         <PiTimer />
@@ -52,10 +60,12 @@ export function SwitchSignIn() {
                         <PiUsers />
                         Candidates
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="pr-3 py-2 [&_svg]:size-5">
-                        <PiBuilding />
-                        Enterprise
-                    </DropdownMenuItem>
+                    {hasPermission(userInfo, 'enterpriseDashboard', 'access') && (
+                        <DropdownMenuItem className="pr-3 py-2 [&_svg]:size-5">
+                            <PiBuilding />
+                            Enterprise
+                        </DropdownMenuItem>
+                    )}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem className="pr-3 py-2 [&_svg]:size-5">
                         <PiSignOutFill />
