@@ -1,3 +1,4 @@
+'use client';
 import { FooterSection } from '@/components/custom-ui/footer-section';
 import { HeaderSection } from '@/components/custom-ui/header-section';
 import React from 'react';

@@ -7,10 +7,11 @@ export interface Language {
 
 export interface Address {
     isActive: boolean;
+    addressId: string;
     country: string;
     city: string;
     street: string;
-    zipCode: number;
+    zipCode: string;
 }
 
 export interface UserType {
@@ -22,3 +23,5 @@ export interface UserType {
     status: string;
     roles: string[];
 }
+
+export type SocialType = 'FACEBOOK' | 'TWITTER' | 'INSTAGRAM' | 'YOUTUBE' | 'LINKEDIN';

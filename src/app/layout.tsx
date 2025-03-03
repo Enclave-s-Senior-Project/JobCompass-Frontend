@@ -4,6 +4,7 @@ import { inter } from '@/components/font';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ReactQueryProvider from './providers/react-query-provider';
+import { UserProvider } from '@/contexts/user-context';
 
 export const metadata: Metadata = {
     title: 'JobCompass',
@@ -20,7 +21,9 @@ export default function RootLayout({
             <body className={`${inter.className} antialiased`}>
                 <ToastContainer />
                 <ReactQueryProvider>
-                    <main>{children}</main>
+                    <UserProvider>
+                        <main>{children}</main>
+                    </UserProvider>
                 </ReactQueryProvider>
             </body>
         </html>

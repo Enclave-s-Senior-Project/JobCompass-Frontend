@@ -1,4 +1,4 @@
-import { Address } from './common-types';
+import { Address, SocialType } from './common-types';
 
 export interface Job {
     createdAt: string;
@@ -9,13 +9,16 @@ export interface Job {
     lowestWage: string;
     highestWage: string;
     description: string;
+    responsibility: string;
     type: string;
     experience: number;
     deadline: string;
     introImg: string;
     status: boolean;
+    education: string;
     enterprise: Enterprise;
-    addresses: Address[];
+    tags: Tag[] | null;
+    addresses: Address[] | null;
     profiles: profile[] | null;
     isFavorite: boolean | null;
 }
@@ -112,4 +115,19 @@ export interface User {
     expiredPremium?: any;
     experience?: string;
     account_id: string;
+}
+
+export interface Tag {
+    isActive: boolean;
+    tagId: string;
+    name: string;
+    color: string;
+    backgroundColor: string;
+}
+
+export interface Categories {
+    isActive: any;
+    categoryId: string;
+    categoryName: string;
+    parent: any;
 }

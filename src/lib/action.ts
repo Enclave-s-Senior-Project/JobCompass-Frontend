@@ -1,6 +1,6 @@
-import { BaseAxios } from './axios';
-import { DetailedRequest } from '@/types';
 import { toast } from 'react-toastify';
+import { BaseAxios } from './axios';
+import { DetailedRequest, SocialLink, SocialType } from '@/types';
 import { errorKeyMessage } from './message-keys';
 import {
     addTagSchema,
@@ -19,9 +19,10 @@ import { ApplyJobService } from '@/services/applyJob.service';
 import { AuthService } from '@/services/auth.service';
 import { UploadService } from '@/services/upload.service';
 import { UserService } from '@/services/user.service';
-import { JobService } from '@/services/job.service';
-import { getBackgroundColor, getRandomColor } from './random-color';
+import { WebsiteService } from '@/services/website.service';
 import { TagService } from '@/services/tag.service';
+import { getBackgroundColor, getRandomColor } from './random-color';
+import { JobService } from '@/services/job.service';
 
 export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, formData: FormData) => {
     const username = formData.get('username')?.toString() ?? '';
@@ -180,12 +181,9 @@ export const resetPassword = async (currentState: any, formData: FormData) => {
     return { ...currentState, errors: {}, success: false, data: null };
 };
 
-export const applyJob = async (currentState: any, formData: FormData) => {
+export const applyJob = async (currentState: any, formData: FormData, temp: string) => {
     currentState.selectedCv = formData.get('selectedCv')?.toString() ?? '';
     currentState.coverLetter = formData.get('coverLetter')?.toString() ?? '';
-
-    console.log('Selected CV:', currentState.selectedCv);
-    console.log('Cover Letter:', currentState.coverLetter);
     const validation = applyJobCoverLetterSchema.safeParse(currentState);
     if (!validation.success) {
         return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
@@ -194,7 +192,7 @@ export const applyJob = async (currentState: any, formData: FormData) => {
         const applyJob = await ApplyJobService.applyJobCoverLetter({
             cvId: currentState.selectedCv,
             coverLetter: currentState.coverLetter,
-            jobId: '95117f99-2282-4657-938a-2ad500f70612',
+            jobId: temp,
         });
         return { ...currentState, errors: {}, success: true, data: applyJob };
     } catch (error: any) {
@@ -301,6 +299,54 @@ export const updateCandidateProfile = async (currentState: any, formData: FormDa
 
     return currentState;
 };
+
+const regex = {
+    FACEBOOK: /^(https?:\/\/)?(www\.)?(m\.)?(facebook|fb)\.com\/[A-Za-z0-9._-]+(\/)?$/,
+    YOUTUBE:
+        /^(https?:\/\/)?(www\.)?(youtube\.com\/(@[A-Za-z0-9_-]+|channel\/[A-Za-z0-9_-]+|watch\?v=[A-Za-z0-9_-]+)|youtu\.be\/[A-Za-z0-9_-]+)(\/)?$/,
+    INSTAGRAM: /^(https?:\/\/)?(www\.)?(instagram\.com\/[A-Za-z0-9._-]+(\/)?)$/,
+    LINKEDIN: /^(https?:\/\/)?(www\.)?(linkedin\.com\/(in|company)\/[A-Za-z0-9_-]+(\/)?)$/,
+    TWITTER: /^(https?:\/\/)?(www\.)?(x|twitter)\.com\/[A-Za-z0-9_]+(\/)?$/,
+};
+
+export const updateCandidateSocialLinks = async (currentState: any, formData: FormData) => {
+    let success = true;
+    const socialLinks = formData.getAll('link') as string[];
+    const socialTypes = formData.getAll('typeSocial') as SocialType[];
+
+    const errors = [];
+    const links: SocialLink[] = [];
+    for (let i = 0; i < socialLinks.length; i++) {
+        links.push({ socialLink: socialLinks[i], socialType: socialTypes[i] });
+        const link = socialLinks[i];
+        if (!link) {
+            errors.push(['This field is required']);
+            success = false;
+        } else if (!regex[socialTypes[i]].test(link)) {
+            errors.push([`This ${socialTypes[i].toLowerCase()} url is not a valid`]);
+        } else {
+            errors.push(null);
+        }
+    }
+
+    if (success) {
+        try {
+            await WebsiteService.updateCandidateSocialLinks(links);
+        } catch (error) {
+            handleErrorToast(error);
+        }
+    }
+
+    currentState.socialLinks = socialLinks;
+    currentState.socialTypes = socialTypes;
+
+    return {
+        ...currentState,
+        success,
+        errors,
+    };
+};
+
 export const postJob = async (currentState: any, formData: FormData) => {
     currentState.title = formData.get('title')?.toString() ?? '';
     currentState.tags = formData.getAll('tags[]');
@@ -314,6 +360,8 @@ export const postJob = async (currentState: any, formData: FormData) => {
     currentState.description = formData.get('description')?.toString() ?? '';
     currentState.responsibilities = formData.get('responsibilities')?.toString() ?? '';
     currentState.category = formData.get('category')?.toString() ?? '';
+    currentState.address = formData.get('address')?.toString() ?? '';
+    currentState.education = formData.get('education')?.toString() ?? '';
     const validation = postJobSchema.safeParse(currentState);
     if (!validation.success) {
         return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
@@ -330,11 +378,12 @@ export const postJob = async (currentState: any, formData: FormData) => {
             deadline: currentState.expirationDate,
             introImg: '',
             status: false,
+            education: currentState.education,
             tagIds: currentState.tags,
-            enterpriseId: 'f9a74c91-6ebf-4d92-8b57-d4d9cacf8abc',
             categoryIds: [currentState.category],
-            address: ['b1c2d3e4-5678-90ab-cdef-abcdefabcdef'],
+            address: [currentState.address],
         });
+
         return { ...currentState, errors: {}, success: true, data: applyJob };
     } catch (error: any) {
         handleErrorToast(error);
@@ -344,7 +393,7 @@ export const postJob = async (currentState: any, formData: FormData) => {
 };
 
 export const addTag = async (currentState: any, formData: FormData) => {
-    currentState.name = formData.get('tag')?.toString() ?? '';
+    currentState.name = formData.get('name')?.toString() ?? '';
     const validation = addTagSchema.safeParse(currentState);
     if (!validation.success) {
         console.log('Error', validation.error.flatten().fieldErrors);

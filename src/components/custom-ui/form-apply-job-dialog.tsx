@@ -12,15 +12,18 @@ import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { successKeyMessage } from '@/lib/message-keys';
 
-export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void }) {
+export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void; jobId: string }) {
     const router = useRouter();
-    const { setOpen } = props;
-    const [state, onSubmit, isPending] = useActionState(applyJob, {
-        coverLetter: '',
-        selectedCv: '',
-        errors: {},
-        success: false,
-    });
+    const { setOpen, jobId } = props;
+    const [state, onSubmit, isPending] = useActionState<any, FormData>(
+        (currentState, formData) => applyJob(currentState, formData, jobId),
+        {
+            coverLetter: '',
+            selectedCv: '',
+            errors: {},
+            success: false,
+        }
+    );
     const [selectedCv, setSelectedCv] = useState(state.selectedCv);
     const [coverLetter, setCoverLetter] = useState(state.coverLetter);
     const { data: resultQuery } = useQuery({

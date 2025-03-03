@@ -1,9 +1,10 @@
-import { BaseAxios } from '@/lib/axios';
-import { ApiResponse, DetailedRequest, DetailedResponse } from '@/types';
+import { AuthAxios, BaseAxios } from '@/lib/axios';
+import { ApiResponse, DetailedRequest, DetailedResponse, User } from '@/types';
 import { AxiosError } from 'axios';
 import NextError from 'next/error';
 
 const axios = new BaseAxios('auth');
+const authAxios = new AuthAxios('auth');
 
 export class AuthService {
     public static async login(data: DetailedRequest.SignInRequest) {
@@ -101,6 +102,21 @@ export class AuthService {
     public static async resetPassword(data: DetailedRequest.ResetPasswordRequest) {
         try {
             const dataResponse = await axios.post<ApiResponse<DetailedResponse.ResetPassword>>('/reset-password', data);
+            return dataResponse.payload;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
+
+    public static async getMe() {
+        try {
+            const dataResponse = await authAxios.get<ApiResponse<User>>('/me');
             return dataResponse.payload;
         } catch (err) {
             if (err instanceof AxiosError) {

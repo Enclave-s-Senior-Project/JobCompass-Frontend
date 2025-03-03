@@ -17,8 +17,8 @@ export function ContentAddTag(props: { setOpen: (value: boolean) => void }) {
     });
 
     useEffect(() => {
-        if (state.errors?.tag) {
-            toast.error(state.errors.tag[0]);
+        if (state.errors?.name) {
+            toast.error(state.errors.name[0]);
         }
         if (state.success) {
             toast.success(successKeyMessage.APPLY_JOB_SUCCESSFULL);
@@ -30,15 +30,15 @@ export function ContentAddTag(props: { setOpen: (value: boolean) => void }) {
         <form className="space-y-6 p-2" action={onSubmit}>
             <div className="space-y-2">
                 <Input
-                    name="tag"
+                    name="name"
                     className={clsx(
                         'h-12 rounded-sm',
-                        state.errors?.tag
+                        state.errors?.name
                             ? 'border-2 border-danger ring-danger'
                             : 'focus-visible:border-primary focus-visible:ring-primary'
                     )}
                 />
-                <p className="text-red-500 text-[12px] font-medium">{state.errors?.tag && state.errors.tag[0]}</p>
+                <p className="text-red-500 text-[12px] font-medium">{state.errors?.name && state.errors.name[0]}</p>
             </div>
 
             <div className="flex justify-between gap-3">

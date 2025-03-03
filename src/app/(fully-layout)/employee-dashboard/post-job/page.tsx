@@ -1,6 +1,6 @@
 'use client';
 import type React from 'react';
-import { useActionState, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -15,9 +15,13 @@ import { queryKey } from '@/lib/react-query/keys';
 import { CategoryService } from '@/services/categories.service';
 import clsx from 'clsx';
 import { AddressService } from '@/services/address.Service';
+import { toast } from 'react-toastify';
+import { successKeyMessage } from '@/lib/message-keys';
+import { useRouter } from 'next/navigation';
 
 export default function PostJobForm() {
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
+    const router = useRouter();
     const [state, onSubmit] = useActionState(postJob, {
         title: '',
         tags: [] as Tag[],
@@ -25,17 +29,20 @@ export default function PostJobForm() {
         maxSalary: '',
         description: '',
         responsibilities: '',
+        categories: '',
+        address: '',
     });
     const [description, setDescription] = useState(state.description);
     const [responsibilities, setResponsibility] = useState(state.responsibilities);
     const [categories, setCategories] = useState(state.categories);
+    const [address, setAddress] = useState(state.address);
     const { data: resultQuery } = useQuery({
         queryKey: [queryKey.listCategory],
         queryFn: async () => {
             try {
                 const payload = await CategoryService.getAllCategories();
-                const address = await AddressService.getAllAddressByEnterprise();
-                return { payload, address };
+                const temp = await AddressService.getAllAddressByEnterprise();
+                return { payload, temp };
             } catch (error: any) {
                 console.log(error);
             }
@@ -45,6 +52,12 @@ export default function PostJobForm() {
         retry: 2,
         enabled: true,
     });
+    useEffect(() => {
+        if (state.success) {
+            toast.success(successKeyMessage.POST_JOB_SUCCESSFULL);
+            router.push('/');
+        }
+    }, [state.success, state.errors]);
     const handleDescription = (content: string) => {
         setDescription(content);
     };
@@ -103,17 +116,17 @@ export default function PostJobForm() {
                 <div className="flex flex-col gap-y-2">
                     <h1>Address</h1>
                     <Select
-                        value={categories}
+                        value={address}
                         onValueChange={(value) => {
-                            setCategories(value);
-                            state.categories = value;
+                            setAddress(value);
+                            state.address = value;
                         }}
-                        name="category"
+                        name="address"
                     >
                         <SelectTrigger
                             className={clsx(
                                 'h-12 text-base rounded-sm',
-                                state.errors?.category
+                                state.errors?.address
                                     ? 'border-2 border-danger focus:border-danger focus:ring-0'
                                     : 'focus:border-primary focus:ring-primary'
                             )}
@@ -121,15 +134,15 @@ export default function PostJobForm() {
                             <SelectValue placeholder="Select..." />
                         </SelectTrigger>
                         <SelectContent>
-                            {resultQuery?.payload?.map((categories) => (
-                                <SelectItem key={categories.categoryId} value={categories.categoryId}>
-                                    {categories.categoryName}
+                            {resultQuery?.temp?.map((temp) => (
+                                <SelectItem key={temp.addressId} value={temp.addressId}>
+                                    {temp.country} - {temp.city}
                                 </SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
                     <p className=" text-red-500 text-[12px] font-medium ">
-                        {state.errors?.category && state.errors.category[0]}
+                        {state.errors?.address && state.errors.address[0]}
                     </p>
                 </div>
 
@@ -141,7 +154,7 @@ export default function PostJobForm() {
                             <Input
                                 className={clsx(
                                     'h-12 rounded-sm',
-                                    state.errors?.title
+                                    state.errors?.minSalary
                                         ? 'border-2 border-danger ring-danger'
                                         : 'focus-visible:border-primary focus-visible:ring-primary'
                                 )}
