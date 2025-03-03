@@ -1,9 +1,12 @@
 'use client';
 
+import { UserContext } from '@/contexts/user-context';
 import clsx from 'clsx';
 import { LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useContext } from 'react';
+import { Separator } from '../ui/separator';
 
 type SidebarItem = {
     href: string;
@@ -14,9 +17,10 @@ type SidebarItem = {
 
 export function SidebarDashboard({ items, title }: { title: string; items: SidebarItem[] }) {
     const pathname = usePathname();
+    const { logoutHandle } = useContext(UserContext);
 
     return (
-        <div className="h-full flex flex-col justify-between">
+        <div className="h-full">
             <div className="space-y-3">
                 <h6 className="pl-5 border-l-[3px] border-l-transparent text-gray-400 text-[12px] leading-[18px] font-medium uppercase">
                     {title}
@@ -49,7 +53,13 @@ export function SidebarDashboard({ items, title }: { title: string; items: Sideb
                     ))}
                 </div>
             </div>
-            <button className="transition-all relative px-5 py-2 w-full flex items-center border-l-[3px] border-l-transparent gap-4 [&_svg]:size-6 text-sm font-medium text-gray-500 hover:text-primary hover:bg-primary-50">
+            <div className="m-2">
+                <Separator />
+            </div>
+            <button
+                className="transition-all relative px-5 py-2 w-full flex items-center border-l-[3px] border-l-transparent gap-4 [&_svg]:size-6 text-sm font-medium text-gray-500 hover:text-primary hover:bg-primary-50"
+                onClick={logoutHandle}
+            >
                 <LogOut />
                 Logout
             </button>

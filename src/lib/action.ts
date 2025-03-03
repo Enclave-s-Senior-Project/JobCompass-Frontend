@@ -47,7 +47,7 @@ export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, 
     try {
         const res = await AuthService.login(data);
         if (res.value)
-            axios.storeTokenInfo(res.value?.accessToken, res.value?.tokenType, res.value?.accessTokenExpires);
+            axios.storeTokenInfo(res.value?.accessToken as string, res.value?.tokenType, res.value?.accessTokenExpires);
         return {
             ...currentState,
             errors: {},

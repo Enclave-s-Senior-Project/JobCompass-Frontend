@@ -19,7 +19,7 @@ import { UserContext } from '@/contexts/user-context';
 import { hasPermission } from '@/lib/auth';
 
 export function SwitchSignIn() {
-    const { userInfo } = useContext(UserContext);
+    const { userInfo, logoutHandle } = useContext(UserContext);
 
     return userInfo ? (
         <div className="flex items-center justify-between lg:justify-normal gap-2 lg:gap-6">
@@ -67,7 +67,7 @@ export function SwitchSignIn() {
                         </DropdownMenuItem>
                     )}
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className="pr-3 py-2 [&_svg]:size-5">
+                    <DropdownMenuItem className="pr-3 py-2 [&_svg]:size-5" onClick={logoutHandle}>
                         <PiSignOutFill />
                         Sign Out
                     </DropdownMenuItem>

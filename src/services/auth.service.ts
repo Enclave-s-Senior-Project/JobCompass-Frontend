@@ -22,7 +22,20 @@ export class AuthService {
         }
     }
 
-    public static async logout() {}
+    public static async logout() {
+        try {
+            await authAxios.post<ApiResponse<null>>('/logout');
+            return axios;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
 
     public static async register(data: Omit<DetailedRequest.SignUpRequest, 'confirmPassword'>) {
         try {

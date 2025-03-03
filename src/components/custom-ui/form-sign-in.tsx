@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Input } from '../ui/input';
-import { useActionState, useEffect, useId, useState } from 'react';
+import { useActionState, useContext, useEffect, useId, useState } from 'react';
 import { InputPassword } from '@/components/custom-ui/input-password';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
@@ -13,8 +13,11 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import clsx from 'clsx';
 import { routes } from '@/configs/routes';
+import { UserContext } from '@/contexts/user-context';
 
 export function FormSignIn() {
+    const { refreshMe } = useContext(UserContext);
+
     const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
     const [state, onSubmit, isPending] = useActionState(signInSubmit, {
@@ -27,6 +30,9 @@ export function FormSignIn() {
     const checkboxId = useId();
     useEffect(() => {
         if (state.success) {
+            // fetch user information
+            refreshMe();
+            // set cookies and redirect to dashboard
             toast.success('Login successful');
             document.cookie = 'login=true';
             router.push('/');
