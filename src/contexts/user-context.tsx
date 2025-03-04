@@ -49,7 +49,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
             // clear user info and cookie logged
             setLocalUser(null);
             localStorage.removeItem('user');
-            document.cookie = 'login=';
+            document.cookie = 'login=; path=/login';
 
             // Clear cache
             queryClient.setQueryData([queryKey.me], null); // Immediately clear cache

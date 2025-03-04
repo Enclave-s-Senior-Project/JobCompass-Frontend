@@ -42,5 +42,7 @@ export const handleErrorToast = (err: any) => {
     if (err.props?.title) {
         const errorMessage = errorKeyMessage[err.props.title as keyof typeof errorKeyMessage];
         toast.error(errorMessage);
+    } else {
+        toast.error('Oops! Please try again');
     }
 };

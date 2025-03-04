@@ -34,7 +34,7 @@ export function FormSignIn() {
             refreshMe();
             // set cookies and redirect to dashboard
             toast.success('Login successful');
-            document.cookie = 'login=true';
+            document.cookie = 'login=true; path=/login';
             router.push('/');
         }
     }, [state.success, state.errors, router]);

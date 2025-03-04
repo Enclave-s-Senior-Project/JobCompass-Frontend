@@ -214,13 +214,12 @@ export const settingPersonalProfile = async (currentState: any, formData: FormDa
 
     const backgroundFile = formData.get('background') as File;
     if (backgroundFile.size > 0) {
-        console.log(backgroundFile);
         const uploadBackground = (async () => await UploadService.uploadFile(backgroundFile))();
         uploadPromises.push(uploadBackground);
     }
 
     const fullname = formData.get('fullname')?.toString() ?? '';
-    const phone = '+' + (formData.get('phone')?.toString() ?? '');
+    const phone = formData.get('phone')?.toString() ?? '';
     const education = formData.get('education')?.toString() ?? '';
     const experience = formData.get('experience')?.toString() ?? '';
 
@@ -243,12 +242,12 @@ export const settingPersonalProfile = async (currentState: any, formData: FormDa
             phone: phone,
             education: education,
             experience: experience,
-            pageUrl: avatar?.fileUrl || currentState.avatarUrl,
-            profileUrl: background?.fileUrl || currentState.backgroundUrl,
+            profileUrl: avatar?.fileUrl || currentState.avatarUrl,
+            pageUrl: background?.fileUrl || currentState.backgroundUrl,
         });
 
-        currentState.avatarUrl = updatedProfile?.pageUrl ?? currentState.avatarUrl;
-        currentState.backgroundUrl = updatedProfile?.profileUrl ?? currentState.backgroundUrl;
+        currentState.avatarUrl = updatedProfile?.profileUrl ?? currentState.avatarUrl;
+        currentState.backgroundUrl = updatedProfile?.pageUrl ?? currentState.backgroundUrl;
         currentState.fullname = updatedProfile?.fullName ?? currentState.fullname;
         currentState.phone = updatedProfile?.phone ?? currentState.phone;
         currentState.education = updatedProfile?.education ?? currentState.education;
@@ -261,26 +260,24 @@ export const settingPersonalProfile = async (currentState: any, formData: FormDa
     return currentState;
 };
 
-export const updateCandidateProfile = async (currentState: any, formData: FormData) => {
-    currentState.nationality = formData.get('nationality')?.toString() ?? '';
-    currentState.dateOfBirth = formData.get('dateOfBirth')?.toString() ?? '';
-    currentState.gender = formData.get('gender')?.toString() ?? '';
-    currentState.maritalStatus = formData.get('maritalStatus')?.toString() ?? '';
-    currentState.introduction = formData.get('introduction')?.toString() ?? '';
-
+export const updateCandidateProfile = async (currentState: {
+    nationality: string;
+    dateOfBirth: string;
+    gender: string;
+    maritalStatus: string;
+    introduction: string;
+}) => {
     const validation = updateCandidateProfileZ.safeParse(currentState);
 
     if (!validation.success) {
         return {
-            ...currentState,
             errors: validation.error.flatten().fieldErrors,
             success: false,
-            data: {},
         };
     }
 
     try {
-        const updatedProfile = await UserService.updateCandidateProfile({
+        await UserService.updateCandidateProfile({
             nationality: currentState.nationality,
             dateOfBirth: currentState.dateOfBirth,
             gender: currentState.gender,
@@ -288,18 +285,10 @@ export const updateCandidateProfile = async (currentState: any, formData: FormDa
             introduction: currentState.introduction,
         });
 
-        currentState.nationality = updatedProfile?.nationality ?? currentState.nationality;
-        currentState.dateOfBirth = updatedProfile?.dateOfBirth ?? currentState.dateOfBirth;
-        currentState.gender = updatedProfile?.gender ?? currentState.gender;
-        currentState.maritalStatus = updatedProfile?.maritalStatus ?? currentState.maritalStatus;
-        currentState.introduction = updatedProfile?.introduction ?? currentState.introduction;
-
-        return { ...currentState, success: true, errors: {} };
+        return { success: true, errors: {} };
     } catch (error) {
         handleErrorToast(error);
     }
-
-    return currentState;
 };
 
 const regex = {

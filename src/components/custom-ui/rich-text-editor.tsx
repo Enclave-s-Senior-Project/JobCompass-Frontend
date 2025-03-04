@@ -18,9 +18,11 @@ type TextEditorProps = {
     placement?: 'inside-bottom' | 'inside-top' | 'outside-bottom' | 'outside-top';
     className?: string;
     hasError?: boolean;
+    value?: string;
 };
 
 export default function RichTextEditor({
+    value,
     name,
     onChange,
     initialContent,
@@ -49,7 +51,7 @@ export default function RichTextEditor({
                 },
             }),
         ],
-        content: initialContent,
+        content: value ?? initialContent,
         onUpdate: ({ editor }) => {
             if (inputRef.current) inputRef.current.value = editor.getHTML();
             if (typeof onChange === 'function') onChange(editor.getHTML());
@@ -78,7 +80,15 @@ export default function RichTextEditor({
                 <TextEditorMenuBar editor={editor} />
             </div>
             <EditorContent editor={editor} />
-            <input ref={inputRef} name={name} type="text" className="hidden" />
+            <input
+                ref={inputRef}
+                name={name}
+                value={value}
+                onChange={() => {}}
+                defaultValue={initialContent}
+                type="text"
+                className="hidden"
+            />
         </div>
     );
 }

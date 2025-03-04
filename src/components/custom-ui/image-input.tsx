@@ -19,6 +19,10 @@ export function ImageInput({ name, initImage, isAvatar = false, isError = false 
         }
     };
 
+    const handleResetImage = () => {
+        setImage({ size: 0, url: initImage });
+    };
+
     const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             const file = e.target.files[0];
@@ -72,8 +76,13 @@ export function ImageInput({ name, initImage, isAvatar = false, isError = false 
             {image.size > 0 && (
                 <div className="absolute bottom-0 flex items-center gap-3 text-[10px] md:text-[12px]">
                     <span className="text-gray-600">{image.size} MB</span>
-                    <span className="text-gray-900 hover:underline cursor-pointer">Remove</span>
-                    <span className="hidden lg:block text-primary font-medium hover:underline cursor-pointer">
+                    <span className="text-gray-900 hover:underline cursor-pointer" onClick={handleResetImage}>
+                        Remove
+                    </span>
+                    <span
+                        className="hidden lg:block text-primary font-medium hover:underline cursor-pointer"
+                        onClick={handleSelectFile}
+                    >
                         Replace
                     </span>
                 </div>

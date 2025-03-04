@@ -1,26 +1,43 @@
 'use client';
 
-import React, { useActionState } from 'react';
+import React, { useActionState, useContext, useEffect } from 'react';
 import RichTextEditor from '@/components/custom-ui/rich-text-editor';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import clsx from 'clsx';
 import { ImageInput } from './image-input';
 import { settingPersonalProfile } from '@/lib/action';
+import { UserContext } from '@/contexts/user-context';
 
 export function FormPersonalProfile() {
-    const [state, onSubmit, isPending] = useActionState(settingPersonalProfile, {
+    const { refreshMe, userInfo } = useContext(UserContext);
+
+    // Initial state setup with fallback values
+    const initialState = {
         avatarFile: null,
         backgroundFile: null,
-        avatarUrl: null,
-        backgroundUrl: null,
-        fullname: '',
-        phone: '',
-        education: '',
-        experience: '',
+        avatarUrl: userInfo?.profileUrl ?? null,
+        backgroundUrl: userInfo?.pageUrl ?? null,
+        fullname: userInfo?.fullName ?? '',
+        phone: userInfo?.phone ?? '',
+        education: userInfo?.education ?? '',
+        experience: userInfo?.experience ?? '',
         errors: {},
         success: false,
-    });
+    };
+
+    const handleSubmit = (currentState: any, formData: FormData) => {
+        return settingPersonalProfile(currentState, formData).then((res) => {
+            refreshMe();
+            return res;
+        });
+    };
+
+    const [state, onSubmit, isPending] = useActionState(handleSubmit, initialState);
+
+    useEffect(() => {
+        refreshMe();
+    }, []);
 
     return (
         <form action={onSubmit} className="space-y-8">
@@ -28,11 +45,11 @@ export function FormPersonalProfile() {
                 <div className="flex items-center gap-4 select-none">
                     <div className="w-24 md:w-40 lg:w-60">
                         <label className="text-sm text-gray-900 cursor-default">Profile Picture</label>
-                        <ImageInput name="avatar" initImage="" isAvatar={true} />
+                        <ImageInput name="avatar" initImage={state?.avatarUrl} isAvatar={true} />
                     </div>
                     <div className="flex-1">
                         <label className="text-sm text-gray-900 cursor-default">Background Picture</label>
-                        <ImageInput name="background" initImage="" />
+                        <ImageInput name="background" initImage={state?.backgroundUrl} />
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4 select-none">
