@@ -44,7 +44,6 @@ export function FormAddEnterprises(props: { setOpen: (value: boolean) => void })
             toast.success(successKeyMessage.REGISTER_ENTERPRISE_SUCCESSFULL);
             setOpen(false);
         }
-        // setCheckLogo(false);
     }, [state.success, state.errors]);
 
     const handleEnterpriseBenefits = (content: string) => {
@@ -66,7 +65,7 @@ export function FormAddEnterprises(props: { setOpen: (value: boolean) => void })
             <div className="flex flex-row gap-7">
                 <div className="w-24 md:w-40 lg:w-60">
                     <label className="text-sm text-gray-900 cursor-default">Profile Picture</label>
-                    <ImageInput name="logo" initImage="" isAvatar={true} checkError={checkLogo} />
+                    <ImageInput name="logo" initImage="" isAvatar={true} isError={checkLogo} />
                     <p className="text-red-500 text-[12px] font-medium">
                         {Array.isArray(state.errors?.logo) ? state.errors.logo[0] : state.errors?.logo}
                     </p>

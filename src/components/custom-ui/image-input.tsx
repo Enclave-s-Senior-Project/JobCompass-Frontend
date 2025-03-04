@@ -5,10 +5,10 @@ import clsx from 'clsx';
 import { DefaultPlaceholderImage } from './default-placeholder-image';
 import { toast } from 'react-toastify';
 
-type Props = { name: string; initImage: string; isAvatar?: boolean; checkError?: boolean };
+type Props = { name: string; initImage: string; isAvatar?: boolean; isError?: boolean };
 type ImageProps = { url: string; size: number };
 
-export function ImageInput({ name, initImage, isAvatar = false, checkError = false }: Props) {
+export function ImageInput({ name, initImage, isAvatar = false, isError = false }: Props) {
     const [image, setImage] = useState<ImageProps>({ size: 0, url: initImage ?? '' });
 
     const inputFileRef = useRef<HTMLInputElement>(null);
@@ -43,7 +43,7 @@ export function ImageInput({ name, initImage, isAvatar = false, checkError = fal
                 className={clsx(
                     'h-24 md:h-40 lg:h-60 flex items-center flex-col justify-center text-center bg-gray-50/70 rounded-md border-2',
                     image.url ? 'border-primary-500' : 'border-dashed',
-                    checkError ? 'border-red-500' : ''
+                    isError ? 'border-red-500' : ''
                 )}
                 onClick={handleSelectFile}
             >
