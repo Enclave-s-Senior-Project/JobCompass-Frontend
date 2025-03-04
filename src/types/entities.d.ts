@@ -44,6 +44,7 @@ export interface Enterprise {
     bio: string;
     isPremium: boolean;
     expiredPremium: string;
+    status: string | null;
 }
 
 export interface CV {

@@ -65,6 +65,7 @@ export namespace DetailedResponse {
         addresses: Address[];
     };
     export type GetDetailJob = Job;
+    export type getDataRegisterEnterprise = Enterprise;
 }
 
 export namespace DetailedRequest {
@@ -167,5 +168,6 @@ export namespace DetailedRequest {
         teamSize: string;
         industryType: string;
         bio: string;
+        status: string;
     }
 }

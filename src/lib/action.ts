@@ -457,6 +457,7 @@ export const addEnterprises = async (currentState: any, formData: FormData) => {
             teamSize: currentState.size,
             industryType: currentState.industryType,
             bio: currentState.bio,
+            status: 'PENDING',
         });
 
         return { ...currentState, success: true, errors: {} };

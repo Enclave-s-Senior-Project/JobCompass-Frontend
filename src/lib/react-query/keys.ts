@@ -7,4 +7,6 @@ export const queryKey = {
     listTag: 'list-tag',
     listCategory: 'list-category',
     detailJob: 'detail-job',
+    checkEnterprise: 'check-enterprise',
+    updateRegisterEnterprises: 'update-register-enterprise',
 };
