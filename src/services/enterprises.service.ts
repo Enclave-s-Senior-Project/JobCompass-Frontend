@@ -25,7 +25,23 @@ export class EnterpriseService {
         try {
             const dataResponse =
                 await authAxios.get<ApiResponse<DetailedResponse.getDataRegisterEnterprise>>('/me/check');
+            console.log('s', dataResponse);
             return dataResponse.payload;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
+
+    public static async updateEnterprise(data: DetailedRequest.PostEnterprisesCredentials, id: string) {
+        try {
+            const dataResponse = await authAxios.patch<ApiResponse<null>>(`/${id}`, data);
+            return dataResponse.payload.value;
         } catch (err) {
             if (err instanceof AxiosError) {
                 throw new NextError({

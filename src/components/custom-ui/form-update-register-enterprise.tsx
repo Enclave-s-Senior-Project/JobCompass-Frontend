@@ -2,34 +2,35 @@
 import { useActionState, useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import { ChevronRight } from 'lucide-react';
-import { addEnterprises } from '@/lib/action';
+import { addEnterprises, updateRegisterEnterprice } from '@/lib/action';
 import { toast } from 'react-toastify';
 import { successKeyMessage } from '@/lib/message-keys';
 import { Input } from '../ui/input';
 import clsx from 'clsx';
 import { ImageInput } from './image-input';
 import RichTextEditor from './rich-text-editor';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { useQuery } from '@tanstack/react-query';
-import { queryKey } from '@/lib/react-query/keys';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup } from '../ui/select';
+import { Enterprise } from '@/types';
 
-export function FormUpdateRegisterEnterprises(props: { setOpen: (value: boolean) => void }) {
-    const { setOpen } = props;
+export function FormUpdateRegisterEnterprises(props: { setOpen: (value: boolean) => void; enterprise: Enterprise }) {
+    const { setOpen, enterprise } = props;
+
     const [checkLogo, setCheckLogo] = useState(false);
-    const [state, onSubmit, isPending] = useActionState(addEnterprises, {
-        logo: null,
-        logoUrl: null,
-        name: '',
-        phone: '',
-        email: '',
-        vision: '',
-        size: '',
-        foundedIn: '',
-        organizationType: '',
-        industryType: '',
-        bio: '',
-        enterpriseBenefits: '',
-        description: '',
+    const [state, onSubmit, isPending] = useActionState(updateRegisterEnterprice, {
+        id: enterprise.enterpriseId,
+        logo: enterprise.logoUrl || '',
+        logoUrl: enterprise.logoUrl || '',
+        name: enterprise.name,
+        phone: enterprise.phone,
+        email: enterprise.email,
+        vision: enterprise.companyVision,
+        size: enterprise.teamSize,
+        foundedIn: enterprise.foundedIn,
+        organizationType: enterprise.organizationType,
+        industryType: enterprise.industryType,
+        bio: enterprise.bio,
+        enterpriseBenefits: enterprise.enterpriseBenefits,
+        description: enterprise.description,
         errors: {},
         success: false,
     });
@@ -43,7 +44,7 @@ export function FormUpdateRegisterEnterprises(props: { setOpen: (value: boolean)
             setCheckLogo(false);
         }
         if (state.success) {
-            toast.success(successKeyMessage.REGISTER_ENTERPRISE_SUCCESSFULL);
+            toast.success(successKeyMessage.UPDATE_REGISTER_ENTERPRISE_SUCCESSFULL);
             setOpen(false);
         }
     }, [state.success, state.errors]);
@@ -67,7 +68,7 @@ export function FormUpdateRegisterEnterprises(props: { setOpen: (value: boolean)
             <div className="flex flex-row gap-7">
                 <div className="w-24 md:w-40 lg:w-60">
                     <label className="text-sm text-gray-900 cursor-default">Profile Picture</label>
-                    <ImageInput name="logo" initImage="" isAvatar={true} isError={checkLogo} />
+                    <ImageInput name="logo" initImage={state.logo} isAvatar={true} isError={checkLogo} />
                     <p className="text-red-500 text-[12px] font-medium">
                         {Array.isArray(state.errors?.logo) ? state.errors.logo[0] : state.errors?.logo}
                     </p>
@@ -179,7 +180,7 @@ export function FormUpdateRegisterEnterprises(props: { setOpen: (value: boolean)
                 </div>
                 <div className="w-1/2">
                     <label>Organization type</label>
-                    <Select name="organizationType">
+                    <Select name="organizationType" defaultValue={state.organizationType}>
                         <SelectTrigger
                             className={clsx(
                                 'h-12 text-base rounded-sm',
@@ -191,10 +192,12 @@ export function FormUpdateRegisterEnterprises(props: { setOpen: (value: boolean)
                             <SelectValue placeholder="Select..." className="text-[#767F8C]" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="FLAT">Flat</SelectItem>
-                            <SelectItem value="PRIVATE">Private</SelectItem>
-                            <SelectItem value="PUBLIC">Public</SelectItem>
-                            <SelectItem value="OUTSOURCE">Out source</SelectItem>
+                            <SelectGroup>
+                                <SelectItem value="FLAT">Flat</SelectItem>
+                                <SelectItem value="PRIVATE">Private</SelectItem>
+                                <SelectItem value="PUBLIC">Public</SelectItem>
+                                <SelectItem value="OUTSOURCE">Out source</SelectItem>
+                            </SelectGroup>
                         </SelectContent>
                     </Select>
                     <p className="text-red-500 text-[12px] font-medium">
@@ -271,7 +274,7 @@ export function FormUpdateRegisterEnterprises(props: { setOpen: (value: boolean)
                     isPending={isPending}
                     className="group w-[168px] h-[48px] bg-[#0A65CC] text-[#FFFFFF]"
                 >
-                    Register
+                    Update
                     <ChevronRight className="group-hover:translate-x-2 transition-all ml-2 h-4 w-4" />
                 </Button>
             </div>

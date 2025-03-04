@@ -13,6 +13,7 @@ const successKeyMessage = {
     APPLY_JOB_SUCCESSFULL: ' Apply job successfully',
     POST_JOB_SUCCESSFULL: ' Submit job successfully',
     REGISTER_ENTERPRISE_SUCCESSFULL: 'Register enterprise successfull',
+    UPDATE_REGISTER_ENTERPRISE_SUCCESSFULL: ' Update enterprise successfull',
 };
 
 export { errorKeyMessage, successKeyMessage };

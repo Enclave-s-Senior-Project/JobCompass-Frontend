@@ -178,8 +178,8 @@ const addEnterpriseSchema = z.object({
         .string()
         .min(1, 'Name is required.')
         .max(255, 'Name must be between 1 and 255 characters.')
-        .refine((value) => /^[A-Z]/.test(value), {
-            message: 'name must start with an uppercase letter',
+        .refine((value) => /^[A-Z][a-zA-Z0-9\s]*$/.test(value), {
+            message: 'Name must start with an uppercase letter and contain only letters, numbers, and spaces.',
         }),
     email: z
         .string()
@@ -194,9 +194,13 @@ const addEnterpriseSchema = z.object({
     phone: z.string().regex(/^\+?\d{7,15}$/, 'Phone must be a valid phone number.'),
     description: z.string().min(20, 'Description is required and must be at least 20 characters'),
     vision: z.string().min(1, 'vision is required '),
-    // logoUrl: z.string().max(255, 'Logo URL must be at most 255 characters.').optional(),
     organizationType: z.string().min(1, 'Organization type is required'),
-    size: z.string().min(1, 'Team size is required '),
+    size: z
+        .string()
+        .min(1, 'Team size is required.')
+        .refine((value) => /^\d+$/.test(value), {
+            message: 'Team size must contain only numbers.',
+        }),
     industryType: z
         .string()
         .min(1, 'Industry is require')
@@ -213,7 +217,17 @@ const addEnterpriseSchema = z.object({
         .string({
             required_error: 'Founded in date is required',
         })
-        .nonempty('Founded in date cannot be empty'),
+        .nonempty('Founded in date cannot be empty')
+        .refine(
+            (data) => {
+                const founded = new Date(data);
+                const today = new Date();
+                return founded <= today;
+            },
+            {
+                message: 'Founded in date cannot be in the future',
+            }
+        ),
 });
 
 export {

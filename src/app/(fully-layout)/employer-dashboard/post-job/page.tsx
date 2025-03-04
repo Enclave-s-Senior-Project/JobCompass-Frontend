@@ -97,7 +97,7 @@ export default function PostJobForm() {
                     </p>
                 </div>
 
-                <div className="flex flex-grow gap-x-2">
+                <div className="flex flex-col gap-y-2">
                     <h1>Tag</h1>
                     <div className="flex flex-grow gap-x-2">
                         <MultiSelectSearchInput
