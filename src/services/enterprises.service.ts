@@ -40,7 +40,7 @@ export class EnterpriseService {
 
     public static async updateEnterprise(data: DetailedRequest.PostEnterprisesCredentials, id: string) {
         try {
-            const dataResponse = await authAxios.patch<ApiResponse<null>>(`/${id}`, data);
+            const dataResponse = await authAxios.patch<ApiResponse<null>>(`/update-enterprise/${id}`, data);
             return dataResponse.payload.value;
         } catch (err) {
             if (err instanceof AxiosError) {
@@ -83,7 +83,7 @@ export class EnterpriseService {
 
     public static async deleteEnterprise(id: string) {
         try {
-            const dataResponse = await authAxios.delete<ApiResponse<null>>(`/${id}`);
+            const dataResponse = await authAxios.delete<ApiResponse<null>>(`/cancel-enterprise/${id}`);
             return dataResponse.payload;
         } catch (err) {
             if (err instanceof AxiosError) {

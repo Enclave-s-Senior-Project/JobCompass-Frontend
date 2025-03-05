@@ -6,7 +6,7 @@ import { queryKey } from '@/lib/react-query/keys';
 import { useEffect, useState } from 'react';
 import { DialogUpdateEnterprises } from './dialog-update-register-enterprise';
 import { AlertCircle } from 'lucide-react';
-// import { Button } from '../ui/button';
+import { toast } from 'sonner';
 
 export function FormAccountSetting() {
     const { data: temp, refetch } = useQuery({
@@ -29,15 +29,14 @@ export function FormAccountSetting() {
         try {
             await EnterpriseService.deleteEnterprise(temp.enterpriseId);
             refetch();
-        } catch (error) {
-            console.error('Error delete enterprise:', error);
+        } catch {
+            toast.error('Oops! Something went wrong');
         }
     };
 
     useEffect(() => {
         setCheck(temp === null);
     }, [temp]);
-
     return (
         <div className="space-y-8">
             <h1>Contact Info</h1>
