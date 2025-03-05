@@ -37,6 +37,7 @@ export interface Enterprise {
     enterpriseBenefits: string;
     companyVision: string;
     logoUrl: string;
+    backgroundImageUrl: string;
     foundedIn: string;
     organizationType: string;
     teamSize: string;
@@ -45,6 +46,7 @@ export interface Enterprise {
     isPremium: boolean;
     expiredPremium: string;
     status: string | null;
+    enterpriseId: string;
 }
 
 export interface CV {

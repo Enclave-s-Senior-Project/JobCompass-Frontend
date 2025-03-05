@@ -9,4 +9,5 @@ export const queryKey = {
     detailJob: 'detail-job',
     checkEnterprise: 'check-enterprise',
     updateRegisterEnterprises: 'update-register-enterprise',
+    enterprise:'enterprise',
 };

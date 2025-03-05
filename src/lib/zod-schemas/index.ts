@@ -230,7 +230,27 @@ const addEnterpriseSchema = z.object({
         ),
 });
 
+const companyProfileSchema = z.object({
+    logoUrl: z.string().optional(),
+    backgroundImageUrl: z.string().optional(),
+    logoFile: z.instanceof(File).optional().nullable(),
+    backgroundFile: z.instanceof(File).optional().nullable(),
+    name: z
+        .string()
+        .min(3, 'Company name must be at least 3 characters')
+        .max(100, 'Company name is too long')
+        .optional(),
+    description: z
+        .string()
+        .min(10, 'Description must be at least 10 characters')
+        .max(1000, 'Description is too long')
+        .optional(),
+});
+
+export type CompanyProfileForm = z.infer<typeof companyProfileSchema>;
+
 export {
+    companyProfileSchema,
     signUpSchema,
     verifySignInSchema,
     verifyEmailSchema,

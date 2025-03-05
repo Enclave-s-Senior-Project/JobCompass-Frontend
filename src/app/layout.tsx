@@ -5,6 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ReactQueryProvider from './providers/react-query-provider';
 import { UserProvider } from '@/contexts/user-context';
+import { EnterpriseProvider } from '@/contexts/enterprise-context';
 
 export const metadata: Metadata = {
     title: 'JobCompass',
@@ -22,7 +23,9 @@ export default function RootLayout({
                 <ToastContainer />
                 <ReactQueryProvider>
                     <UserProvider>
+                        <EnterpriseProvider>
                         <main>{children}</main>
+                        </EnterpriseProvider>
                     </UserProvider>
                 </ReactQueryProvider>
             </body>

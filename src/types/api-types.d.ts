@@ -163,11 +163,18 @@ export namespace DetailedRequest {
         enterpriseBenefits: string;
         companyVision: string;
         logoUrl: string;
+        backgroundImageUrl: string;
         foundedIn: string;
         organizationType: string;
         teamSize: string;
         industryType: string;
         bio: string;
         status: string;
+    }
+    export interface UpdateEnterprisesCompany {
+        name: string | null;
+        logoUrl?: string | null;
+        backgroundImageUrl?: string | null;
+        description: string | null;
     }
 }

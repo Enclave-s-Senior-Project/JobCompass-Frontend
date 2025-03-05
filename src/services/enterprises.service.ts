@@ -52,4 +52,32 @@ export class EnterpriseService {
             throw err;
         }
     }
+    public static async updateEnterpriseCompany(data: DetailedRequest.UpdateEnterprisesCompany, id: string) {
+        try {
+            const dataResponse = await authAxios.patch<ApiResponse<null>>(`/${id}`, data);
+            return dataResponse.payload.value;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
+    public static async getEnterprise() {
+        try {
+            const dataResponse = await authAxios.get<ApiResponse<DetailedResponse.getDataRegisterEnterprise>>('/me');
+            return dataResponse.payload.value;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
 }

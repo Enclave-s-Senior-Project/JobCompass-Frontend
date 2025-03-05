@@ -261,6 +261,62 @@ export const settingPersonalProfile = async (
         return { ...currentState, success: false, errors: {} };
     }
 };
+export const settingEmployerProfile = async (formData: FormData) => {
+    console.log('Form Data:');
+    for (const [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+    }
+
+    // Upload promises storage
+    const uploadPromises: Promise<any>[] = [];
+
+    let logoUrl = formData.get('logoUrl')?.toString() || '';
+    let backgroundImageUrl = formData.get('backgroundImageUrl')?.toString() || '';
+
+    const logoFile = formData.get('logoFile') as File;
+    if (logoFile && logoFile.size > 0) {
+        console.log('Uploading Logo...');
+        uploadPromises.push(
+            UploadService.uploadFile(logoFile).then((res) => {
+                logoUrl = res.fileUrl || ''; // Update logoUrl after successful upload
+            })
+        );
+    }
+
+    const backgroundFile = formData.get('backgroundFile') as File;
+    if (backgroundFile && backgroundFile.size > 0) {
+        console.log('Uploading Background...');
+        uploadPromises.push(
+            UploadService.uploadFile(backgroundFile).then((res) => {
+                backgroundImageUrl = res.fileUrl || ''; // Update backgroundImageUrl after successful upload
+            })
+        );
+    }
+
+    try {
+        // Wait for all uploads to complete
+        await Promise.all(uploadPromises);
+
+        console.log('Final Logo:', logoUrl);
+        console.log('Final Background:', backgroundImageUrl);
+
+        // Now update company profile with the correct URLs
+        const updateData = await EnterpriseService.updateEnterpriseCompany(
+            {
+                logoUrl,
+                backgroundImageUrl,
+                name: formData.get('name')?.toString() || '',
+                description: formData.get('description')?.toString() || '',
+            },
+            formData.get('enterpriseId')?.toString() || ''
+        );
+
+        console.log('Update Data:', updateData);
+    } catch (error) {
+        handleErrorToast(error);
+        return { ...formData, success: false, errors: {} };
+    }
+};
 
 export const updateCandidateProfile = async (currentState: {
     nationality: string;
@@ -453,6 +509,7 @@ export const addEnterprises = async (currentState: any, formData: FormData) => {
             enterpriseBenefits: currentState.enterpriseBenefits,
             companyVision: currentState.vision,
             logoUrl: logoFile?.fileUrl || currentState.logoUrl,
+            backgroundImageUrl: currentState.backgroundImageUrl,
             foundedIn: currentState.foundedIn,
             organizationType: currentState.organizationType,
             teamSize: currentState.size,
@@ -520,6 +577,7 @@ export const updateRegisterEnterprice = async (currentState: any, formData: Form
                 enterpriseBenefits: currentState.enterpriseBenefits,
                 companyVision: currentState.vision,
                 logoUrl: logoUrl,
+                backgroundImageUrl: currentState.backgroundImageUrl,
                 foundedIn: currentState.foundedIn,
                 organizationType: currentState.organizationType,
                 teamSize: currentState.size,

@@ -7,52 +7,46 @@ import {
     CircleUser,
     CirclePlus,
     NotebookText,
-    Users,
 } from 'lucide-react';
 
-export function SidebarDashboardEmployee() {
+export function SidebarDashboardEmployer() {
     const sidebarItems = [
         {
-            href: '/overview',
+            href: '/employer-dashboard/overview',
             label: 'Overview',
             icon: <Layers />,
         },
         {
-            href: '/applied-jobs',
+            href: '/employer-dashboard/employers-profile',
             label: 'Employers Profile',
             icon: <CircleUser />,
         },
         {
-            href: '/candidate-dashboard/favorite-jobs',
+            href: '/employer-dashboard/post-job',
             label: 'Post a Job',
             icon: <CirclePlus />,
         },
         {
-            href: '/job-alerts',
+            href: '/employer-dashboard/my-jobs',
             label: 'My Jobs',
             icon: <BriefcaseBusiness />,
         },
         {
-            href: '/settings',
-            label: 'Saved Candidate',
+            href: '/employer-dashboard/saved-candidates',
+            label: 'Saved Candidates',
             icon: <Bookmark />,
         },
         {
-            href: '/settings',
+            href: '/employer-dashboard/plans-billing',
             label: 'Plans & Billing',
             icon: <NotebookText />,
         },
         {
-            href: '/settings',
-            label: 'All Companies',
-            icon: <Users />,
-        },
-        {
-            href: '/settings',
-            label: 'Saved Candidate',
+            href: '/employer-dashboard/settings',
+            label: 'Settings',
             icon: <Settings />,
         },
     ];
 
-    return <SidebarDashboard title="candidate dashboard" items={sidebarItems} />;
+    return <SidebarDashboard title="Employer dashboard" items={sidebarItems} />;
 }
