@@ -88,7 +88,6 @@ export default function PostJobForm() {
                                 ? 'border-2 border-danger ring-danger'
                                 : ' focus-visible:border-primary focus-visible:ring-primary'
                         )}
-                        placeholder="Add job title, role, vacancies etc"
                         defaultValue={state.title}
                         name="title"
                     />
@@ -159,7 +158,6 @@ export default function PostJobForm() {
                                         : 'focus-visible:border-primary focus-visible:ring-primary'
                                 )}
                                 type="number"
-                                placeholder="Minimum salary..."
                                 defaultValue={state.minSalary}
                                 name="minSalary"
                             />
@@ -177,7 +175,6 @@ export default function PostJobForm() {
                                         : 'focus-visible:border-primary focus-visible:ring-primary'
                                 )}
                                 type="number"
-                                placeholder="Maximum salary..."
                                 defaultValue={state.maxSalary}
                                 name="maxSalary"
                             />
@@ -224,7 +221,6 @@ export default function PostJobForm() {
                                         : 'focus-visible:border-primary focus-visible:ring-primary'
                                 )}
                                 type="number"
-                                placeholder="Maximum salary..."
                                 defaultValue={state.experience}
                                 name="experience"
                             />

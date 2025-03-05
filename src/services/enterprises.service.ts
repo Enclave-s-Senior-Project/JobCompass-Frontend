@@ -80,4 +80,19 @@ export class EnterpriseService {
             throw err;
         }
     }
+
+    public static async deleteEnterprise(id: string) {
+        try {
+            const dataResponse = await authAxios.delete<ApiResponse<null>>(`/${id}`);
+            return dataResponse.payload;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
 }

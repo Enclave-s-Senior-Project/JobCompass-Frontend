@@ -471,13 +471,18 @@ export const addTag = async (currentState: any, formData: FormData) => {
 export const addEnterprises = async (currentState: any, formData: FormData) => {
     const errors: Record<string, any> = {};
     const uploadPromises = [];
-    const logoFile = formData.get('logo') as File;
+    const logoFile =
+        (formData.get('logo') as File).size === 0 && currentState.logo
+            ? (currentState.logo as File)
+            : (formData.get('logo') as File);
     if (!logoFile || logoFile.size === 0) {
-        errors.logo = 'Profile picture is required';
+        errors.logo = 'Logo is required';
     } else {
         const uploadLogo = (async () => await UploadService.uploadFile(logoFile))();
         uploadPromises.push(uploadLogo);
+        currentState.logo = logoFile;
     }
+    currentState.logo = logoFile;
     currentState.name = formData.get('name')?.toString() ?? '';
     currentState.phone = formData.get('phone')?.toString() ?? '';
     currentState.email = formData.get('email')?.toString() ?? '';

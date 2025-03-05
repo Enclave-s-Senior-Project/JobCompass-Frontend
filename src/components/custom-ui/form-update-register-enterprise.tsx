@@ -11,31 +11,41 @@ import { ImageInput } from './image-input';
 import RichTextEditor from './rich-text-editor';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup } from '../ui/select';
 import { Enterprise } from '@/types';
+import { EnterpriseService } from '@/services/enterprises.service';
 
-export function FormUpdateRegisterEnterprises(props: { setOpen: (value: boolean) => void; enterprise: Enterprise }) {
-    const { setOpen, enterprise } = props;
-
+export function FormUpdateRegisterEnterprises(props: {
+    setOpen: (value: boolean) => void;
+    enterprises: Enterprise | null;
+}) {
+    const { setOpen, enterprises } = props;
+    const [enterprise, setEnterprise] = useState<Enterprise | null>(enterprises);
     const [checkLogo, setCheckLogo] = useState(false);
     const [state, onSubmit, isPending] = useActionState(updateRegisterEnterprice, {
-        id: enterprise.enterpriseId,
-        logo: enterprise.logoUrl || '',
-        logoUrl: enterprise.logoUrl || '',
-        name: enterprise.name,
-        phone: enterprise.phone,
-        email: enterprise.email,
-        vision: enterprise.companyVision,
-        size: enterprise.teamSize,
-        foundedIn: enterprise.foundedIn,
-        organizationType: enterprise.organizationType,
-        industryType: enterprise.industryType,
-        bio: enterprise.bio,
-        enterpriseBenefits: enterprise.enterpriseBenefits,
-        description: enterprise.description,
+        id: enterprise?.enterpriseId,
+        logo: enterprise?.logoUrl || '',
+        logoUrl: enterprise?.logoUrl || '',
+        name: enterprise?.name,
+        phone: enterprise?.phone,
+        email: enterprise?.email,
+        vision: enterprise?.companyVision,
+        size: enterprise?.teamSize,
+        foundedIn: enterprise?.foundedIn,
+        organizationType: enterprise?.organizationType,
+        industryType: enterprise?.industryType,
+        bio: enterprise?.bio,
+        enterpriseBenefits: enterprise?.enterpriseBenefits,
+        description: enterprise?.description,
         errors: {},
         success: false,
     });
     const [enterpriseBenefits, setEnterpriseBenefits] = useState(state.enterpriseBenefits);
     const [description, setDescription] = useState(state.description);
+    const fetchEnterpriseData = async () => {
+        const updatedEnterprise = await EnterpriseService.checkEnterprise();
+        if (updatedEnterprise?.value) {
+            setEnterprise(updatedEnterprise.value);
+        }
+    };
 
     useEffect(() => {
         if (state.errors?.logo) {
@@ -44,6 +54,7 @@ export function FormUpdateRegisterEnterprises(props: { setOpen: (value: boolean)
             setCheckLogo(false);
         }
         if (state.success) {
+            fetchEnterpriseData();
             toast.success(successKeyMessage.UPDATE_REGISTER_ENTERPRISE_SUCCESSFULL);
             setOpen(false);
         }
@@ -75,7 +86,7 @@ export function FormUpdateRegisterEnterprises(props: { setOpen: (value: boolean)
                 </div>
                 <div className="space-y-5">
                     <div className="relative col-span-1">
-                        <label className="text-[#18191C] text-[14px]">Enterprise name</label>
+                        <label className="text-sm text-gray-900 cursor-default">Enterprise name</label>
                         <Input
                             defaultValue={state.name}
                             name="name"
@@ -92,7 +103,7 @@ export function FormUpdateRegisterEnterprises(props: { setOpen: (value: boolean)
                     </div>
                     <div className="flex flex-row gap-3 relative col-span-1">
                         <div className="w-1/2">
-                            <label className="text-[#18191C] text-[14px]">Phone number</label>
+                            <label className="text-sm text-gray-900 cursor-default">Phone number</label>
                             <Input
                                 defaultValue={state.phone}
                                 name="phone"
@@ -108,7 +119,7 @@ export function FormUpdateRegisterEnterprises(props: { setOpen: (value: boolean)
                             </p>
                         </div>
                         <div className="w-1/2">
-                            <label className="text-[#18191C] text-[14px]">Email</label>
+                            <label className="text-sm text-gray-900 cursor-default">Email</label>
                             <Input
                                 defaultValue={state.email}
                                 name="email"
@@ -126,7 +137,7 @@ export function FormUpdateRegisterEnterprises(props: { setOpen: (value: boolean)
                     </div>
                     <div className="flex flex-row gap-3 relative col-span-1">
                         <div className="w-1/2">
-                            <label>Company vision</label>
+                            <label className="text-sm text-gray-900 cursor-default">Company vision</label>
                             <Input
                                 defaultValue={state.vision}
                                 name="vision"
@@ -142,7 +153,7 @@ export function FormUpdateRegisterEnterprises(props: { setOpen: (value: boolean)
                             </p>
                         </div>
                         <div className="w-1/2">
-                            <label>Team size</label>
+                            <label className="text-sm text-gray-900 cursor-default">Team size</label>
                             <Input
                                 defaultValue={state.size}
                                 name="size"
@@ -162,7 +173,7 @@ export function FormUpdateRegisterEnterprises(props: { setOpen: (value: boolean)
             </div>
             <div className="flex flex-row gap-3 relative col-span-1">
                 <div className="w-1/2">
-                    <label>Founded in</label>
+                    <label className="text-sm text-gray-900 cursor-default">Founded in</label>
                     <Input
                         defaultValue={state.foundedIn}
                         type="date"
@@ -179,7 +190,7 @@ export function FormUpdateRegisterEnterprises(props: { setOpen: (value: boolean)
                     </p>
                 </div>
                 <div className="w-1/2">
-                    <label>Organization type</label>
+                    <label className="text-sm text-gray-900 cursor-default">Organization type</label>
                     <Select name="organizationType" defaultValue={state.organizationType}>
                         <SelectTrigger
                             className={clsx(
@@ -207,7 +218,7 @@ export function FormUpdateRegisterEnterprises(props: { setOpen: (value: boolean)
             </div>
             <div className="flex flex-row gap-3 relative col-span-1">
                 <div className="w-1/2">
-                    <label>Industry type</label>
+                    <label className="text-sm text-gray-900 cursor-default">Industry type</label>
                     <Input
                         defaultValue={state.industryType}
                         name="industryType"
@@ -223,7 +234,7 @@ export function FormUpdateRegisterEnterprises(props: { setOpen: (value: boolean)
                     </p>
                 </div>
                 <div className="w-1/2">
-                    <label>Bio </label>
+                    <label className="text-sm text-gray-900 cursor-default">Bio </label>
                     <Input
                         defaultValue={state.bio}
                         name="bio"
@@ -238,9 +249,10 @@ export function FormUpdateRegisterEnterprises(props: { setOpen: (value: boolean)
                 </div>
             </div>
             <div className="relative col-span-1">
-                <label>Benefits</label>
+                <label className="text-sm text-gray-900 cursor-default">Benefits</label>
                 <RichTextEditor
                     onChange={handleEnterpriseBenefits}
+                    placement="inside-bottom"
                     initialContent={enterpriseBenefits}
                     hasError={!!state.errors?.enterpriseBenefits}
                 />
@@ -249,9 +261,10 @@ export function FormUpdateRegisterEnterprises(props: { setOpen: (value: boolean)
                 </p>
             </div>
             <div className="relative col-span-1">
-                <label>Description</label>
+                <label className="text-sm text-gray-900 cursor-default">Description</label>
                 <RichTextEditor
                     onChange={handleDescription}
+                    placement="inside-bottom"
                     initialContent={description}
                     hasError={!!state.errors?.description}
                 />
@@ -262,7 +275,7 @@ export function FormUpdateRegisterEnterprises(props: { setOpen: (value: boolean)
 
             <div className="flex justify-between gap-3">
                 <Button
-                    type="button"
+                    type="reset"
                     variant="secondary"
                     className="w-[102px] h-[48px] text-[#0A65CC] bg-[#E7F0FA]"
                     onClick={() => setOpen(false)}

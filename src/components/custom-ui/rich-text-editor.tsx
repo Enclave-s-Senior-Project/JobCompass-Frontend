@@ -70,7 +70,12 @@ export default function RichTextEditor({
     });
 
     return (
-        <div className={clsx('relative', placement.startsWith('outside') ? 'py-11' : '')}>
+        <div
+            className={clsx(
+                'relative',
+                placement === 'outside-bottom' ? 'pb-11' : placement === 'outside-top' ? 'pt-11' : ''
+            )}
+        >
             <div
                 className={clsx(
                     'z-10 absolute left-0',

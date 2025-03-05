@@ -11,6 +11,10 @@ interface MultiSelectSearchInputProps {
     onChange: (selectedItems: string[]) => void;
     error?: string;
 }
+enum OrderType {
+    ASC = 'ASC',
+    DESC = 'DESC',
+}
 
 const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChange, error }) => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -22,12 +26,17 @@ const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChang
     const { data: options = [], isLoading } = useQuery({
         queryKey: ['searchTags', debouncedSearchTerm],
         queryFn: async () => {
-            if (debouncedSearchTerm.trim()) {
-                return await TagService.searchTag(debouncedSearchTerm);
-            }
-            return [];
+            const searchValue = (debouncedSearchTerm ?? '').trim();
+            const data = {
+                name: searchValue,
+                order: OrderType.ASC,
+                page: 1,
+                take: 5,
+                options: '',
+            };
+            return await TagService.searchTag(data);
         },
-        enabled: !!debouncedSearchTerm,
+        enabled: showDropdown, // Kích hoạt request khi dropdown được hiển thị
         staleTime: 1000 * 60,
         refetchOnWindowFocus: false,
     });
@@ -90,7 +99,7 @@ const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChang
                     placeholder="Search..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    onFocus={() => setShowDropdown(true)}
+                    onFocus={() => setShowDropdown(true)} // Hiển thị dropdown khi input được focus
                     onKeyDown={handleKeyDown}
                     aria-expanded={showDropdown}
                     aria-controls="search-dropdown"
@@ -98,7 +107,7 @@ const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChang
                 />
             </div>
 
-            {showDropdown && options.length > 0 && (
+            {showDropdown && (
                 <Card
                     className="absolute z-10 w-full mt-1 max-h-60 overflow-auto shadow-lg rounded-sm"
                     id="search-dropdown"
@@ -107,21 +116,23 @@ const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChang
                     <CardContent className="p-1">
                         {isLoading ? (
                             <p>Loading...</p>
-                        ) : (
+                        ) : options.length > 0 ? (
                             options.map((option) => (
                                 <div
                                     key={option.tagId}
-                                    className="p-2 flex items-center justify-between cursor-pointer hover:bg-gray-50 hover:animate-in    rounded-sm transition-all"
+                                    className="p-2 flex items-center justify-between cursor-pointer hover:bg-gray-50 hover:animate-in rounded-sm transition-all"
                                     onClick={() => handleSelect(option)}
                                     role="option"
                                     aria-selected={selectedItems.some((i) => i.tagId === option.tagId)}
                                 >
                                     <span>{option.name}</span>
                                     {selectedItems.some((i) => i.tagId === option.tagId) && (
-                                        <Check className="w-4 h-4 " />
+                                        <Check className="w-4 h-4" />
                                     )}
                                 </div>
                             ))
+                        ) : (
+                            <p className="p-2 text-gray-500 text-sm">No tags found</p>
                         )}
                     </CardContent>
                 </Card>

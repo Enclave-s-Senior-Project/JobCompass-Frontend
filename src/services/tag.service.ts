@@ -1,5 +1,5 @@
 import { BaseAxios } from '@/lib/axios';
-import { ApiResponse, DetailedResponse, Tag } from '@/types';
+import { ApiResponse, DetailedRequest, DetailedResponse, Tag } from '@/types';
 import { AxiosError } from 'axios';
 import NextError from 'next/error';
 
@@ -21,10 +21,10 @@ export class TagService {
         }
     }
 
-    public static async searchTag(name: string) {
+    public static async searchTag(data: DetailedRequest.GetTagsByName) {
         try {
-            const temp = await axios.get<ApiResponse<DetailedResponse.GetAllTag>>(`/filter/${name}`);
-            return temp.payload.value;
+            const temp = await axios.get<ApiResponse<DetailedResponse.GetAllTag>>('', { params: data });
+            return temp.payload.value?.data;
         } catch (err) {
             if (err instanceof AxiosError) {
                 throw new NextError({
