@@ -1,5 +1,5 @@
 import { BaseAxios } from './axios';
-import { DetailedRequest, SocialLink, SocialType } from '@/types';
+import { DetailedRequest, SocialLink } from '@/types';
 import { toast } from 'react-toastify';
 import { errorKeyMessage } from './message-keys';
 import {
@@ -300,21 +300,20 @@ const regex = {
     TWITTER: /^(https?:\/\/)?(www\.)?(x|twitter)\.com\/[A-Za-z0-9_]+(\/)?$/,
 };
 
-export const updateCandidateSocialLinks = async (currentState: any, formData: FormData) => {
+export const updateCandidateSocialLinks = async (currentState: {
+    links: SocialLink[];
+}): Promise<{ success: boolean; errors: (string[] | null)[] }> => {
     let success = true;
-    const socialLinks = formData.getAll('link') as string[];
-    const socialTypes = formData.getAll('typeSocial') as SocialType[];
 
     const errors = [];
-    const links: SocialLink[] = [];
-    for (let i = 0; i < socialLinks.length; i++) {
-        links.push({ socialLink: socialLinks[i], socialType: socialTypes[i] });
-        const link = socialLinks[i];
-        if (!link) {
+    const links: SocialLink[] = currentState.links ?? [];
+    for (const link of links) {
+        if (!link.socialLink) {
             errors.push(['This field is required']);
             success = false;
-        } else if (!regex[socialTypes[i]].test(link)) {
-            errors.push([`This ${socialTypes[i].toLowerCase()} url is not a valid`]);
+        } else if (!regex[link.socialType].test(link.socialLink)) {
+            errors.push([`This ${link.socialType.toLowerCase()} url is not a valid`]);
+            success = false;
         } else {
             errors.push(null);
         }
@@ -322,17 +321,17 @@ export const updateCandidateSocialLinks = async (currentState: any, formData: Fo
 
     if (success) {
         try {
-            await WebsiteService.updateCandidateSocialLinks(links);
+            const linksWithoutId = links.map<Omit<SocialLink, 'websiteId'>>((link) => ({
+                socialLink: link.socialLink,
+                socialType: link.socialType,
+            }));
+            await WebsiteService.updateCandidateSocialLinks(linksWithoutId);
         } catch (error) {
             handleErrorToast(error);
         }
     }
 
-    currentState.socialLinks = socialLinks;
-    currentState.socialTypes = socialTypes;
-
     return {
-        ...currentState,
         success,
         errors,
     };

@@ -34,10 +34,32 @@ export function FormUpdateCandidateProfile() {
     const [introduction, setIntroduction] = useState(userInfo?.introduction ?? '');
     const [dateOfBirth, setDateOfBirth] = useState(userInfo?.dateOfBirth ?? '');
     const [errors, setErrors] = useState(initialErrors);
+    const [isLoading, setIsLoading] = useState(false);
+    const [canSubmit, setCanSubmit] = useState(false);
+
+    useEffect(() => {
+        refreshMe();
+    }, []);
+
+    useEffect(() => {
+        const timeout = setTimeout(checkFormChanged, 200); // Check after 100ms delay
+        return () => clearTimeout(timeout);
+    }, [nationality, gender, maritalStatus, introduction, dateOfBirth, userInfo]);
+
+    const checkFormChanged = () => {
+        const hasChanges =
+            nationality !== (userInfo?.nationality ?? '') ||
+            gender !== (userInfo?.gender ?? '') ||
+            maritalStatus !== (userInfo?.maritalStatus ?? '') ||
+            introduction !== (userInfo?.introduction ?? '') ||
+            dateOfBirth !== (userInfo?.dateOfBirth ?? '');
+
+        setCanSubmit(hasChanges);
+    };
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-
+        setIsLoading(true);
         try {
             const result = await updateCandidateProfile({
                 nationality,
@@ -61,12 +83,10 @@ export function FormUpdateCandidateProfile() {
             }
         } catch {
             toast.error('Oops! Please try again');
+        } finally {
+            setIsLoading(false);
         }
     };
-
-    useEffect(() => {
-        refreshMe();
-    }, []);
 
     return (
         <form onSubmit={handleSubmit} className="space-y-8">
@@ -180,7 +200,7 @@ export function FormUpdateCandidateProfile() {
                 </div>
             </div>
             <div>
-                <Button size="xl" variant="primary" type="submit" isPending={false}>
+                <Button size="xl" variant="primary" type="submit" isPending={isLoading} disabled={!canSubmit}>
                     Save changes
                 </Button>
             </div>

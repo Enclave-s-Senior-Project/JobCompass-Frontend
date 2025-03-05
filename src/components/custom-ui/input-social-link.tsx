@@ -7,14 +7,18 @@ import { CircleX } from 'lucide-react';
 import { FaXTwitter, FaFacebookF, FaInstagram, FaYoutube, FaLinkedin } from 'react-icons/fa6';
 import { cn } from '@/lib/utils';
 import { SocialType } from '@/types';
+import { ChangeEvent } from 'react';
 
 type Props = {
-    nameSelect?: string;
-    nameInput?: string;
+    name: string;
+    valueInput?: string;
+    valueSelect?: SocialType;
     error?: string | null;
     defaultSocial?: SocialType;
     defaultValue?: string;
     handleRemove?: () => void;
+    onChangeSelect?: (value: SocialType) => void;
+    onChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
 const socials: Array<{ key: SocialType; value: string; icon: React.ReactElement }> = [
@@ -26,12 +30,15 @@ const socials: Array<{ key: SocialType; value: string; icon: React.ReactElement 
 ];
 
 export function InputSocialLink({
-    nameInput,
-    nameSelect,
+    name,
+    valueInput,
+    valueSelect,
     error,
-    defaultSocial = 'FACEBOOK',
-    defaultValue = '',
     handleRemove,
+    onChangeSelect,
+    onChangeInput,
+    defaultSocial,
+    defaultValue,
 }: Props) {
     return (
         <div className="flex items-center gap-3">
@@ -43,30 +50,26 @@ export function InputSocialLink({
                         : 'focus-within:border-primary focus-within:ring-primary focus-within:border focus-within:ring-1'
                 )}
             >
-                <Select name={nameSelect} defaultValue={defaultSocial}>
+                <Select name={name} defaultValue={defaultSocial} value={valueSelect} onValueChange={onChangeSelect}>
                     <SelectTrigger
                         className={clsx(
                             'h-12 max-w-52 text-base border-0 ring-0 focus:ring-0 focus-within:ring-0 focus-visible:ring-0'
                         )}
                     >
                         <SelectValue
-                            defaultValue={defaultSocial}
+                            defaultValue={valueSelect}
                             placeholder={
                                 <div className="flex items-center gap-2 text-sm">
-                                    {socials.find((social) => social.key === defaultSocial)?.icon}{' '}
-                                    {socials.find((social) => social.key === defaultSocial)?.value}
+                                    {socials.find((s) => s.key === valueSelect)?.icon}
+                                    {socials.find((s) => s.key === valueSelect)?.value}
                                 </div>
                             }
                         />
                     </SelectTrigger>
-                    <SelectContent defaultValue={defaultSocial}>
+                    <SelectContent defaultValue={valueSelect}>
                         <SelectGroup>
                             {socials.map((social) => (
-                                <SelectItem
-                                    key={social.key}
-                                    value={social.key}
-                                    defaultChecked={social.key === 'TWITTER'}
-                                >
+                                <SelectItem key={social.key} value={social.key}>
                                     <div className="flex items-center gap-2 text-sm">
                                         {social.icon} {social.value}
                                     </div>
@@ -77,8 +80,10 @@ export function InputSocialLink({
                 </Select>
                 <Separator orientation="vertical" className="h-8" />
                 <Input
-                    name={nameInput}
+                    name={name}
                     defaultValue={defaultValue}
+                    value={valueInput}
+                    onChange={onChangeInput}
                     className="h-12 border-0 ring-0 focus:ring-0 focus-within:ring-0 focus-visible:ring-0"
                 />
             </div>

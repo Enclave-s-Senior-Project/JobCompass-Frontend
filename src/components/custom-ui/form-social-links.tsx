@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useActionState, useContext, useState } from 'react';
+import { v4 } from 'uuid';
+import React, { FormEvent, useContext, useEffect, useState } from 'react';
 import { InputSocialLink } from './input-social-link';
 import { Button } from '../ui/button';
 import { CirclePlus } from 'lucide-react';
@@ -12,27 +13,31 @@ import { queryKey } from '@/lib/react-query/keys';
 import { UserContext } from '@/contexts/user-context';
 import { WebsiteService } from '@/services/website.service';
 import { handleErrorToast } from '@/lib/utils';
+import { toast } from 'react-toastify';
 
 export function FormSocialLinks() {
     const { userInfo } = useContext(UserContext);
 
     const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
+    const [errors, setErrors] = useState<(string[] | null)[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [canSubmit, setCanSubmit] = useState(false);
 
-    const [state, onSubmit, isPending] = useActionState(updateCandidateSocialLinks, {
-        success: false,
-        errors: {},
-        socialLinks: [],
-        socialTypes: [],
-    });
-
-    useQuery({
+    const { data } = useQuery({
         queryKey: [queryKey.candidateSocialLinks, userInfo?.profileId],
         queryFn: async ({ queryKey }) => {
             try {
                 if (queryKey[1]) {
                     const data = await WebsiteService.getCandidateSocialLinks({ profileId: queryKey[1] });
-                    setSocialLinks(data as SocialLink[]);
-                    return data;
+                    if (data) {
+                        const modifiedData = data.map<SocialLink>((link) => ({
+                            socialLink: link.socialLink,
+                            socialType: link.socialType,
+                            websiteId: link.websiteId,
+                        }));
+                        setSocialLinks(modifiedData);
+                        return modifiedData;
+                    }
                 }
                 return null;
             } catch (error) {
@@ -42,12 +47,19 @@ export function FormSocialLinks() {
         retry: 2,
     });
 
+    useEffect(() => {
+        const timeout = setTimeout(checkFormChanged, 200); // Check after 200ms delay
+        return () => clearTimeout(timeout);
+    }, [socialLinks]);
+
+    const checkFormChanged = () => {
+        const hasChanges = JSON.stringify(data) !== JSON.stringify(socialLinks);
+        setCanSubmit(hasChanges);
+    };
+
     const handleAddSocialLink = () => {
         if (socialLinks.length < 7) {
-            setSocialLinks((prev) => [
-                ...prev,
-                { socialType: 'FACEBOOK', socialLink: '', websiteId: Math.random().toString() },
-            ]);
+            setSocialLinks((prev) => [...prev, { socialType: 'FACEBOOK', socialLink: '', websiteId: v4() }]);
         }
     };
 
@@ -55,24 +67,58 @@ export function FormSocialLinks() {
         setSocialLinks((prev) => prev.filter((social) => social.websiteId !== id));
     };
 
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
+        try {
+            const result = await updateCandidateSocialLinks({ links: socialLinks });
+            if (!result.success) {
+                setErrors(result.errors);
+            } else {
+                setErrors([]);
+            }
+        } catch {
+            toast.error('Oops! Please try again');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
-        <form className="space-y-6" action={onSubmit}>
+        <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-4">
                 {socialLinks.map((socialLink, index) => {
                     return (
                         <div key={socialLink.websiteId} className="relative">
                             <label className="text-sm text-gray-900 cursor-default">Social Link {index + 1}</label>
                             <InputSocialLink
-                                defaultValue={state.socialLinks[index] ?? socialLink.socialLink}
-                                nameInput="link"
-                                nameSelect="typeSocial"
-                                defaultSocial={state.socialTypes[index] || socialLink.socialType}
-                                error={state.errors?.[index]?.[0]}
+                                name="link"
+                                valueInput={socialLink.socialLink}
+                                valueSelect={socialLink.socialType}
+                                onChangeInput={(e) => {
+                                    setSocialLinks((prev) =>
+                                        prev.map((link) => {
+                                            if (link.websiteId === socialLink.websiteId)
+                                                return { ...link, socialLink: e.target.value };
+                                            else return link;
+                                        })
+                                    );
+                                }}
+                                onChangeSelect={(value) => {
+                                    setSocialLinks((prev) =>
+                                        prev.map((link) => {
+                                            if (link.websiteId === socialLink.websiteId)
+                                                return { ...link, socialType: value };
+                                            else return link;
+                                        })
+                                    );
+                                }}
+                                error={errors?.[index]?.[0]}
                                 handleRemove={() => handleRemoveSocialLink(socialLink.websiteId ?? '')}
                             />
-                            {state.errors?.[index]?.[0] && (
+                            {errors?.[index]?.[0] && (
                                 <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
-                                    {state.errors[index][0]}
+                                    {errors[index][0]}
                                 </p>
                             )}
                         </div>
@@ -98,7 +144,7 @@ export function FormSocialLinks() {
                 </Button>
             </div>
 
-            <Button type="submit" variant="primary" isPending={isPending}>
+            <Button type="submit" variant="primary" isPending={isLoading} disabled={!canSubmit}>
                 Save Changes
             </Button>
         </form>

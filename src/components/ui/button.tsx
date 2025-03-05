@@ -50,7 +50,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps & { isPending?: b
                 className={cn(buttonVariants({ variant, size, className }))}
                 ref={ref}
                 {...props}
-                disabled={isPending}
+                disabled={props.disabled || isPending}
             >
                 {isPending && <ImSpinner2 className="animate-spin" />} {children}
             </Comp>

@@ -21,6 +21,9 @@ export function ImageInput({ name, initImage, isAvatar = false, isError = false 
 
     const handleResetImage = () => {
         setImage({ size: 0, url: initImage });
+        if (inputFileRef.current) {
+            inputFileRef.current.files = null;
+        }
     };
 
     const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {

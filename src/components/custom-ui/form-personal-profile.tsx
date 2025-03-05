@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useActionState, useContext, useEffect } from 'react';
+import React, { useEffect, useRef, useState, useActionState, useContext } from 'react';
 import RichTextEditor from '@/components/custom-ui/rich-text-editor';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,6 +11,8 @@ import { UserContext } from '@/contexts/user-context';
 
 export function FormPersonalProfile() {
     const { refreshMe, userInfo } = useContext(UserContext);
+    const formRef = useRef<HTMLFormElement>(null);
+    const [canSubmit, setCanSubmit] = useState(false);
 
     // Initial state setup with fallback values
     const initialState = {
@@ -35,12 +37,67 @@ export function FormPersonalProfile() {
 
     const [state, onSubmit, isPending] = useActionState(handleSubmit, initialState);
 
+    // Function to check if form has changed
+    const checkFormChanged = () => {
+        if (!formRef.current) return;
+
+        const formData = new FormData(formRef.current);
+        const currentValues = {
+            avatar: formData.get('avatar'), // File or null
+            background: formData.get('background'), // File or null
+            fullname: formData.get('fullname') || '',
+            phone: formData.get('phone') || '',
+            education: formData.get('education') || '',
+            experience: formData.get('experience') || '',
+        };
+
+        const hasChanges =
+            // Check if new avatar file is selected
+            currentValues.avatar === null ||
+            (currentValues.avatar instanceof File && currentValues.avatar.size > 0) ||
+            // Check if new background file is selected
+            currentValues.background === null ||
+            (currentValues.background instanceof File && currentValues.background.size > 0) ||
+            // Compare text fields with initial values
+            currentValues.fullname !== (userInfo?.fullName ?? '') ||
+            currentValues.phone !== (userInfo?.phone ?? '') ||
+            currentValues.education !== (userInfo?.education ?? '') ||
+            currentValues.experience !== (userInfo?.experience ?? '');
+
+        setCanSubmit(hasChanges);
+    };
+
+    // Add event listeners to detect changes
+    useEffect(() => {
+        const form = formRef.current;
+        if (!form) return;
+
+        // Debounced change handler
+        let timeout: NodeJS.Timeout;
+        const handleChange = () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(checkFormChanged, 200); // Debounce by 100ms
+        };
+
+        form.addEventListener('input', handleChange);
+        form.addEventListener('change', handleChange); // For file inputs
+
+        // Initial check
+        checkFormChanged();
+
+        return () => {
+            form.removeEventListener('input', handleChange);
+            form.removeEventListener('change', handleChange);
+            clearTimeout(timeout);
+        };
+    }, [userInfo]);
+
     useEffect(() => {
         refreshMe();
     }, []);
 
     return (
-        <form action={onSubmit} className="space-y-8">
+        <form ref={formRef} action={onSubmit} className="space-y-8">
             <div className="space-y-4">
                 <div className="flex items-center gap-4 select-none">
                     <div className="w-24 md:w-40 lg:w-60">
@@ -118,7 +175,7 @@ export function FormPersonalProfile() {
                 </div>
             </div>
             <div>
-                <Button size="xl" isPending={isPending}>
+                <Button size="xl" isPending={isPending} disabled={!canSubmit}>
                     Save Changes
                 </Button>
             </div>
