@@ -11,7 +11,7 @@ import { Tag } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import clsx from 'clsx';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { successKeyMessage } from '@/lib/message-keys';
 import { useRouter } from 'next/navigation';
 import MultiSelectSearchInput from '@/components/custom-ui/selected-tags';

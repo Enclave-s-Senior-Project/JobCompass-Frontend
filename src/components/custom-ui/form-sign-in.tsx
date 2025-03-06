@@ -10,7 +10,7 @@ import { LuArrowRight } from 'react-icons/lu';
 import { signInSubmit } from '@/lib/action';
 import { ButtonOptionsSignIn } from '@/components/custom-ui/button-options-sign-in';
 import { useRouter } from 'next/navigation';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import clsx from 'clsx';
 import { routes } from '@/configs/routes';
 import { UserContext } from '@/contexts/user-context';

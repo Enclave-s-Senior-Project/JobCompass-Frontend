@@ -5,7 +5,7 @@ import { Input } from '../ui/input';
 import { LuArrowRight } from 'react-icons/lu';
 import { verifyEmail } from '@/lib/action';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { AuthService } from '@/services/auth.service';
 
 export function FormEmailVerify() {

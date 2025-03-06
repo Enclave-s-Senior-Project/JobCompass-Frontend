@@ -10,7 +10,7 @@ import { settingPersonalProfile } from '@/lib/action';
 import { UserContext } from '@/contexts/user-context';
 import { PersonalProfileType } from '@/types';
 import { useMutation } from '@tanstack/react-query';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 type FormErrors = {
     avatarFile: (string | null)[];
@@ -46,8 +46,7 @@ export function FormPersonalProfile() {
     const { mutate: submitMutation, isPending } = useMutation({
         mutationFn: () => settingPersonalProfile(formValue),
         onSuccess: (res) => {
-            const { success, errors, ...formValue } = res;
-            setFormValue(formValue);
+            const { success, errors } = res;
             setErrors(errors as FormErrors);
             if (success) {
                 refreshMe();
@@ -61,24 +60,24 @@ export function FormPersonalProfile() {
     });
 
     useEffect(() => {
-        setCanSubmit(
-            JSON.stringify(formValue) !==
-                JSON.stringify({
-                    avatarFile: null,
-                    backgroundFile: null,
-                    avatarUrl: userInfo?.profileUrl ?? '',
-                    backgroundUrl: userInfo?.pageUrl ?? '',
-                    fullname: userInfo?.fullName ?? '',
-                    phone: userInfo?.phone ?? '',
-                    education: userInfo?.education ?? '',
-                    experience: userInfo?.experience ?? '',
-                })
-        );
-    }, [formValue, userInfo]);
+        const handler = setTimeout(() => {
+            setCanSubmit(
+                JSON.stringify(formValue) !==
+                    JSON.stringify({
+                        avatarFile: null,
+                        backgroundFile: null,
+                        avatarUrl: userInfo?.profileUrl ?? '',
+                        backgroundUrl: userInfo?.pageUrl ?? '',
+                        fullname: userInfo?.fullName ?? '',
+                        phone: userInfo?.phone ?? '',
+                        education: userInfo?.education ?? '',
+                        experience: userInfo?.experience ?? '',
+                    })
+            );
+        }, 300);
 
-    useEffect(() => {
-        console.log(formValue);
-    }, [formValue]);
+        return () => clearTimeout(handler);
+    }, [formValue, userInfo]);
 
     useEffect(() => {
         refreshMe();

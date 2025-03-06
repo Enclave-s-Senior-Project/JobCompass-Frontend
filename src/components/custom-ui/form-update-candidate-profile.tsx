@@ -9,23 +9,26 @@ import RichTextEditor from './rich-text-editor';
 import { Button } from '../ui/button';
 import { languagesData } from '@/lib/data/languages.data';
 import { UserContext } from '@/contexts/user-context';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
+import { useMutation } from '@tanstack/react-query';
+
+type FormErrors = {
+    nationality: (string | null)[];
+    dateOfBirth: (string | null)[];
+    gender: (string | null)[];
+    maritalStatus: (string | null)[];
+    introduction: (string | null)[];
+};
 
 export function FormUpdateCandidateProfile() {
     const { refreshMe, userInfo } = useContext(UserContext);
 
-    const initialErrors: {
-        nationality: string[] | null;
-        dateOfBirth: string[] | null;
-        gender: string[] | null;
-        maritalStatus: string[] | null;
-        introduction: string[] | null;
-    } = {
-        nationality: null,
-        dateOfBirth: null,
-        gender: null,
-        maritalStatus: null,
-        introduction: null,
+    const initialErrors: FormErrors = {
+        nationality: [],
+        dateOfBirth: [],
+        gender: [],
+        maritalStatus: [],
+        introduction: [],
     };
 
     const [nationality, setNationality] = useState(userInfo?.nationality ?? '');
@@ -33,16 +36,38 @@ export function FormUpdateCandidateProfile() {
     const [maritalStatus, setMaritalStatus] = useState(userInfo?.maritalStatus ?? '');
     const [introduction, setIntroduction] = useState(userInfo?.introduction ?? '');
     const [dateOfBirth, setDateOfBirth] = useState(userInfo?.dateOfBirth ?? '');
-    const [errors, setErrors] = useState(initialErrors);
-    const [isLoading, setIsLoading] = useState(false);
+    const [errors, setErrors] = useState<FormErrors>(initialErrors);
     const [canSubmit, setCanSubmit] = useState(false);
+
+    const { mutate: submitMutation, isPending } = useMutation({
+        mutationFn: () =>
+            updateCandidateProfile({
+                nationality,
+                gender,
+                maritalStatus,
+                introduction,
+                dateOfBirth,
+            }),
+        onSuccess: (res) => {
+            const { success, errors } = res;
+            setErrors(errors as FormErrors);
+            if (success) {
+                refreshMe();
+                toast.success('Updated!');
+            }
+            return res;
+        },
+        onError: () => {
+            toast.error('Oops! Something went wrong');
+        },
+    });
 
     useEffect(() => {
         refreshMe();
     }, []);
 
     useEffect(() => {
-        const timeout = setTimeout(checkFormChanged, 200); // Check after 100ms delay
+        const timeout = setTimeout(checkFormChanged, 300); // Check after 100ms delay
         return () => clearTimeout(timeout);
     }, [nationality, gender, maritalStatus, introduction, dateOfBirth, userInfo]);
 
@@ -59,33 +84,7 @@ export function FormUpdateCandidateProfile() {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
-        try {
-            const result = await updateCandidateProfile({
-                nationality,
-                gender,
-                maritalStatus,
-                introduction,
-                dateOfBirth,
-            });
-
-            if (result && !result.success) {
-                setErrors({
-                    nationality: result.errors.nationality || [],
-                    dateOfBirth: result.errors.dateOfBirth || [],
-                    gender: result.errors.gender || [],
-                    maritalStatus: result.errors.maritalStatus || [],
-                    introduction: result.errors.introduction || [],
-                });
-            } else {
-                setErrors(initialErrors);
-                refreshMe();
-            }
-        } catch {
-            toast.error('Oops! Please try again');
-        } finally {
-            setIsLoading(false);
-        }
+        submitMutation();
     };
 
     return (
@@ -97,7 +96,7 @@ export function FormUpdateCandidateProfile() {
                         <SelectTrigger
                             className={clsx(
                                 'h-12 text-base rounded-sm',
-                                errors?.nationality
+                                errors?.nationality?.length > 0
                                     ? 'border-2 border-danger focus:border-danger focus:ring-0'
                                     : 'focus:border-primary focus:ring-primary'
                             )}
@@ -117,7 +116,7 @@ export function FormUpdateCandidateProfile() {
                         </SelectContent>
                     </Select>
                     <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
-                        {errors?.nationality && errors.nationality[0]}
+                        {errors?.nationality?.length > 0 && errors.nationality[0]}
                     </p>
                 </div>
                 <div className="relative col-span-1">
@@ -132,13 +131,13 @@ export function FormUpdateCandidateProfile() {
                         type="date"
                         className={clsx(
                             'h-12 rounded-sm',
-                            errors?.dateOfBirth
+                            errors?.dateOfBirth?.length
                                 ? 'border-2 border-danger ring-danger'
                                 : 'focus-visible:border-primary focus-visible:ring-primary'
                         )}
                     />
                     <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
-                        {errors?.dateOfBirth && errors.dateOfBirth[0]}
+                        {errors?.dateOfBirth?.length > 0 && errors.dateOfBirth[0]}
                     </p>
                 </div>
                 <div className="relative col-span-1">
@@ -147,7 +146,7 @@ export function FormUpdateCandidateProfile() {
                         <SelectTrigger
                             className={clsx(
                                 'h-12 text-base rounded-sm',
-                                errors?.gender
+                                errors?.gender?.length > 0
                                     ? 'border-2 border-danger focus:border-danger focus:ring-0'
                                     : 'focus:border-primary focus:ring-primary'
                             )}
@@ -162,7 +161,7 @@ export function FormUpdateCandidateProfile() {
                         </SelectContent>
                     </Select>
                     <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
-                        {errors?.gender && errors.gender[0]}
+                        {errors?.gender?.length > 0 && errors.gender[0]}
                     </p>
                 </div>
                 <div className="relative col-span-1">
@@ -171,7 +170,7 @@ export function FormUpdateCandidateProfile() {
                         <SelectTrigger
                             className={clsx(
                                 'h-12 text-base rounded-sm',
-                                errors?.maritalStatus
+                                errors?.maritalStatus?.length > 0
                                     ? 'border-2 border-danger focus:border-danger focus:ring-0'
                                     : 'focus:border-primary focus:ring-primary'
                             )}
@@ -186,7 +185,7 @@ export function FormUpdateCandidateProfile() {
                         </SelectContent>
                     </Select>
                     <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
-                        {errors?.maritalStatus && errors.maritalStatus[0]}
+                        {errors?.maritalStatus?.length > 0 && errors.maritalStatus[0]}
                     </p>
                 </div>
                 <div className="relative col-span-2">
@@ -200,7 +199,7 @@ export function FormUpdateCandidateProfile() {
                 </div>
             </div>
             <div>
-                <Button size="xl" variant="primary" type="submit" isPending={isLoading} disabled={!canSubmit}>
+                <Button size="xl" variant="primary" type="submit" isPending={isPending} disabled={!canSubmit}>
                     Save changes
                 </Button>
             </div>

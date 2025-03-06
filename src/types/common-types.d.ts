@@ -35,3 +35,11 @@ export type PersonalProfileType = {
     education: string;
     experience: string;
 };
+
+export type CandidateProfileType = {
+    nationality: string | null;
+    dateOfBirth: string | null;
+    gender: string | null;
+    maritalStatus: string | null;
+    introduction: string;
+};

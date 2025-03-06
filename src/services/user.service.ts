@@ -8,7 +8,7 @@ const authAxios = new AuthAxios('user');
 export class UserService {
     public static async updatePersonalProfile(data: DetailedRequest.UpdatePersonalProfile) {
         try {
-            const res = await authAxios.patch<ApiResponse<User>>('/personal', data);
+            const res = await authAxios.patch<ApiResponse<Partial<User>>>('/personal', data);
             return res.payload.value;
         } catch (error) {
             if (error instanceof AxiosError) {
@@ -23,7 +23,7 @@ export class UserService {
 
     public static async updateCandidateProfile(data: DetailedRequest.UpdateCandidateProfile) {
         try {
-            const res = await authAxios.patch<ApiResponse<User>>('/candidate', data);
+            const res = await authAxios.patch<ApiResponse<Partial<User>>>('/candidate', data);
             return res.payload.value;
         } catch (error) {
             if (error instanceof AxiosError) {

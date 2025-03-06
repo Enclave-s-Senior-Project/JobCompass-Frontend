@@ -1,6 +1,6 @@
 import { BaseAxios } from './axios';
-import { DetailedRequest, PersonalProfileType, SocialLink } from '@/types';
-import { toast } from 'react-toastify';
+import { CandidateProfileType, DetailedRequest, PersonalProfileType, SocialLink } from '@/types';
+import { toast } from 'sonner';
 import { errorKeyMessage } from './message-keys';
 import {
     applyJobCoverLetterSchema,
@@ -322,34 +322,38 @@ export const settingEmployerProfile = async (formData: FormData) => {
     }
 };
 
-export const updateCandidateProfile = async (currentState: {
-    nationality: string;
-    dateOfBirth: string;
-    gender: string;
-    maritalStatus: string;
-    introduction: string;
-}) => {
+export const updateCandidateProfile = async (
+    currentState: CandidateProfileType
+): Promise<CandidateProfileType & { errors: {}; success: boolean }> => {
     const validation = updateCandidateProfileZ.safeParse(currentState);
 
     if (!validation.success) {
         return {
+            ...currentState,
             errors: validation.error.flatten().fieldErrors,
             success: false,
         };
     }
 
     try {
-        await UserService.updateCandidateProfile({
-            nationality: currentState.nationality,
-            dateOfBirth: currentState.dateOfBirth,
-            gender: currentState.gender,
-            maritalStatus: currentState.maritalStatus,
-            introduction: currentState.introduction,
+        const updatedProfile = await UserService.updateCandidateProfile({
+            nationality: currentState.nationality ?? '',
+            dateOfBirth: currentState.dateOfBirth ?? '',
+            gender: currentState.gender ?? '',
+            maritalStatus: currentState.maritalStatus ?? '',
+            introduction: currentState.introduction ?? '',
         });
 
-        return { success: true, errors: {} };
+        currentState.nationality = updatedProfile?.nationality ?? '';
+        currentState.dateOfBirth = updatedProfile?.dateOfBirth ?? '';
+        currentState.gender = updatedProfile?.gender ?? '';
+        currentState.maritalStatus = updatedProfile?.maritalStatus ?? '';
+        currentState.introduction = updatedProfile?.introduction ?? '';
+
+        return { ...currentState, success: true, errors: {} };
     } catch (error) {
         handleErrorToast(error);
+        return { ...currentState, success: false, errors: {} };
     }
 };
 

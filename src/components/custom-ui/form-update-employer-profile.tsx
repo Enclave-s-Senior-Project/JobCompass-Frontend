@@ -9,7 +9,7 @@ import RichTextEditor from './rich-text-editor';
 import { Button } from '../ui/button';
 import { languagesData } from '@/lib/data/languages.data';
 import { UserContext } from '@/contexts/user-context';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { EnterpriseContext } from '@/contexts';
 
 export function FormUpdateEmployerProfile() {
@@ -35,7 +35,6 @@ export function FormUpdateEmployerProfile() {
     const [introduction, setIntroduction] = useState(userInfo?.introduction ?? '');
     const [dateOfBirth, setDateOfBirth] = useState(userInfo?.dateOfBirth ?? '');
     const [errors, setErrors] = useState(initialErrors);
-
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -67,7 +66,7 @@ export function FormUpdateEmployerProfile() {
     };
 
     useEffect(() => {
-        refetchEnterpriseInfo();    
+        refetchEnterpriseInfo();
     }, []);
 
     return (

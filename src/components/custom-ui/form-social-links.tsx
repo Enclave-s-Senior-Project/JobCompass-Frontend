@@ -8,22 +8,21 @@ import { CirclePlus } from 'lucide-react';
 import { SocialLink } from '@/types';
 import clsx from 'clsx';
 import { updateCandidateSocialLinks } from '@/lib/action';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import { UserContext } from '@/contexts/user-context';
 import { WebsiteService } from '@/services/website.service';
 import { handleErrorToast } from '@/lib/utils';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 export function FormSocialLinks() {
     const { userInfo } = useContext(UserContext);
 
     const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
     const [errors, setErrors] = useState<(string[] | null)[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
     const [canSubmit, setCanSubmit] = useState(false);
 
-    const { data } = useQuery({
+    const { data, refetch } = useQuery({
         queryKey: [queryKey.candidateSocialLinks, userInfo?.profileId],
         queryFn: async ({ queryKey }) => {
             try {
@@ -45,6 +44,22 @@ export function FormSocialLinks() {
             }
         },
         retry: 2,
+    });
+
+    const { mutate: submitMutate, isPending } = useMutation({
+        mutationFn: () => updateCandidateSocialLinks({ links: socialLinks }),
+        onSuccess: (result) => {
+            if (!result.success) {
+                setErrors(result.errors);
+            } else {
+                toast.success('Updated!');
+                refetch();
+                setErrors([]);
+            }
+        },
+        onError: () => {
+            toast.error('Oops! Please try again');
+        },
     });
 
     useEffect(() => {
@@ -69,19 +84,7 @@ export function FormSocialLinks() {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
-        try {
-            const result = await updateCandidateSocialLinks({ links: socialLinks });
-            if (!result.success) {
-                setErrors(result.errors);
-            } else {
-                setErrors([]);
-            }
-        } catch {
-            toast.error('Oops! Please try again');
-        } finally {
-            setIsLoading(false);
-        }
+        submitMutate();
     };
 
     return (
@@ -144,7 +147,7 @@ export function FormSocialLinks() {
                 </Button>
             </div>
 
-            <Button type="submit" variant="primary" isPending={isLoading} disabled={!canSubmit}>
+            <Button type="submit" variant="primary" isPending={isPending} disabled={!canSubmit}>
                 Save Changes
             </Button>
         </form>

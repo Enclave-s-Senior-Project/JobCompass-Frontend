@@ -10,7 +10,7 @@ import { DetailedRequest, Meta } from '@/types';
 import { Separator } from '@/components/ui/separator';
 import { handleErrorToast } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import CardJobHorizontal from '@/components/custom-ui/card-job-horizontal';
 
 const ITEM_PER_PAGE = 10;

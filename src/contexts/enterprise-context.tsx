@@ -7,7 +7,7 @@ import React, { createContext, useEffect, useState } from 'react';
 
 export const EnterpriseContext = createContext<{
     enterpriseInfo: Enterprise | null;
-    refetchEnterpriseInfo:() => void;
+    refetchEnterpriseInfo: () => void;
     deactivateEnterprise: () => void;
 }>({
     enterpriseInfo: null,
@@ -26,7 +26,7 @@ export function EnterpriseProvider({ children }: { children: React.ReactNode }) 
         setIsHydrated(true);
     }, []);
 
-    const { data: fetchedEnterprise , refetch: refetchEnterpriseInfo} = useQuery({
+    const { data: fetchedEnterprise, refetch: refetchEnterpriseInfo } = useQuery({
         queryKey: [queryKey.enterprise],
         queryFn: async () => {
             const data = await EnterpriseService.getEnterprise();

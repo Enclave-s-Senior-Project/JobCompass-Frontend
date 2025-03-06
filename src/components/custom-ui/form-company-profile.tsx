@@ -9,7 +9,7 @@ import clsx from 'clsx';
 import { ImageInput } from './image-input';
 import { settingEmployerProfile } from '@/lib/action';
 import { EnterpriseContext } from '@/contexts';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { CompanyProfileForm, companyProfileSchema } from '@/lib/zod-schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -53,7 +53,6 @@ export function FormCompanyProfile() {
     const onSubmit = async (data: any) => {
         const formData = new FormData();
 
-
         formData.append('name', data.name);
         formData.append('description', data.description);
         formData.append('enterpriseId', enterpriseInfo?.enterpriseId || '');
@@ -88,7 +87,7 @@ export function FormCompanyProfile() {
 
     const handleChangeInputValue = (e: ChangeEvent<HTMLInputElement>) => {
         const name = e.target.name;
-    
+
         if (e.target.type === 'file') {
             const file = e.target.files?.[0] || null;
             if (file) {
@@ -102,7 +101,6 @@ export function FormCompanyProfile() {
             setValue(name as keyof CompanyProfileForm, e.target.value, { shouldDirty: true, shouldValidate: true });
         }
     };
-    
 
     if (loading) {
         return <p>Loading...</p>;

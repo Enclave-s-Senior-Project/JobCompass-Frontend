@@ -5,7 +5,7 @@ import CardJob from './card-job';
 import { useMutation } from '@tanstack/react-query';
 import { JobService } from '@/services/job.service';
 import { handleErrorToast } from '@/lib/utils';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { Separator } from '@/components/ui/separator';
 
 export function JobCardTwoType(props: {

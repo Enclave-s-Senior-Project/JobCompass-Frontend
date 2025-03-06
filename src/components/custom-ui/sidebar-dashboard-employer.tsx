@@ -1,13 +1,5 @@
 import { SidebarDashboard } from '@/components/custom-ui/sidebar-dashboard';
-import {
-    Bookmark,
-    BriefcaseBusiness,
-    Layers,
-    Settings,
-    CircleUser,
-    CirclePlus,
-    NotebookText,
-} from 'lucide-react';
+import { Bookmark, BriefcaseBusiness, Layers, Settings, CircleUser, CirclePlus, NotebookText } from 'lucide-react';
 
 export function SidebarDashboardEmployer() {
     const sidebarItems = [
