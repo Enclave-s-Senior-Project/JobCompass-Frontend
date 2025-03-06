@@ -13,7 +13,7 @@ import { useRef } from 'react';
 
 type TextEditorProps = {
     name?: string;
-    onChange?: (content: string) => void;
+    onChange?: (content: string, nameInput?: string) => void;
     initialContent?: string;
     placement?: 'inside-bottom' | 'inside-top' | 'outside-bottom' | 'outside-top';
     className?: string;
@@ -54,14 +54,14 @@ export default function RichTextEditor({
         content: value ?? initialContent,
         onUpdate: ({ editor }) => {
             if (inputRef.current) inputRef.current.value = editor.getHTML();
-            if (typeof onChange === 'function') onChange(editor.getHTML());
+            if (typeof onChange === 'function') onChange(editor.getHTML(), name);
         },
         editorProps: {
             attributes: {
                 class: cn(
                     'focus-visible:ring-primary min-h-[150px] max-h-[300px] h-[300px] overflow-auto cursor-text rounded-md border py-2 px-3 ring-offset-background focus-within:outline-none focus-within:ring-2',
                     placement === 'inside-top' ? 'pt-10' : placement === 'inside-bottom' ? 'pb-10' : '',
-                    hasError ? 'border-2 border-danger focus:border-danger focus:ring-0' : 'border-gray-300',
+                    hasError ? 'border-2 border-danger focus:border-danger focus:ring-0' : 'border-input',
                     className
                 ),
             },

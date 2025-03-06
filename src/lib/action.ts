@@ -1,5 +1,5 @@
 import { BaseAxios } from './axios';
-import { DetailedRequest, SocialLink } from '@/types';
+import { DetailedRequest, PersonalProfileType, SocialLink } from '@/types';
 import { toast } from 'react-toastify';
 import { errorKeyMessage } from './message-keys';
 import {
@@ -204,52 +204,32 @@ export const applyJob = async (currentState: any, formData: FormData, temp: stri
     return { ...currentState, errors: {}, success: false, data: null };
 };
 
-export const settingPersonalProfile = async (currentState: any, formData: FormData) => {
+export const settingPersonalProfile = async (
+    currentState: PersonalProfileType
+): Promise<PersonalProfileType & { errors: {}; success: boolean }> => {
     const uploadPromises = [];
     // get avatar file from inputs
-    const avatarFile =
-        (formData.get('avatar') as File).size === 0 && currentState.avatarFile
-            ? (currentState.avatarFile as File)
-            : (formData.get('avatar') as File);
+    const avatarFile = currentState.avatarFile;
     // because the url include name of file, so if the url not including name means file is different from url => upload to cloud
-    if (!currentState.avatarUrl?.includes(avatarFile.name) && avatarFile.size > 0) {
+    if (avatarFile && !currentState.avatarUrl?.includes(avatarFile.name) && avatarFile.size > 0) {
         const uploadAvatar = (async () => await UploadService.uploadFile(avatarFile))();
         uploadPromises.push(uploadAvatar);
     }
-    // update current state
-    currentState.avatarFile = avatarFile;
 
     // get background file from inputs
-    const backgroundFile =
-        (formData.get('background') as File).size === 0 && currentState.backgroundFile
-            ? (currentState.backgroundFile as File)
-            : (formData.get('background') as File);
+    const backgroundFile = currentState.backgroundFile;
     // because the url include name of file, so if the url not including name means file is different from url => upload to cloud
-    if (!currentState.backgroundUrl?.includes(backgroundFile.name) && backgroundFile.size > 0) {
+    if (backgroundFile && !currentState.backgroundUrl?.includes(backgroundFile.name) && backgroundFile.size > 0) {
         const uploadBackground = (async () => await UploadService.uploadFile(backgroundFile))();
         uploadPromises.push(uploadBackground);
     }
-    // update current state
-    currentState.backgroundFile = backgroundFile;
 
-    const fullname = formData.get('fullname')?.toString() ?? '';
-    const phone = formData.get('phone')?.toString() ?? '';
-    const education = formData.get('education')?.toString() ?? '';
-    const experience = formData.get('experience')?.toString() ?? '';
-
-    // update current state
-    currentState.fullname = fullname;
-    currentState.phone = phone;
-    currentState.education = education;
-    currentState.experience = experience;
-
-    const validation = updatePersonalProfile.safeParse({ fullname, phone });
+    const validation = updatePersonalProfile.safeParse({ fullname: currentState.fullname, phone: currentState.phone });
     if (!validation.success) {
         return {
             ...currentState,
             errors: validation.error.flatten().fieldErrors,
             success: false,
-            data: {},
         };
     }
 
@@ -257,10 +237,10 @@ export const settingPersonalProfile = async (currentState: any, formData: FormDa
         const [avatar, background] = await Promise.all(uploadPromises);
 
         const updatedProfile = await UserService.updatePersonalProfile({
-            fullName: fullname,
-            phone: phone,
-            education: education,
-            experience: experience,
+            fullName: currentState.fullname,
+            phone: currentState.phone,
+            education: currentState.education,
+            experience: currentState.experience,
             profileUrl: avatar?.fileUrl || currentState.avatarUrl,
             pageUrl: background?.fileUrl || currentState.backgroundUrl,
         });
@@ -272,12 +252,14 @@ export const settingPersonalProfile = async (currentState: any, formData: FormDa
         currentState.phone = updatedProfile?.phone ?? currentState.phone;
         currentState.education = updatedProfile?.education ?? currentState.education;
         currentState.experience = updatedProfile?.experience ?? currentState.experience;
+        currentState.avatarFile = null;
+        currentState.backgroundFile = null;
 
         return { ...currentState, success: true, errors: {} };
     } catch (error) {
         handleErrorToast(error);
+        return { ...currentState, success: false, errors: {} };
     }
-    return currentState;
 };
 
 export const updateCandidateProfile = async (currentState: {

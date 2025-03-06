@@ -10,7 +10,7 @@ import { Button } from '../ui/button';
 
 export function FormAccountSetting() {
     const [check, setCheck] = useState(false);
-    const { data: temp, isLoading } = useQuery({
+    const { data: temp } = useQuery({
         queryKey: [queryKey.checkEnterprise],
         queryFn: async () => {
             try {

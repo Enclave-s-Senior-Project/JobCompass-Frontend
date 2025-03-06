@@ -2,7 +2,7 @@
 import { useActionState, useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import { ChevronRight } from 'lucide-react';
-import { addEnterprises, updateRegisterEnterprice } from '@/lib/action';
+import { updateRegisterEnterprice } from '@/lib/action';
 import { toast } from 'react-toastify';
 import { successKeyMessage } from '@/lib/message-keys';
 import { Input } from '../ui/input';

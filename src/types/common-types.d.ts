@@ -24,3 +24,14 @@ export interface UserType {
 }
 
 export type SocialType = 'FACEBOOK' | 'TWITTER' | 'INSTAGRAM' | 'YOUTUBE' | 'LINKEDIN';
+
+export type PersonalProfileType = {
+    avatarFile: File | null;
+    backgroundFile: File | null;
+    avatarUrl: string;
+    backgroundUrl: string;
+    fullname: string;
+    phone: string;
+    education: string;
+    experience: string;
+};
