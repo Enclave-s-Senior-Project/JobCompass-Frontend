@@ -25,14 +25,13 @@ export function FormAccountSetting() {
     const [check, setCheck] = useState(false);
     const handleCancleEnterprise = async () => {
         if (!temp || !temp.enterpriseId) {
-            console.error('Không có enterpriseId để xóa');
             return;
         }
         try {
             await EnterpriseService.deleteEnterprise(temp.enterpriseId);
             refetch();
         } catch (error) {
-            console.error('Lỗi khi xóa doanh nghiệp:', error);
+            console.error('Error delete enterprise:', error);
         }
     };
 
