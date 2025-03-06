@@ -9,8 +9,7 @@ import { AlertCircle } from 'lucide-react';
 // import { Button } from '../ui/button';
 
 export function FormAccountSetting() {
-    const [check, setCheck] = useState(false);
-    const { data: temp } = useQuery({
+    const { data: temp, refetch } = useQuery({
         queryKey: [queryKey.checkEnterprise],
         queryFn: async () => {
             try {
