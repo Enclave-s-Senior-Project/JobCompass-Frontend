@@ -214,6 +214,8 @@ export const settingPersonalProfile = async (
     if (avatarFile && !currentState.avatarUrl?.includes(avatarFile.name) && avatarFile.size > 0) {
         const uploadAvatar = (async () => await UploadService.uploadFile(avatarFile))();
         uploadPromises.push(uploadAvatar);
+    } else {
+        uploadPromises.push((() => {})());
     }
 
     // get background file from inputs
@@ -222,6 +224,8 @@ export const settingPersonalProfile = async (
     if (backgroundFile && !currentState.backgroundUrl?.includes(backgroundFile.name) && backgroundFile.size > 0) {
         const uploadBackground = (async () => await UploadService.uploadFile(backgroundFile))();
         uploadPromises.push(uploadBackground);
+    } else {
+        uploadPromises.push((() => {})());
     }
 
     const validation = updatePersonalProfile.safeParse({ fullname: currentState.fullname, phone: currentState.phone });

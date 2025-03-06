@@ -49,8 +49,10 @@ export function FormPersonalProfile() {
             const { success, errors, ...formValue } = res;
             setFormValue(formValue);
             setErrors(errors as FormErrors);
-            if (success) refreshMe();
-            toast.success('Updated!');
+            if (success) {
+                refreshMe();
+                toast.success('Updated!');
+            }
             return res;
         },
         onError: () => {
@@ -73,6 +75,10 @@ export function FormPersonalProfile() {
                 })
         );
     }, [formValue, userInfo]);
+
+    useEffect(() => {
+        console.log(formValue);
+    }, [formValue]);
 
     useEffect(() => {
         refreshMe();
