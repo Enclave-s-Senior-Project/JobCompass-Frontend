@@ -10,6 +10,11 @@ export function ButtonOptionsSignIn() {
         window.open(`${process.env.NEXT_PUBLIC_APP_SERVER_URL}/auth/facebook`, '_self');
     };
 
+    const handleGoogleSignIn = () => {
+        sessionStorage.setItem('onLoginOauth2', 'true');
+        window.open(`${process.env.NEXT_PUBLIC_APP_SERVER_URL}/auth/google`, '_self');
+    };
+
     return (
         <div className="flex items-center flex-wrap justify-between gap-x-5 gap-y-2">
             <Button
@@ -21,7 +26,13 @@ export function ButtonOptionsSignIn() {
             >
                 <FaFacebookF className="text-primary" /> Sign in with Facebook
             </Button>
-            <Button className="flex-1 h-11 rounded-sm" variant="outline" size="md" type="button">
+            <Button
+                className="flex-1 h-11 rounded-sm"
+                variant="outline"
+                size="md"
+                type="button"
+                onClick={handleGoogleSignIn}
+            >
                 <FcGoogle /> Sign in with Google
             </Button>
         </div>

@@ -29,9 +29,9 @@ const CallbackPage = () => {
             refreshMe();
 
             toast.success('Login successful');
-            router.push('/'); // Redirect to dashboard after login
+            router.push('/');
         } else {
-            router.push('/sign-in'); // Redirect back if missing data
+            router.push('/sign-in');
         }
     }, [router, searchParams]);
 

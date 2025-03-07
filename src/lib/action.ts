@@ -392,6 +392,7 @@ export const updateCandidateSocialLinks = async (currentState: {
 };
 
 export const postJob = async (currentState: any, formData: FormData) => {
+    console.log('12', currentState.specializations, currentState.tags);
     currentState.title = formData.get('title')?.toString() ?? '';
     currentState.tags = formData.getAll('tags[]');
     currentState.minSalary = formData.get('minSalary');
@@ -400,14 +401,16 @@ export const postJob = async (currentState: any, formData: FormData) => {
     currentState.experience = Number(formData.get('experience'));
     currentState.jobType = formData.get('jobType')?.toString() ?? '';
     currentState.expirationDate = formData.get('expirationDate')?.toString() ?? '';
-    currentState.jobLevel = formData.get('jobLevel')?.toString() ?? '';
     currentState.description = formData.get('description')?.toString() ?? '';
     currentState.responsibilities = formData.get('responsibilities')?.toString() ?? '';
     currentState.category = formData.get('category')?.toString() ?? '';
     currentState.address = formData.get('address')?.toString() ?? '';
     currentState.education = formData.get('education')?.toString() ?? '';
+    currentState.benefit = formData.get('benefit')?.toString() ?? '';
+    currentState.specializations = formData.getAll('specializations[]');
     const validation = postJobSchema.safeParse(currentState);
     if (!validation.success) {
+        console.log('Error', validation.error.flatten().fieldErrors);
         return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
     }
     try {
@@ -426,6 +429,8 @@ export const postJob = async (currentState: any, formData: FormData) => {
             tagIds: currentState.tags,
             categoryIds: [currentState.category],
             address: [currentState.address],
+            enterpriseBenefits: currentState.benefit,
+            specializationIds: currentState.specializations,
         });
         return { ...currentState, errors: {}, success: true };
     } catch (error: any) {

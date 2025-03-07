@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { motionVariant } from '@/lib/motion-variants';
+import { featureColors, getRandomFeatureColor } from '@/lib/random-color';
 
 export default function CardJob(props: { job: Job }) {
     const { job } = props;
@@ -25,23 +26,27 @@ export default function CardJob(props: { job: Job }) {
                     <div className="flex items-start gap-4">
                         <div className=" relative rounded-lg overflow-hidden border-none flex-shrink-0 bg-gray-50">
                             <img
-                                src={job.introImg || 'https://www.foxsports.com/soccer/cristiano-ronaldo-player'}
-                                alt={job.enterprise.name || 'Company logo'}
+                                src={job.enterprise?.logoUrl || ''}
                                 width={48}
                                 height={48}
-                                className="object-contain size-14 rounded-sm"
+                                className="w-14 h-14 object-cover rounded-sm"
                             />
                         </div>
 
                         <div className="gap-4">
                             <div className="flex items-center gap-2 mb-1">
-                                <h3 className="font-medium">{job.enterprise.name}</h3>
-                                {/* {job.featured && (
-                                    <span className="text-xs bg-red-50 text-red-500 px-2 py-1 rounded-full">
-                                        Featured
-                                    </span>
-                                )} */}
-                                <span className="text-xs bg-red-50 text-red-500 px-2 py-1 rounded-full">Featured</span>
+                                {job.tags?.map((feature, index) => {
+                                    const color = getRandomFeatureColor(index);
+                                    console.log(color.bg, color.text);
+                                    return (
+                                        <span
+                                            key={feature.tagId}
+                                            className={`text-xs px-2 py-1 rounded-full ${color.bg} ${color.text} border border-opacity-50`}
+                                        >
+                                            {feature.name}
+                                        </span>
+                                    );
+                                })}
                             </div>
                             <div className="flex items-center text-sm text-gray-500">
                                 <MapPin className="h-4 w-4 mr-1 flex-shrink-0 text-[#939AAD]" />

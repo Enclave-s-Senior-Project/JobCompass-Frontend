@@ -1,5 +1,7 @@
+import { GetCategories } from './api-types.d';
+import { Address } from './common-types.d';
 import { PersonalProfileType, UserType } from './common-types';
-import { Enterprise, Job, SocialLink, Tag } from './entities';
+import { Categories, Enterprise, Job, SocialLink, Tag } from './entities';
 
 export interface ApiResponse<T> {
     payload: {
@@ -69,6 +71,15 @@ export namespace DetailedResponse {
     };
     export type GetDetailJob = Job;
     export type getDataRegisterEnterprise = Enterprise;
+    export type GetDataEnterprises = {
+        data: Enterprise[];
+        meta: Meta;
+    };
+
+    export type GetCategoriesChild = {
+        data: Categories[];
+        meta: Meta;
+    };
 }
 
 export namespace DetailedRequest {
@@ -163,6 +174,8 @@ export namespace DetailedRequest {
         tagIds: string[];
         categoryIds: string[];
         address: string[];
+        enterpriseBenefits: string;
+        specializationIds: string[];
     }
     export interface PostEnterprisesCredentials {
         name: string;
@@ -189,6 +202,10 @@ export namespace DetailedRequest {
     }
 
     export interface GetTagsByName extends Pagination {
+        name: string;
+    }
+
+    export interface GetCategoriesChildByName extends Pagination {
         name: string;
     }
 }

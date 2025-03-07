@@ -60,6 +60,11 @@ const resetPasswordSchema = z
     });
 
 const applyJobCoverLetterSchema = z.object({
+    selectedCv: z
+        .string({
+            required_error: 'CV is required',
+        })
+        .min(1, 'CV is required'),
     coverLetter: z.string().min(1, 'Cover letter is required'),
 });
 const updatePersonalProfile = z.object({
@@ -146,11 +151,6 @@ const postJobSchema = z
                 required_error: 'Expiration date is required',
             })
             .nonempty('Expiration date cannot be empty'),
-        jobLevel: z
-            .string({
-                required_error: 'Job level is required',
-            })
-            .min(1, 'Job level is required'),
         category: z
             .string({
                 required_error: 'Category is required',
@@ -160,7 +160,9 @@ const postJobSchema = z
             .string({
                 required_error: 'Address is required',
             })
-            .min(1, 'Address is required'),
+            .nonempty('Address is required'),
+        benefit: z.string().min(20, 'Benefit is required and must be at least 20 characters'),
+        specializations: z.array(z.string()).min(1, 'At least one specialization is required'),
     })
     .refine((data) => Number(data.minSalary) <= Number(data.maxSalary), {
         message: 'Minimum salary must be less than or equal to maximum salary',
@@ -170,7 +172,7 @@ const postJobSchema = z
 const addTagSchema = z.object({
     name: z
         .string()
-        .min(1, 'required')
+        .min(1, 'Tag name is required')
         .refine((value) => /^[A-Z]/.test(value), {
             message: 'Tag name must start with an uppercase letter',
         }),
@@ -198,22 +200,13 @@ const addEnterpriseSchema = z.object({
     description: z.string().min(20, 'Description is required and must be at least 20 characters'),
     vision: z.string().min(1, 'vision is required '),
     organizationType: z.string().min(1, 'Organization type is required'),
-    size: z
-        .string()
-        .min(1, 'Team size is required.')
-        .refine((value) => /^\d+$/.test(value), {
-            message: 'Team size must contain only numbers.',
-        }),
+    size: z.string().min(1, 'Size is required'),
     industryType: z
         .string()
         .min(1, 'Industry is require')
         .max(255, 'Industry type must be at most 255 characters.')
         .optional(),
-    bio: z
-        .string()
-        .min(1, 'Bio is required.')
-        .max(255, 'Bio must be at most 255 characters.')
-        .regex(/^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-./?%&=]*)?$/, 'Bio must be a valid URL.'),
+    bio: z.string().min(1, 'Bio is required.').max(255, 'Bio must be at most 255 characters.'),
 
     enterpriseBenefits: z.string().min(20, 'Benefit is required and must be at least 20 characters'),
     foundedIn: z

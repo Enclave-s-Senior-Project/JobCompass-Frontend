@@ -8,8 +8,8 @@ import { successKeyMessage } from '@/lib/message-keys';
 import { Input } from '../ui/input';
 import clsx from 'clsx';
 
-export function ContentAddTag(props: { setOpen: (value: boolean) => void }) {
-    const { setOpen } = props;
+export function ContentAddTag(props: { setOpen: (value: boolean) => void; refetch: () => void }) {
+    const { setOpen, refetch } = props;
     const [state, onSubmit, isPending] = useActionState(addTag, {
         tagName: '',
         errors: {},
@@ -18,10 +18,11 @@ export function ContentAddTag(props: { setOpen: (value: boolean) => void }) {
 
     useEffect(() => {
         if (state.errors?.name) {
-            toast.error(state.errors.name[0]);
+            toast.error('Oops! Something went wrong');
         }
         if (state.success) {
             toast.success(successKeyMessage.APPLY_JOB_SUCCESSFULL);
+            refetch();
             setOpen(false);
         }
     }, [state.success, state.errors]);

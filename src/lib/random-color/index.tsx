@@ -18,4 +18,16 @@ const getBackgroundColor = (color: string): string => {
     return `#${Math.floor(backgroundColorValue).toString(16).padStart(6, '0')}`;
 };
 
-export { getRandomColor, getBackgroundColor };
+const featureColors = [
+    { bg: 'bg-red-50', text: 'text-red-600' },
+    { bg: 'bg-blue-50', text: 'text-blue-600' },
+    { bg: 'bg-green-50', text: 'text-green-600' },
+    { bg: 'bg-yellow-50', text: 'text-yellow-600' },
+    { bg: 'bg-purple-50', text: 'text-purple-600' },
+];
+
+// Đảm bảo index luôn nằm trong phạm vi của featureColors
+const getRandomFeatureColor = (index: number) => {
+    return featureColors[index % featureColors.length] || featureColors[0];
+};
+export { getRandomColor, getBackgroundColor, featureColors, getRandomFeatureColor };

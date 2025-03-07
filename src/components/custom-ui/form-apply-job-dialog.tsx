@@ -11,6 +11,7 @@ import { CVService } from '@/services/cv.service';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { successKeyMessage } from '@/lib/message-keys';
+import clsx from 'clsx';
 
 export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void; jobId: string }) {
     const router = useRouter();
@@ -24,7 +25,6 @@ export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void; j
             success: false,
         }
     );
-    const [selectedCv, setSelectedCv] = useState(state.selectedCv);
     const [coverLetter, setCoverLetter] = useState(state.coverLetter);
     const { data: resultQuery } = useQuery({
         queryKey: [queryKey.listCvofProfile],
@@ -64,15 +64,15 @@ export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void; j
         >
             <div className="space-y-2">
                 <label className="text-[#18191C] text-[14px]">Choose Resume</label>
-                <Select
-                    value={selectedCv}
-                    onValueChange={(value) => {
-                        setSelectedCv(value);
-                        state.selectedCv = value;
-                    }}
-                    name="selectedCv"
-                >
-                    <SelectTrigger>
+                <Select name="selectedCv">
+                    <SelectTrigger
+                        className={clsx(
+                            'h-12 text-base rounded-sm',
+                            state.errors?.selectedCv
+                                ? 'border-2 border-danger focus:border-danger focus:ring-0'
+                                : 'focus:border-primary focus:ring-primary'
+                        )}
+                    >
                         <SelectValue placeholder="Select..." />
                     </SelectTrigger>
                     <SelectContent>
@@ -83,10 +83,20 @@ export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void; j
                         ))}
                     </SelectContent>
                 </Select>
+                <p className=" text-red-500 text-[12px] font-medium ">
+                    {state.errors?.selectedCv && state.errors.selectedCv[0]}
+                </p>
             </div>
 
             <div>
-                <RichTextEditor onChange={handleCoverLetterChange} initialContent={coverLetter} />
+                <RichTextEditor
+                    onChange={handleCoverLetterChange}
+                    initialContent={coverLetter}
+                    hasError={!!state.errors?.coverLetter}
+                />
+                <p className=" text-red-500 text-[12px] font-medium ">
+                    {state.errors?.coverLetter && state.errors.coverLetter[0]}
+                </p>
             </div>
 
             <div className="flex justify-between gap-3">
@@ -100,7 +110,7 @@ export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void; j
                 <Button
                     type="submit"
                     isPending={isPending}
-                    onClick={() => setOpen(false)}
+                    // onClick={() => setOpen(false)}
                     className="w-[168px] h-[48px] bg-[#0A65CC] text-[#FFFFFF]"
                 >
                     Apply Now

@@ -21,12 +21,14 @@ import { DialogApplyJob } from '@/components/custom-ui/dialog-apply-job';
 import Link from 'next/link';
 import { routes } from '@/configs/routes';
 import { useSearchParams } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import { JobService } from '@/services/job.service';
 import moment from 'moment';
 import DOMPurify from 'dompurify';
 import { Suspense } from 'react';
+import { handleErrorToast } from '@/lib/utils';
+import { toast } from 'sonner';
 
 export default function SingleJob() {
     return (
@@ -38,7 +40,7 @@ export default function SingleJob() {
 function PageContentOfSingleJob() {
     const jobId = useSearchParams();
     const id = jobId.get('id') || '';
-    const { data: resultQuery } = useQuery({
+    const { data: resultQuery, refetch } = useQuery({
         queryKey: [queryKey.detailJob],
         queryFn: async () => {
             try {
@@ -49,6 +51,39 @@ function PageContentOfSingleJob() {
             }
         },
     });
+    const removeFavoriteJobMutation = useMutation({
+        mutationFn: async ({ jobId }: { jobId: string }) => {
+            try {
+                await JobService.removeFavoriteJob({ jobId });
+                await refetch();
+            } catch (error: any) {
+                handleErrorToast(error);
+            }
+        },
+        onSuccess: () => {
+            toast.success('Job remove to favorite list');
+        },
+        onError: () => {
+            toast.error('Failed to add job to favorite list');
+        },
+    });
+    const addFavoriteJobMutation = useMutation({
+        mutationFn: async ({ jobId }: { jobId: string }) => {
+            try {
+                await JobService.addFavoriteJob({ jobId });
+                await refetch();
+            } catch (error: any) {
+                handleErrorToast(error);
+            }
+        },
+        onSuccess: () => {
+            toast.success('Job added to favorite list');
+        },
+        onError: () => {
+            toast.error('Failed to add job to favorite list');
+        },
+    });
+    const isFavorite = resultQuery?.isFavorite;
     return (
         <div className="min-h-screen ">
             <div className="w-full h-[76px] bg-[#F1F2F4] flex items-center">
@@ -68,7 +103,7 @@ function PageContentOfSingleJob() {
                     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
                             <div className="relative w-[96px] h-[96px] rounded-full overflow-hidden bg-gradient-to-br from-pink-500 to-orange-400">
-                                <img src={resultQuery?.enterprise.logoUrl} alt="Company logo" />
+                                <img src={resultQuery?.enterprise?.logoUrl || ''} alt="Company logo" />
                             </div>
                             <div>
                                 <div className="flex items-center gap-2">
@@ -92,22 +127,35 @@ function PageContentOfSingleJob() {
                                 <div className="flex flex-wrap gap-5 text-sm text-muted-foreground mt-2">
                                     <span className="flex flex-row gap-1 text-[#474C54]">
                                         <Link2 className="w-5 h-5 text-[#0066FF]" />
-                                        {resultQuery?.enterprise.bio}
+                                        {resultQuery?.enterprise?.bio}
                                     </span>
                                     <span className="flex flex-row gap-1 text-[#474C54]">
                                         <Phone className="w-5 h-5 text-[#0066FF] " />
-                                        {resultQuery?.enterprise.phone}
+                                        {resultQuery?.enterprise?.phone}
                                     </span>
                                     <span className="flex flex-row gap-1 text-[#474C54]">
                                         <Mail className="w-5 h-5 text-[#0066FF]" />
-                                        {resultQuery?.enterprise.email}
+                                        {resultQuery?.enterprise?.email}
                                     </span>
                                 </div>
                             </div>
                         </div>
                         <div className="flex gap-3 w-full md:w-auto">
-                            <Button variant="outline" size="icon-lg" className="h-[56px] w-[56px] hover:bg-[#E7F0FA]">
-                                <Bookmark className="h-[24px] w-[24px]" />
+                            <Button
+                                variant="outline"
+                                size="icon-lg"
+                                className={`h-[56px] w-[56px] hover:bg-[#E7F0FA] ${isFavorite ? 'bg-[#E7F0FA]' : ''}`}
+                                onClick={() => {
+                                    if (isFavorite) {
+                                        removeFavoriteJobMutation.mutate({ jobId: id });
+                                    } else {
+                                        addFavoriteJobMutation.mutate({ jobId: id });
+                                    }
+                                }}
+                            >
+                                <Bookmark
+                                    className={`h-[24px] w-[24px] ${isFavorite ? 'text-blue-500' : 'text-gray-500'}`}
+                                />
                             </Button>
                             <DialogApplyJob nameJob="Senior UX Designer" jobId={id} />
                         </div>
@@ -185,16 +233,16 @@ function PageContentOfSingleJob() {
                             <CardHeader className="space-y-2">
                                 <div className="flex items-center gap-4">
                                     <img
-                                        src={resultQuery?.enterprise.logoUrl}
+                                        src={resultQuery?.enterprise?.logoUrl}
                                         alt="Instagram logo"
                                         width={56}
                                         height={56}
                                         className="rounded-xl"
                                     />
                                     <div>
-                                        <h2 className="text-[20px]">{resultQuery?.enterprise.name}</h2>
+                                        <h2 className="text-[20px]">{resultQuery?.enterprise?.name}</h2>
                                         <p className="text-[14px] text-[#767F8C]">
-                                            {resultQuery?.enterprise.description}
+                                            {resultQuery?.enterprise?.description}
                                         </p>
                                     </div>
                                 </div>
@@ -211,23 +259,23 @@ function PageContentOfSingleJob() {
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <p className="text-[16px] text-muted-foreground">Organization type:</p>
-                                        <p className="text-[16px]">{resultQuery?.enterprise.industryType}</p>
+                                        <p className="text-[16px]">{resultQuery?.enterprise?.industryType}</p>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <p className="text-[16px] text-muted-foreground">Company size:</p>
-                                        <p className="text-[16px]">{resultQuery?.enterprise.teamSize}</p>
+                                        <p className="text-[16px]">{resultQuery?.enterprise?.teamSize}</p>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <p className="text-[16px] text-muted-foreground">Phone:</p>
-                                        <p className="text-[16px]">{resultQuery?.enterprise.phone}</p>
+                                        <p className="text-[16px]">{resultQuery?.enterprise?.phone}</p>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <p className="text-[16px] text-muted-foreground">Email:</p>
-                                        <p className="text-[16px]">{resultQuery?.enterprise.email}</p>
+                                        <p className="text-[16px]">{resultQuery?.enterprise?.email}</p>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <p className="text-[16px] text-muted-foreground">Website:</p>
-                                        <p className="text-[16px]">{resultQuery?.enterprise.bio}</p>
+                                        <p className="text-[16px]">{resultQuery?.enterprise?.bio || ''}</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-2 pt-4">

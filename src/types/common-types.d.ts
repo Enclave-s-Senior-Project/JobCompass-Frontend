@@ -6,6 +6,7 @@ export interface Language {
 }
 
 export interface Address {
+    addressId: string;
     isActive: boolean;
     country: string;
     city: string;

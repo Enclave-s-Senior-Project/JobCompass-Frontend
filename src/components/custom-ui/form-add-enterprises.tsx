@@ -9,7 +9,7 @@ import { Input } from '../ui/input';
 import clsx from 'clsx';
 import { ImageInput } from './image-input';
 import RichTextEditor from './rich-text-editor';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 export function FormAddEnterprises({ setOpen, refetch }: { setOpen: (value: boolean) => void; refetch: () => void }) {
     const [checkLogo, setCheckLogo] = useState(false);
@@ -140,16 +140,26 @@ export function FormAddEnterprises({ setOpen, refetch }: { setOpen: (value: bool
                         </div>
                         <div className="w-1/2">
                             <label className="text-sm text-gray-900 cursor-default">Team size</label>
-                            <Input
-                                defaultValue={state.size}
-                                name="size"
-                                className={clsx(
-                                    'h-12 rounded-sm',
-                                    state.errors?.size
-                                        ? 'border-2 border-danger ring-danger '
-                                        : 'focus-visible:border-primary focus-visible:ring-primary'
-                                )}
-                            />
+                            <Select name="size">
+                                <SelectTrigger
+                                    className={clsx(
+                                        'h-12 text-base rounded-sm',
+                                        state.errors?.size
+                                            ? 'border-2 border-danger focus:border-danger focus:ring-0'
+                                            : 'focus:border-primary focus:ring-primary'
+                                    )}
+                                >
+                                    <SelectValue placeholder="Select..." className="text-[#767F8C]" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="1-10">1-10</SelectItem>
+                                        <SelectItem value="11-50">11-50</SelectItem>
+                                        <SelectItem value="51-200">51-200</SelectItem>
+                                        <SelectItem value="200+">200+</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
                             <p className="text-red-500 text-[12px] font-medium">
                                 {state.errors?.size && state.errors.size[0]}
                             </p>
