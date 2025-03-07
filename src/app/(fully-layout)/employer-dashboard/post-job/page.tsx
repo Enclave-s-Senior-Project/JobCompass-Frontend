@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { LuArrowRight } from 'react-icons/lu';
 import RichTextEditor from '@/components/custom-ui/rich-text-editor';
 import { postJob } from '@/lib/action';
-import { Tag } from '@/types';
+import { Categories, Category, Tag } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import clsx from 'clsx';
@@ -18,6 +18,7 @@ import MultiSelectSearchInput from '@/components/custom-ui/selected-tags';
 import { DialogAddTag } from '@/components/custom-ui/dialog-add-tag';
 import { CategoryService } from '@/services/categories.service';
 import { AddressService } from '@/services/address.service';
+import MultiSelectCategoriesChildSearchInput from '@/components/custom-ui/select-categories-child';
 
 export default function PostJobForm() {
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -31,12 +32,16 @@ export default function PostJobForm() {
         responsibilities: '',
         categories: '',
         address: '',
+        benefit: '',
+        jobSpecialization: [] as Category[],
     });
     const [description, setDescription] = useState(state.description);
     const [responsibilities, setResponsibility] = useState(state.responsibilities);
-    const [categories, setCategories] = useState(state.categories);
-    const [address, setAddress] = useState(state.address);
-    const { data: resultQuery } = useQuery({
+    const [benefit, setBenefit] = useState(state.benefit);
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const [jobSpecializations, setJobSpecializations] = useState<string[]>([]);
+
+    const { data: resultQuery, refetch } = useQuery({
         queryKey: [queryKey.listCategory],
         queryFn: async () => {
             try {
@@ -52,17 +57,28 @@ export default function PostJobForm() {
         retry: 2,
         enabled: true,
     });
+
     useEffect(() => {
         if (state.success) {
             toast.success(successKeyMessage.POST_JOB_SUCCESSFULL);
             router.push('/');
         }
     }, [state.success, state.errors]);
+
     const handleDescription = (content: string) => {
         setDescription(content);
     };
+
     const handleResponsibility = (content: string) => {
         setResponsibility(content);
+    };
+
+    const handleBenefit = (content: string) => {
+        setBenefit(content);
+    };
+
+    const handleCategoryChange = (value: string) => {
+        setSelectedCategory(value);
     };
 
     return (
@@ -72,8 +88,12 @@ export default function PostJobForm() {
                 action={(formData) => {
                     formData.set('description', description);
                     formData.set('responsibilities', responsibilities);
+                    formData.set('benefit', benefit);
                     selectedTags.forEach((tagId) => {
                         formData.append('tags[]', tagId);
+                    });
+                    jobSpecializations.forEach((specializations) => {
+                        formData.append('specializations[]', specializations);
                     });
                     return onSubmit(formData);
                 }}
@@ -105,7 +125,7 @@ export default function PostJobForm() {
                         />
 
                         <div className="flex-grow basis-1/3 max-w-[30%]">
-                            <DialogAddTag />
+                            <DialogAddTag refetch={refetch} />
                         </div>
                     </div>
                     <p className=" text-red-500 text-[12px] font-medium ">
@@ -114,14 +134,7 @@ export default function PostJobForm() {
                 </div>
                 <div className="flex flex-col gap-y-2">
                     <h1>Address</h1>
-                    <Select
-                        value={address}
-                        onValueChange={(value) => {
-                            setAddress(value);
-                            state.address = value;
-                        }}
-                        name="address"
-                    >
+                    <Select name="address">
                         <SelectTrigger
                             className={clsx(
                                 'h-12 text-base rounded-sm',
@@ -130,16 +143,23 @@ export default function PostJobForm() {
                                     : 'focus:border-primary focus:ring-primary'
                             )}
                         >
-                            <SelectValue placeholder="Select..." />
+                            <SelectValue placeholder="Select an address..." />
                         </SelectTrigger>
                         <SelectContent>
-                            {resultQuery?.temp?.map((temp) => (
-                                <SelectItem key={temp.addressId} value={temp.addressId}>
-                                    {temp.country} - {temp.city}
+                            {resultQuery?.temp?.length === 0 ? (
+                                <SelectItem value="no-address" disabled>
+                                    No addresses available
                                 </SelectItem>
-                            ))}
+                            ) : (
+                                resultQuery?.temp?.map((temp) => (
+                                    <SelectItem key={temp.addressId} value={temp.addressId}>
+                                        {temp.country} - {temp.city}
+                                    </SelectItem>
+                                ))
+                            )}
                         </SelectContent>
                     </Select>
+
                     <p className=" text-red-500 text-[12px] font-medium ">
                         {state.errors?.address && state.errors.address[0]}
                     </p>
@@ -271,38 +291,8 @@ export default function PostJobForm() {
                             </p>
                         </div>
                         <div className="flex flex-col gap-y-2">
-                            <h1>Job Level</h1>
-                            <Select name="jobLevel">
-                                <SelectTrigger
-                                    className={clsx(
-                                        'h-12 text-base rounded-sm',
-                                        state.errors?.jobLevel
-                                            ? 'border-2 border-danger focus:border-danger focus:ring-0'
-                                            : 'focus:border-primary focus:ring-primary'
-                                    )}
-                                >
-                                    <SelectValue placeholder="Select..." />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="junior">Junior</SelectItem>
-                                    <SelectItem value="mid">Mid-Level</SelectItem>
-                                    <SelectItem value="senior">Senior</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <p className=" text-red-500 text-[12px] font-medium ">
-                                {state.errors?.jobLevel && state.errors.jobLevel[0]}
-                            </p>
-                        </div>
-                        <div className="flex flex-col gap-y-2">
-                            <h1>Category</h1>
-                            <Select
-                                value={categories}
-                                onValueChange={(value) => {
-                                    setCategories(value);
-                                    state.categories = value;
-                                }}
-                                name="category"
-                            >
+                            <h1>Job Category</h1>
+                            <Select name="category" onValueChange={handleCategoryChange}>
                                 <SelectTrigger
                                     className={clsx(
                                         'h-12 text-base rounded-sm',
@@ -323,6 +313,17 @@ export default function PostJobForm() {
                             </Select>
                             <p className=" text-red-500 text-[12px] font-medium ">
                                 {state.errors?.category && state.errors.category[0]}
+                            </p>
+                        </div>
+                        <div className="flex flex-col gap-y-2">
+                            <h1>Job Specialization</h1>
+                            <MultiSelectCategoriesChildSearchInput
+                                categoryId={selectedCategory}
+                                onChange={(newTagIds: string[]) => setJobSpecializations(newTagIds)}
+                                error={state.errors?.jobSpecialization}
+                            />
+                            <p className=" text-red-500 text-[12px] font-medium ">
+                                {state.errors?.jobSpecialization && state.errors.jobSpecialization[0]}
                             </p>
                         </div>
                     </div>
@@ -356,6 +357,19 @@ export default function PostJobForm() {
                             </div>
                             <p className=" text-red-500 text-[12px] font-medium ">
                                 {state.errors?.responsibilities && state.errors.responsibilities[0]}
+                            </p>
+                        </div>
+                        <div className="flex flex-col gap-y-2">
+                            <h1>Benefit</h1>
+                            <div className="focus-visible:border-primary focus-visible:ring-primary">
+                                <RichTextEditor
+                                    onChange={handleBenefit}
+                                    initialContent={benefit}
+                                    hasError={!!state.errors?.benefit}
+                                />
+                            </div>
+                            <p className=" text-red-500 text-[12px] font-medium ">
+                                {state.errors?.benefit && state.errors.benefit[0]}
                             </p>
                         </div>
                     </div>

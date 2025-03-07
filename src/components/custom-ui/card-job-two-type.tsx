@@ -58,7 +58,7 @@ export function JobCardTwoType(props: {
                 mark={job.isFavorite || false}
                 showMarkButton={false}
             />
-            <Separator className="my-4" /> {/* 👈 Thêm Separator ở đây */}
+            <Separator className="my-4" />
         </>
     ) : (
         <CardJob job={job} />

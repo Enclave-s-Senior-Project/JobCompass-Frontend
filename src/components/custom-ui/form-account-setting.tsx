@@ -7,6 +7,12 @@ import { useEffect, useState } from 'react';
 import { DialogUpdateEnterprises } from './dialog-update-register-enterprise';
 import { AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
+export enum IsActive {
+    PENDING = 'PENDING',
+    ACTIVE = 'ACTIVE',
+    BLOCKED = 'PUBLIC',
+    REJECTED = 'REJECTED',
+}
 
 export function FormAccountSetting() {
     const { data: temp, refetch } = useQuery({
@@ -43,7 +49,7 @@ export function FormAccountSetting() {
             <h1>Contact Info</h1>
             {check ? (
                 <DialogAddEnterprises refetch={refetch} />
-            ) : (
+            ) : temp?.status === IsActive.ACTIVE ? null : (
                 <div className="space-y-4 text-gray-600">
                     <div className="flex items-center space-x-2 text-yellow-600">
                         <AlertCircle size={20} />

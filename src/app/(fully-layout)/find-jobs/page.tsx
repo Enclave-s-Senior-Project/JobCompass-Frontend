@@ -25,6 +25,8 @@ export default function Page() {
             [key]: '',
         }));
     };
+    const [itemsPerPage, setItemsPerPage] = useState(6);
+    const [option, setOption] = useState('ASC');
     return (
         <main className="min-h-dvh bg-white">
             <SearchForm onSearch={handleSearch} />
@@ -50,27 +52,27 @@ export default function Page() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4">
-                    <Select>
+                    <Select onValueChange={(value) => setOption(value)}>
                         <SelectTrigger className="text-sm border-[1px] rounded-md px-2 py-1.5 h-[48px] w-[180px] bg-[#FFFFFF] focus:ring-0 focus:ring-offset-0">
-                            <SelectValue placeholder="Lastest" />
+                            <SelectValue placeholder={option === 'ASC' ? 'Lastest' : 'Oldest'} />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                <SelectItem value="Lastest">Lastest</SelectItem>
-                                <SelectItem value="Oldest">Oldest</SelectItem>
+                                <SelectItem value="ASC">Lastest</SelectItem>
+                                <SelectItem value="DESC">Oldest</SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-                    <Select>
+                    <Select onValueChange={(value) => setItemsPerPage(Number(value))}>
                         <SelectTrigger className="text-sm border rounded-md px-2 py-1.5 h-[48px] w-[180px] bg-[#FFFFFF] focus:ring-0 focus:ring-offset-0">
-                            <SelectValue placeholder="12 per page" />
+                            <SelectValue placeholder={`${itemsPerPage} per page`} />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup className="space-y-2 py-2">
-                                <SelectItem value="12">12 per page</SelectItem>
-                                <SelectItem value="24">24 per page</SelectItem>
-                                <SelectItem value="36">36 per page</SelectItem>
-                                <SelectItem value="48">48 per page</SelectItem>
+                                <SelectItem value="2">2 per page</SelectItem>
+                                <SelectItem value="4">4 per page</SelectItem>
+                                <SelectItem value="6">6 per page</SelectItem>
+                                <SelectItem value="8">8 per page</SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
@@ -96,9 +98,9 @@ export default function Page() {
                 </div>
             </div>
 
-            <div className="mx-auto container max-w-screen-xl">
+            <div className="mx-auto container max-w-screen-xl pb-4">
                 <Suspense fallback={<span>Loading...</span>}>
-                    <ListCardJobs viewType={viewType} />
+                    <ListCardJobs viewType={viewType} perPage={itemsPerPage || 6} option={option} />
                 </Suspense>
             </div>
         </main>

@@ -1,9 +1,10 @@
-import { AuthAxios } from '@/lib/axios';
+import { AuthAxios, BaseAxios } from '@/lib/axios';
 import { ApiResponse, DetailedRequest, DetailedResponse } from '@/types';
 import { AxiosError } from 'axios';
 import NextError from 'next/error';
 
 const authAxios = new AuthAxios('enterprise');
+const axios = new BaseAxios('enterprise');
 
 export class EnterpriseService {
     public static async postEnterprise(data: DetailedRequest.PostEnterprisesCredentials) {
@@ -84,6 +85,21 @@ export class EnterpriseService {
         try {
             const dataResponse = await authAxios.delete<ApiResponse<null>>(`/cancel-enterprise/${id}`);
             return dataResponse.payload;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
+
+    public static async getListEnterprise(data: DetailedRequest.ParamListJobsCredentials) {
+        try {
+            const temp = await axios.get<ApiResponse<DetailedResponse.GetDataEnterprises>>('', { params: data });
+            return temp.payload.value;
         } catch (err) {
             if (err instanceof AxiosError) {
                 throw new NextError({

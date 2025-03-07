@@ -47,6 +47,7 @@ export interface Enterprise {
     expiredPremium: string;
     status: string | null;
     enterpriseId: string;
+    addresses: Address[] | null;
 }
 
 export interface CV {

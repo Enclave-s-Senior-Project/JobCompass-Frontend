@@ -12,18 +12,19 @@ import { queryKey } from '@/lib/react-query/keys';
 import { handleErrorToast } from '@/lib/utils';
 import { PrimaryPagination } from '../ui/pagination';
 
-const ITEM_PER_PAGE = 2;
-export default function ListCardJobs(props: { viewType: 'list' | 'grid' }) {
+export default function ListCardJobs(props: { viewType: 'list' | 'grid'; perPage: number; option: string }) {
+    const ITEM_PER_PAGE = props.perPage;
     const [totalPages, setTotalPages] = useState(0);
     const search = useSearchParams();
     const page = Number(search.get('page') || 1);
     const order = (search.get('order')?.toUpperCase() as 'ASC' | 'DESC') || 'ASC';
+    const options = props.option;
     const {
         refetch,
         data: resultQuery,
         isPending,
     } = useQuery({
-        queryKey: [queryKey.favoriteJobs, { order, page, take: ITEM_PER_PAGE }],
+        queryKey: [queryKey.favoriteJobs, { order, page, take: ITEM_PER_PAGE, options }],
         queryFn: async ({ queryKey }) => {
             try {
                 const payload = await services.JobService.getAllJobs(queryKey[1] as DetailedRequest.Pagination);

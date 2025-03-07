@@ -26,7 +26,7 @@ export default function CardJobHorizontal(props: {
     const router = useRouter();
     return (
         <motion.div
-            className="space-y-6 w-full"
+            className="space-y-6 w-full border-2 rounded-xl border-gray-100"
             variants={motionVariant.itemVariants}
             initial="hidden"
             whileInView="visible"
@@ -43,10 +43,9 @@ export default function CardJobHorizontal(props: {
                     <div className="w-16 h-w-16 bg-slate-100 rounded-lg flex items-center justify-center">
                         <img
                             loading="lazy"
-                            src={job.enterprise.logoUrl || 'https://www.foxsports.com/soccer/cristiano-ronaldo-player'}
-                            alt={job.enterprise.name}
-                            className="object-contain size-[68px] rounded-md"
-                            // priority={false} // Set to true if it's a critical image above the fold
+                            src={job.enterprise?.logoUrl || ''}
+                            alt={job.enterprise?.name || 'Company Logo'}
+                            className="w-[68px] h-[68px] object-cover rounded-md"
                         />
                     </div>
                     <div className="space-y-3">
