@@ -27,6 +27,7 @@ export function FormAccountSetting() {
             return;
         }
         try {
+            toast.success('Cancle enteredprise successfully');
             await EnterpriseService.deleteEnterprise(temp.enterpriseId);
             refetch();
         } catch {
