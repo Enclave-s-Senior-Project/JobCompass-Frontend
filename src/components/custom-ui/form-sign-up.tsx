@@ -46,7 +46,7 @@ export function FormSignUp() {
             </div>
             <div className="space-y-5">
                 <div className="flex items-center gap-5">
-                    <div className="relative flex flex-col">
+                    <div className="relative flex-1 flex flex-col">
                         <Input
                             defaultValue={state.full_name}
                             color="danger"
@@ -65,7 +65,7 @@ export function FormSignUp() {
                         </p>
                     </div>
 
-                    <div className="relative flex flex-col">
+                    <div className="relative flex-1 flex flex-col">
                         <Input
                             defaultValue={state.username}
                             name="username"
