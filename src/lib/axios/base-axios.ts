@@ -27,29 +27,6 @@ export class BaseAxios {
         );
     }
 
-    public getStoredTokenInfo() {
-        return {
-            isLogged: JSON.parse(localStorage.getItem('logged') || 'false'),
-            accessToken: JSON.parse(localStorage.getItem('access_token') || ''),
-            accessType: JSON.parse(localStorage.getItem('access_type') || 'Bearer'),
-            tokenExpires: parseInt(JSON.parse(localStorage.getItem('access_expires') || '0')),
-        };
-    }
-
-    public storeTokenInfo(accessToken: string, accessType: string, expires: number) {
-        localStorage.setItem('logged', JSON.stringify(true));
-        localStorage.setItem('access_token', JSON.stringify(accessToken));
-        localStorage.setItem('access_type', JSON.stringify(accessType));
-        localStorage.setItem('access_expires', JSON.stringify(Date.now() + expires));
-    }
-
-    public clearTokenInfo() {
-        localStorage.removeItem('logged');
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('access_type');
-        localStorage.removeItem('access_expires');
-    }
-
     protected handleErrorRequest(response: ApiResponse<any>) {
         if (response.payload?.code >= 400) {
             throw new Error({

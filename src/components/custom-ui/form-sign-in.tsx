@@ -14,8 +14,15 @@ import { toast } from 'sonner';
 import clsx from 'clsx';
 import { routes } from '@/configs/routes';
 import { UserContext } from '@/contexts/user-context';
+import { setLoginCookie } from '@/lib/auth';
+import { errorKeyMessage } from '@/lib/message-keys';
 
-export function FormSignIn() {
+interface Props {
+    error_code?: string;
+    redirect?: string;
+}
+
+export function FormSignIn({ error_code, redirect }: Props) {
     const { refreshMe } = useContext(UserContext);
 
     const [showPassword, setShowPassword] = useState(false);
@@ -28,14 +35,26 @@ export function FormSignIn() {
     });
 
     const checkboxId = useId();
+
+    useEffect(() => {
+        if (error_code) {
+            if (error_code in errorKeyMessage) {
+                const errorMessage = errorKeyMessage[error_code as keyof typeof errorKeyMessage];
+                toast.error(errorMessage);
+            } else {
+                toast.error('Oops! Something went wrong');
+            }
+        }
+    }, []);
+
     useEffect(() => {
         if (state.success) {
             // fetch user information
             refreshMe();
             // set cookies and redirect to dashboard
             toast.success('Login successful');
-            document.cookie = 'login=true; path=/login';
-            router.push('/');
+            setLoginCookie();
+            router.push(redirect ?? '/');
         }
     }, [state.success, state.errors, router]);
     return (

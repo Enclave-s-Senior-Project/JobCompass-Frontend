@@ -1,4 +1,3 @@
-import { BaseAxios } from './axios';
 import { CandidateProfileType, DetailedRequest, PersonalProfileType, SocialLink } from '@/types';
 import { toast } from 'sonner';
 import { errorKeyMessage } from './message-keys';
@@ -25,12 +24,12 @@ import { getBackgroundColor, getRandomColor } from './random-color';
 import { TagService } from '@/services/tag.service';
 import { JobService } from '@/services/job.service';
 import { EnterpriseService } from '@/services/enterprises.service';
+import { storeTokenInfo } from './auth';
 
 export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, formData: FormData) => {
     const username = formData.get('username')?.toString() ?? '';
     const password = formData.get('password')?.toString() ?? '';
     const data = { username, password };
-    const axios = new BaseAxios('auth');
     const validate = verifySignInSchema.safeParse(data);
 
     currentState.username = username;
@@ -49,7 +48,7 @@ export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, 
     try {
         const res = await AuthService.login(data);
         if (res.value)
-            axios.storeTokenInfo(res.value?.accessToken as string, res.value?.tokenType, res.value?.accessTokenExpires);
+            storeTokenInfo(res.value?.accessToken as string, res.value?.tokenType, res.value?.accessTokenExpires);
         return {
             ...currentState,
             errors: {},

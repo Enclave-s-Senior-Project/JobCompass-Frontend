@@ -141,4 +141,20 @@ export class AuthService {
             throw err;
         }
     }
+
+    public static async loginViaFacebook() {
+        try {
+            console.log('Service running');
+            const dataResponse = await axios.get<ApiResponse<User>>('/facebook');
+            return dataResponse.payload;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
 }

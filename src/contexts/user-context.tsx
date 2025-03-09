@@ -1,6 +1,6 @@
 'use client';
 
-import { BaseAxios } from '@/lib/axios';
+import { clearLoginCookie, clearTokenInfo } from '@/lib/auth';
 import { queryKey } from '@/lib/react-query/keys';
 import { handleErrorToast } from '@/lib/utils';
 import { AuthService } from '@/services/auth.service';
@@ -43,13 +43,13 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
     const logoutMutation = useMutation({
         mutationFn: AuthService.logout,
-        onSuccess: (axios: BaseAxios) => {
-            axios.clearTokenInfo();
+        onSuccess: () => {
+            clearTokenInfo();
 
             // clear user info and cookie logged
             setLocalUser(null);
             localStorage.removeItem('user');
-            document.cookie = 'login=; path=/login';
+            clearLoginCookie();
 
             // Clear cache
             queryClient.setQueryData([queryKey.me], null); // Immediately clear cache
