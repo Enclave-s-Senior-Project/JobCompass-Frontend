@@ -3,6 +3,7 @@
 import React, { ChangeEvent, useRef, useState, memo } from 'react';
 import clsx from 'clsx';
 import { DefaultPlaceholderImage } from './default-placeholder-image';
+import Image from 'next/image';
 
 // Types
 interface ImageData {

@@ -5,7 +5,7 @@ const errorKeyMessage = {
     USERNAME_TOO_SHORT: 'Username is too short.',
     EMAIL_NOT_EXIST: 'Email not registered. Try again!',
     AUTH_VERIFY_CODE_INVALID: 'Invalid code',
-    INTERNAL_ERROR_SERVER: 'Internal server error'
+    INTERNAL_ERROR_SERVER: 'Internal server error',
 };
 
 const successKeyMessage = {

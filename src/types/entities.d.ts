@@ -1,4 +1,4 @@
-import { Address, SocialType } from './common-types';
+import { Address, OrganizationType, SocialType } from './common-types';
 
 export interface Job {
     createdAt: string;
@@ -38,8 +38,8 @@ export interface Enterprise {
     companyVision: string;
     logoUrl: string;
     backgroundImageUrl: string;
-    foundedIn: string;
-    organizationType: string;
+    foundedIn: Date;
+    organizationType: OrganizationType;
     teamSize: string;
     industryType: string;
     bio: string;

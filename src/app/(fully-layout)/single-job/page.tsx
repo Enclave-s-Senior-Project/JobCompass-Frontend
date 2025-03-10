@@ -203,7 +203,11 @@ function PageContentOfSingleJob() {
                                 <div className="space-y-4">
                                     <div className="flex justify-between items-center">
                                         <p className="text-[16px] text-muted-foreground">Founded in:</p>
-                                        <p className="text-[16px]">{resultQuery?.enterprise.foundedIn}</p>
+                                        <p className="text-[16px]">
+                                            {resultQuery?.enterprise.foundedIn
+                                                ? moment(resultQuery.enterprise.foundedIn).format('YYYY-MM-DD')
+                                                : 'Unknown'}
+                                        </p>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <p className="text-[16px] text-muted-foreground">Organization type:</p>

@@ -124,6 +124,17 @@ export namespace DetailedRequest {
         jobId: string;
     }
 
+    export interface UpdateEnterprisesCompanyFounding {
+        foundedIn: Date;
+        organizationType: string;
+        teamSize: string;
+        industryType: string;
+        bio: string;
+        email: string;
+        companyVision: string;
+        description: string;
+    }
+
     export interface UpdatePersonalProfile {
         profileUrl: string;
         pageUrl: string;
@@ -179,6 +190,7 @@ export namespace DetailedRequest {
         logoUrl?: string | null;
         backgroundImageUrl?: string | null;
         description: string | null;
+        phone: string | null;
     }
 
     export interface GetTagsByName extends Pagination {

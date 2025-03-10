@@ -240,6 +240,7 @@ const companyProfileSchema = z.object({
         .min(3, 'Company name must be at least 3 characters')
         .max(100, 'Company name is too long')
         .optional(),
+    phone: z.string().min(1, 'Phone is required').max(20, 'Phone is too long').optional(),
     description: z
         .string()
         .min(10, 'Description must be at least 10 characters')
@@ -249,7 +250,25 @@ const companyProfileSchema = z.object({
 
 export type CompanyProfileForm = z.infer<typeof companyProfileSchema>;
 
+// Define Zod Schema
+const companyProfileFoundingSchema = z.object({
+    name: z.string().min(1, 'Name is required'),
+    email: z.string().min(1, 'Email is required').email('Invalid email'),
+    phone: z.string().min(1, 'Phone is required'),
+    description: z.string().min(1, 'Description is required'),
+    companyVision: z.string().min(1, 'Vision is required'), // Fixed naming to match form
+    organizationType: z.string().min(1, 'Organization type is required'),
+    teamSize: z.string().min(1, 'Size is required'), // Fixed naming to match form
+    industryType: z.string().min(1, 'Industry type is required'),
+    bio: z.string().min(1, 'Bio is required'),
+    enterpriseBenefits: z.string().min(1, 'Enterprise benefits is required'),
+    foundedIn: z.string().min(1, 'Founded in is required'),
+});
+
+export type CompanyProfileFoundingForm = z.infer<typeof companyProfileFoundingSchema>;
+
 export {
+    companyProfileFoundingSchema,
     companyProfileSchema,
     signUpSchema,
     verifySignInSchema,

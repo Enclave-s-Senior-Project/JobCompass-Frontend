@@ -265,11 +265,6 @@ export const settingPersonalProfile = async (
     }
 };
 export const settingEmployerProfile = async (formData: FormData) => {
-    console.log('Form Data:');
-    for (const [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-    }
-
     // Upload promises storage
     const uploadPromises: Promise<any>[] = [];
 
@@ -278,7 +273,6 @@ export const settingEmployerProfile = async (formData: FormData) => {
 
     const logoFile = formData.get('logoFile') as File;
     if (logoFile && logoFile.size > 0) {
-        console.log('Uploading Logo...');
         uploadPromises.push(
             UploadService.uploadFile(logoFile).then((res) => {
                 logoUrl = res.fileUrl || ''; // Update logoUrl after successful upload
@@ -288,7 +282,6 @@ export const settingEmployerProfile = async (formData: FormData) => {
 
     const backgroundFile = formData.get('backgroundFile') as File;
     if (backgroundFile && backgroundFile.size > 0) {
-        console.log('Uploading Background...');
         uploadPromises.push(
             UploadService.uploadFile(backgroundFile).then((res) => {
                 backgroundImageUrl = res.fileUrl || ''; // Update backgroundImageUrl after successful upload
@@ -300,21 +293,14 @@ export const settingEmployerProfile = async (formData: FormData) => {
         // Wait for all uploads to complete
         await Promise.all(uploadPromises);
 
-        console.log('Final Logo:', logoUrl);
-        console.log('Final Background:', backgroundImageUrl);
-
         // Now update company profile with the correct URLs
-        const updateData = await EnterpriseService.updateEnterpriseCompany(
-            {
-                logoUrl,
-                backgroundImageUrl,
-                name: formData.get('name')?.toString() || '',
-                description: formData.get('description')?.toString() || '',
-            },
-            formData.get('enterpriseId')?.toString() || ''
-        );
-
-        console.log('Update Data:', updateData);
+        await EnterpriseService.updateEnterpriseCompany({
+            logoUrl,
+            backgroundImageUrl,
+            name: formData.get('name')?.toString() || '',
+            description: formData.get('description')?.toString() || '',
+            phone: formData.get('phone')?.toString() || '',
+        });
     } catch (error) {
         handleErrorToast(error);
         return { ...formData, success: false, errors: {} };
@@ -608,5 +594,23 @@ export const updateRegisterEnterprice = async (currentState: any, formData: Form
             errors: { general: 'An error occurred while updating the enterprise' },
             success: false,
         };
+    }
+};
+
+export const settingEmployerFounding = async (formData: FormData) => {
+    try {
+        await EnterpriseService.updateEnterpriseCompanyFounding({
+            organizationType: formData.get('organizationType')?.toString() || '',
+            industryType: formData.get('industryType')?.toString() || '',
+            teamSize: formData.get('teamSize')?.toString() || '',
+            foundedIn: formData.get('foundedIn') ? new Date(formData.get('foundedIn') as string) : new Date(),
+            email: formData.get('email')?.toString() || '',
+            bio: formData.get('bio')?.toString() || '',
+            companyVision: formData.get('companyVision')?.toString() || '',
+            description: formData.get('description')?.toString() || '',
+        });
+    } catch (error) {
+        handleErrorToast(error);
+        return { ...formData, success: false, errors: {} };
     }
 };

@@ -25,7 +25,6 @@ export class EnterpriseService {
         try {
             const dataResponse =
                 await authAxios.get<ApiResponse<DetailedResponse.getDataRegisterEnterprise>>('/me/check');
-            console.log('s', dataResponse);
             return dataResponse.payload;
         } catch (err) {
             if (err instanceof AxiosError) {
@@ -52,9 +51,9 @@ export class EnterpriseService {
             throw err;
         }
     }
-    public static async updateEnterpriseCompany(data: DetailedRequest.UpdateEnterprisesCompany, id: string) {
+    public static async updateEnterpriseCompany(data: DetailedRequest.UpdateEnterprisesCompany) {
         try {
-            const dataResponse = await authAxios.patch<ApiResponse<null>>(`/${id}`, data);
+            const dataResponse = await authAxios.patch<ApiResponse<null>>(`/company`, data);
             return dataResponse.payload.value;
         } catch (err) {
             if (err instanceof AxiosError) {
@@ -85,6 +84,20 @@ export class EnterpriseService {
         try {
             const dataResponse = await authAxios.delete<ApiResponse<null>>(`/cancel-enterprise/${id}`);
             return dataResponse.payload;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
+    public static async updateEnterpriseCompanyFounding(data: DetailedRequest.UpdateEnterprisesCompanyFounding) {
+        try {
+            const dataResponse = await authAxios.patch<ApiResponse<null>>(`/founding`, data);
+            return dataResponse.payload.value;
         } catch (err) {
             if (err instanceof AxiosError) {
                 throw new NextError({
