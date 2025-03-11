@@ -343,12 +343,13 @@ export const updateCandidateProfile = async (
 };
 
 const regex = {
-    FACEBOOK: /^(https?:\/\/)?(www\.)?(m\.)?(facebook|fb)\.com\/[A-Za-z0-9._-]+(\/)?$/,
+    FACEBOOK: /^(https?:\/\/)?(www\.)?(facebook\.com)\/(profile\.php\?id=\d{6,}|[\w\.]{5,})$/,
     YOUTUBE:
-        /^(https?:\/\/)?(www\.)?(youtube\.com\/(@[A-Za-z0-9_-]+|channel\/[A-Za-z0-9_-]+|watch\?v=[A-Za-z0-9_-]+)|youtu\.be\/[A-Za-z0-9_-]+)(\/)?$/,
-    INSTAGRAM: /^(https?:\/\/)?(www\.)?(instagram\.com\/[A-Za-z0-9._-]+(\/)?)$/,
-    LINKEDIN: /^(https?:\/\/)?(www\.)?(linkedin\.com\/(in|company)\/[A-Za-z0-9_-]+(\/)?)$/,
-    TWITTER: /^(https?:\/\/)?(www\.)?(x|twitter)\.com\/[A-Za-z0-9_]+(\/)?$/,
+        /^(https?:\/\/)?(?:www\.)?youtube\.com\/(?:@[\w-]{1,30}|channel\/[a-zA-Z0-9!@#$%^&*(),.?":{}|<>_-]{22,24})$/,
+    INSTAGRAM: /^(https?:\/\/)?(?:www\.)?instagram\.com\/[a-zA-Z0-9_\.]{1,30}$/,
+    LINKEDIN:
+        /^(https?:\/\/)?((www|\w\w)\.)?linkedin\.com\/(in\/[a-zA-Z0-9!@#$%^&*(),.?":{}|<>\-]{3,100}|company\/[a-zA-Z0-9!@#$%^&*(),.?":{}|<>\-]{3,100}|school\/[a-zA-Z0-9!@#$%^&*(),.?":{}|<>\-]{3,100})(\/)?$/,
+    TWITTER: /^(https?:\/\/)?(?:www\.|mobile\.)?twitter\.com\/[a-zA-Z0-9!@#$%^&*(),.?":{}|<>_]{1,15}$/,
 };
 
 export const updateCandidateSocialLinks = async (currentState: {
