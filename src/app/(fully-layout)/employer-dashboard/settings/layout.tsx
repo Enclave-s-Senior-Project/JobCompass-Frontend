@@ -5,7 +5,7 @@ import React from 'react';
 const subPages = [
     { href: '/employer-dashboard/settings/company-info', icon: <UserRound />, title: 'Company Info' },
     { href: '/employer-dashboard/settings/founding-info', icon: <CircleUser />, title: 'Founding Info' },
-    { href: '/employer-dashboard/settings/social-media-profile', icon: <Globe />, title: 'Social Media Profile' },
+    { href: '/employer-dashboard/settings/social-links', icon: <Globe />, title: 'Social Media Profile' },
     { href: '/employer-dashboard/settings/account', icon: <Settings />, title: 'Account Settings' },
 ];
 

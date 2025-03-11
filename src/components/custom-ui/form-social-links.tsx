@@ -7,53 +7,100 @@ import { Button } from '../ui/button';
 import { CirclePlus } from 'lucide-react';
 import { SocialLink } from '@/types';
 import clsx from 'clsx';
-import { updateCandidateSocialLinks } from '@/lib/action';
+import { updateCandidateSocialLinks, updateEnterpriseSocialLinks } from '@/lib/action';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import { UserContext } from '@/contexts/user-context';
 import { WebsiteService } from '@/services/website.service';
 import { handleErrorToast } from '@/lib/utils';
 import { toast } from 'sonner';
+import { EnterpriseContext } from '@/contexts';
 
-export function FormSocialLinks() {
-    const { userInfo } = useContext(UserContext);
-
+export function FormSocialLinks({ useType }: { useType: 'candidate' | 'employer' }) {
     const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
     const [errors, setErrors] = useState<(string[] | null)[]>([]);
     const [canSubmit, setCanSubmit] = useState(false);
 
-    const { data, refetch } = useQuery({
+    const { userInfo } = useContext(UserContext);
+    const { enterpriseInfo } = useContext(EnterpriseContext);
+    // Candidate Query
+    const { data: candidateData, refetch: candidateRefetch } = useQuery({
         queryKey: [queryKey.candidateSocialLinks, userInfo?.profileId],
         queryFn: async ({ queryKey }) => {
+            if (useType !== 'candidate' || !queryKey[1]) return null;
             try {
-                if (queryKey[1]) {
-                    const data = await WebsiteService.getCandidateSocialLinks({ profileId: queryKey[1] });
-                    if (data) {
-                        const modifiedData = data.map<SocialLink>((link) => ({
-                            socialLink: link.socialLink,
-                            socialType: link.socialType,
-                            websiteId: link.websiteId,
-                        }));
-                        setSocialLinks(modifiedData);
-                        return modifiedData;
-                    }
+                const data = await WebsiteService.getCandidateSocialLinks({ profileId: queryKey[1] });
+                if (data) {
+                    const modifiedData = data.map<SocialLink>((link) => ({
+                        socialLink: link.socialLink,
+                        socialType: link.socialType,
+                        websiteId: link.websiteId,
+                    }));
+                    setSocialLinks(modifiedData);
+                    return modifiedData;
                 }
                 return null;
             } catch (error) {
                 handleErrorToast(error);
+                return null;
             }
         },
         retry: 2,
+        enabled: useType === 'candidate' && !!userInfo?.profileId,
     });
 
-    const { mutate: submitMutate, isPending } = useMutation({
+    // Employer Query
+    const { data: employerData, refetch: employerRefetch } = useQuery({
+        queryKey: [queryKey.enterpriseSocialLinks, enterpriseInfo?.enterpriseId],
+        queryFn: async ({ queryKey }) => {
+            if (useType !== 'employer' || !queryKey[1]) return null;
+            try {
+                const data = await WebsiteService.getEmployerSocialLinks({ enterpriseId: queryKey[1] });
+                if (data) {
+                    const modifiedData = data.map<SocialLink>((link) => ({
+                        socialLink: link.socialLink,
+                        socialType: link.socialType,
+                        websiteId: link.websiteId || v4(),
+                    }));
+                    setSocialLinks(modifiedData);
+                    return modifiedData;
+                }
+                return null;
+            } catch (error) {
+                handleErrorToast(error);
+                return null;
+            }
+        },
+        retry: 2,
+        enabled: useType === 'employer' && !!userInfo?.profileId,
+    });
+
+    // Candidate Mutation
+    const { mutate: candidateMutate, isPending: candidatePending } = useMutation({
         mutationFn: () => updateCandidateSocialLinks({ links: socialLinks }),
         onSuccess: (result) => {
             if (!result.success) {
                 setErrors(result.errors);
             } else {
                 toast.success('Updated!');
-                refetch();
+                candidateRefetch();
+                setErrors([]);
+            }
+        },
+        onError: () => {
+            toast.error('Oops! Please try again');
+        },
+    });
+
+    // Employer Mutation
+    const { mutate: employerMutate, isPending: employerPending } = useMutation({
+        mutationFn: () => updateEnterpriseSocialLinks({ links: socialLinks }),
+        onSuccess: (result) => {
+            if (!result.success) {
+                setErrors(result.errors);
+            } else {
+                toast.success('Updated!');
+                employerRefetch();
                 setErrors([]);
             }
         },
@@ -63,18 +110,30 @@ export function FormSocialLinks() {
     });
 
     useEffect(() => {
-        const timeout = setTimeout(checkFormChanged, 200); // Check after 200ms delay
+        const timeout = setTimeout(checkFormChanged, 200);
         return () => clearTimeout(timeout);
     }, [socialLinks]);
 
     const checkFormChanged = () => {
-        const hasChanges = JSON.stringify(data) !== JSON.stringify(socialLinks);
-        setCanSubmit(hasChanges);
+        const originalData = useType === 'candidate' ? candidateData : employerData;
+        if (originalData) {
+            const hasChanges = JSON.stringify(originalData) !== JSON.stringify(socialLinks);
+            setCanSubmit(hasChanges);
+        } else {
+            setCanSubmit(socialLinks.length > 0);
+        }
     };
 
     const handleAddSocialLink = () => {
         if (socialLinks.length < 7) {
-            setSocialLinks((prev) => [...prev, { socialType: 'FACEBOOK', socialLink: '', websiteId: v4() }]);
+            setSocialLinks((prev) => [
+                ...prev,
+                {
+                    socialType: 'FACEBOOK',
+                    socialLink: '',
+                    websiteId: v4(),
+                },
+            ]);
         }
     };
 
@@ -84,49 +143,49 @@ export function FormSocialLinks() {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        submitMutate();
+        if (useType === 'candidate') {
+            candidateMutate();
+        } else if (useType === 'employer') {
+            employerMutate();
+        }
     };
 
     return (
         <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-4">
-                {socialLinks.map((socialLink, index) => {
-                    return (
-                        <div key={socialLink.websiteId} className="relative">
-                            <label className="text-sm text-gray-900 cursor-default">Social Link {index + 1}</label>
-                            <InputSocialLink
-                                name="link"
-                                valueInput={socialLink.socialLink}
-                                valueSelect={socialLink.socialType}
-                                onChangeInput={(e) => {
-                                    setSocialLinks((prev) =>
-                                        prev.map((link) => {
-                                            if (link.websiteId === socialLink.websiteId)
-                                                return { ...link, socialLink: e.target.value };
-                                            else return link;
-                                        })
-                                    );
-                                }}
-                                onChangeSelect={(value) => {
-                                    setSocialLinks((prev) =>
-                                        prev.map((link) => {
-                                            if (link.websiteId === socialLink.websiteId)
-                                                return { ...link, socialType: value };
-                                            else return link;
-                                        })
-                                    );
-                                }}
-                                error={errors?.[index]?.[0]}
-                                handleRemove={() => handleRemoveSocialLink(socialLink.websiteId ?? '')}
-                            />
-                            {errors?.[index]?.[0] && (
-                                <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
-                                    {errors[index][0]}
-                                </p>
-                            )}
-                        </div>
-                    );
-                })}
+                {socialLinks.map((socialLink, index) => (
+                    <div key={socialLink.websiteId} className="relative">
+                        <label className="text-sm text-gray-900 cursor-default">Social Link {index + 1}</label>
+                        <InputSocialLink
+                            name="link"
+                            valueInput={socialLink.socialLink}
+                            valueSelect={socialLink.socialType}
+                            onChangeInput={(e) => {
+                                setSocialLinks((prev) =>
+                                    prev.map((link) =>
+                                        link.websiteId === socialLink.websiteId
+                                            ? { ...link, socialLink: e.target.value }
+                                            : link
+                                    )
+                                );
+                            }}
+                            onChangeSelect={(value) => {
+                                setSocialLinks((prev) =>
+                                    prev.map((link) =>
+                                        link.websiteId === socialLink.websiteId ? { ...link, socialType: value } : link
+                                    )
+                                );
+                            }}
+                            error={errors?.[index]?.[0]}
+                            handleRemove={() => handleRemoveSocialLink(socialLink.websiteId ?? '')}
+                        />
+                        {errors?.[index]?.[0] && (
+                            <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                                {errors[index][0]}
+                            </p>
+                        )}
+                    </div>
+                ))}
             </div>
             <div>
                 {socialLinks.length >= 7 && (
@@ -147,7 +206,12 @@ export function FormSocialLinks() {
                 </Button>
             </div>
 
-            <Button type="submit" variant="primary" isPending={isPending} disabled={!canSubmit}>
+            <Button
+                type="submit"
+                variant="primary"
+                isPending={useType === 'candidate' ? candidatePending : employerPending}
+                disabled={!canSubmit}
+            >
                 Save Changes
             </Button>
         </form>

@@ -99,7 +99,6 @@ export const signUpSubmit = async (currentState: DetailedRequest.SignUpRequest, 
             };
         }
     } catch (error: any) {
-        console.log(error);
         handleErrorToast(error);
     }
     return { ...currentState, errors: {}, success: false };
@@ -614,4 +613,41 @@ export const settingEmployerFounding = async (formData: FormData) => {
         handleErrorToast(error);
         return { ...formData, success: false, errors: {} };
     }
+};
+
+export const updateEnterpriseSocialLinks = async (currentState: {
+    links: SocialLink[];
+}): Promise<{ success: boolean; errors: (string[] | null)[] }> => {
+    let success = true;
+
+    const errors = [];
+    const links: SocialLink[] = currentState.links ?? [];
+    for (const link of links) {
+        if (!link.socialLink) {
+            errors.push(['This field is required']);
+            success = false;
+        } else if (!regex[link.socialType].test(link.socialLink)) {
+            errors.push([`This ${link.socialType.toLowerCase()} url is not a valid`]);
+            success = false;
+        } else {
+            errors.push(null);
+        }
+    }
+
+    if (success) {
+        try {
+            const linksWithoutId = links.map<Omit<SocialLink, 'websiteId'>>((link) => ({
+                socialLink: link.socialLink,
+                socialType: link.socialType,
+            }));
+            await WebsiteService.updateEmployerSocialLinks(linksWithoutId);
+        } catch (error) {
+            handleErrorToast(error);
+        }
+    }
+
+    return {
+        success,
+        errors,
+    };
 };

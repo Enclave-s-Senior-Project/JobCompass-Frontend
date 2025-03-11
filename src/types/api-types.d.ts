@@ -153,6 +153,7 @@ export namespace DetailedRequest {
     }
 
     export type UpdateCandidateSocialLinks = SocialLink[];
+    export type UpdateEnterpriseSocialLinks = SocialLink[];
     export interface postJobCredentials {
         name: string;
         lowestWage: number;
