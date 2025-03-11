@@ -28,7 +28,6 @@ export class UploadService {
 
             return { success: true, key, fileUrl };
         } catch (err) {
-            console.error('Upload failed:', err);
             if (err instanceof AxiosError) {
                 throw new Error({
                     statusCode: Number(err.status || err.response?.status),

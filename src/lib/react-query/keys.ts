@@ -10,4 +10,5 @@ export const queryKey = {
     checkEnterprise: 'check-enterprise',
     updateRegisterEnterprises: 'update-register-enterprise',
     enterprise: 'enterprise',
+    enterpriseSocialLinks: 'enterprise-social-links',
 };

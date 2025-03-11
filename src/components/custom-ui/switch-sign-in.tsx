@@ -61,9 +61,11 @@ export function SwitchSignIn() {
                         Candidates
                     </DropdownMenuItem>
                     {hasPermission(userInfo, 'enterpriseDashboard', 'access') && (
-                        <DropdownMenuItem className="pr-3 py-2 [&_svg]:size-5">
-                            <PiBuilding />
-                            Enterprise
+                        <DropdownMenuItem className="pr-3 py-2 [&_svg]:size-5" asChild>
+                            <Link href="/employer-dashboard/settings/company-info">
+                                <PiBuilding />
+                                Enterprise
+                            </Link>
                         </DropdownMenuItem>
                     )}
                     <DropdownMenuSeparator />
