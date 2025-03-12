@@ -1,9 +1,6 @@
 'use client';
 
-import clsx from 'clsx';
-import { ImSpinner2 } from 'react-icons/im';
-
-const LoadingOnlyIcon = ({ size = 'lg' }: { size?: 'sm' | 'md' | 'lg' }) => {
+const LoadingOnlyIcon = () => {
     return (
         <div className="fui-loading-default">
             <div></div>

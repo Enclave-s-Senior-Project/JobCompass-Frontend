@@ -226,7 +226,12 @@ export const settingPersonalProfile = async (
         uploadPromises.push((() => {})());
     }
 
-    const validation = updatePersonalProfile.safeParse({ fullname: currentState.fullname, phone: currentState.phone });
+    const validation = updatePersonalProfile.safeParse({
+        fullname: currentState.fullName,
+        phone: currentState.phone,
+        maritalStatus: currentState.maritalStatus || null,
+        dateOfBirth: currentState.dateOfBirth || null,
+    });
     if (!validation.success) {
         return {
             ...currentState,
@@ -239,18 +244,20 @@ export const settingPersonalProfile = async (
         const [avatar, background] = await Promise.all(uploadPromises);
 
         const updatedProfile = await UserService.updatePersonalProfile({
-            fullName: currentState.fullname,
+            fullName: currentState.fullName,
             phone: currentState.phone,
             education: currentState.education,
             experience: currentState.experience,
-            profileUrl: avatar?.fileUrl || currentState.avatarUrl,
+            profileUrl: avatar?.fileUrl ?? currentState.avatarUrl,
             pageUrl: background?.fileUrl || currentState.backgroundUrl,
+            dateOfBirth: currentState.dateOfBirth,
+            maritalStatus: currentState.maritalStatus,
         });
 
         // update current state
         currentState.avatarUrl = updatedProfile?.profileUrl ?? currentState.avatarUrl;
         currentState.backgroundUrl = updatedProfile?.pageUrl ?? currentState.backgroundUrl;
-        currentState.fullname = updatedProfile?.fullName ?? currentState.fullname;
+        currentState.fullName = updatedProfile?.fullName ?? currentState.fullName;
         currentState.phone = updatedProfile?.phone ?? currentState.phone;
         currentState.education = updatedProfile?.education ?? currentState.education;
         currentState.experience = updatedProfile?.experience ?? currentState.experience;
@@ -322,16 +329,12 @@ export const updateCandidateProfile = async (
     try {
         const updatedProfile = await UserService.updateCandidateProfile({
             nationality: currentState.nationality ?? '',
-            dateOfBirth: currentState.dateOfBirth ?? '',
             gender: currentState.gender ?? '',
-            maritalStatus: currentState.maritalStatus ?? '',
             introduction: currentState.introduction ?? '',
         });
 
         currentState.nationality = updatedProfile?.nationality ?? '';
-        currentState.dateOfBirth = updatedProfile?.dateOfBirth ?? '';
         currentState.gender = updatedProfile?.gender ?? '';
-        currentState.maritalStatus = updatedProfile?.maritalStatus ?? '';
         currentState.introduction = updatedProfile?.introduction ?? '';
 
         return { ...currentState, success: true, errors: {} };

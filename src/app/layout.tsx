@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { inter } from '@/components/font';
-import ReactQueryProvider from './providers/react-query-provider';
+import ReactQueryProvider from '../contexts/react-query-provider';
 import { UserProvider } from '@/contexts/user-context';
 import { EnterpriseProvider } from '@/contexts/enterprise-context';
 import { Toaster } from '@/components/ui/sonner';

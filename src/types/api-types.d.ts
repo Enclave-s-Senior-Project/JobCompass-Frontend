@@ -1,4 +1,4 @@
-import { UserType } from './common-types';
+import { PersonalProfileType, UserType } from './common-types';
 import { Enterprise, Job, SocialLink, Tag } from './entities';
 
 export interface ApiResponse<T> {
@@ -135,20 +135,14 @@ export namespace DetailedRequest {
         description: string;
     }
 
-    export interface UpdatePersonalProfile {
-        profileUrl: string;
-        pageUrl: string;
-        fullName: string;
-        phone?: string;
-        education?: string;
-        experience?: string;
+    export interface UpdatePersonalProfile extends Omit<PersonalProfileType, 'avatarFile' | 'backgroundFile'> {
+        profileUrl?: string;
+        pageUrl?: string;
     }
 
     export interface UpdateCandidateProfile {
         nationality: string;
-        dateOfBirth: string;
         gender: string;
-        maritalStatus: string;
         introduction: string;
     }
 

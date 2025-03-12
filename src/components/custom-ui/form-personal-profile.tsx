@@ -11,14 +11,17 @@ import { UserContext } from '@/contexts/user-context';
 import { PersonalProfileType } from '@/types';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 type FormErrors = {
     avatarFile: (string | null)[];
     backgroundFile: (string | null)[];
-    fullname: (string | null)[];
+    fullName: (string | null)[];
     phone: (string | null)[];
     education: (string | null)[];
     experience: (string | null)[];
+    dateOfBirth: (string | null)[];
+    maritalStatus: (string | null)[];
 };
 
 export function FormPersonalProfile() {
@@ -27,20 +30,24 @@ export function FormPersonalProfile() {
     const [errors, setErrors] = useState<FormErrors>({
         avatarFile: [],
         backgroundFile: [],
-        fullname: [],
+        fullName: [],
         phone: [],
         education: [],
         experience: [],
+        dateOfBirth: [],
+        maritalStatus: [],
     });
     const [formValue, setFormValue] = useState<PersonalProfileType>({
         avatarFile: null,
         backgroundFile: null,
         avatarUrl: userInfo?.profileUrl ?? '',
         backgroundUrl: userInfo?.pageUrl ?? '',
-        fullname: userInfo?.fullName ?? '',
+        fullName: userInfo?.fullName ?? '',
         phone: userInfo?.phone ?? '',
         education: userInfo?.education ?? '',
         experience: userInfo?.experience ?? '',
+        dateOfBirth: userInfo?.dateOfBirth ?? '',
+        maritalStatus: userInfo?.maritalStatus ?? '',
     });
 
     const { mutate: submitMutation, isPending } = useMutation({
@@ -68,10 +75,12 @@ export function FormPersonalProfile() {
                         backgroundFile: null,
                         avatarUrl: userInfo?.profileUrl ?? '',
                         backgroundUrl: userInfo?.pageUrl ?? '',
-                        fullname: userInfo?.fullName ?? '',
+                        fullName: userInfo?.fullName ?? '',
                         phone: userInfo?.phone ?? '',
                         education: userInfo?.education ?? '',
                         experience: userInfo?.experience ?? '',
+                        dateOfBirth: userInfo?.dateOfBirth ?? null,
+                        maritalStatus: userInfo?.maritalStatus ?? null,
                     })
             );
         }, 300);
@@ -132,21 +141,21 @@ export function FormPersonalProfile() {
                             Full name
                         </label>
                         <Input
-                            // defaultValue={formValue?.fullname}
-                            value={formValue?.fullname}
-                            name="fullname"
+                            // defaultValue={formValue?.fullName}
+                            value={formValue?.fullName}
+                            name="fullName"
                             placeholder="John Smith"
                             type="text"
                             onChange={handleChangeInputValue}
                             className={clsx(
                                 'h-12 rounded-sm',
-                                errors?.fullname?.length > 0
+                                errors?.fullName?.length > 0
                                     ? 'border-2 border-danger ring-danger'
                                     : 'focus-visible:border-primary focus-visible:ring-primary'
                             )}
                         />
                         <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
-                            {errors?.fullname?.length > 0 && errors.fullname[0]}
+                            {errors?.fullName?.length > 0 && errors.fullName[0]}
                         </p>
                     </div>
                     <div className="relative col-span-2 lg:col-span-1">
@@ -154,14 +163,13 @@ export function FormPersonalProfile() {
                             Phone
                         </label>
                         <Input
-                            // defaultValue={formValue.phone}
                             name="phone"
                             placeholder="+1233456789"
                             type="text"
                             value={formValue.phone}
                             onChange={handleChangeInputValue}
                             className={clsx(
-                                'h-12 roundefalsed-sm',
+                                'h-12 rounded-sm',
                                 errors?.phone?.length > 0
                                     ? 'border-2 border-danger ring-danger'
                                     : 'focus-visible:border-primary focus-visible:ring-primary'
@@ -169,6 +177,57 @@ export function FormPersonalProfile() {
                         />
                         <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
                             {errors?.phone?.length > 0 && errors.phone[0]}
+                        </p>
+                    </div>
+                    <div className="relative col-span-1">
+                        <label className="text-sm text-gray-900 cursor-default">Date Of Birth</label>
+                        <Input
+                            value={formValue.dateOfBirth}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                setFormValue((prev) => ({ ...prev, dateOfBirth: e.target.value }));
+                            }}
+                            name="dateOfBirth"
+                            placeholder="Email address"
+                            type="date"
+                            className={clsx(
+                                'h-12 rounded-sm',
+                                errors?.dateOfBirth?.length
+                                    ? 'border-2 border-danger ring-danger'
+                                    : 'focus-visible:border-primary focus-visible:ring-primary'
+                            )}
+                        />
+                        <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                            {errors?.dateOfBirth?.length > 0 && errors.dateOfBirth[0]}
+                        </p>
+                    </div>
+                    <div className="relative col-span-1">
+                        <label className="text-sm text-gray-900 cursor-default">Marital Status</label>
+                        <Select
+                            name="maritalStatus"
+                            value={formValue.maritalStatus}
+                            onValueChange={(value: string) =>
+                                setFormValue((prev) => ({ ...prev, maritalStatus: value }))
+                            }
+                        >
+                            <SelectTrigger
+                                className={clsx(
+                                    'h-12 text-base rounded-sm',
+                                    errors?.maritalStatus?.length > 0
+                                        ? 'border-2 border-danger focus:border-danger focus:ring-0'
+                                        : 'focus:border-primary focus:ring-primary'
+                                )}
+                            >
+                                <SelectValue placeholder="Select..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectItem value="ALONE">Alone</SelectItem>
+                                    <SelectItem value="MARRIED">Married</SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                        <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                            {errors?.maritalStatus?.length > 0 && errors.maritalStatus[0]}
                         </p>
                     </div>
                     <div className="col-span-2 lg:col-span-1">

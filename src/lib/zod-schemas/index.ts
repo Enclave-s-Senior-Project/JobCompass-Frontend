@@ -62,39 +62,42 @@ const resetPasswordSchema = z
 const applyJobCoverLetterSchema = z.object({
     coverLetter: z.string().min(1, 'Cover letter is required'),
 });
-
 const updatePersonalProfile = z.object({
     fullname: z.string().min(1, 'Full name is required'),
-    phone: z.string().regex(/^\+?[0-9]{7,15}$/, 'Phone is invalid'),
+    phone: z
+        .string()
+        .regex(/^\+?[0-9]{7,15}$/, 'Phone is invalid')
+        .optional(),
+    maritalStatus: z.enum(['ALONE', 'MARRIED'], { message: 'Marital status is invalid' }).nullable().optional(),
+    dateOfBirth: z
+        .string()
+        .refine((date) => new Date(date).getTime() <= Date.now(), { message: 'Your birthday cannot be in the future' })
+        .refine(
+            (date) => {
+                const birthDate = new Date(date);
+                const today = new Date();
+
+                if (isNaN(birthDate.getTime())) return false; // Invalid date check
+
+                const age =
+                    today.getFullYear() -
+                    birthDate.getFullYear() -
+                    (today < new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate()) ? 1 : 0);
+                console.log(age);
+                return age >= 18;
+            },
+            { message: 'You must be at least 18 years old' }
+        )
+        .nullable()
+        .optional(),
 });
 
 const updateCandidateProfile = z.object({
     nationality: z.string().min(1, 'Nationality is required'),
-    dateOfBirth: z.string().refine(
-        (date) => {
-            const today = new Date();
-            const birthDate = new Date(date);
-
-            // Calculate age
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const monthDiff = today.getMonth() - birthDate.getMonth();
-            const dayDiff = today.getDate() - birthDate.getDate();
-
-            // Adjust age if birthday hasn't occurred this year
-            if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-                age--;
-            }
-
-            return age >= 18;
-        },
-        {
-            message: 'You must be at least 18 years old',
-        }
-    ),
     gender: z.enum(['FEMALE', 'MALE'], { message: 'Gender is required' }),
-    maritalStatus: z.enum(['ALONE', 'MARRIED'], { message: 'Marital status is required' }),
     introduction: z.string().min(1, 'Introduction is required'),
 });
+
 const postJobSchema = z
     .object({
         title: z
