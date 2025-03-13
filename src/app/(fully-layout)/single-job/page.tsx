@@ -29,6 +29,7 @@ import DOMPurify from 'dompurify';
 import { Suspense } from 'react';
 import { handleErrorToast } from '@/lib/utils';
 import { toast } from 'sonner';
+import { NotFound } from '@/components/custom-ui/not-found';
 
 export default function SingleJob() {
     return (
@@ -37,20 +38,26 @@ export default function SingleJob() {
         </Suspense>
     );
 }
+
 function PageContentOfSingleJob() {
     const jobId = useSearchParams();
-    const id = jobId.get('id') || '';
+    const id = jobId.get('id');
+
+    // Sử dụng useQuery với enabled để kiểm soát việc gọi API
     const { data: resultQuery, refetch } = useQuery({
-        queryKey: [queryKey.detailJob],
+        queryKey: [queryKey.detailJob, id],
         queryFn: async () => {
             try {
-                const payload = await JobService.detailJob(id);
+                const payload = await JobService.detailJob(id!);
                 return payload;
             } catch (error: any) {
                 console.log(error);
+                handleErrorToast(error);
             }
         },
+        enabled: !!id, // Chỉ gọi API nếu id tồn tại
     });
+
     const removeFavoriteJobMutation = useMutation({
         mutationFn: async ({ jobId }: { jobId: string }) => {
             try {
@@ -61,12 +68,13 @@ function PageContentOfSingleJob() {
             }
         },
         onSuccess: () => {
-            toast.success('Job remove to favorite list');
+            toast.success('Job removed from favorite list');
         },
         onError: () => {
-            toast.error('Failed to add job to favorite list');
+            toast.error('Failed to remove job from favorite list');
         },
     });
+
     const addFavoriteJobMutation = useMutation({
         mutationFn: async ({ jobId }: { jobId: string }) => {
             try {
@@ -83,7 +91,13 @@ function PageContentOfSingleJob() {
             toast.error('Failed to add job to favorite list');
         },
     });
+
     const isFavorite = resultQuery?.isFavorite;
+
+    // Nếu id không tồn tại, hiển thị trang NotFound
+    if (!id) {
+        return <NotFound />;
+    }
     return (
         <div className="min-h-screen ">
             <div className="w-full h-[76px] bg-[#F1F2F4] flex items-center">

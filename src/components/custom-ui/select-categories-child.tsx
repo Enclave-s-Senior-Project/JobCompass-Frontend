@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Check } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { Categories, Tag } from '@/types';
+import { Categories } from '@/types';
 import clsx from 'clsx';
 import { useDebounce } from '@/hooks/useDebounce';
 import { CategoryService } from '@/services/categories.service';

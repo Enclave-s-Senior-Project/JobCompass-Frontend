@@ -392,7 +392,6 @@ export const updateCandidateSocialLinks = async (currentState: {
 };
 
 export const postJob = async (currentState: any, formData: FormData) => {
-    console.log('12', currentState.specializations, currentState.tags);
     currentState.title = formData.get('title')?.toString() ?? '';
     currentState.tags = formData.getAll('tags[]');
     currentState.minSalary = formData.get('minSalary');
@@ -410,7 +409,6 @@ export const postJob = async (currentState: any, formData: FormData) => {
     currentState.specializations = formData.getAll('specializations[]');
     const validation = postJobSchema.safeParse(currentState);
     if (!validation.success) {
-        console.log('Error', validation.error.flatten().fieldErrors);
         return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
     }
     try {

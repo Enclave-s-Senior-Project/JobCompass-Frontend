@@ -1,4 +1,3 @@
-import { GetCategories } from './api-types.d';
 import { Address } from './common-types.d';
 import { PersonalProfileType, UserType } from './common-types';
 import { Categories, Enterprise, Job, SocialLink, Tag } from './entities';
