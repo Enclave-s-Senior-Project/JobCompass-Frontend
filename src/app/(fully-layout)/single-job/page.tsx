@@ -103,7 +103,11 @@ function PageContentOfSingleJob() {
                     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
                             <div className="relative w-[96px] h-[96px] rounded-full overflow-hidden bg-gradient-to-br from-pink-500 to-orange-400">
-                                <img src={resultQuery?.enterprise?.logoUrl || ''} alt="Company logo" />
+                                <img
+                                    src={resultQuery?.enterprise?.logoUrl || ''}
+                                    alt="Company logo"
+                                    className="w-full h-full object-cover"
+                                />
                             </div>
                             <div>
                                 <div className="flex items-center gap-2">
@@ -237,8 +241,9 @@ function PageContentOfSingleJob() {
                                         alt="Instagram logo"
                                         width={56}
                                         height={56}
-                                        className="rounded-xl"
+                                        className="rounded-full w-14 h-14 object-cover"
                                     />
+
                                     <div>
                                         <h2 className="text-[20px]">{resultQuery?.enterprise?.name}</h2>
                                         <p className="text-[14px] text-[#767F8C]">
