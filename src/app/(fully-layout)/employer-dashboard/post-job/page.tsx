@@ -7,9 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { LuArrowRight } from 'react-icons/lu';
 import RichTextEditor from '@/components/custom-ui/rich-text-editor';
 import { postJob } from '@/lib/action';
-import { Categories, Category, Tag } from '@/types';
+import { Category, Tag } from '@/types';
 import { useQuery } from '@tanstack/react-query';
-import { queryKey } from '@/lib/react-query/keys';
 import clsx from 'clsx';
 import { toast } from 'sonner';
 import { successKeyMessage } from '@/lib/message-keys';
@@ -19,10 +18,12 @@ import { DialogAddTag } from '@/components/custom-ui/dialog-add-tag';
 import { CategoryService } from '@/services/categories.service';
 import { AddressService } from '@/services/address.service';
 import MultiSelectCategoriesChildSearchInput from '@/components/custom-ui/select-categories-child';
+import { handleErrorToast } from '@/lib/utils';
+import { queryKey } from '@/lib/react-query/keys';
 
 export default function PostJobForm() {
-    const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const router = useRouter();
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [state, onSubmit] = useActionState(postJob, {
         title: '',
         tags: [] as Tag[],
@@ -41,6 +42,7 @@ export default function PostJobForm() {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [jobSpecializations, setJobSpecializations] = useState<string[]>([]);
 
+    // Sử dụng useQuery với enabled để kiểm soát việc gọi API
     const { data: resultQuery, refetch } = useQuery({
         queryKey: [queryKey.listCategory],
         queryFn: async () => {
@@ -50,12 +52,13 @@ export default function PostJobForm() {
                 return { payload, temp };
             } catch (error: any) {
                 console.log(error);
+                handleErrorToast(error);
             }
         },
         staleTime: 1000 * 60,
         refetchInterval: 1000 * 60,
         retry: 2,
-        enabled: true,
+        enabled: true, // Luôn bật truy vấn
     });
 
     useEffect(() => {
@@ -80,7 +83,6 @@ export default function PostJobForm() {
     const handleCategoryChange = (value: string) => {
         setSelectedCategory(value);
     };
-
     return (
         <div className="container mx-auto p-6 ">
             <h1 className="text-2xl font-bold mb-6">Post a job</h1>

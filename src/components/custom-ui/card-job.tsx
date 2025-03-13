@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { motionVariant } from '@/lib/motion-variants';
-import { featureColors, getRandomFeatureColor } from '@/lib/random-color';
+import { getRandomFeatureColor } from '@/lib/random-color';
 
 export default function CardJob(props: { job: Job }) {
     const { job } = props;
