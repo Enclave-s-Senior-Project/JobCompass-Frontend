@@ -35,7 +35,7 @@ export default function SearchForm({ onSearch }: SearchFormProps) {
                         <span className="text-gray-900">Find Job</span>
                     </div>
                 </div>
-                <div className="p-3 flex flex-wrap w-full bg-[#FFFFFF] xl:w-[1320px] xl:h-[80px] items-center">
+                <div className="p-3 flex flex-wrap w-full bg-[#FFFFFF] xl:w-[1320px] xl:h-[80px] items-center rounded-sm">
                     {/* Job Titile Input */}
                     <div className="relative flex-1 min-w-[250px] md:min-w-[375px]">
                         <div className="absolute left-3 top-1/2 -translate-y-1/2 ">

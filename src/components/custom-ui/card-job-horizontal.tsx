@@ -44,7 +44,7 @@ export default function CardJobHorizontal(props: {
                         <img
                             loading="lazy"
                             src={job.enterprise?.logoUrl || ''}
-                            alt={job.enterprise?.name || 'Company Logo'}
+                            // alt={job.enterprise?.name || 'Company Logo'}
                             className="w-[68px] h-[68px] object-cover rounded-md"
                         />
                     </div>
@@ -57,7 +57,7 @@ export default function CardJobHorizontal(props: {
                         </h3>
                         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                             <span className="flex items-center gap-1 text-sm">
-                                <Building2 className="h-5 w-5" /> {job.enterprise.name}
+                                <Building2 className="h-5 w-5" /> {job?.enterprise?.name}
                             </span>
                             <span className="flex items-center gap-1 text-sm">
                                 <MapPin className="h-5 w-5" /> {addresses}

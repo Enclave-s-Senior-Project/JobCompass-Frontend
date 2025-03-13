@@ -20,7 +20,7 @@ import { FaFacebookF, FaInstagram, FaXTwitter, FaYoutube } from 'react-icons/fa6
 import { DialogApplyJob } from '@/components/custom-ui/dialog-apply-job';
 import Link from 'next/link';
 import { routes } from '@/configs/routes';
-import { useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import { JobService } from '@/services/job.service';
@@ -40,15 +40,12 @@ export default function SingleJob() {
 }
 
 function PageContentOfSingleJob() {
-    const jobId = useSearchParams();
-    const id = jobId.get('id');
-
-    // Sử dụng useQuery với enabled để kiểm soát việc gọi API
+    const { id } = useParams<{ id: string }>();
     const { data: resultQuery, refetch } = useQuery({
         queryKey: [queryKey.detailJob, id],
         queryFn: async () => {
             try {
-                const payload = await JobService.detailJob(id!);
+                const payload = await JobService.detailJob(id);
                 return payload;
             } catch (error: any) {
                 console.log(error);
@@ -94,14 +91,13 @@ function PageContentOfSingleJob() {
 
     const isFavorite = resultQuery?.isFavorite;
 
-    // Nếu id không tồn tại, hiển thị trang NotFound
     if (!id) {
         return <NotFound />;
     }
     return (
         <div className="min-h-screen ">
             <div className="w-full h-[76px] bg-[#F1F2F4] flex items-center">
-                <div className="flex  max-w-7xl mx-auto w-full items-center justify-between">
+                <div className="flex max-w-7xl mx-auto w-full items-center justify-between px-4 2xl:px-0">
                     <h1 className="text-[18px] leading-[28px]">Find Job</h1>
                     <div className="flex items-center gap-2 text-sm text-gray-500">
                         <Link href="/">Home</Link>
