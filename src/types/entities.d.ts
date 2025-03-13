@@ -23,6 +23,7 @@ export interface Job {
     addresses: Address[];
     profiles: User[] | null;
     isFavorite: boolean | null;
+    enterpriseBenefits: string | null;
 }
 
 export interface Enterprise {
