@@ -320,10 +320,10 @@ export default function PostJobForm() {
                             <MultiSelectCategoriesChildSearchInput
                                 categoryId={selectedCategory}
                                 onChange={(newTagIds: string[]) => setJobSpecializations(newTagIds)}
-                                error={state.errors?.jobSpecialization}
+                                error={state.errors?.specializations}
                             />
                             <p className=" text-red-500 text-[12px] font-medium ">
-                                {state.errors?.jobSpecialization && state.errors.jobSpecialization[0]}
+                                {state.errors?.specializations && state.errors.specializations[0]}
                             </p>
                         </div>
                     </div>
