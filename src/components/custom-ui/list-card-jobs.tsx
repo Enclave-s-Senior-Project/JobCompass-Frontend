@@ -67,7 +67,7 @@ export default function ListCardJobs(props: { viewType: 'list' | 'grid'; perPage
                     <div
                         className={
                             viewType === 'grid'
-                                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-6 place-items-center'
+                                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-20 gap-y-6 place-items-center'
                                 : 'flex flex-col place-items-center gap-y-6'
                         }
                     >

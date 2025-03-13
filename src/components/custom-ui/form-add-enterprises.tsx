@@ -62,15 +62,22 @@ export function FormAddEnterprises({ setOpen, refetch }: { setOpen: (value: bool
                 return onSubmit(formData);
             }}
         >
-            <div className="flex flex-row gap-7">
-                <div className="w-24 md:w-40 lg:w-60">
+            <div className="flex flex-col md:flex-row gap-7">
+                <div className="w-full md:w-24 lg:w-40 xl:w-60">
                     <label className="text-sm text-gray-900 cursor-default">Profile Picture</label>
-                    <ImageInput name="logo" initImage={state?.logoUrl?.fileUrl} isAvatar={true} isError={checkLogo} />
+                    <div className="w-16 h-16 md:w-24 md:h-24 lg:w-40 lg:h-40 xl:w-60 xl:h-60">
+                        <ImageInput
+                            name="logo"
+                            initImage={state?.logoUrl?.fileUrl}
+                            isAvatar={true}
+                            isError={checkLogo}
+                        />
+                    </div>
                     <p className="text-red-500 text-[12px] font-medium">
                         {Array.isArray(state.errors?.logo) ? state.errors.logo[0] : state.errors?.logo}
                     </p>
                 </div>
-                <div className="space-y-5">
+                <div className="flex-1 space-y-5">
                     <div className="relative col-span-1">
                         <label className="text-sm text-gray-900 cursor-default">Enterprise name</label>
                         <Input
@@ -87,8 +94,8 @@ export function FormAddEnterprises({ setOpen, refetch }: { setOpen: (value: bool
                             {state.errors?.name && state.errors.name[0]}
                         </p>
                     </div>
-                    <div className="flex flex-row gap-3 relative col-span-1">
-                        <div className="w-1/2">
+                    <div className="flex flex-col md:flex-row gap-3">
+                        <div className="w-full md:w-1/2">
                             <label className="text-sm text-gray-900 cursor-default">Phone number</label>
                             <Input
                                 defaultValue={state.phone}
@@ -104,7 +111,7 @@ export function FormAddEnterprises({ setOpen, refetch }: { setOpen: (value: bool
                                 {state.errors?.phone && state.errors.phone[0]}
                             </p>
                         </div>
-                        <div className="w-1/2">
+                        <div className="w-full md:w-1/2">
                             <label className="text-sm text-gray-900 cursor-default">Email</label>
                             <Input
                                 defaultValue={state.email}

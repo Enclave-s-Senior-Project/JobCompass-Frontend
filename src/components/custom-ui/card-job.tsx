@@ -15,10 +15,10 @@ export default function CardJob(props: { job: Job }) {
             : 'Unknown location';
 
     return (
-        <Link href={`/single-job?id=${job.jobId}`}>
+        <Link href={`/single-job/${job.jobId}`}>
             <motion.div
-                className="bg-white rounded-3xl p-6 border hover:border-[#0A65CC] transition-shadow flex flex-col justify-center xl:w-[424px] xl:h-[204px]"
-                variants={motionVariant.cardVariants}
+                className="bg-white rounded-md  p-6 border-2 hover:border-[#0A65CC] transition-shadow flex flex-col justify-center xl:w-[424px] xl:h-[204px]"
+                variants={motionVariant.containerVariants}
                 initial="hidden"
                 animate="visible"
                 whileHover="hover"
@@ -63,7 +63,7 @@ export default function CardJob(props: { job: Job }) {
                         <span>{job.type}</span>
                         <span>•</span>
                         <span>
-                            ${job.lowestWage}-${job.highestWage}
+                            ${job.lowestWage}-${job?.highestWage}
                         </span>
                     </div>
                 </div>

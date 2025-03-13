@@ -30,7 +30,7 @@ export function SwitchSignIn() {
             </div>
             {/*if there is enterprise role, this will be shown*/}
             {hasPermission(userInfo, 'job', 'create') && (
-                <Link href={routes.home}>
+                <Link href={routes.postJob}>
                     <Button variant="outline" size="lg">
                         Post a Job
                     </Button>
