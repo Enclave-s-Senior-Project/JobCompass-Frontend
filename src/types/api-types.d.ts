@@ -1,6 +1,10 @@
-import { Address } from './common-types.d';
-import { PersonalProfileType, UserType } from './common-types';
+import { PersonalProfileType, UserType, Address, CandidateProfileType  } from './common-types';
 import { Categories, Enterprise, Job, SocialLink, Tag } from './entities';
+
+interface ResponseWithMeta<T> {
+    meta: Meta;
+    data: T;
+}
 
 export interface ApiResponse<T> {
     payload: {
@@ -52,10 +56,7 @@ export namespace DetailedResponse {
         salary: string;
         logo: string;
     }
-    export interface GetAllJobs {
-        data: Job[];
-        meta: Meta;
-    }
+    export type GetAllJobs = ResponseWithMeta<Job[]>;
 
     export interface FavoriteJobs extends GetAllJobs {}
 
@@ -75,10 +76,9 @@ export namespace DetailedResponse {
         meta: Meta;
     };
 
-    export type GetCategoriesChild = {
-        data: Categories[];
-        meta: Meta;
-    };
+    export type GetCategoriesPrimary = ResponseWithMeta<Categories[]>;
+
+    export type GetCategoriesChild = GetCategoriesPrimary;
 }
 
 export namespace DetailedRequest {
@@ -86,7 +86,7 @@ export namespace DetailedRequest {
         order?: 'ASC' | 'DESC';
         page?: number;
         take?: number;
-        option?: string;
+        options?: string;
     }
 
     export interface SignInRequest {
@@ -150,11 +150,7 @@ export namespace DetailedRequest {
         pageUrl?: string;
     }
 
-    export interface UpdateCandidateProfile {
-        nationality: string;
-        gender: string;
-        introduction: string;
-    }
+    export interface UpdateCandidateProfile extends CandidateProfileType {}
 
     export type UpdateCandidateSocialLinks = SocialLink[];
     export type UpdateEnterpriseSocialLinks = SocialLink[];
@@ -201,10 +197,6 @@ export namespace DetailedRequest {
     }
 
     export interface GetTagsByName extends Pagination {
-        name: string;
-    }
-
-    export interface GetCategoriesChildByName extends Pagination {
         name: string;
     }
     export interface ParamListJobsOfEnterprise {

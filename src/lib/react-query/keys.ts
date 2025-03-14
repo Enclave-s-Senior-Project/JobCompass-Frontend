@@ -12,6 +12,7 @@ export const queryKey = {
     enterprise: 'enterprise',
     enterpriseSocialLinks: 'enterprise-social-links',
     categoriesChild: 'searchCategoriesChild',
+    categoriesPrimary: 'categories-primary',
     tagList: 'searchTags',
     jobsOfEnterprise: 'jobs-of-enterprise',
     countTotalJobsOfEnterpriseId: 'count-total-jobs-of-enterprise-id',

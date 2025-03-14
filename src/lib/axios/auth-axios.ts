@@ -1,6 +1,7 @@
 import { InternalAxiosRequestConfig } from 'axios';
 import { BaseAxios } from './base-axios';
-import { getStoredTokenInfo, storeTokenInfo } from '../auth';
+import { clearLoginCookie, clearTokenInfo, getStoredTokenInfo, storeTokenInfo } from '../auth';
+import { toast } from 'sonner';
 
 export class AuthAxios extends BaseAxios {
     constructor(prefix: string) {
@@ -17,12 +18,18 @@ export class AuthAxios extends BaseAxios {
         this.axiosInstance.interceptors.request.use(
             async (config: InternalAxiosRequestConfig) => {
                 const { isLogged, accessToken, accessType, tokenExpires } = getStoredTokenInfo();
-                if (isLogged && tokenExpires && tokenExpires < Date.now()) {
-                    const res = await this._refreshToken();
-                    if (res) {
-                        storeTokenInfo(res.accessToken, res.tokenType, res.accessTokenExpires);
-                        config.headers['Authorization'] = `${res.tokenType} ${res.accessToken}`;
-                        return config;
+                if (isLogged && accessToken && accessType && tokenExpires < Date.now()) {
+                    try {
+                        const res = await this._refreshToken();
+                        if (res) {
+                            storeTokenInfo(res.accessToken, res.tokenType, res.accessTokenExpires);
+                            config.headers['Authorization'] = `${res.tokenType} ${res.accessToken}`;
+                            return config;
+                        }
+                    } catch (error) {
+                        toast.error('Session is out');
+                        clearLoginCookie();
+                        clearTokenInfo();
                     }
                 }
 

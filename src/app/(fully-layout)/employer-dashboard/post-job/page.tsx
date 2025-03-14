@@ -47,7 +47,7 @@ export default function PostJobForm() {
         queryKey: [queryKey.listCategory],
         queryFn: async () => {
             try {
-                const payload = await CategoryService.getAllCategories();
+                const payload = await CategoryService.getPrimaryCategories({});
                 const temp = await AddressService.getAllAddressByEnterprise();
                 return { payload, temp };
             } catch (error: any) {

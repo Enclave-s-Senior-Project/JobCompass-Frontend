@@ -29,7 +29,7 @@ const MultiSelectCategoriesChildSearchInput: React.FC<MultiSelectSearchInputProp
     const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-    const { data: options = [], isLoading } = useQuery({
+    const { data: options, isLoading } = useQuery({
         queryKey: [queryKey.categoriesChild, debouncedSearchTerm, categoryId],
         queryFn: async () => {
             const searchValue = (debouncedSearchTerm ?? '').trim();
@@ -133,8 +133,8 @@ const MultiSelectCategoriesChildSearchInput: React.FC<MultiSelectSearchInputProp
                             <p className="p-2 text-gray-500 text-sm">Please select a Job Category first.</p>
                         ) : isLoading ? (
                             <p>Loading...</p>
-                        ) : options.length > 0 ? (
-                            options.map((option) => (
+                        ) : options && options?.data && options?.data?.length > 0 ? (
+                            options.data.map((option) => (
                                 <div
                                     key={option.categoryId}
                                     className="p-2 flex items-center justify-between cursor-pointer hover:bg-gray-50 hover:animate-in rounded-sm transition-all"

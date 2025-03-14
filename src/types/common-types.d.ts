@@ -39,11 +39,13 @@ export type PersonalProfileType = {
     maritalStatus?: string;
 };
 
-export type CandidateProfileType = {
+export interface CandidateProfileType {
+    industryId: string | null;
+    majorityId: string | null;
     nationality: string | null;
     gender: string | null;
     introduction: string;
-};
+}
 
 export enum OrganizationType {
     PRIVATE = 'PRIVATE',
