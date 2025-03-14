@@ -12,9 +12,13 @@ const nextConfig: NextConfig = {
                 protocol: 'https',
                 hostname: 'i.pinimg.com',
             },
+            {
+                protocol: 'https',
+                hostname: 'job-compass-store.s3.ap-southeast-1.amazonaws.com',
+            },
         ],
     },
-    output: "standalone",
+    output: 'standalone',
 };
 
 export default nextConfig;

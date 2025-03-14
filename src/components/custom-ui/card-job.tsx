@@ -5,6 +5,7 @@ import { MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { motionVariant } from '@/lib/motion-variants';
 import { getRandomFeatureColor } from '@/lib/random-color';
+import Image from 'next/image';
 
 export default function CardJob(props: { job: Job }) {
     const { job } = props;
@@ -25,11 +26,12 @@ export default function CardJob(props: { job: Job }) {
                 <div className="flex items-start justify-between mb-4 ">
                     <div className="flex items-start gap-4">
                         <div className=" relative rounded-lg overflow-hidden border-none flex-shrink-0 bg-gray-50">
-                            <img
+                            <Image
                                 src={job.enterprise?.logoUrl || ''}
                                 width={48}
                                 height={48}
                                 className="w-14 h-14 object-cover rounded-sm"
+                                alt={job.enterprise?.name}
                             />
                         </div>
 
@@ -37,7 +39,6 @@ export default function CardJob(props: { job: Job }) {
                             <div className="flex items-center gap-2 mb-1">
                                 {job.tags?.map((feature, index) => {
                                     const color = getRandomFeatureColor(index);
-                                    console.log(color.bg, color.text);
                                     return (
                                         <span
                                             key={feature.tagId}

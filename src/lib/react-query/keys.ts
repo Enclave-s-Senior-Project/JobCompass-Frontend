@@ -13,4 +13,6 @@ export const queryKey = {
     enterpriseSocialLinks: 'enterprise-social-links',
     categoriesChild: 'searchCategoriesChild',
     tagList: 'searchTags',
+    jobsOfEnterprise: 'jobs-of-enterprise',
+    countTotalJobsOfEnterpriseId: 'count-total-jobs-of-enterprise-id',
 };

@@ -124,4 +124,38 @@ export class EnterpriseService {
             throw err;
         }
     }
+    public static async getAllJobsByEnterpriseId(data: DetailedRequest.ParamListJobsOfEnterprise) {
+        try {
+            const temp = await axios.get<ApiResponse<DetailedResponse.GetAllJobs>>(`/${data.enterpriseId}/jobs`, {
+                params: {
+                    order: data.order,
+                    page: data.page,
+                    take: data.take,
+                },
+            });
+            return temp.payload.value;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
+    public static async countJobsByEnterpriseId(id: string) {
+        try {
+            const temp = await axios.get<ApiResponse<any>>(`/${id}/total-jobs`);
+            return temp.payload;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
 }
