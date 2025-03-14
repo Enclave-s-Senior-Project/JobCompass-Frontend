@@ -207,4 +207,11 @@ export namespace DetailedRequest {
     export interface GetCategoriesChildByName extends Pagination {
         name: string;
     }
+    export interface ParamListJobsOfEnterprise {
+        enterpriseId: string;
+        order?: 'ASC' | 'DESC';
+        page?: number;
+        take?: number;
+        status?: boolean;
+    }
 }

@@ -27,7 +27,7 @@ export default function CardJobHorizontal(props: {
     return (
         <motion.div
             className="space-y-6 w-full border-2 rounded-xl border-gray-100"
-            variants={motionVariant.itemVariants}
+            variants={motionVariant.containerVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
