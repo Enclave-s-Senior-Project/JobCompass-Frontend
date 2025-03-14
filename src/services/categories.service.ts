@@ -3,12 +3,14 @@ import { ApiResponse, DetailedResponse, DetailedRequest } from '@/types';
 import { AxiosError } from 'axios';
 import NextError from 'next/error';
 
-const axios = new BaseAxios('Category');
+const axios = new BaseAxios('category');
 
 export class CategoryService {
-    public static async getAllCategories() {
+    public static async getPrimaryCategories(pagination: DetailedRequest.Pagination) {
         try {
-            const temp = await axios.get<ApiResponse<DetailedResponse.GetCategories>>('/primary');
+            const temp = await axios.get<ApiResponse<DetailedResponse.GetCategoriesPrimary>>('/primary', {
+                params: pagination,
+            });
             return temp.payload.value;
         } catch (err) {
             if (err instanceof AxiosError) {
@@ -21,12 +23,12 @@ export class CategoryService {
         }
     }
 
-    public static async getCategoriesChildren(id: string, data: DetailedRequest.GetCategoriesChildByName) {
+    public static async getCategoriesChildren(id: string, data: DetailedRequest.Pagination) {
         try {
             const temp = await axios.get<ApiResponse<DetailedResponse.GetCategoriesChild>>(`/${id}/children`, {
                 params: data,
             });
-            return temp?.payload?.value?.data;
+            return temp.payload.value;
         } catch (err) {
             if (err instanceof AxiosError) {
                 throw new NextError({

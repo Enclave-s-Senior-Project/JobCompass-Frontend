@@ -91,6 +91,11 @@ export function clearTokenInfo() {
     localStorage.removeItem('access_expires');
 }
 
+export function clearUserAndEnterpriseInfoLocalStorage() {
+    localStorage.removeItem('user');
+    localStorage.removeItem('enterprise');
+}
+
 export function setLoginCookie() {
     document.cookie = 'login=true; path=/';
 }
