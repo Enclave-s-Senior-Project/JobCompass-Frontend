@@ -328,9 +328,11 @@ export const updateCandidateProfile = async (
 
     try {
         const updatedProfile = await UserService.updateCandidateProfile({
-            nationality: currentState.nationality ?? '',
-            gender: currentState.gender ?? '',
-            introduction: currentState.introduction ?? '',
+            nationality: currentState.nationality || null,
+            gender: currentState.gender || null,
+            introduction: currentState.introduction || '',
+            industryId: currentState.industryId || null,
+            majorityId: currentState.majorityId || null,
         });
 
         currentState.nationality = updatedProfile?.nationality ?? '';

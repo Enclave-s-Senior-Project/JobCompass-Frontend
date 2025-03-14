@@ -12,5 +12,6 @@ export const queryKey = {
     enterprise: 'enterprise',
     enterpriseSocialLinks: 'enterprise-social-links',
     categoriesChild: 'searchCategoriesChild',
+    categoriesPrimary: 'categories-primary',
     tagList: 'searchTags',
 };

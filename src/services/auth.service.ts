@@ -54,7 +54,7 @@ export class AuthService {
 
     public static async refreshToken(): Promise<DetailedResponse.RefreshToken | undefined> {
         try {
-            const res = await axios.post<ApiResponse<DetailedResponse.RefreshToken>>('/refresh-token', {});
+            const res = await axios.post<ApiResponse<DetailedResponse.RefreshToken>>('/refresh-token', null, {});
             return res.payload.value;
         } catch (error) {
             console.error('Refresh token call API :', error);

@@ -1,11 +1,12 @@
 'use client';
 
-import { clearLoginCookie, clearTokenInfo } from '@/lib/auth';
+import { clearLoginCookie, clearTokenInfo, clearUserAndEnterpriseInfoLocalStorage } from '@/lib/auth';
 import { queryKey } from '@/lib/react-query/keys';
 import { handleErrorToast } from '@/lib/utils';
 import { AuthService } from '@/services/auth.service';
 import { User } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import React, { createContext, useEffect, useState } from 'react';
 
 export const UserContext = createContext<{ userInfo: User | null; refreshMe: () => void; logoutHandle: () => void }>({
@@ -15,6 +16,8 @@ export const UserContext = createContext<{ userInfo: User | null; refreshMe: () 
 });
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
+    const router = useRouter();
+
     const [localUser, setLocalUser] = useState<User | null>(null);
     const [isHydrated, setIsHydrated] = useState(false);
     const queryClient = useQueryClient();
@@ -46,10 +49,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         onSuccess: () => {
             clearTokenInfo();
 
-            // clear user info and cookie logged
+            // clear user info/enterprise info and cookie logged
             setLocalUser(null);
-            localStorage.removeItem('user');
+            clearUserAndEnterpriseInfoLocalStorage();
             clearLoginCookie();
+
+            router.replace('/');
 
             // Clear cache
             queryClient.setQueryData([queryKey.me], null); // Immediately clear cache
