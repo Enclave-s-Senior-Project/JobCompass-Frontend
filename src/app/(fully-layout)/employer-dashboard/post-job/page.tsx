@@ -306,7 +306,7 @@ export default function PostJobForm() {
                                     <SelectValue placeholder="Select..." />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {resultQuery?.payload?.map((categories) => (
+                                    {resultQuery?.payload?.data.map((categories) => (
                                         <SelectItem key={categories.categoryId} value={categories.categoryId}>
                                             {categories.categoryName}
                                         </SelectItem>

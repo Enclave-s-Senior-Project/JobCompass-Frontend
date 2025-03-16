@@ -152,7 +152,7 @@ const PrimaryPagination = ({
             <PaginationContent>
                 <PaginationItem className="mr-2">
                     <PaginationPrevious
-                        href={`?page=${Number(meta?.page) - 1}&order=${pagination.order}&option=${pagination.option}`}
+                        href={`?page=${Number(meta?.page) - 1}&order=${pagination.order}&option=${pagination.options}`}
                         disabled={!meta?.hasPreviousPage}
                     />
                 </PaginationItem>
@@ -164,7 +164,7 @@ const PrimaryPagination = ({
                     ) : (
                         <PaginationItem key={index}>
                             <PaginationLink
-                                href={`?page=${pageNum}&order=${pagination.order}&option=${pagination.option}`}
+                                href={`?page=${pageNum}&order=${pagination.order}&option=${pagination.options}`}
                                 isActive={meta?.page === pageNum}
                             >
                                 {pageNum}
@@ -174,7 +174,7 @@ const PrimaryPagination = ({
                 )}
                 <PaginationItem className="ml-2">
                     <PaginationNext
-                        href={`?page=${Number(meta?.page) + 1}&order=${pagination.order}&option=${pagination.option}`}
+                        href={`?page=${Number(meta?.page) + 1}&order=${pagination.order}&option=${pagination.options}`}
                         disabled={!meta?.hasNextPage}
                     />
                 </PaginationItem>

@@ -1,9 +1,9 @@
 'use client';
 
-import React, { FormEvent, useContext, useEffect, useRef, useState } from 'react';
+import React, { FormEvent, useContext, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { updateCandidateProfile } from '@/lib/action';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from '@/components/ui/select';
 import RichTextEditor from './rich-text-editor';
 import { Button } from '../ui/button';
 import { languagesData } from '@/lib/data/languages.data';
@@ -12,6 +12,8 @@ import { toast } from 'sonner';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { InputSelectSingle, InputSelectSingleItem } from './input-select-single';
 import { queryKey } from '@/lib/react-query/keys';
+import { CategoryService } from '@/services/categories.service';
+import { useDebounce } from '@/hooks/useDebounce';
 
 type FormErrors = {
     nationality: (string | null)[];
@@ -37,11 +39,39 @@ export function FormUpdateCandidateProfile() {
     const [introduction, setIntroduction] = useState(userInfo?.introduction ?? '');
     const [errors, setErrors] = useState<FormErrors>(initialErrors);
     const [canSubmit, setCanSubmit] = useState(false);
-    const [inputValueIndustry, setInputValueIndustry] = useState({ inputValue: '', selectValue: '' });
+    const [inputValueIndustry, setInputValueIndustry] = useState({
+        inputValue: userInfo?.industry?.categoryName ?? '',
+        selectValue: userInfo?.industry?.categoryId ?? '',
+    });
+    const [inputValueMajority, setInputValueMajority] = useState({
+        inputValue: userInfo?.majority?.categoryName ?? '',
+        selectValue: userInfo?.majority?.categoryId ?? '',
+    });
+    const debouncedIndustry = useDebounce(inputValueIndustry.inputValue, 500);
+    const debouncedMajority = useDebounce(inputValueMajority.inputValue, 500);
 
-    useEffect(() => {
-        console.log(inputValueIndustry);
-    }, [inputValueIndustry]);
+    const { data: primaryCategoryData } = useQuery({
+        queryKey: [queryKey.categoriesPrimary, debouncedIndustry],
+        queryFn: async ({ queryKey }) => {
+            try {
+                return await CategoryService.getPrimaryCategories({ options: queryKey[1], take: 20 });
+            } catch {
+                toast.error('Oops! Something went wrong');
+            }
+        },
+    });
+
+    const { data: childrenCategoryData } = useQuery({
+        queryKey: [queryKey.categoriesChild, inputValueIndustry.selectValue, debouncedMajority],
+        queryFn: async ({ queryKey }) => {
+            try {
+                return await CategoryService.getCategoriesChildren(queryKey[1], { options: queryKey[2], take: 20 });
+            } catch {
+                toast.error('Oops! Something went wrong');
+            }
+        },
+        enabled: !!inputValueIndustry.selectValue, // query if industry is selected
+    });
 
     const { mutate: submitMutation, isPending } = useMutation({
         mutationFn: () =>
@@ -49,8 +79,8 @@ export function FormUpdateCandidateProfile() {
                 nationality,
                 gender,
                 introduction,
-                industryId: null,
-                majorityId: null,
+                industryId: inputValueIndustry.selectValue,
+                majorityId: inputValueMajority.selectValue,
             }),
         onSuccess: (res) => {
             const { success, errors } = res;
@@ -73,14 +103,25 @@ export function FormUpdateCandidateProfile() {
     useEffect(() => {
         const timeout = setTimeout(checkFormChanged, 300); // Check after 100ms delay
         return () => clearTimeout(timeout);
-    }, [nationality, gender, introduction, userInfo]);
+    }, [nationality, gender, introduction, userInfo, inputValueIndustry.selectValue, inputValueMajority.selectValue]);
+
+    // trigger if user unselect the industry, the majority will be removed
+    useEffect(() => {
+        if (!inputValueIndustry.selectValue && inputValueMajority.selectValue) {
+            setInputValueMajority({
+                inputValue: '',
+                selectValue: '',
+            });
+        }
+    }, [inputValueIndustry.selectValue]);
 
     const checkFormChanged = () => {
         const hasChanges =
             nationality !== (userInfo?.nationality ?? '') ||
             gender !== (userInfo?.gender ?? '') ||
-            introduction !== (userInfo?.introduction ?? '');
-
+            introduction !== (userInfo?.introduction ?? '') ||
+            inputValueIndustry.selectValue !== (userInfo?.industry?.categoryId ?? '') ||
+            inputValueMajority.selectValue !== (userInfo?.majority?.categoryId ?? '');
         setCanSubmit(hasChanges);
     };
 
@@ -88,17 +129,6 @@ export function FormUpdateCandidateProfile() {
         e.preventDefault();
         submitMutation();
     };
-
-    const categories = [
-        { value: 'fruits', label: 'Fruits' },
-        { value: 'vegetables', label: 'Vegetables' },
-        { value: 'dairy', label: 'Dairy' },
-        { value: 'bakery', label: 'Bakery' },
-        { value: 'meat', label: 'Meat' },
-        { value: 'beverages', label: 'Beverages' },
-        { value: 'snacks', label: 'Snacks' },
-        { value: 'frozen', label: 'Frozen Foods' },
-    ];
 
     return (
         <form onSubmit={handleSubmit} className="space-y-8">
@@ -115,7 +145,7 @@ export function FormUpdateCandidateProfile() {
                                     : 'focus:border-primary focus:ring-primary'
                             )}
                         >
-                            <SelectValue placeholder="Select..." />
+                            <span className="text-stone-500">Select...</span>
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
@@ -145,7 +175,7 @@ export function FormUpdateCandidateProfile() {
                                     : 'focus:border-primary focus:ring-primary'
                             )}
                         >
-                            <SelectValue placeholder="Select..." />
+                            <span className="text-stone-500">Select...</span>
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
@@ -162,17 +192,22 @@ export function FormUpdateCandidateProfile() {
                 <div className="relative col-span-1">
                     <label className="text-sm text-gray-900 cursor-default">Industry</label>
                     <InputSelectSingle
+                        placeholder="Select..."
                         inputValue={inputValueIndustry.inputValue}
-                        onChangeInputValue={(value) =>
-                            setInputValueIndustry({ ...inputValueIndustry, inputValue: value })
+                        onChangeInputValue={(value: string) =>
+                            setInputValueIndustry((prev) => ({ ...prev, inputValue: value }))
                         }
                         selectValue={inputValueIndustry.selectValue}
-                        onChangeSelectValue={(value) =>
-                            setInputValueIndustry({ ...inputValueIndustry, selectValue: value })
+                        onChangeSelectValue={(value: string) =>
+                            setInputValueIndustry((prev) => ({ ...prev, selectValue: value }))
                         }
                     >
-                        {categories.map((category) => (
-                            <InputSelectSingleItem key={category.value} value={category.value} label={category.label} />
+                        {primaryCategoryData?.data.map((category) => (
+                            <InputSelectSingleItem
+                                key={category.categoryId}
+                                value={category.categoryId}
+                                label={category.categoryName}
+                            />
                         ))}
                     </InputSelectSingle>
                     <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
@@ -181,30 +216,26 @@ export function FormUpdateCandidateProfile() {
                 </div>
                 {/* majority */}
                 <div className="relative col-span-1">
-                    <label className="text-sm text-gray-900 cursor-default">Nationality</label>
-                    <Select name="nationality" value={nationality} onValueChange={setNationality}>
-                        <SelectTrigger
-                            className={clsx(
-                                'h-12 text-base rounded-sm',
-                                errors?.nationality?.length > 0
-                                    ? 'border-2 border-danger focus:border-danger focus:ring-0'
-                                    : 'focus:border-primary focus:ring-primary'
-                            )}
-                        >
-                            <SelectValue placeholder="Select..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                {Object.entries(languagesData).map(([abb, country]) => {
-                                    return (
-                                        <SelectItem key={abb} value={country.title}>
-                                            {country.title}
-                                        </SelectItem>
-                                    );
-                                })}
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
+                    <label className="text-sm text-gray-900 cursor-default">Majority</label>
+                    <InputSelectSingle
+                        placeholder="Select..."
+                        inputValue={inputValueMajority.inputValue}
+                        onChangeInputValue={(value: string) =>
+                            setInputValueMajority((prev) => ({ ...prev, inputValue: value }))
+                        }
+                        selectValue={inputValueMajority.selectValue}
+                        onChangeSelectValue={(value: string) =>
+                            setInputValueMajority((prev) => ({ ...prev, selectValue: value }))
+                        }
+                    >
+                        {childrenCategoryData?.data.map((category) => (
+                            <InputSelectSingleItem
+                                key={category.categoryId}
+                                value={category.categoryId}
+                                label={category.categoryName}
+                            />
+                        ))}
+                    </InputSelectSingle>
                     <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
                         {errors?.nationality?.length > 0 && errors.nationality[0]}
                     </p>

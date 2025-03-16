@@ -116,9 +116,9 @@ const MultiSelectCategoriesChildSearchInput: React.FC<MultiSelectSearchInputProp
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onFocus={() => setShowDropdown(true)}
                     onKeyDown={handleKeyDown}
-                    aria-expanded={showDropdown}
-                    aria-controls="search-dropdown"
-                    aria-haspopup="listbox"
+                    // aria-expanded={showDropdown}
+                    // aria-controls="search-dropdown"
+                    // aria-haspopup="listbox"
                 />
             </div>
 

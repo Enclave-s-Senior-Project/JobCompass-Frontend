@@ -20,8 +20,8 @@ export default function CardJobHorizontal(props: {
 }) {
     const { job } = props;
     const addresses =
-        job.addresses?.[0]?.city && job.addresses?.[0]?.country
-            ? `${job.addresses[0].city}, ${job.addresses[0].country}`
+        job?.addresses?.[0]?.city && job?.addresses?.[0]?.country
+            ? `${job?.addresses[0].city}, ${job?.addresses[0].country}`
             : 'Unknown location';
     const router = useRouter();
     return (
@@ -43,8 +43,8 @@ export default function CardJobHorizontal(props: {
                     <div className="w-16 h-w-16 bg-slate-100 rounded-lg flex items-center justify-center">
                         <img
                             loading="lazy"
-                            src={job.enterprise?.logoUrl || ''}
-                            alt={job.enterprise?.name || 'Company Logo'}
+                            src={job?.enterprise?.logoUrl || ''}
+                            alt={job?.enterprise?.name || 'Company Logo'}
                             className="w-[68px] h-[68px] object-cover rounded-md"
                         />
                     </div>
@@ -52,32 +52,34 @@ export default function CardJobHorizontal(props: {
                         <h3 className="font-semibold text-xl flex items-center gap-2">
                             {job?.name}&nbsp;
                             <Badge className="cursor-default bg-primary-100 text-primary hover:text-white border-none rounded-xl px-4 shadow-none">
-                                {job.type}
+                                {job?.type}
                             </Badge>
                         </h3>
                         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                             <span className="flex items-center gap-1 text-sm">
-                                <Building2 className="h-5 w-5" /> {job.enterprise.name}
+                                <Building2 className="h-5 w-5" /> {job?.enterprise?.name}
                             </span>
                             <span className="flex items-center gap-1 text-sm">
                                 <MapPin className="h-5 w-5" /> {addresses}
                             </span>
                             <span className="flex items-center gap-1 text-sm">
                                 <DollarSign className="h-5 w-5" /> $
-                                {Number(job.lowestWage) > 1000 ? `${Number(job.lowestWage) / 1000}K` : job.lowestWage} -
-                                $
-                                {Number(job.highestWage) > 1000
-                                    ? `${Number(job.highestWage) / 1000}K`
-                                    : job.highestWage}
+                                {Number(job?.lowestWage) > 1000
+                                    ? `${Number(job?.lowestWage) / 1000}K`
+                                    : job?.lowestWage}{' '}
+                                - $
+                                {Number(job?.highestWage) > 1000
+                                    ? `${Number(job?.highestWage) / 1000}K`
+                                    : job?.highestWage}
                             </span>
-                            {new Date(job.deadline).getTime() < Date.now() ? (
+                            {new Date(job?.deadline).getTime() < Date.now() ? (
                                 <span className="flex items-center gap-1 text-sm text-danger">
                                     <CircleX className="h-5 w-5" /> Job Expire
                                 </span>
                             ) : (
                                 <span className="flex items-center gap-1 text-sm">
                                     <Calendar className="h-5 w-5" />{' '}
-                                    {`${new Date(job.deadline).toLocaleString('default', { month: 'short', day: '2-digit', year: 'numeric' })}`}
+                                    {`${new Date(job?.deadline).toLocaleString('default', { month: 'short', day: '2-digit', year: 'numeric' })}`}
                                 </span>
                             )}
                         </div>
@@ -95,7 +97,7 @@ export default function CardJobHorizontal(props: {
                         className="group"
                         variant="third"
                         size="lg"
-                        onClick={() => router.push(`/single-job?id=${job.jobId}`)}
+                        onClick={() => router.push(`/single-job?id=${job?.jobId}`)}
                     >
                         Apply Now <LuArrowRight className="group-hover:translate-x-2 transition-all" />
                     </Button>
