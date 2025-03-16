@@ -11,7 +11,7 @@ import { UserContext } from '@/contexts/user-context';
 import { PersonalProfileType } from '@/types';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from '../ui/select';
 
 type FormErrors = {
     avatarFile: (string | null)[];
@@ -119,7 +119,6 @@ export function FormPersonalProfile() {
                         <label className="text-sm text-gray-900 cursor-default">Profile Picture</label>
                         <ImageInput
                             name="avatarFile"
-                            // initImage={formValue?.avatarUrl}
                             value={formValue?.avatarUrl}
                             isAvatar={true}
                             onChange={handleChangeInputValue}
@@ -129,7 +128,6 @@ export function FormPersonalProfile() {
                         <label className="text-sm text-gray-900 cursor-default">Background Picture</label>
                         <ImageInput
                             name="backgroundFile"
-                            // initImage={formValue?.backgroundUrl}
                             value={formValue?.backgroundUrl}
                             onChange={handleChangeInputValue}
                         />
@@ -141,7 +139,6 @@ export function FormPersonalProfile() {
                             Full name
                         </label>
                         <Input
-                            // defaultValue={formValue?.fullName}
                             value={formValue?.fullName}
                             name="fullName"
                             placeholder="John Smith"
@@ -217,7 +214,7 @@ export function FormPersonalProfile() {
                                         : 'focus:border-primary focus:ring-primary'
                                 )}
                             >
-                                <SelectValue placeholder="Select..." />
+                                <span className="text-stone-500">Select...</span>
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
@@ -236,7 +233,6 @@ export function FormPersonalProfile() {
                         </label>
                         <RichTextEditor
                             name="education"
-                            // initialContent={formValue.education}
                             onChange={handleChangeRichEditor}
                             placement="inside-bottom"
                             value={formValue.education}
@@ -249,7 +245,6 @@ export function FormPersonalProfile() {
                         </label>
                         <RichTextEditor
                             name="experience"
-                            // initialContent={formValue.experience}
                             value={formValue.experience}
                             onChange={handleChangeRichEditor}
                             placement="inside-bottom"

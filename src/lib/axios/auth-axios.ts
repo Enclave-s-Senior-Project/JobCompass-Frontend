@@ -26,7 +26,7 @@ export class AuthAxios extends BaseAxios {
                             config.headers['Authorization'] = `${res.tokenType} ${res.accessToken}`;
                             return config;
                         }
-                    } catch (error) {
+                    } catch {
                         toast.error('Session is out');
                         clearLoginCookie();
                         clearTokenInfo();

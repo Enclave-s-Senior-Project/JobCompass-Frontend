@@ -88,6 +88,8 @@ export interface User {
     experience?: string;
     account_id: string;
     roles: Role[];
+    industry: Pick<Categories, 'categoryId' | 'categoryName'>;
+    majority: Pick<Categories, 'categoryId' | 'categoryName'>;
 }
 export interface Tag {
     isActive: boolean;

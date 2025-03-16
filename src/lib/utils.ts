@@ -39,7 +39,7 @@ export const getClientSideCookie = (name: string): string | undefined => {
 };
 
 export const handleErrorToast = (err: any) => {
-    if (err.props?.title) {
+    if (err.props?.title && errorKeyMessage) {
         const errorMessage = errorKeyMessage[err.props.title as keyof typeof errorKeyMessage];
         toast.error(errorMessage);
     } else {

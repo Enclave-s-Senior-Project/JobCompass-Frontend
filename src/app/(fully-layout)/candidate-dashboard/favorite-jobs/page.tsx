@@ -13,7 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import CardJobHorizontal from '@/components/custom-ui/card-job-horizontal';
 
-const ITEM_PER_PAGE = 10;
+const ITEM_PER_PAGE = 1;
 
 export default function JobWishListPage() {
     return (
@@ -73,7 +73,7 @@ function PageContent() {
             <div>
                 <div className="flex items-center">
                     <h5 className="text-lg text-gray-900 font-medium">Favorite Jobs</h5>&nbsp;
-                    <span className="text-base text-gray-400 font-normal">({resultQuery?.meta.itemCount})</span>
+                    <span className="text-base text-gray-400 font-normal">({resultQuery?.meta?.itemCount})</span>
                 </div>
                 <div className="space-y-2">
                     {isPending
@@ -90,7 +90,7 @@ function PageContent() {
                               <Fragment key={job.jobId}>
                                   <CardJobHorizontal
                                       job={job}
-                                      handleUnMark={() => removeFavoriteJobMutation.mutate({ jobId: job.jobId })}
+                                      handleUnMark={() => removeFavoriteJobMutation.mutate({ jobId: job?.jobId })}
                                       mark={true}
                                       showMarkButton={true}
                                   />

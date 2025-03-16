@@ -1,4 +1,4 @@
-import { PersonalProfileType, UserType, Address, CandidateProfileType  } from './common-types';
+import { PersonalProfileType, UserType, Address, CandidateProfileType } from './common-types';
 import { Categories, Enterprise, Job, SocialLink, Tag } from './entities';
 
 interface ResponseWithMeta<T> {

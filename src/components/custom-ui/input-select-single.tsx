@@ -1,13 +1,14 @@
-import React, { useState, ReactElement } from 'react';
+import React, { useState, ReactElement, memo } from 'react';
 import { Input } from '@/components/ui/input';
 import { CheckIcon } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 import clsx from 'clsx';
 
 interface InputSelectSingleProps {
-    children: ReactElement<InputSelectSingleItemProps>[];
+    children: any;
     inputValue: string;
     selectValue: string;
+    placeholder?: string;
     onChangeInputValue: (value: string) => void;
     onChangeSelectValue: (value: string) => void;
 }
@@ -18,9 +19,9 @@ interface InputSelectSingleItemProps {
 }
 
 // Component for each selectable item
-const InputSelectSingleItem = ({ value, label }: InputSelectSingleItemProps) => {
+const InputSelectSingleItem = memo(({ value, label }: InputSelectSingleItemProps) => {
     return <div data-value={value} data-label={label}></div>;
-};
+});
 
 // Parent Select Component
 const InputSelectSingle = ({
@@ -29,6 +30,7 @@ const InputSelectSingle = ({
     onChangeInputValue,
     onChangeSelectValue,
     selectValue,
+    placeholder,
 }: InputSelectSingleProps) => {
     const [open, setOpen] = useState(false);
 
@@ -40,14 +42,13 @@ const InputSelectSingle = ({
         label: child.props.label,
     }));
 
-    const handleSelectItem = ({ label, value: categoryValue }: { value: string; label: string }) => {
+    const handleSelectItem = ({ label: categoryLabel, value: categoryValue }: { value: string; label: string }) => {
         if (categoryValue === selectValue) {
             onChangeSelectValue('');
             onChangeInputValue('');
         } else {
-            console.log(categoryValue);
             onChangeSelectValue(categoryValue);
-            onChangeInputValue(label);
+            onChangeInputValue(categoryLabel);
         }
         setOpen(false);
     };
@@ -56,19 +57,16 @@ const InputSelectSingle = ({
         if (!inputValue) {
             onChangeSelectValue('');
         } else {
-            onChangeInputValue(categories.find((c) => c.value === selectValue)?.label || '');
+            const isChanged = (categories.find((c) => c.value === selectValue)?.label || '') !== inputValue;
+            if (isChanged) onChangeInputValue(categories.find((c) => c.value === selectValue)?.label || '');
         }
         setOpen(false);
     };
 
-    const filteredCategories = categories.filter((category) =>
-        category.label.toLowerCase().includes(inputValue.toLowerCase())
-    );
-
     return (
         <div className="relative w-full">
             <Input
-                placeholder="Search categories..."
+                placeholder={placeholder}
                 value={inputValue}
                 onChange={(e) => onChangeInputValue(e.target.value)}
                 className="h-12 w-full rounded-sm focus-visible:ring-primary-500 focus-visible:border-primary-500"
@@ -82,11 +80,11 @@ const InputSelectSingle = ({
                 )}
             >
                 <CardContent className="py-0 px-1">
-                    {filteredCategories.length === 0 ? (
+                    {categories.length === 0 ? (
                         <div className="py-6 text-center text-sm text-gray-500">No items found.</div>
                     ) : (
                         <div className="py-1">
-                            {filteredCategories.map((category) => (
+                            {categories.map((category) => (
                                 <div
                                     key={category.value}
                                     className="flex items-center px-2 py-1.5 text-sm cursor-pointer hover:bg-zinc-100 rounded-sm"
@@ -103,5 +101,8 @@ const InputSelectSingle = ({
         </div>
     );
 };
+
+InputSelectSingle.displayName = 'InputSelectSingle';
+InputSelectSingleItem.displayName = 'InputSelectSingleItem';
 
 export { InputSelectSingle, InputSelectSingleItem };
