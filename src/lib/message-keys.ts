@@ -4,11 +4,13 @@ const errorKeyMessage = {
     INVALID_CREDENTIALS: 'Password or email went wrong.',
     USERNAME_TOO_SHORT: 'Username is too short.',
     EMAIL_NOT_EXIST: 'Email not registered. Try again!',
-    AUTH_VERIFY_CODE_INVALID: 'Invalid code',
-    INTERNAL_ERROR_SERVER: 'Internal server error',
-    FILL_INDUSTRY_BEFORE_MAJORITY: 'Fill industry before majority',
-    MAJORITY_MUST_BE_CHILD_OF_INDUSTRY: 'Majority must be included in the industry',
-    USER_NOT_FOUND: 'User not found',
+    AUTH_VERIFY_CODE_INVALID: 'Invalid code.',
+    INTERNAL_ERROR_SERVER: 'Internal server error.',
+    FILL_INDUSTRY_BEFORE_MAJORITY: 'Fill industry before majority.',
+    MAJORITY_MUST_BE_CHILD_OF_INDUSTRY: 'Majority must be included in the industry.',
+    USER_NOT_FOUND: 'User not found.',
+    CODE_INVALID: 'Invalid code.',
+    NOT_ALLOW: 'Token is expired or invalid.',
 };
 
 const successKeyMessage = {
