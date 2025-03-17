@@ -17,110 +17,113 @@ const MemoizedJobItem = memo(JobItem);
 
 // Define props interface for JobsList
 interface JobsListProps {
-  jobStatus?: string; // Optional prop for filtering jobs
+    jobStatus?: string; // Optional prop for filtering jobs
 }
 
 export default function JobsList({ jobStatus = 'All Jobs' }: JobsListProps) {
-  const { enterpriseInfo } = useContext(EnterpriseContext);
-  const [totalPages, setTotalPages] = useState(0);
-  const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
-  const search = useSearchParams();
-  const page = Number(search.get('page') || 1);
-  const order = (search.get('order')?.toUpperCase() as 'ASC' | 'DESC') || 'ASC';
+    const { enterpriseInfo } = useContext(EnterpriseContext);
+    const [totalPages, setTotalPages] = useState(0);
+    const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
+    const search = useSearchParams();
+    const page = Number(search.get('page') || 1);
+    const order = (search.get('order')?.toUpperCase() as 'ASC' | 'DESC') || 'ASC';
 
-  // Map jobStatus to a backend-compatible filter
-  const statusFilter = jobStatus === 'Active Jobs' ? true : jobStatus === 'Expired Jobs' ? false : undefined;
+    // Map jobStatus to a backend-compatible filter
+    const statusFilter = jobStatus === 'Active Jobs' ? true : jobStatus === 'Expired Jobs' ? false : undefined;
 
-  // Fetch jobs with useQuery, optimized with backend filtering
-  const { data: resultQuery } = useQuery({
-    queryKey: [queryKey.jobsOfEnterprise, { order, page, take: 5, enterpriseId: enterpriseInfo?.enterpriseId, status: statusFilter }],
-    queryFn: async ({ queryKey }) => {
-      try {
-        const params = queryKey[1];
+    // Fetch jobs with useQuery, optimized with backend filtering
+    const { data: resultQuery } = useQuery({
+        queryKey: [
+            queryKey.jobsOfEnterprise,
+            { order, page, take: 5, enterpriseId: enterpriseInfo?.enterpriseId, status: statusFilter },
+        ],
+        queryFn: async ({ queryKey }) => {
+            try {
+                const params = queryKey[1];
 
-        if (typeof params !== 'object' || !params.enterpriseId) {
-          throw new Error('Invalid query parameters');
-        }
+                if (typeof params !== 'object' || !params.enterpriseId) {
+                    throw new Error('Invalid query parameters');
+                }
 
-        const payload = await services.EnterpriseService.getAllJobsByEnterpriseId({
-          ...(params as DetailedRequest.ParamListJobsOfEnterprise),
-          status: statusFilter,
-        });
+                const payload = await services.EnterpriseService.getAllJobsByEnterpriseId({
+                    ...(params as DetailedRequest.ParamListJobsOfEnterprise),
+                    status: statusFilter,
+                });
 
-        setTotalPages((prev) => {
-          const newTotal = Number(payload?.meta.pageCount ?? 0);
-          return newTotal !== prev ? newTotal : prev;
-        });
+                setTotalPages((prev) => {
+                    const newTotal = Number(payload?.meta.pageCount ?? 0);
+                    return newTotal !== prev ? newTotal : prev;
+                });
 
-        return payload;
-      } catch (error: any) {
-        handleErrorToast(error);
-        return { data: [], meta: { pageCount: 0 } };
-      }
-    },
-    staleTime: 1000 * 60, 
-    refetchInterval: 1000 * 60 * 5, 
-    retry: 2,
-    enabled: Boolean(enterpriseInfo?.enterpriseId),
-  });
+                return payload;
+            } catch (error: any) {
+                handleErrorToast(error);
+                return { data: [], meta: { pageCount: 0 } };
+            }
+        },
+        staleTime: 1000 * 60,
+        refetchInterval: 1000 * 60 * 5,
+        retry: 2,
+        enabled: Boolean(enterpriseInfo?.enterpriseId),
+    });
 
-  const toggleJobMenu = useCallback((jobId: number) => {
-    setSelectedJobId((prev) => (prev === jobId ? null : jobId));
-  }, []);
+    const toggleJobMenu = useCallback((jobId: number) => {
+        setSelectedJobId((prev) => (prev === jobId ? null : jobId));
+    }, []);
 
-  const jobs = useMemo(() => {
-    return Array.isArray(resultQuery?.data)
-        ? resultQuery.data.map((job: any) => ({
-              jobId: job.jobId,         
-              name: job.name,           
-              type: job.type,
-              timeRemaining: job.status ? 'Active' : 'Expired',
-              status: job.status ? 'Active' : 'Expire', 
-              applications: job.applicationCount,
-          }))
-        : [];
-}, [resultQuery?.data]);
+    const jobs = useMemo(() => {
+        return Array.isArray(resultQuery?.data)
+            ? resultQuery.data.map((job: any) => ({
+                  jobId: job.jobId,
+                  name: job.name,
+                  type: job.type,
+                  timeRemaining: job.status ? 'Active' : 'Expired',
+                  status: job.status ? 'Active' : 'Expire',
+                  applications: job.applicationCount,
+              }))
+            : [];
+    }, [resultQuery?.data]);
 
-  return (
-    <div className="bg-gray-100 rounded-lg overflow-hidden">
-      {/* Header */}
-      <div className="grid grid-cols-12 bg-gray-100 py-4 px-6 text-sm text-gray-500 font-medium">
-        <div className="col-span-4">JOBS</div>
-        <div className="col-span-2 text-center">STATUS</div>
-        <div className="col-span-3 text-center">APPLICATIONS</div>
-        <div className="col-span-3 text-center">ACTIONS</div>
-      </div>
+    return (
+        <div className="bg-gray-100 rounded-lg overflow-hidden">
+            {/* Header */}
+            <div className="grid grid-cols-12 bg-gray-100 py-4 px-6 text-sm text-gray-500 font-medium">
+                <div className="col-span-4">JOBS</div>
+                <div className="col-span-2 text-center">STATUS</div>
+                <div className="col-span-3 text-center">APPLICATIONS</div>
+                <div className="col-span-3 text-center">ACTIONS</div>
+            </div>
 
-      {/* Job List */}
-      <div className="divide-y divide-gray-200">
-        {jobs.length > 0 ? (
-          jobs.map((job) => (
-            <MemoizedJobItem
-              key={job.jobId}
-              job={job}
-              isMenuOpen={selectedJobId === job.jobId}
-              onToggleMenu={() => toggleJobMenu(job.jobId)}
-            />
-          ))
-        ) : (
-          <div className="p-4 text-center text-gray-500">No jobs found</div>
-        )}
-      </div>
+            {/* Job List */}
+            <div className="divide-y divide-gray-200">
+                {jobs.length > 0 ? (
+                    jobs.map((job) => (
+                        <MemoizedJobItem
+                            key={job.jobId}
+                            job={job}
+                            isMenuOpen={selectedJobId === job.jobId}
+                            onToggleMenu={() => toggleJobMenu(job.jobId)}
+                        />
+                    ))
+                ) : (
+                    <div className="p-4 text-center text-gray-500">No jobs found</div>
+                )}
+            </div>
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="bg-white px-4 py-3 flex items-center justify-between border-gray-200 sm:px-6">
-          <PrimaryPagination
-            meta={resultQuery?.meta as Meta}
-            pagination={{
-              page,
-              order,
-              take: 5,
-            }}
-            totalPages={totalPages}
-          />
+            {/* Pagination */}
+            {totalPages > 1 && (
+                <div className="bg-white px-4 py-3 flex items-center justify-between border-gray-200 sm:px-6">
+                    <PrimaryPagination
+                        meta={resultQuery?.meta as Meta}
+                        pagination={{
+                            page,
+                            order,
+                            take: 5,
+                        }}
+                        totalPages={totalPages}
+                    />
+                </div>
+            )}
         </div>
-      )}
-    </div>
-  );
+    );
 }

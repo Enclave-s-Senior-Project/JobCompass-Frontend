@@ -3,7 +3,7 @@
 import React, { FormEvent, useContext, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { updateCandidateProfile } from '@/lib/action';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from '@/components/ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import RichTextEditor from './rich-text-editor';
 import { Button } from '../ui/button';
 import { languagesData } from '@/lib/data/languages.data';
@@ -142,10 +142,11 @@ export function FormUpdateCandidateProfile() {
                                 'h-12 text-base rounded-sm',
                                 errors?.nationality?.length > 0
                                     ? 'border-2 border-danger focus:border-danger focus:ring-0'
-                                    : 'focus:border-primary focus:ring-primary'
+                                    : 'focus:border-primary focus:ring-primary',
+                                nationality ? 'text-gray-900' : 'text-stone-500'
                             )}
                         >
-                            <span className="text-stone-500">Select...</span>
+                            <SelectValue placeholder="Select..." />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
@@ -172,10 +173,11 @@ export function FormUpdateCandidateProfile() {
                                 'h-12 text-base rounded-sm',
                                 errors?.gender?.length > 0
                                     ? 'border-2 border-danger focus:border-danger focus:ring-0'
-                                    : 'focus:border-primary focus:ring-primary'
+                                    : 'focus:border-primary focus:ring-primary',
+                                gender ? 'text-gray-900' : 'text-stone-500'
                             )}
                         >
-                            <span className="text-stone-500">Select...</span>
+                            <SelectValue placeholder="Select..." />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
