@@ -11,7 +11,7 @@ import { UserContext } from '@/contexts/user-context';
 import { PersonalProfileType } from '@/types';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from '../ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 type FormErrors = {
     avatarFile: (string | null)[];
@@ -202,19 +202,21 @@ export function FormPersonalProfile() {
                         <Select
                             name="maritalStatus"
                             value={formValue.maritalStatus}
-                            onValueChange={(value: string) =>
-                                setFormValue((prev) => ({ ...prev, maritalStatus: value }))
-                            }
+                            onValueChange={(value: string) => {
+                                console.log(value);
+                                setFormValue((prev) => ({ ...prev, maritalStatus: value }));
+                            }}
                         >
                             <SelectTrigger
                                 className={clsx(
                                     'h-12 text-base rounded-sm',
                                     errors?.maritalStatus?.length > 0
                                         ? 'border-2 border-danger focus:border-danger focus:ring-0'
-                                        : 'focus:border-primary focus:ring-primary'
+                                        : 'focus:border-primary focus:ring-primary',
+                                    formValue.maritalStatus ? 'text-gray-900' : 'text-stone-500'
                                 )}
                             >
-                                <span className="text-stone-500">Select...</span>
+                                <SelectValue placeholder="Select..." />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
