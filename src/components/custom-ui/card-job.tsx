@@ -26,7 +26,7 @@ export default function CardJob(props: { job: Job }) {
                 <div className="flex items-start justify-between mb-4 ">
                     <div className="flex items-start gap-4">
                         <div className=" relative rounded-lg overflow-hidden border-none flex-shrink-0 bg-gray-50">
-                            <Image
+                            <img
                                 src={job.enterprise?.logoUrl || ''}
                                 width={48}
                                 height={48}

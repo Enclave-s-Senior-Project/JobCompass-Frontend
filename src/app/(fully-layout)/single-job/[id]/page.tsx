@@ -52,7 +52,7 @@ function PageContentOfSingleJob() {
                 handleErrorToast(error);
             }
         },
-        enabled: !!id, // Chỉ gọi API nếu id tồn tại
+        enabled: !!id,
     });
 
     const removeFavoriteJobMutation = useMutation({
