@@ -67,7 +67,7 @@ export function HeaderSection() {
                     </div>
                     <div
                         className={clsx(
-                            'w-full ml-0 lg:ml-8  lg:mr-auto overflow-hidden lg:h-12 transition-all',
+                            'w-full ml-0 lg:ml-8  lg:mr-auto lg:h-12 transition-all',
                             showSearchMobile ? 'h-12' : 'h-0'
                         )}
                     >
@@ -78,7 +78,6 @@ export function HeaderSection() {
                     </div>
                 </div>
             </div>
-            {/*    */}
         </header>
     );
 }
