@@ -85,9 +85,11 @@ export class JobService {
         }
     }
 
-    public static async detailJob(id: string) {
+    public static async detailJob(id: string, data: DetailedRequest.CheckWishlist) {
         try {
-            const dataResponse = await authAxios.get<ApiResponse<Job>>(`/${id}`);
+            console.log('Detail', id, data);
+            const dataResponse = await axios.get<ApiResponse<Job>>(`/${id}`, { params: data });
+            console.log(dataResponse);
             return dataResponse.payload.value;
         } catch (err) {
             if (err instanceof AxiosError) {

@@ -206,4 +206,7 @@ export namespace DetailedRequest {
         take?: number;
         status?: boolean;
     }
+    export interface CheckWishlist {
+        userId: string;
+    }
 }
