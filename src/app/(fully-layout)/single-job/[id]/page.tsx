@@ -20,16 +20,17 @@ import { FaFacebookF, FaInstagram, FaXTwitter, FaYoutube } from 'react-icons/fa6
 import { DialogApplyJob } from '@/components/custom-ui/dialog-apply-job';
 import Link from 'next/link';
 import { routes } from '@/configs/routes';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import { JobService } from '@/services/job.service';
 import moment from 'moment';
 import DOMPurify from 'dompurify';
-import { Suspense } from 'react';
+import { Suspense, useContext } from 'react';
 import { handleErrorToast } from '@/lib/utils';
 import { toast } from 'sonner';
 import { NotFound } from '@/components/custom-ui/not-found';
+import { UserContext } from '@/contexts';
 
 export default function SingleJob() {
     return (
@@ -40,12 +41,16 @@ export default function SingleJob() {
 }
 
 function PageContentOfSingleJob() {
+    const router = useRouter();
+    const pathname = usePathname();
+    const isLog = localStorage.getItem('logged') ?? false;
+    const { userInfo } = useContext(UserContext);
     const { id } = useParams<{ id: string }>();
     const { data: resultQuery, refetch } = useQuery({
         queryKey: [queryKey.detailJob, id],
         queryFn: async () => {
             try {
-                const payload = await JobService.detailJob(id);
+                const payload = await JobService.detailJob(id, { userId: userInfo?.profileId ?? '' });
                 return payload;
             } catch (error: any) {
                 console.log(error);
@@ -55,39 +60,39 @@ function PageContentOfSingleJob() {
         enabled: !!id,
     });
 
-    const removeFavoriteJobMutation = useMutation({
-        mutationFn: async ({ jobId }: { jobId: string }) => {
-            try {
-                await JobService.removeFavoriteJob({ jobId });
-                await refetch();
-            } catch (error: any) {
-                handleErrorToast(error);
-            }
-        },
-        onSuccess: () => {
-            toast.error('Job removed from favorite list');
-        },
-        onError: () => {
-            toast.error('Failed to remove job from favorite list');
-        },
-    });
+    const removeFavoriteJobMutation = async (jobId: string) => {
+        if (!isLog) {
+            toast.error('Vui lòng đăng nhập để sử dụng chức năng này.');
+            router.push(`/sign-in?redirect=${pathname}`);
+            return;
+        }
 
-    const addFavoriteJobMutation = useMutation({
-        mutationFn: async ({ jobId }: { jobId: string }) => {
-            try {
-                await JobService.addFavoriteJob({ jobId });
-                await refetch();
-            } catch (error: any) {
-                handleErrorToast(error);
-            }
-        },
-        onSuccess: () => {
+        try {
+            await JobService.removeFavoriteJob({ jobId });
+            await refetch();
             toast.success('Job added to favorite list');
-        },
-        onError: () => {
+        } catch (error: any) {
+            handleErrorToast(error);
             toast.error('Failed to add job to favorite list');
-        },
-    });
+        }
+    };
+
+    const handleAddFavoriteJob = async (jobId: string) => {
+        if (!isLog) {
+            toast.error('Vui lòng đăng nhập để sử dụng chức năng này.');
+            router.push(`/sign-in?redirect=${pathname}`);
+            return;
+        }
+
+        try {
+            await JobService.addFavoriteJob({ jobId });
+            await refetch();
+            toast.success('Job added to favorite list');
+        } catch (error: any) {
+            handleErrorToast(error);
+            toast.error('Failed to add job to favorite list');
+        }
+    };
 
     const isFavorite = resultQuery?.isFavorite;
 
@@ -114,7 +119,7 @@ function PageContentOfSingleJob() {
                         <div className="flex items-center gap-4">
                             <div className="relative w-[96px] h-[96px] rounded-full overflow-hidden bg-gradient-to-br from-pink-500 to-orange-400">
                                 <img
-                                    src={resultQuery?.enterprise?.logoUrl || ''}
+                                    src={resultQuery?.enterprise?.logoUrl}
                                     alt="Company logo"
                                     className="w-full h-full object-cover"
                                 />
@@ -159,17 +164,33 @@ function PageContentOfSingleJob() {
                                 variant="outline"
                                 size="icon-lg"
                                 className={`h-[56px] w-[56px] hover:bg-[#E7F0FA] ${isFavorite ? 'bg-[#E7F0FA]' : ''}`}
-                                onClick={() => {
+                                // disabled={loading} // Chặn click khi API đang chạy
+                                onClick={async () => {
+                                    // Ngăn chặn spam click nếu đang xử lý API
+
+                                    if (!isLog) {
+                                        router.push(`/sign-in?redirect=${pathname}`);
+                                        return;
+                                    }
+
+                                    // setLoading(true); // Bắt đầu loading
                                     if (isFavorite) {
-                                        removeFavoriteJobMutation.mutate({ jobId: id });
+                                        await removeFavoriteJobMutation(id);
                                     } else {
-                                        addFavoriteJobMutation.mutate({ jobId: id });
+                                        await handleAddFavoriteJob(id);
                                     }
                                 }}
+                                aria-label={
+                                    isFavorite ? 'Xóa khỏi danh sách yêu thích' : 'Thêm vào danh sách yêu thích'
+                                }
                             >
+                                {/* {loading ? (
+                                    <Spinner size="sm" /> // Nếu có component loading
+                                ) : ( */}
                                 <Bookmark
                                     className={`h-[24px] w-[24px] ${isFavorite ? 'text-blue-500' : 'text-gray-500'}`}
                                 />
+                                {/* )} */}
                             </Button>
                             <DialogApplyJob nameJob="Senior UX Designer" jobId={id} />
                         </div>
