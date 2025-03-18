@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const publicPages = ['/', '/single-job/*', '/find-jobs', '/reset-password'];
+const publicPages = ['/', '/single-job/*', '/find-jobs', '/reset-password', '/find-candidates/candidate-profile'];
 const blockedPagesAfterAuth = ['/sign-in', '/sign-up', '/forget-password', '/auth/callback', '/email-verify'];
 
 export function middleware(req: NextRequest) {

@@ -152,8 +152,8 @@ export function FormUpdateCandidateProfile() {
                             <SelectGroup>
                                 {Object.entries(languagesData).map(([abb, country]) => {
                                     return (
-                                        <SelectItem key={abb} value={country.title}>
-                                            {country.title}
+                                        <SelectItem key={abb} value={abb}>
+                                            {abb}
                                         </SelectItem>
                                     );
                                 })}
