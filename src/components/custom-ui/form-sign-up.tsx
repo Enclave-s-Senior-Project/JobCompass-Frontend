@@ -30,7 +30,6 @@ export function FormSignUp() {
 
     useEffect(() => {
         if (state.success && state.email) {
-            console.log('Email:', state.email);
             router.push(`/email-verify?email=${state.email}`);
         }
     }, [state.success, state.errors, state.email, router]);

@@ -4,21 +4,25 @@ const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
 const signUpSchema = z
     .object({
-        full_name: z.string().min(1, 'Full name is required'),
+        full_name: z
+            .string()
+            .min(1, 'Full name is required')
+            .regex(/^[A-Z][a-zA-Z'’-]+(?: [A-Z][a-zA-Z'’-]+)*$/, 'Full name is invalid'),
         username: z
             .string()
+            .min(1, 'Username is required')
             .min(4, 'Username must be at least 4 characters')
-            .max(20, 'Username must be at most 20 characters.'),
+            .max(20, 'Username must be at most 20 characters'),
         email: z.string().min(1, 'Email is required').email('Invalid email'),
         password: z
             .string()
-            .min(1, 'New password is required')
+            .min(1, 'Password is required')
             .max(32, 'Password must be at most 32 characters')
             .regex(
                 passwordRegex,
                 'Password must be at least 8 characters with uppercase, number, and special character'
             ),
-        confirmPassword: z.string().min(8, 'Confirm Password is required'),
+        confirmPassword: z.string().min(1, 'Confirm password is required'),
     })
     .refine((data) => data.password === data.confirmPassword, {
         message: 'Confirm password does not match',
@@ -180,22 +184,22 @@ const addTagSchema = z.object({
 const addEnterpriseSchema = z.object({
     name: z
         .string()
-        .min(1, 'Name is required.')
-        .max(255, 'Name must be between 1 and 255 characters.')
+        .min(1, 'Name is required')
+        .max(255, 'Name must be between 1 and 255 characters')
         .refine((value) => /^[A-Z][a-zA-Z0-9\s]*$/.test(value), {
-            message: 'Name must start with an uppercase letter and contain only letters, numbers, and spaces.',
+            message: 'Name must start with an uppercase letter and contain only letters, numbers, and spaces',
         }),
     email: z
         .string()
-        .min(1, 'Email is required.')
-        .max(255, 'Email must be at most 255 characters.')
-        .email('Email format is invalid.')
+        .min(1, 'Email is required')
+        .max(255, 'Email must be at most 255 characters')
+        .email('Email format is invalid')
         .regex(
             /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|net|org|edu|gov|mil|biz|info|io|vn|us|uk|fr|de|ca|au|jp|kr)$/,
-            'Email format is invalid.'
+            'Email format is invalid'
         ),
 
-    phone: z.string().regex(/^\+?\d{7,15}$/, 'Phone must be a valid phone number.'),
+    phone: z.string().regex(/^\+?\d{7,15}$/, 'Phone must be a valid phone number'),
     description: z.string().min(20, 'Description is required and must be at least 20 characters'),
     vision: z.string().min(1, 'vision is required '),
     organizationType: z.string().min(1, 'Organization type is required'),
@@ -203,9 +207,9 @@ const addEnterpriseSchema = z.object({
     industryType: z
         .string()
         .min(1, 'Industry is require')
-        .max(255, 'Industry type must be at most 255 characters.')
+        .max(255, 'Industry type must be at most 255 characters')
         .optional(),
-    bio: z.string().min(1, 'Bio is required.').max(255, 'Bio must be at most 255 characters.'),
+    bio: z.string().min(1, 'Bio is required').max(255, 'Bio must be at most 255 characters'),
 
     enterpriseBenefits: z.string().min(20, 'Benefit is required and must be at least 20 characters'),
     foundedIn: z
