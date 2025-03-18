@@ -99,4 +99,19 @@ export class JobService {
             throw err;
         }
     }
+
+    public static async filterJob(data: DetailedRequest.ParamListJobsCredentials) {
+        try {
+            const temp = await axios.get<ApiResponse<DetailedResponse.GetAllJobs>>('', { params: data });
+            return temp.payload.value;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
 }
