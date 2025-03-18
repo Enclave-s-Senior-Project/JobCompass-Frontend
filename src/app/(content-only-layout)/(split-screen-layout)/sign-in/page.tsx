@@ -21,7 +21,7 @@ export default async function SignIn({ searchParams }: { searchParams?: Promise<
                 <p className="inline text-gray-600">Don&apos;t have account</p>
                 &nbsp;
                 <Link href={routes.signUp} className="text-primary font-medium">
-                   Create account                                                                                                                
+                    Create account
                 </Link>
             </div>
             <FormSignIn error_code={params.error_code} redirect={params.redirect} />
