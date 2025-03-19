@@ -27,7 +27,9 @@ const featureColors = [
 ];
 
 // Đảm bảo index luôn nằm trong phạm vi của featureColors
-const getRandomFeatureColor = (index: number) => {
-    return featureColors[index % featureColors.length] || featureColors[0];
+const getRandomFeatureColor = () => {
+    const randomIndex = Math.floor(Math.random() * featureColors.length);
+    return featureColors[randomIndex];
 };
+
 export { getRandomColor, getBackgroundColor, featureColors, getRandomFeatureColor };

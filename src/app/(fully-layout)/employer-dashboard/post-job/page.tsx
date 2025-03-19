@@ -49,6 +49,7 @@ export default function PostJobForm() {
             try {
                 const payload = await CategoryService.getPrimaryCategories({});
                 const temp = await AddressService.getAllAddressByEnterprise();
+                // console.log('e', payload);
                 return { payload, temp };
             } catch (error: any) {
                 console.log(error);
@@ -308,7 +309,7 @@ export default function PostJobForm() {
                                 <SelectContent>
                                     {resultQuery?.payload?.data.map((categories) => (
                                         <SelectItem key={categories.categoryId} value={categories.categoryId}>
-                                            {categories.categoryName}
+                                            {categories?.categoryName}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
