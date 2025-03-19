@@ -158,4 +158,21 @@ export class EnterpriseService {
             throw err;
         }
     }
+    public static async getEnterpriseJob(data: DetailedRequest.GetEnterpriseJobs) {
+        try {
+            const { enterpriseId, ...pagination } = data;
+            const dataRes = await axios.get<ApiResponse<DetailedResponse.EnterpriseJobs>>(`/${enterpriseId}/jobs`, {
+                params: pagination,
+            });
+            return dataRes.payload.value;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
 }

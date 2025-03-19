@@ -59,6 +59,7 @@ export namespace DetailedResponse {
     export type GetAllJobs = ResponseWithMeta<Job[]>;
 
     export interface FavoriteJobs extends GetAllJobs {}
+    export interface EnterpriseJobs extends GetAllJobs {}
 
     export type GetAllCvByIdProfile = CV[];
     export type GetAllTag = {
@@ -205,6 +206,10 @@ export namespace DetailedRequest {
         page?: number;
         take?: number;
         status?: boolean;
+    }
+
+    export interface GetEnterpriseJobs extends Pagination {
+        enterpriseId: string;
     }
     export interface CheckWishlist {
         userId: string;

@@ -20,7 +20,7 @@ export function Search() {
     useEffect(() => {
         const filteredCountries = Object.entries(languagesData).filter((language) => {
             const splitted = select.inputValue.split(' ');
-            let text = splitted.length > 1 ? splitted[1] : splitted[0];
+            const text = splitted.length > 1 ? splitted[1] : splitted[0];
             return language[0].toLowerCase().startsWith(text.toLowerCase());
         });
 
