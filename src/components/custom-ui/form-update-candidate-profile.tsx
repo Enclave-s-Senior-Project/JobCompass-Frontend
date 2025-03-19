@@ -150,7 +150,7 @@ export function FormUpdateCandidateProfile() {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                {Object.entries(languagesData).map(([abb, country]) => {
+                                {Object.entries(languagesData).map(([abb]) => {
                                     return (
                                         <SelectItem key={abb} value={abb}>
                                             {abb}

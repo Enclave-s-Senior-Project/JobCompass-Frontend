@@ -11,6 +11,7 @@ const errorKeyMessage = {
     USER_NOT_FOUND: 'User not found.',
     CODE_INVALID: 'Invalid code.',
     NOT_ALLOW: 'Token is expired or invalid.',
+    EMAIL_ALREADY_EXISTS: 'This email was already used',
 };
 
 const successKeyMessage = {

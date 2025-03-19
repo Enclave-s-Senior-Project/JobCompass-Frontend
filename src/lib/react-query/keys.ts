@@ -17,4 +17,5 @@ export const queryKey = {
     jobsOfEnterprise: 'jobs-of-enterprise',
     countTotalJobsOfEnterpriseId: 'count-total-jobs-of-enterprise-id',
     filterJob: 'filter-job',
+    enterpriseJob: 'enterprise-job',
 };

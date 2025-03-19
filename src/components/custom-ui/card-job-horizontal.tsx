@@ -3,12 +3,14 @@ import { Job } from '@/types';
 import { motion } from 'framer-motion';
 import { motionVariant } from '@/lib/motion-variants';
 import { Badge } from '@/components/ui/badge';
-import { Building2, Calendar, CircleX, DollarSign, MapPin } from 'lucide-react';
+import { Building2, Calendar, CircleX, DollarSign, EyeIcon, MapPin } from 'lucide-react';
 import { ButtonMark } from '../custom-ui/button-mark';
 import { Button } from '@/components/ui/button';
 import { LuArrowRight } from 'react-icons/lu';
 import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
+import { JobTypeEnum } from '@/lib/common-enum';
+import { toast } from 'sonner';
 
 export default function CardJobHorizontal(props: {
     job: Job;
@@ -26,7 +28,7 @@ export default function CardJobHorizontal(props: {
     const router = useRouter();
     return (
         <motion.div
-            className="space-y-6 w-full border-2 rounded-xl border-gray-100"
+            className="space-y-6 w-full rounded-xl border-2 border-input hover:border-primary bg-white"
             variants={motionVariant.containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -35,7 +37,7 @@ export default function CardJobHorizontal(props: {
         >
             <div
                 className={clsx(
-                    'w-full flex gap-8 flex-wrap items-center justify-between p-5 border-2 rounded-xl border-gray-100 hover:border-primary hover:shadow-lg transition-colors',
+                    'w-full flex gap-8 flex-wrap items-center justify-between p-5 border-2 rounded-xl hover:shadow-lg transition-colors',
                     props.border ? 'border-2' : 'border-transparent'
                 )}
             >
@@ -51,7 +53,18 @@ export default function CardJobHorizontal(props: {
                     <div className="space-y-3">
                         <h3 className="font-semibold text-xl flex items-center gap-2">
                             {job?.name}&nbsp;
-                            <Badge className="cursor-default bg-primary-100 text-primary hover:text-white border-none rounded-xl px-4 shadow-none">
+                            <Badge
+                                className={clsx(
+                                    'cursor-default border-none rounded-xl px-4 shadow-none',
+                                    JobTypeEnum.fulltime == job?.type
+                                        ? 'bg-primary-100 text-primary hover:text-white hover:bg-primary-400'
+                                        : JobTypeEnum.partTime == job?.type
+                                          ? 'bg-green-100 text-green hover:text-white hover:bg-green-400'
+                                          : JobTypeEnum.contract == job?.type
+                                            ? 'bg-warning-100 text-warning hover:text-white hover:bg-warning-400'
+                                            : ''
+                                )}
+                            >
                                 {job?.type}
                             </Badge>
                         </h3>
@@ -93,11 +106,16 @@ export default function CardJobHorizontal(props: {
                             mark={!!props.mark}
                         />
                     )}
+                    <Button variant="outline" size="icon-lg" onClick={() => router.push(`/single-job/${job?.jobId}`)}>
+                        <EyeIcon />
+                    </Button>
                     <Button
                         className="group"
                         variant="third"
                         size="lg"
-                        onClick={() => router.push(`/single-job?id=${job?.jobId}`)}
+                        onClick={() => {
+                            toast.info('This function is coming soon');
+                        }}
                     >
                         Apply Now <LuArrowRight className="group-hover:translate-x-2 transition-all" />
                     </Button>

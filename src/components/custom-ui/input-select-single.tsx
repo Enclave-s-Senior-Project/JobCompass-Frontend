@@ -22,120 +22,122 @@ interface InputSelectSingleItemProps {
 }
 
 // Component for each selectable item
-const InputSelectSingleItem = ({ value, label, className }: InputSelectSingleItemProps) => {
+const InputSelectSingleItem = memo(({ value, label, className }: InputSelectSingleItemProps) => {
     return <div data-value={value} data-label={label} data-class={className}></div>;
-};
+});
 
 // Parent Select Component
-const InputSelectSingle = ({
-    children,
-    inputValue,
-    onChangeInputValue,
-    onChangeSelectValue,
-    selectValue,
-    placeholder,
-    className,
-}: InputSelectSingleProps) => {
-    const [open, setOpen] = useState(false);
-    const [isBlur, setIsBlur] = useState(false);
+const InputSelectSingle = memo(
+    ({
+        children,
+        inputValue,
+        onChangeInputValue,
+        onChangeSelectValue,
+        selectValue,
+        placeholder,
+        className,
+    }: InputSelectSingleProps) => {
+        const [open, setOpen] = useState(false);
+        const [isBlur, setIsBlur] = useState(false);
 
-    const wrapperRef = useRef<HTMLDivElement>(null);
+        const wrapperRef = useRef<HTMLDivElement>(null);
 
-    const items = React.Children.toArray(children) as ReactElement<InputSelectSingleItemProps>[];
+        const items = React.Children.toArray(children) as ReactElement<InputSelectSingleItemProps>[];
 
-    const categories = items.map((child) => ({
-        value: child.props.value,
-        label: child.props.label,
-        className: child.props.className,
-    }));
+        const categories = items.map((child) => ({
+            value: child.props.value,
+            label: child.props.label,
+            className: child.props.className,
+        }));
 
-    const handleSelectItem = ({ label: categoryLabel, value: categoryValue }: { value: string; label: string }) => {
-        if (categoryValue === selectValue) {
-            onChangeSelectValue('');
-            onChangeInputValue('');
-        } else {
-            onChangeSelectValue(categoryValue);
-            onChangeInputValue(categoryLabel);
-        }
-        setOpen(false);
-    };
-
-    const handleBlurInput = () => {
-        if (!inputValue) {
-            onChangeSelectValue('');
-        } else {
-            const c = categories.find((c) => c.value === selectValue)?.label || '';
-            if (c !== inputValue) {
-                onChangeInputValue(c);
+        const handleSelectItem = ({ label: categoryLabel, value: categoryValue }: { value: string; label: string }) => {
+            if (categoryValue === selectValue) {
+                onChangeSelectValue('');
+                onChangeInputValue('');
+            } else {
+                onChangeSelectValue(categoryValue);
+                onChangeInputValue(categoryLabel);
             }
-        }
-        setOpen(false);
-    };
+            setOpen(false);
+        };
 
-    const handleWrapperBlur = (e: React.FocusEvent<HTMLDivElement>) => {
-        // Check if blur is happening inside the wrapper (e.g., clicking the dropdown)
-        if (wrapperRef.current?.contains(e.relatedTarget)) return;
+        const handleBlurInput = () => {
+            if (!inputValue) {
+                onChangeSelectValue('');
+            } else {
+                const c = categories.find((c) => c.value === selectValue)?.label || '';
+                if (c !== inputValue) {
+                    onChangeInputValue(c);
+                }
+            }
+            setOpen(false);
+        };
 
-        setIsBlur(true);
-        setOpen(false);
-    };
+        const handleWrapperBlur = (e: React.FocusEvent<HTMLDivElement>) => {
+            // Check if blur is happening inside the wrapper (e.g., clicking the dropdown)
+            if (wrapperRef.current?.contains(e.relatedTarget)) return;
 
-    useEffect(() => {
-        if (isBlur) handleBlurInput();
-    }, [isBlur]);
+            setIsBlur(true);
+            setOpen(false);
+        };
 
-    return (
-        <div
-            ref={wrapperRef}
-            tabIndex={0} // Makes the div focusable
-            onBlur={handleWrapperBlur}
-            className={cn(
-                'h-12 relative rounded-sm border border-input shadow-sm focus-within:ring-1 focus-within:ring-primary-500 focus-within:border-primary-500 transition-all',
-                className
-            )}
-        >
-            <Input
-                placeholder={placeholder}
-                value={inputValue}
-                onChange={(e) => {
-                    onChangeInputValue(e.target.value);
-                    setIsBlur(false);
-                }}
-                className="h-12 w-full rounded-sm shadow-none ring-0 border-0 transition-none focus-visible:border-0 focus-visible:ring-0"
-                onFocus={() => {
-                    setOpen(true);
-                    setIsBlur(false);
-                }}
-            />
-            <Card
-                className={clsx(
-                    'p-0 max-h-96 overflow-y-auto absolute -left-0.5 -right-0.5 z-40 mt-1 rounded-md transition-all',
-                    open ? 'visible opacity-100' : 'invisible opacity-0'
+        useEffect(() => {
+            if (isBlur) handleBlurInput();
+        }, [isBlur]);
+
+        return (
+            <div
+                ref={wrapperRef}
+                tabIndex={0} // Makes the div focusable
+                onBlur={handleWrapperBlur}
+                className={cn(
+                    'h-12 relative rounded-sm border border-input shadow-sm focus-within:ring-1 focus-within:ring-primary-500 focus-within:border-primary-500 transition-all',
+                    className
                 )}
             >
-                <CardContent className="py-1 px-1">
-                    {categories.length === 0 ? (
-                        <div className="py-6 text-center text-sm text-gray-500">No items found.</div>
-                    ) : (
-                        categories.map((category) => (
-                            <div
-                                key={category.value}
-                                className={cn(
-                                    'flex items-center px-2 py-1.5 text-sm cursor-pointer hover:bg-zinc-100 rounded-sm',
-                                    category.className
-                                )}
-                                onClick={() => handleSelectItem(category)}
-                            >
-                                {category.label}
-                                {selectValue === category.value && <CheckIcon className="ml-auto size-4" />}
-                            </div>
-                        ))
+                <Input
+                    placeholder={placeholder}
+                    value={inputValue}
+                    onChange={(e) => {
+                        onChangeInputValue(e.target.value);
+                        setIsBlur(false);
+                    }}
+                    className="h-12 w-full rounded-sm shadow-none ring-0 border-0 transition-none focus-visible:border-0 focus-visible:ring-0"
+                    onFocus={() => {
+                        setOpen(true);
+                        setIsBlur(false);
+                    }}
+                />
+                <Card
+                    className={clsx(
+                        'p-0 max-h-96 overflow-y-auto absolute -left-0.5 -right-0.5 z-40 mt-1 rounded-md transition-all',
+                        open ? 'visible opacity-100' : 'invisible opacity-0'
                     )}
-                </CardContent>
-            </Card>
-        </div>
-    );
-};
+                >
+                    <CardContent className="py-1 px-1">
+                        {categories.length === 0 ? (
+                            <div className="py-6 text-center text-sm text-gray-500">No items found.</div>
+                        ) : (
+                            categories.map((category) => (
+                                <div
+                                    key={category.value}
+                                    className={cn(
+                                        'flex items-center px-2 py-1.5 text-sm cursor-pointer hover:bg-zinc-100 rounded-sm',
+                                        category.className
+                                    )}
+                                    onClick={() => handleSelectItem(category)}
+                                >
+                                    {category.label}
+                                    {selectValue === category.value && <CheckIcon className="ml-auto size-4" />}
+                                </div>
+                            ))
+                        )}
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
+);
 
 InputSelectSingle.displayName = 'InputSelectSingle';
 InputSelectSingleItem.displayName = 'InputSelectSingleItem';
