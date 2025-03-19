@@ -14,14 +14,13 @@ import {
     Wallet,
     MapPin,
 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import ShareProfile from '@/components/custom-ui/share-profile';
 import { FaFacebookF, FaInstagram, FaXTwitter, FaYoutube } from 'react-icons/fa6';
 import { DialogApplyJob } from '@/components/custom-ui/dialog-apply-job';
 import Link from 'next/link';
 import { routes } from '@/configs/routes';
-import { useParams, useSearchParams, usePathname, useRouter } from 'next/navigation';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useParams, usePathname, useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import { JobService } from '@/services/job.service';
 import moment from 'moment';
@@ -31,6 +30,7 @@ import { handleErrorToast } from '@/lib/utils';
 import { toast } from 'sonner';
 import { NotFound } from '@/components/custom-ui/not-found';
 import { UserContext } from '@/contexts';
+import { ListTag } from '@/components/custom-ui/list-tags';
 
 export default function SingleJob() {
     return (
@@ -61,36 +61,24 @@ function PageContentOfSingleJob() {
     });
 
     const removeFavoriteJobMutation = async (jobId: string) => {
-        if (!isLog) {
-            toast.error('Vui lòng đăng nhập để sử dụng chức năng này.');
-            router.push(`/sign-in?redirect=${pathname}`);
-            return;
-        }
-
         try {
             await JobService.removeFavoriteJob({ jobId });
             await refetch();
             toast.success('Job added to favorite list');
         } catch (error: any) {
             handleErrorToast(error);
-            toast.error('Failed to add job to favorite list');
+            toast.error('Oops! Something went wrong');
         }
     };
 
     const handleAddFavoriteJob = async (jobId: string) => {
-        if (!isLog) {
-            toast.error('Vui lòng đăng nhập để sử dụng chức năng này.');
-            router.push(`/sign-in?redirect=${pathname}`);
-            return;
-        }
-
         try {
             await JobService.addFavoriteJob({ jobId });
             await refetch();
             toast.success('Job added to favorite list');
         } catch (error: any) {
             handleErrorToast(error);
-            toast.error('Failed to add job to favorite list');
+            toast.error('Oops! Something went wrong');
         }
     };
 
@@ -127,21 +115,7 @@ function PageContentOfSingleJob() {
                             <div>
                                 <div className="flex items-center gap-2">
                                     <h1 className="text-xl">{resultQuery?.name}</h1>
-                                    {resultQuery?.tags?.map((temp) => {
-                                        return (
-                                            <Badge
-                                                key={temp.tagId}
-                                                variant="secondary"
-                                                className={`h-[26px] px-3 font-normal text-[14px] whitespace-nowrap`}
-                                                style={{
-                                                    backgroundColor: temp.backgroundColor || '#E8F1FF',
-                                                    color: temp.color || '#0066FF',
-                                                }}
-                                            >
-                                                {temp.name}
-                                            </Badge>
-                                        );
-                                    })}
+                                    <ListTag tag={resultQuery?.tags ?? []} />
                                 </div>
                                 <div className="flex flex-wrap gap-5 text-sm text-muted-foreground mt-2">
                                     <span className="flex flex-row gap-1 text-[#474C54]">
@@ -164,33 +138,21 @@ function PageContentOfSingleJob() {
                                 variant="outline"
                                 size="icon-lg"
                                 className={`h-[56px] w-[56px] hover:bg-[#E7F0FA] ${isFavorite ? 'bg-[#E7F0FA]' : ''}`}
-                                // disabled={loading} // Chặn click khi API đang chạy
                                 onClick={async () => {
-                                    // Ngăn chặn spam click nếu đang xử lý API
-
                                     if (!isLog) {
                                         router.push(`/sign-in?redirect=${pathname}`);
                                         return;
                                     }
-
-                                    // setLoading(true); // Bắt đầu loading
                                     if (isFavorite) {
                                         await removeFavoriteJobMutation(id);
                                     } else {
                                         await handleAddFavoriteJob(id);
                                     }
                                 }}
-                                aria-label={
-                                    isFavorite ? 'Xóa khỏi danh sách yêu thích' : 'Thêm vào danh sách yêu thích'
-                                }
                             >
-                                {/* {loading ? (
-                                    <Spinner size="sm" /> // Nếu có component loading
-                                ) : ( */}
                                 <Bookmark
                                     className={`h-[24px] w-[24px] ${isFavorite ? 'text-blue-500' : 'text-gray-500'}`}
                                 />
-                                {/* )} */}
                             </Button>
                             <DialogApplyJob nameJob="Senior UX Designer" jobId={id} />
                         </div>
@@ -202,13 +164,13 @@ function PageContentOfSingleJob() {
                     <div className="col-span-12 md:col-span-7 space-y-9">
                         <div className="space-y-4">
                             <article
-                                className="text-gray-700 break-normal"
+                                // className="text-gray-700 break-normal"
                                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(resultQuery?.description || '') }}
                             ></article>
                         </div>
                         <div className="space-y-4">
                             <article
-                                className="text-gray-700 break-normal"
+                                // className="text-gray-700 break-normal"
                                 dangerouslySetInnerHTML={{
                                     __html: DOMPurify.sanitize(resultQuery?.responsibility || ''),
                                 }}
@@ -216,7 +178,7 @@ function PageContentOfSingleJob() {
                         </div>
                         <div className="space-y-4">
                             <article
-                                className="text-gray-700 break-normal"
+                                // className="text-gray-700 break-normal"
                                 dangerouslySetInnerHTML={{
                                     __html: DOMPurify.sanitize(resultQuery?.enterpriseBenefits || ''),
                                 }}
@@ -285,9 +247,15 @@ function PageContentOfSingleJob() {
 
                                     <div>
                                         <h2 className="text-[20px]">{resultQuery?.enterprise?.name}</h2>
-                                        <p className="text-[14px] text-[#767F8C]">
+                                        <article
+                                            className="text-[14px] text-[#767F8C]"
+                                            dangerouslySetInnerHTML={{
+                                                __html: DOMPurify.sanitize(resultQuery?.enterprise?.description || ''),
+                                            }}
+                                        ></article>
+                                        {/* <p className="text-[14px] text-[#767F8C]">
                                             {resultQuery?.enterprise?.description}
-                                        </p>
+                                        </p> */}
                                     </div>
                                 </div>
                             </CardHeader>

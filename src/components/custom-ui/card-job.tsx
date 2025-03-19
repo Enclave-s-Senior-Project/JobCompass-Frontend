@@ -4,8 +4,7 @@ import { motion } from 'framer-motion';
 import { MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { motionVariant } from '@/lib/motion-variants';
-import { getRandomFeatureColor } from '@/lib/random-color';
-import Image from 'next/image';
+import { ListTag } from './list-tags';
 
 export default function CardJob(props: { job: Job }) {
     const { job } = props;
@@ -17,7 +16,12 @@ export default function CardJob(props: { job: Job }) {
     return (
         <Link href={`/single-job/${job.jobId}`}>
             <motion.div
-                className="bg-white rounded-md  p-6 border-2 hover:border-[#0A65CC] transition-shadow flex flex-col justify-center xl:w-[424px] xl:h-[204px]"
+                className="bg-white rounded-md p-6 border-2 hover:border-[#0A65CC] transition-shadow flex flex-col justify-center 
+                w-[414px] h-[204px] 
+                sm:w-[350px] sm:h-[180px] 
+                md:w-[400px] md:h-[200px] 
+                lg:w-[414px] lg:h-[204px] 
+                xl:w-[414px] xl:h-[204px]"
                 variants={motionVariant.containerVariants}
                 initial="hidden"
                 animate="visible"
@@ -37,17 +41,7 @@ export default function CardJob(props: { job: Job }) {
 
                         <div className="gap-4">
                             <div className="flex items-center gap-2 mb-1">
-                                {job.tags?.map((feature, index) => {
-                                    const color = getRandomFeatureColor(index);
-                                    return (
-                                        <span
-                                            key={feature.tagId}
-                                            className={`text-xs px-2 py-1 rounded-full ${color.bg} ${color.text} border border-opacity-50`}
-                                        >
-                                            {feature.name}
-                                        </span>
-                                    );
-                                })}
+                                <ListTag tag={job?.tags ?? []} />
                             </div>
                             <div className="flex items-center text-sm text-gray-500">
                                 <MapPin className="h-4 w-4 mr-1 flex-shrink-0 text-[#939AAD]" />
