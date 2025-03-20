@@ -9,7 +9,7 @@ const authAxios = new AuthAxios('job');
 export class JobService {
     public static async getAllJobs(data: DetailedRequest.ParamListJobsCredentials) {
         try {
-            const temp = await axios.get<ApiResponse<DetailedResponse.GetAllJobs>>('', { params: data });
+            const temp = await axios.get<ApiResponse<DetailedResponse.GetAllJobs>>('search', { params: data });
             return temp.payload.value;
         } catch (err) {
             if (err instanceof AxiosError) {
@@ -21,7 +21,6 @@ export class JobService {
             throw err;
         }
     }
-
     public static async getFavoriteJobs(data: DetailedRequest.FavoriteJobs) {
         try {
             const dataResponse = await authAxios.get<ApiResponse<DetailedResponse.FavoriteJobs>>('/wishlist', {
@@ -87,9 +86,7 @@ export class JobService {
 
     public static async detailJob(id: string, data: DetailedRequest.CheckWishlist) {
         try {
-            console.log('Detail', id, data);
             const dataResponse = await axios.get<ApiResponse<Job>>(`/${id}`, { params: data });
-            console.log(dataResponse);
             return dataResponse.payload.value;
         } catch (err) {
             if (err instanceof AxiosError) {

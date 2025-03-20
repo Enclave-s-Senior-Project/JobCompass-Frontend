@@ -57,7 +57,7 @@ export function FormPersonalProfile() {
             setErrors(errors as FormErrors);
             if (success) {
                 refreshMe();
-                toast.success('Updated!');
+                toast.success('User update is successful!');
             }
             return res;
         },

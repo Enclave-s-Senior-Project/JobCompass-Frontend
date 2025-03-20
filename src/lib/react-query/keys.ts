@@ -16,6 +16,7 @@ export const queryKey = {
     tagList: 'searchTags',
     jobsOfEnterprise: 'jobs-of-enterprise',
     countTotalJobsOfEnterpriseId: 'count-total-jobs-of-enterprise-id',
+    listJobs: 'list-jobs',
     filterJob: 'filter-job',
     enterpriseJob: 'enterprise-job',
     ownResumes: 'own-resumes',

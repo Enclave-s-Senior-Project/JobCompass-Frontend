@@ -42,14 +42,12 @@ export default function PostJobForm() {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [jobSpecializations, setJobSpecializations] = useState<string[]>([]);
 
-    // Sử dụng useQuery với enabled để kiểm soát việc gọi API
     const { data: resultQuery, refetch } = useQuery({
         queryKey: [queryKey.listCategory],
         queryFn: async () => {
             try {
                 const payload = await CategoryService.getPrimaryCategories({});
                 const temp = await AddressService.getAllAddressByEnterprise();
-                // console.log('e', payload);
                 return { payload, temp };
             } catch (error: any) {
                 console.log(error);
@@ -59,7 +57,7 @@ export default function PostJobForm() {
         staleTime: 1000 * 60,
         refetchInterval: 1000 * 60,
         retry: 2,
-        enabled: true, // Luôn bật truy vấn
+        enabled: true,
     });
 
     useEffect(() => {

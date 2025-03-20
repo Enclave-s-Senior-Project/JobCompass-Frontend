@@ -126,8 +126,13 @@ export namespace DetailedRequest {
     export interface SearchFilterListJobsCredentials {
         keyword: string;
         location: string;
-        category: string;
-        advance: string;
+        parentCategoryId: any | null;
+        childrenCategoryId: any | null;
+        experience: string;
+        salary: string;
+        jobType: string[];
+        education: string[];
+        jobLevel: string;
     }
     export interface ParamListJobsCredentials extends Pagination {}
     export interface FavoriteJobs extends Pagination {}

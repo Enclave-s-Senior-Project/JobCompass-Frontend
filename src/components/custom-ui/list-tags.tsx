@@ -1,6 +1,6 @@
 import { Tag } from '@/types';
 import { useMemo } from 'react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'; // Đường dẫn đến Tooltip của shadcn/ui
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export function ListTag({ tag }: { tag: Tag[] }) {
     const featureColors = [

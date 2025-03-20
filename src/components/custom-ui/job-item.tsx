@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { motion } from 'framer-motion';
 import { motionVariant } from '@/lib/motion-variants';
+import { useRouter } from 'next/navigation';
 
 interface JobItemProps {
     job: {
@@ -24,6 +25,7 @@ interface JobItemProps {
 }
 
 export default function JobItem({ job }: JobItemProps) {
+    const router = useRouter();
     return (
         <motion.div
             className="py-4 px-8 md:px-0 bg-white cursor-pointer border-none"
@@ -35,7 +37,7 @@ export default function JobItem({ job }: JobItemProps) {
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-center p-5 border-2 rounded-xl border-gray-100 hover:border-primary hover:shadow-lg transition-colors">
                 {/* Job Title and Info */}
                 <div className="col-span-12 md:col-span-4 flex flex-col">
-                    <h3 className="font-medium text-lg">{job.jobId}</h3>
+                    <h3 className="font-medium text-lg">{job.name}</h3>
                     <div className="flex items-center text-sm text-gray-500 mt-1">
                         <span>{job.type}</span>
                         <span className="mx-2 hidden md:inline-block">•</span>
@@ -69,7 +71,14 @@ export default function JobItem({ job }: JobItemProps) {
 
                 {/* Actions */}
                 <div className="col-span-12 md:col-span-3 flex flex-col md:flex-row md:justify-between items-start md:items-center space-y-3 md:space-y-0">
-                    <Button size="md" variant="third" className="text-base font-semibold w-full md:w-auto">
+                    <Button
+                        size="md"
+                        variant="third"
+                        className="text-base font-semibold w-full md:w-auto"
+                        onClick={() => {
+                            router.push(`/job/${job.jobId}`);
+                        }}
+                    >
                         View Applications
                     </Button>
 
