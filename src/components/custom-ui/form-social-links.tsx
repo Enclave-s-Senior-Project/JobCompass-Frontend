@@ -82,7 +82,7 @@ export function FormSocialLinks({ useType }: { useType: 'candidate' | 'employer'
             if (!result.success) {
                 setErrors(result.errors);
             } else {
-                toast.success('Updated!');
+                toast.success('User links update is successful!');
                 candidateRefetch();
                 setErrors([]);
             }
@@ -99,7 +99,7 @@ export function FormSocialLinks({ useType }: { useType: 'candidate' | 'employer'
             if (!result.success) {
                 setErrors(result.errors);
             } else {
-                toast.success('Updated!');
+                toast.success('User update is successful!');
                 employerRefetch();
                 setErrors([]);
             }

@@ -1,45 +1,27 @@
 'use client';
 
-import { DetailedRequest, Meta } from '@/types';
+import { Meta } from '@/types';
 import { JobCardTwoType } from './card-job-two-type';
-import { useState } from 'react';
-import * as services from '@/services/job.service';
-import { useQuery } from '@tanstack/react-query';
 import { FileX } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
-import { useSearchParams } from 'next/navigation';
-import { queryKey } from '@/lib/react-query/keys';
-import { handleErrorToast } from '@/lib/utils';
 import { PrimaryPagination } from '../ui/pagination';
 
-export default function ListCardJobs(props: { viewType: 'list' | 'grid'; perPage: number; option: string }) {
+export default function ListCardJobs(props: {
+    viewType: 'list' | 'grid';
+    perPage: number;
+    option: string;
+    data?: any[];
+    isPending: boolean;
+    meta?: Meta;
+    totalPages: number;
+    refetch: () => void;
+}) {
     const ITEM_PER_PAGE = props.perPage;
-    const [totalPages, setTotalPages] = useState(0);
-    const search = useSearchParams();
-    const page = Number(search.get('page') || 1);
-    const order = (search.get('order')?.toUpperCase() as 'ASC' | 'DESC') || 'ASC';
-    const options = props.option;
-    const {
-        refetch,
-        data: resultQuery,
-        isPending,
-    } = useQuery({
-        queryKey: [queryKey.favoriteJobs, { order, page, take: ITEM_PER_PAGE, options }],
-        queryFn: async ({ queryKey }) => {
-            try {
-                const payload = await services.JobService.getAllJobs(queryKey[1] as DetailedRequest.Pagination);
-                if (Number(payload?.meta.pageCount) > 0) setTotalPages(Number(payload?.meta.pageCount) || 0);
-                return payload;
-            } catch (error: any) {
-                handleErrorToast(error);
-            }
-        },
-        staleTime: 1000 * 60, // 1 minute
-        refetchInterval: 1000 * 60, // 1 minute
-        retry: 2,
-        enabled: true,
-    });
-    const { viewType } = props;
+    const { viewType, data, isPending, meta, totalPages } = props;
+
+    const refetch = async () => {
+        await props.refetch();
+    };
 
     return (
         <div className={viewType === 'grid' ? 'flex items-center justify-center' : ''}>
@@ -54,7 +36,7 @@ export default function ListCardJobs(props: { viewType: 'list' | 'grid'; perPage
                             </div>
                         </div>
                     ))
-                ) : !resultQuery?.data?.length ? (
+                ) : !data?.length ? (
                     <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4">
                         <FileX className="h-16 w-16 text-muted-foreground mb-4" />
                         <h3 className="text-lg font-semibold text-foreground mb-2">No jobs found</h3>
@@ -71,7 +53,7 @@ export default function ListCardJobs(props: { viewType: 'list' | 'grid'; perPage
                                 : 'flex flex-col place-items-center gap-y-1'
                         }
                     >
-                        {resultQuery.data.map((job, index) => (
+                        {data.map((job, index) => (
                             <JobCardTwoType job={job} viewType={viewType} key={index} refetch={refetch} />
                         ))}
                     </div>
@@ -80,10 +62,10 @@ export default function ListCardJobs(props: { viewType: 'list' | 'grid'; perPage
                 {Number(totalPages) > 1 && (
                     <div className="pt-5">
                         <PrimaryPagination
-                            meta={resultQuery?.meta as Meta}
+                            meta={meta as Meta}
                             pagination={{
-                                page,
-                                order,
+                                page: meta?.page || 1,
+                                order: props.option as 'ASC' | 'DESC',
                             }}
                             totalPages={totalPages}
                         />

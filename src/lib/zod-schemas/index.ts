@@ -92,7 +92,6 @@ const updatePersonalProfile = z.object({
                     today.getFullYear() -
                     birthDate.getFullYear() -
                     (today < new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate()) ? 1 : 0);
-                console.log(age);
                 return age >= 18;
             },
             { message: 'You must be at least 18 years old' }

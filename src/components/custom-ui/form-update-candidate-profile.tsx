@@ -87,7 +87,7 @@ export function FormUpdateCandidateProfile() {
             setErrors(errors as FormErrors);
             if (success) {
                 refreshMe();
-                toast.success('Updated!');
+                toast.success('Updated user is successfully!');
             }
             return res;
         },

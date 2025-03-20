@@ -11,8 +11,6 @@ export class UploadService {
         key: string,
         file: File
     ): Promise<{ success: boolean; key: string; fileUrl: string }> {
-        // Step 2: Upload the file to S3
-        console.log(file.type);
         await axios.put(url, file, {
             headers: { 'Content-Type': file.type },
             withCredentials: false,
@@ -50,7 +48,6 @@ export class UploadService {
     };
 
     public static presignedCV = async (file: File) => {
-        console.log(file.type);
         try {
             // Step 1: Get the presigned URL from the backend
             const res = await authAxios.get<ApiResponse<{ url: string; key: string }>>('/presigned-url/cv', {

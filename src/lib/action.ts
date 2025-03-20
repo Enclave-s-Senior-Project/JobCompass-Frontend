@@ -154,7 +154,6 @@ export const verifyEmail = async (currentState: any, formData: FormData) => {
             };
         }
     } catch (error: any) {
-        console.log('vao day', error);
         handleErrorToast(error);
     }
     return { ...currentState, errors: {}, success: false };
