@@ -31,6 +31,7 @@ import { toast } from 'sonner';
 import { NotFound } from '@/components/custom-ui/not-found';
 import { UserContext } from '@/contexts';
 import { ListTag } from '@/components/custom-ui/list-tags';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export default function SingleJob() {
     return (
@@ -119,8 +120,25 @@ function PageContentOfSingleJob() {
                                 </div>
                                 <div className="flex flex-wrap gap-5 text-sm text-muted-foreground mt-2">
                                     <span className="flex flex-row gap-1 text-[#474C54]">
-                                        <Link2 className="w-5 h-5 text-[#0066FF]" />
-                                        {resultQuery?.enterprise?.bio}
+                                        {resultQuery?.enterprise?.bio ? (
+                                            <>
+                                                <Link2 className="w-5 h-5 text-[#0066FF]" />
+                                                {resultQuery?.enterprise?.bio.length > 30 ? (
+                                                    <TooltipProvider>
+                                                        <Tooltip>
+                                                            <TooltipTrigger>
+                                                                {resultQuery?.enterprise?.bio.substring(0, 30) + '...'}
+                                                            </TooltipTrigger>
+                                                            <TooltipContent>
+                                                                {resultQuery?.enterprise?.bio}
+                                                            </TooltipContent>
+                                                        </Tooltip>
+                                                    </TooltipProvider>
+                                                ) : (
+                                                    <p>{resultQuery?.enterprise?.bio}</p>
+                                                )}
+                                            </>
+                                        ) : null}
                                     </span>
                                     <span className="flex flex-row gap-1 text-[#474C54]">
                                         <Phone className="w-5 h-5 text-[#0066FF] " />
@@ -164,13 +182,11 @@ function PageContentOfSingleJob() {
                     <div className="col-span-12 md:col-span-7 space-y-9">
                         <div className="space-y-4">
                             <article
-                                // className="text-gray-700 break-normal"
                                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(resultQuery?.description || '') }}
                             ></article>
                         </div>
                         <div className="space-y-4">
                             <article
-                                // className="text-gray-700 break-normal"
                                 dangerouslySetInnerHTML={{
                                     __html: DOMPurify.sanitize(resultQuery?.responsibility || ''),
                                 }}
@@ -287,7 +303,24 @@ function PageContentOfSingleJob() {
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <p className="text-[16px] text-muted-foreground">Website:</p>
-                                        <p className="text-[16px]">{resultQuery?.enterprise?.bio || ''}</p>
+                                        {resultQuery?.enterprise?.bio ? (
+                                            resultQuery.enterprise.bio.length > 30 ? (
+                                                <TooltipProvider>
+                                                    <Tooltip>
+                                                        <TooltipTrigger>
+                                                            {resultQuery.enterprise.bio.substring(0, 30) + '...'}
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>
+                                                            <p className="text-[16px]">{resultQuery.enterprise.bio}</p>
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                </TooltipProvider>
+                                            ) : (
+                                                <span>{resultQuery.enterprise.bio}</span>
+                                            )
+                                        ) : (
+                                            <span>N/A</span>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="flex gap-2 pt-4">

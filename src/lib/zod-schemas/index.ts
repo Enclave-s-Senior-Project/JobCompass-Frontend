@@ -159,11 +159,6 @@ const postJobSchema = z
                 required_error: 'Category is required',
             })
             .min(1, 'Category is required'),
-        // address: z
-        //     .string({
-        //         required_error: 'Address is required',
-        //     })
-        //     .nonempty('Address is required'),
         benefit: z.string().min(20, 'Benefit is required and must be at least 20 characters'),
         specializations: z.array(z.string()).min(1, 'At least one specializations is required'),
     })
@@ -176,6 +171,7 @@ const addTagSchema = z.object({
     name: z
         .string()
         .min(1, 'Tag name is required')
+        .max(10, 'Tag name must be at most 10 characters long')
         .refine((value) => /^[A-Z]/.test(value), {
             message: 'Tag name must start with an uppercase letter',
         }),
