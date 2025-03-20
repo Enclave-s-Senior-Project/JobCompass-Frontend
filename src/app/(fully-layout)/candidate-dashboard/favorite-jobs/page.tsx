@@ -3,7 +3,7 @@
 import React, { Fragment, Suspense, useState } from 'react';
 import { PrimaryPagination } from '@/components/ui/pagination';
 import { useSearchParams } from 'next/navigation';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import { JobService } from '@/services/job.service';
 import { DetailedRequest, Meta } from '@/types';
@@ -49,6 +49,7 @@ function PageContent() {
         refetchInterval: 1000 * 60, // 1 minute
         retry: 2,
         enabled: true,
+        placeholderData: keepPreviousData,
     });
 
     const removeFavoriteJobMutation = useMutation({
