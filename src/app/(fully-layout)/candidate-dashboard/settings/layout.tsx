@@ -1,5 +1,5 @@
 import { NavigationSettingProfileBar } from '@/components/custom-ui/horizontial-navigation-bar';
-import { CircleUser, FileUser, Globe, NotebookPen, Settings, UserRound } from 'lucide-react';
+import { CircleUser, Globe, NotebookPen, Settings, UserRound } from 'lucide-react';
 import React from 'react';
 
 const subPages = [

@@ -30,7 +30,7 @@ export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void; j
         queryKey: [queryKey.listCvofProfile],
         queryFn: async () => {
             try {
-                const payload = await CVService.getCvByIdProfile();
+                const payload = await CVService.getOwnCV();
                 return payload;
             } catch (error: any) {
                 console.log(error);

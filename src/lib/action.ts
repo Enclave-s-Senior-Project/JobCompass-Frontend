@@ -13,6 +13,7 @@ import {
     postJobSchema,
     addTagSchema,
     addEnterpriseSchema,
+    uploadCVSchema,
 } from './zod-schemas';
 import { handleErrorToast } from './utils';
 import { ApplyJobService } from '@/services/applyJob.service';
@@ -25,6 +26,7 @@ import { TagService } from '@/services/tag.service';
 import { JobService } from '@/services/job.service';
 import { EnterpriseService } from '@/services/enterprises.service';
 import { storeTokenInfo } from './auth';
+import { CVService } from '@/services/cv.service';
 
 export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, formData: FormData) => {
     const username = formData.get('username')?.toString() ?? '';
@@ -659,4 +661,33 @@ export const updateEnterpriseSocialLinks = async (currentState: {
         success,
         errors,
     };
+};
+
+export const uploadCV = async (currentState: any) => {
+    const validation = uploadCVSchema.safeParse(currentState);
+    if (!validation.success) {
+        return {
+            ...currentState,
+            errors: validation.error.flatten().fieldErrors,
+            success: false,
+        };
+    }
+
+    const { success, fileUrl } = await UploadService.presignedCV(currentState?.cvFile);
+    if (!success || !fileUrl) {
+        return {
+            ...currentState,
+            errors: { cvFile: 'Failed to upload CV' },
+            success: false,
+        };
+    }
+
+    await CVService.uploadCV({
+        cvName: currentState?.cvName,
+        cvUrl: fileUrl,
+        isPublished: currentState?.isPublished,
+        size: (currentState?.cvFile as File).size / (1024 * 1024),
+    });
+
+    return { ...currentState, success: true };
 };
