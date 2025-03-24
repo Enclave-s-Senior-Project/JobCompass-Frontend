@@ -40,7 +40,8 @@ export default function CardJob(props: { job: Job }) {
                         </div>
 
                         <div className="gap-4">
-                            <div className="flex items-center gap-2 mb-1">
+                            {/* Luôn giữ chỗ cho tag dù có hoặc không */}
+                            <div className="flex items-center gap-2 mb-1 min-h-[20px]">
                                 <ListTag tag={job?.tags ?? []} />
                             </div>
                             <div className="flex items-center text-sm text-gray-500">

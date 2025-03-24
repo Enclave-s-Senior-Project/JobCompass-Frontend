@@ -34,7 +34,6 @@ export default function Page() {
     const page = Number(search.get('page') || 1);
     const order = (search.get('order')?.toUpperCase() as 'ASC' | 'DESC') || option;
 
-    // Function to transform filters to match backend DTO
     const transformFiltersToDto = (filters: DetailedRequest.SearchFilterListJobsCredentials) => {
         const salaryRange = filters.salary?.split('-').map(Number) || [];
         return {
@@ -138,8 +137,6 @@ export default function Page() {
                                 ));
                             }
                             if (!value || (Array.isArray(value) && value.length === 0)) return null;
-
-                            // Separate handling for category objects
                             if (key === 'parentCategoryId' && typeof value === 'object' && value !== null) {
                                 return (
                                     <Button
@@ -216,22 +213,22 @@ export default function Page() {
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-                    <div className="flex items-center border rounded-md h-[48px] w-[88px] gap-2">
+                    <div className="flex justify-center items-center border rounded-md h-[48px] w-[88px] gap-2">
                         <Button
                             variant="ghost"
-                            size="md"
-                            className={viewType === 'grid' ? 'bg-gray-100' : ''}
+                            size="icon-md"
+                            className={`w-[36px] h-[36px] flex items-center justify-center ${viewType === 'grid' ? 'bg-gray-100' : ''}`}
                             onClick={() => setViewType('grid')}
                         >
-                            <LayoutGrid className="h-4 w-4" />
+                            <LayoutGrid className="h-3 w-3" />
                         </Button>
                         <Button
                             variant="ghost"
-                            size="md"
-                            className={viewType === 'list' ? 'bg-gray-100' : ''}
+                            size="icon-md"
+                            className={`w-[36px] h-[36px] flex items-center justify-center ${viewType === 'list' ? 'bg-gray-100' : ''}`}
                             onClick={() => setViewType('list')}
                         >
-                            <List className="h-4 w-4" />
+                            <List className="h-3 w-3" />
                         </Button>
                     </div>
                 </div>

@@ -27,15 +27,31 @@ export default function ListCardJobs(props: {
         <div className={viewType === 'grid' ? 'flex items-center justify-center' : ''}>
             <div className={viewType === 'grid' ? 'container mx-auto max-w-screen-xl' : ''}>
                 {isPending ? (
-                    [...Array(ITEM_PER_PAGE)].map((_, i) => (
-                        <div key={i} className="flex items-center space-x-2">
-                            <Skeleton className="h-56 w-56 lg:h-28 lg:w-30 rounded-sm" />
-                            <div className="space-y-2 h-56 lg:h-28 flex-1 flex flex-col">
-                                <Skeleton className="h-9 w-full" />
-                                <Skeleton className="flex-1 w-full" />
-                            </div>
+                    viewType === 'grid' ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-6 place-items-center">
+                            {[...Array(ITEM_PER_PAGE)].map((_, i) => (
+                                <Skeleton
+                                    key={i}
+                                    className="w-[414px] h-[204px] sm:w-[350px] sm:h-[180px] md:w-[400px] md:h-[200px] lg:w-[414px] lg:h-[204px] rounded-md"
+                                />
+                            ))}
                         </div>
-                    ))
+                    ) : (
+                        <div className="flex flex-col place-items-center gap-y-1">
+                            {[...Array(ITEM_PER_PAGE)].map((_, i) => (
+                                <div
+                                    key={i}
+                                    className="flex items-center space-x-2 w-full max-w-2xl p-4 border rounded-md"
+                                >
+                                    <Skeleton className="h-14 w-14 rounded-sm" />
+                                    <div className="space-y-2 flex-1 flex flex-col">
+                                        <Skeleton className="h-6 w-2/3" />
+                                        <Skeleton className="h-4 w-full" />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )
                 ) : !data?.length ? (
                     <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4">
                         <FileX className="h-16 w-16 text-muted-foreground mb-4" />

@@ -109,4 +109,13 @@ export interface Categories {
     parent: any;
 }
 
+export interface CandidatesApplied {
+    userId: number;
+    id: number;
+    title: string;
+    completed: boolean;
+    profile: User;
+    job: Job;
+}
+
 export interface Resume extends CV {}

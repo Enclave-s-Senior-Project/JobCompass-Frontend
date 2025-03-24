@@ -20,4 +20,5 @@ export const queryKey = {
     filterJob: 'filter-job',
     enterpriseJob: 'enterprise-job',
     ownResumes: 'own-resumes',
+    candidatesApplied: 'candidates-applied',
 };
