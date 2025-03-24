@@ -262,6 +262,24 @@ const companyProfileFoundingSchema = z.object({
 
 export type CompanyProfileFoundingForm = z.infer<typeof companyProfileFoundingSchema>;
 
+const uploadCVSchema = z.object({
+    cvName: z.string().min(8, 'Resume name is at least 8 characters').max(20, 'Resume name is at most 20 characters'),
+    cvFile: z.instanceof(File, { message: 'Resume file is required' }).refine(
+        (file) => {
+            // Check file size (12MB limit)
+            if (file.size / (1024 * 1024) >= 12) {
+                return false;
+            }
+            // Check if file is PDF
+            if (file.type !== 'application/pdf') {
+                return false;
+            }
+            return true;
+        },
+        { message: 'File must be a PDF and less than 12MB' }
+    ),
+});
+
 export {
     companyProfileFoundingSchema,
     companyProfileSchema,
@@ -276,4 +294,5 @@ export {
     postJobSchema,
     addTagSchema,
     addEnterpriseSchema,
+    uploadCVSchema,
 };

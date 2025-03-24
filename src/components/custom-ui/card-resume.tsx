@@ -11,7 +11,7 @@ export function CardResume({ resume }: { resume: Resume }) {
             <div className="space-y-1">
                 <p className="text-sm font-medium text-gray-900">{resume.cvName}</p>
                 <p className="text-sm font-normal text-gray-600">
-                    {resume.size}&nbsp;MB -{' '}
+                    {resume.size.toFixed(1)}&nbsp;MB -{' '}
                     <i className={clsx(resume.isPublished ? 'text-primary-400' : 'text-danger-400')}>{isPublished}</i>
                 </p>
             </div>

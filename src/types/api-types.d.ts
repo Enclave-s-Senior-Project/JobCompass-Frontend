@@ -1,5 +1,5 @@
 import { PersonalProfileType, UserType, Address, CandidateProfileType } from './common-types';
-import { Categories, Enterprise, Job, SocialLink, Tag } from './entities';
+import { Categories, Enterprise, Job, Resume, SocialLink, Tag } from './entities';
 
 interface ResponseWithMeta<T> {
     meta: Meta;
@@ -61,7 +61,7 @@ export namespace DetailedResponse {
     export interface FavoriteJobs extends GetAllJobs {}
     export interface EnterpriseJobs extends GetAllJobs {}
 
-    export type GetAllCvByIdProfile = CV[];
+    export type GetAllCvByIdProfile = Resume[];
     export type GetAllTag = {
         data: Tag[];
         meta: Meta;
@@ -80,6 +80,8 @@ export namespace DetailedResponse {
     export type GetCategoriesPrimary = ResponseWithMeta<Categories[]>;
 
     export type GetCategoriesChild = GetCategoriesPrimary;
+
+    export type UploadCV = Resume;
 }
 
 export namespace DetailedRequest {
@@ -213,5 +215,12 @@ export namespace DetailedRequest {
     }
     export interface CheckWishlist {
         userId: string;
+    }
+
+    export interface CVUpload {
+        cvName: string;
+        cvUrl: string;
+        isPublished: boolean;
+        size: number;
     }
 }

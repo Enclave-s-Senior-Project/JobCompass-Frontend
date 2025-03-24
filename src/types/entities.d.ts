@@ -58,6 +58,8 @@ export interface CV {
     cvId: string;
     cvUrl: string;
     cvName: string;
+    size: number;
+    isPublished: boolean;
 }
 
 export interface SocialLink {
@@ -107,11 +109,4 @@ export interface Categories {
     parent: any;
 }
 
-export interface Resume {
-    cvName: string;
-    cvUrl: string;
-    size: string | number;
-    isPublished: boolean;
-    updatedAt: string | number;
-    createdAt: string | number;
-}
+export interface Resume extends CV {}
