@@ -106,3 +106,12 @@ export interface Categories {
     categoryName: string;
     parent: any;
 }
+
+export interface Resume {
+    cvName: string;
+    cvUrl: string;
+    size: string | number;
+    isPublished: boolean;
+    updatedAt: string | number;
+    createdAt: string | number;
+}
