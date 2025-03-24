@@ -3,10 +3,16 @@
 import { SidebarDashboardEmployer } from '@/components/custom-ui/sidebar-dashboard-employer';
 import { UserContext } from '@/contexts/user-context';
 import { hasPermission } from '@/lib/auth';
+import { usePathname } from 'next/navigation';
 import { useContext } from 'react';
 
 export default function EmployeeDashboardLayout({ children }: { children: React.ReactNode }) {
     const { userInfo } = useContext(UserContext);
+    const pathname = usePathname(); // Lấy URL hiện tại
+
+    if (pathname.includes('/candidates')) {
+        return <>{children}</>;
+    }
     return userInfo && hasPermission(userInfo, 'enterpriseDashboard', 'access') ? (
         <div className="mx-auto container max-w-screen-xl">
             <div className="grid grid-cols-5">

@@ -25,7 +25,7 @@ export class EnterpriseService {
     public static async checkEnterprise() {
         try {
             const dataResponse =
-                await authAxios.get<ApiResponse<DetailedResponse.getDataRegisterEnterprise>>('/me/check');
+                await authAxios.get<ApiResponse<DetailedResponse.GetDataRegisterEnterprise>>('/me/check');
             return dataResponse.payload;
         } catch (err) {
             if (err instanceof AxiosError) {
@@ -68,7 +68,7 @@ export class EnterpriseService {
     }
     public static async getEnterprise() {
         try {
-            const dataResponse = await authAxios.get<ApiResponse<DetailedResponse.getDataRegisterEnterprise>>('/me');
+            const dataResponse = await authAxios.get<ApiResponse<DetailedResponse.GetDataRegisterEnterprise>>('/me');
             return dataResponse.payload.value;
         } catch (err) {
             if (err instanceof AxiosError) {
