@@ -35,4 +35,21 @@ export class CVService {
             throw err;
         }
     }
+
+    public static async deleteCV(payload: DetailedRequest.DeleteCv) {
+        try {
+            const dataRes = await authAxios.delete<ApiResponse<DetailedResponse.DeleteEntityResponse>>(
+                `/${payload.cvId}`
+            );
+            return dataRes.payload.value?.deleteResult;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
 }
