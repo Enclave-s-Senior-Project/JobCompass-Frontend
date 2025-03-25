@@ -82,6 +82,13 @@ export namespace DetailedResponse {
     export type GetCategoriesChild = GetCategoriesPrimary;
 
     export type UploadCV = Resume;
+
+    export interface DeleteEntityResponse {
+        deleteResult: {
+            raw: any[];
+            affected: number;
+        };
+    }
 }
 
 export namespace DetailedRequest {
@@ -227,5 +234,8 @@ export namespace DetailedRequest {
         cvUrl: string;
         isPublished: boolean;
         size: number;
+    }
+    export interface DeleteCv {
+        cvId: string;
     }
 }
