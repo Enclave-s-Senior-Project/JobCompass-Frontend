@@ -46,3 +46,26 @@ export const handleErrorToast = (err: any) => {
         toast.error('Oops! Please try again');
     }
 };
+
+export const downloadFileViaURL = async (url: string) => {
+    try {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const blob = await response.blob(); // Convert response to a Blob
+        const fileName = url.split('/').pop() || 'downloaded_file'; // Extract filename or set default
+
+        // Create a temporary link element to trigger download
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link); // Clean up
+    } catch (error) {
+        handleErrorToast(error);
+    }
+};

@@ -41,7 +41,24 @@ export class CVService {
             const dataRes = await authAxios.delete<ApiResponse<DetailedResponse.DeleteEntityResponse>>(
                 `/${payload.cvId}`
             );
-            return dataRes.payload.value?.deleteResult;
+            return dataRes.payload.value;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
+
+    public static async updateCV(payload: DetailedRequest.CVUpdate) {
+        try {
+            const dataRes = await authAxios.patch<ApiResponse<DetailedResponse.UpdateEntityResponse>>(
+                `/${payload.cvId}`
+            );
+            return dataRes.payload.value;
         } catch (err) {
             if (err instanceof AxiosError) {
                 throw new NextError({

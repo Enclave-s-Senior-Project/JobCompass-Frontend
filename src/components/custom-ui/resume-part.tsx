@@ -6,14 +6,25 @@ import { Skeleton } from '../ui/skeleton';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { FormUploadResume } from './form-upload-resume';
 import { createContext, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import { handleErrorToast } from '@/lib/utils';
 import { CVService } from '@/services/cv.service';
+import { toast } from 'sonner';
+import { DetailedRequest } from '@/types';
 
-export const ResumePartContext = createContext<{ refetch: () => any; isLoading: boolean }>({
+type ResumeContextType = {
+    refetch: () => any;
+    isLoading: boolean;
+    deleteMutation: any;
+    updateMutation: any;
+};
+
+export const ResumePartContext = createContext<ResumeContextType>({
     refetch: () => {},
     isLoading: false,
+    deleteMutation: () => new Promise(() => {}),
+    updateMutation: () => new Promise(() => {}),
 });
 
 export function ResumePart() {
@@ -35,8 +46,40 @@ export function ResumePart() {
         enabled: true,
     });
 
+    const deleteMutation = useMutation({
+        mutationFn: async (cvId: string) => {
+            const toastId = toast.loading('Deleting your resume...');
+            const data = await CVService.deleteCV({ cvId });
+            return { toastId, data };
+        },
+        onSuccess: ({ data, toastId }) => {
+            toast.dismiss(toastId);
+            if (data?.affected && data.affected > 0) {
+                toast.success('Your resume has been deleted');
+            } else {
+                toast.error('Failed to delete your resume');
+            }
+            refetch();
+        },
+        onError: (error) => {
+            handleErrorToast(error);
+        },
+    });
+
+    const updateMutation = useMutation({
+        mutationFn: (payload: DetailedRequest.CVUpdate) => CVService.updateCV(payload),
+        onSuccess: (data) => {
+            if (data?.affected && data.affected > 0) toast.success('Your resume has been updated');
+            else toast.success('Update resume failed');
+            refetch();
+        },
+        onError: (error) => {
+            handleErrorToast(error);
+        },
+    });
+
     return (
-        <ResumePartContext.Provider value={{ refetch, isLoading }}>
+        <ResumePartContext.Provider value={{ refetch, isLoading, deleteMutation, updateMutation }}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <Dialog open={showDialog} onOpenChange={setShowDialog}>
                     <DialogTrigger asChild>
