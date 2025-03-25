@@ -1,14 +1,11 @@
 import { Resume } from '@/types';
-import { Ellipsis, FileText, PencilLine, Trash2 } from 'lucide-react';
+import { Download, Ellipsis, FileText, PencilLine, Trash2 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import clsx from 'clsx';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 import dynamic from 'next/dynamic';
 import { Suspense, useContext } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { CVService } from '@/services/cv.service';
-import { toast } from 'sonner';
-import { handleErrorToast } from '@/lib/utils';
+import { downloadFileViaURL } from '@/lib/utils';
 import { ResumePartContext } from './resume-part';
 const PDFPreview = dynamic(() => import('@/components/custom-ui/pdf-preview'), {
     ssr: false,
@@ -18,32 +15,20 @@ const PDFPreview = dynamic(() => import('@/components/custom-ui/pdf-preview'), {
 export function CardResume({ resume }: { resume: Resume }) {
     const isPublished = resume.isPublished ? 'Publish' : 'Private';
 
-    const { isLoading, refetch } = useContext(ResumePartContext);
-
-    const deleteMutation = useMutation({
-        mutationFn: async () => {
-            const toastId = toast.loading('Deleting your resume...');
-            const data = await CVService.deleteCV({ cvId: resume.cvId });
-            return { toastId, data };
-        },
-        onSuccess: ({ data, toastId }) => {
-            toast.dismiss(toastId);
-            if (data?.affected && data.affected > 0) {
-                toast.success('Your resume has been deleted');
-            } else {
-                toast.error('Failed to delete your resume');
-            }
-            refetch();
-        },
-        onError: (error) => {
-            handleErrorToast(error);
-        },
-    });
+    const { isLoading, deleteMutation } = useContext(ResumePartContext);
 
     const handleDeleteResume = (event: any) => {
         event.stopPropagation();
+        deleteMutation?.mutate(resume.cvId);
+    };
 
-        deleteMutation.mutate();
+    const handleDownloadFile = (event: any) => {
+        event.stopPropagation();
+        downloadFileViaURL(resume.cvUrl);
+    };
+
+    const handleUpdateResume = (event: any) => {
+        event.stopPropagation();
     };
 
     return (
@@ -62,17 +47,17 @@ export function CardResume({ resume }: { resume: Resume }) {
                     </div>
                     <DropdownMenu>
                         <DropdownMenuTrigger className="ml-auto">
-                            <Ellipsis />
+                            <div className="p-2 flex items-center justify-center">
+                                <Ellipsis />
+                            </div>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="start" className="px-0 py-3">
-                            <DropdownMenuItem
-                                disabled={isLoading}
-                                className="p-0"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    console.log('RUN EDIT');
-                                }}
-                            >
+                            <DropdownMenuItem disabled={isLoading} className="p-0" onClick={handleDownloadFile}>
+                                <div className="py-2 px-4 flex items-center w-full text-primary hover:text-primary-600 hover:bg-primary-50">
+                                    <Download className="size-5 mr-2" /> Download
+                                </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem disabled={isLoading} className="p-0" onClick={handleUpdateResume}>
                                 <div className="py-2 px-4 flex items-center w-full text-primary hover:text-primary-600 hover:bg-primary-50">
                                     <PencilLine className="size-5 mr-2" /> Edit Resume
                                 </div>

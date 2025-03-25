@@ -84,10 +84,12 @@ export namespace DetailedResponse {
     export type UploadCV = Resume;
 
     export interface DeleteEntityResponse {
-        deleteResult: {
-            raw: any[];
-            affected: number;
-        };
+        raw: any[];
+        affected: number;
+    }
+
+    export interface UpdateEntityResponse extends DeleteEntityResponse {
+        generatedMaps: any[];
     }
 }
 
@@ -235,7 +237,10 @@ export namespace DetailedRequest {
         isPublished: boolean;
         size: number;
     }
+
     export interface DeleteCv {
         cvId: string;
     }
+
+    export interface CVUpdate extends Pick<CVUpload, 'cvName' | 'isPublished'>, DeleteCv {}
 }
