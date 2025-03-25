@@ -13,6 +13,7 @@ import {
     BriefcaseBusiness,
     Wallet,
     MapPin,
+    FileX,
 } from 'lucide-react';
 import ShareProfile from '@/components/custom-ui/share-profile';
 import { FaFacebookF, FaInstagram, FaXTwitter, FaYoutube } from 'react-icons/fa6';
@@ -25,13 +26,14 @@ import { queryKey } from '@/lib/react-query/keys';
 import { JobService } from '@/services/job.service';
 import moment from 'moment';
 import DOMPurify from 'dompurify';
-import { Suspense, useContext } from 'react';
+import { Suspense, useContext, useEffect, useRef } from 'react';
 import { handleErrorToast } from '@/lib/utils';
 import { toast } from 'sonner';
 import { NotFound } from '@/components/custom-ui/not-found';
 import { UserContext } from '@/contexts';
 import { ListTag } from '@/components/custom-ui/list-tags';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function SingleJob() {
     return (
@@ -47,6 +49,12 @@ function PageContentOfSingleJob() {
     const isLog = localStorage.getItem('logged') ?? false;
     const { userInfo } = useContext(UserContext);
     const { id } = useParams<{ id: string }>();
+    const descriptionRef = useRef<HTMLDivElement>(null);
+    const responsibilityRef = useRef<HTMLDivElement>(null);
+    const benefitsRef = useRef<HTMLDivElement>(null);
+    const enterpriseDescRef = useRef<HTMLDivElement>(null);
+    const bioEnterpriseRef = useRef<HTMLDivElement>(null);
+
     const { data: resultQuery, refetch } = useQuery({
         queryKey: [queryKey.detailJob, id],
         queryFn: async () => {
@@ -71,7 +79,26 @@ function PageContentOfSingleJob() {
             toast.error('Oops! Something went wrong');
         }
     };
-
+    useEffect(() => {
+        if (resultQuery) {
+            console.log(resultQuery);
+            if (descriptionRef.current) {
+                descriptionRef.current.innerHTML = DOMPurify.sanitize(resultQuery.description || '');
+            }
+            if (responsibilityRef.current) {
+                responsibilityRef.current.innerHTML = DOMPurify.sanitize(resultQuery.responsibility || '');
+            }
+            if (benefitsRef.current) {
+                benefitsRef.current.innerHTML = DOMPurify.sanitize(resultQuery.enterpriseBenefits || '');
+            }
+            if (enterpriseDescRef.current) {
+                enterpriseDescRef.current.innerHTML = DOMPurify.sanitize(resultQuery.enterprise?.description || '');
+            }
+            if(bioEnterpriseRef.current) {
+                bioEnterpriseRef.current.innerHTML = DOMPurify.sanitize(resultQuery.enterprise?.bio || '');
+            }
+        }
+    }, [resultQuery]);
     const handleAddFavoriteJob = async (jobId: string) => {
         try {
             await JobService.addFavoriteJob({ jobId });
@@ -88,6 +115,7 @@ function PageContentOfSingleJob() {
     if (!id) {
         return <NotFound />;
     }
+    
     return (
         <div className="min-h-screen ">
             <div className="w-full h-[76px] bg-[#F1F2F4] flex items-center">
@@ -119,7 +147,7 @@ function PageContentOfSingleJob() {
                                     <ListTag tag={resultQuery?.tags ?? []} />
                                 </div>
                                 <div className="flex flex-wrap gap-5 text-sm text-muted-foreground mt-2">
-                                    <span className="flex flex-row gap-1 text-[#474C54]">
+                                    {/* <span className="flex flex-row gap-1 text-[#474C54]">
                                         {resultQuery?.enterprise?.bio ? (
                                             <>
                                                 <Link2 className="w-5 h-5 text-[#0066FF]" />
@@ -139,7 +167,7 @@ function PageContentOfSingleJob() {
                                                 )}
                                             </>
                                         ) : null}
-                                    </span>
+                                    </span> */}
                                     <span className="flex flex-row gap-1 text-[#474C54]">
                                         <Phone className="w-5 h-5 text-[#0066FF] " />
                                         {resultQuery?.enterprise?.phone}
@@ -181,24 +209,13 @@ function PageContentOfSingleJob() {
                 <div className="px-2 sm:px-0 grid grid-cols-12 gap-4 md:gap-8 lg:gap-14">
                     <div className="col-span-12 md:col-span-7 space-y-9">
                         <div className="space-y-4">
-                            <article
-                                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(resultQuery?.description || '') }}
-                            ></article>
+                        <div ref={descriptionRef}></div>
                         </div>
                         <div className="space-y-4">
-                            <article
-                                dangerouslySetInnerHTML={{
-                                    __html: DOMPurify.sanitize(resultQuery?.responsibility || ''),
-                                }}
-                            ></article>
+                        <div ref={responsibilityRef}></div>
                         </div>
                         <div className="space-y-4">
-                            <article
-                                // className="text-gray-700 break-normal"
-                                dangerouslySetInnerHTML={{
-                                    __html: DOMPurify.sanitize(resultQuery?.enterpriseBenefits || ''),
-                                }}
-                            ></article>
+                        <div ref={benefitsRef}></div>
                         </div>
                         {/* Share profile for breakpoint from md */}
                         <div className="hidden md:block">
@@ -263,12 +280,7 @@ function PageContentOfSingleJob() {
 
                                     <div>
                                         <h2 className="text-[20px]">{resultQuery?.enterprise?.name}</h2>
-                                        <article
-                                            className="text-[14px] text-[#767F8C]"
-                                            dangerouslySetInnerHTML={{
-                                                __html: DOMPurify.sanitize(resultQuery?.enterprise?.description || ''),
-                                            }}
-                                        ></article>
+                                        <div ref={bioEnterpriseRef}></div>
                                         {/* <p className="text-[14px] text-[#767F8C]">
                                             {resultQuery?.enterprise?.description}
                                         </p> */}
@@ -287,7 +299,7 @@ function PageContentOfSingleJob() {
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <p className="text-[16px] text-muted-foreground">Organization type:</p>
-                                        <p className="text-[16px]">{resultQuery?.enterprise?.industryType}</p>
+                                        <p className="text-[16px]">{resultQuery?.enterprise?.organizationType}</p>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <p className="text-[16px] text-muted-foreground">Company size:</p>
@@ -302,25 +314,8 @@ function PageContentOfSingleJob() {
                                         <p className="text-[16px]">{resultQuery?.enterprise?.email}</p>
                                     </div>
                                     <div className="flex justify-between items-center">
-                                        <p className="text-[16px] text-muted-foreground">Website:</p>
-                                        {resultQuery?.enterprise?.bio ? (
-                                            resultQuery.enterprise.bio.length > 30 ? (
-                                                <TooltipProvider>
-                                                    <Tooltip>
-                                                        <TooltipTrigger>
-                                                            {resultQuery.enterprise.bio.substring(0, 30) + '...'}
-                                                        </TooltipTrigger>
-                                                        <TooltipContent>
-                                                            <p className="text-[16px]">{resultQuery.enterprise.bio}</p>
-                                                        </TooltipContent>
-                                                    </Tooltip>
-                                                </TooltipProvider>
-                                            ) : (
-                                                <span>{resultQuery.enterprise.bio}</span>
-                                            )
-                                        ) : (
-                                            <span>N/A</span>
-                                        )}
+                                        <p className="text-[16px] text-muted-foreground">Industry:</p>
+                                        <p className="text-[16px]">{resultQuery?.enterprise?.industryType}</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-2 pt-4">
@@ -367,24 +362,21 @@ function PageContentOfSingleJob() {
                             </Button>
                         </nav>
                     </div>
-                    {/* <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-8">
-                        {isLoading ? (
-                            <div className="col-span-full flex items-center justify-center min-h-[50vh]">
-                                <Skeleton className="w-[424px] h-[204px] rounded-full" />
-                            </div>
-                        ) : !jobCards?.data?.length ? (
-                            <div className="col-span-full flex flex-col items-center justify-center min-h-[50vh] text-center">
-                                <FileX className="h-16 w-16 text-muted-foreground mb-4" />
-                                <h3 className="text-lg font-semibold text-foreground mb-2">No jobs found</h3>
-                                <p className="text-muted-foreground max-w-[500px]">
-                                    Currently, there are no jobs posted. Please check back later or try searching with
-                                    different criteria.
-                                </p>
-                            </div>
-                        ) : (
-                            jobCards.data.map((job, index) => <CardJob key={index} job={job} />)
-                        )}
-                    </div> */}
+                    <div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-8">
+            <div className="col-span-full flex flex-col items-center justify-center py-12 text-center bg-gray-50 rounded-lg border border-dashed border-gray-200">
+              <FileX className="h-16 w-16 text-muted-foreground mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-2">No related jobs found</h3>
+              <p className="text-muted-foreground max-w-[500px]">
+                We couldn&apos;t find any related job listings at the moment. Please check back later or explore other job
+                categories.
+              </p>
+              <Button variant="outline" className="mt-4">
+                <Link href="/jobs">Browse All Jobs</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
                 </div>
             </main>
         </div>
