@@ -8,7 +8,6 @@ import {
     Phone,
     Bookmark,
     NotepadText,
-    Link2,
     Clock8,
     BriefcaseBusiness,
     Wallet,
@@ -32,8 +31,6 @@ import { toast } from 'sonner';
 import { NotFound } from '@/components/custom-ui/not-found';
 import { UserContext } from '@/contexts';
 import { ListTag } from '@/components/custom-ui/list-tags';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Skeleton } from '@/components/ui/skeleton';
 
 export default function SingleJob() {
     return (
@@ -94,7 +91,7 @@ function PageContentOfSingleJob() {
             if (enterpriseDescRef.current) {
                 enterpriseDescRef.current.innerHTML = DOMPurify.sanitize(resultQuery.enterprise?.description || '');
             }
-            if(bioEnterpriseRef.current) {
+            if (bioEnterpriseRef.current) {
                 bioEnterpriseRef.current.innerHTML = DOMPurify.sanitize(resultQuery.enterprise?.bio || '');
             }
         }
@@ -115,7 +112,7 @@ function PageContentOfSingleJob() {
     if (!id) {
         return <NotFound />;
     }
-    
+
     return (
         <div className="min-h-screen ">
             <div className="w-full h-[76px] bg-[#F1F2F4] flex items-center">
@@ -209,13 +206,13 @@ function PageContentOfSingleJob() {
                 <div className="px-2 sm:px-0 grid grid-cols-12 gap-4 md:gap-8 lg:gap-14">
                     <div className="col-span-12 md:col-span-7 space-y-9">
                         <div className="space-y-4">
-                        <div ref={descriptionRef}></div>
+                            <div ref={descriptionRef}></div>
                         </div>
                         <div className="space-y-4">
-                        <div ref={responsibilityRef}></div>
+                            <div ref={responsibilityRef}></div>
                         </div>
                         <div className="space-y-4">
-                        <div ref={benefitsRef}></div>
+                            <div ref={benefitsRef}></div>
                         </div>
                         {/* Share profile for breakpoint from md */}
                         <div className="hidden md:block">
@@ -363,20 +360,20 @@ function PageContentOfSingleJob() {
                         </nav>
                     </div>
                     <div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-8">
-            <div className="col-span-full flex flex-col items-center justify-center py-12 text-center bg-gray-50 rounded-lg border border-dashed border-gray-200">
-              <FileX className="h-16 w-16 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2">No related jobs found</h3>
-              <p className="text-muted-foreground max-w-[500px]">
-                We couldn&apos;t find any related job listings at the moment. Please check back later or explore other job
-                categories.
-              </p>
-              <Button variant="outline" className="mt-4">
-                <Link href="/jobs">Browse All Jobs</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-8">
+                            <div className="col-span-full flex flex-col items-center justify-center py-12 text-center bg-gray-50 rounded-lg border border-dashed border-gray-200">
+                                <FileX className="h-16 w-16 text-muted-foreground mb-4" />
+                                <h3 className="text-lg font-semibold text-foreground mb-2">No related jobs found</h3>
+                                <p className="text-muted-foreground max-w-[500px]">
+                                    We couldn&apos;t find any related job listings at the moment. Please check back
+                                    later or explore other job categories.
+                                </p>
+                                <Button variant="outline" className="mt-4">
+                                    <Link href="/jobs">Browse All Jobs</Link>
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </main>
         </div>

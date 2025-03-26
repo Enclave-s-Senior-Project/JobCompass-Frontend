@@ -54,7 +54,6 @@ export class CVService {
     }
 
     public static async updateCV(payload: DetailedRequest.CVUpdate) {
-        console.log(payload);
         try {
             const dataRes = await authAxios.patch<ApiResponse<DetailedResponse.UpdateEntityResponse>>(
                 `/${payload.cvId}`,

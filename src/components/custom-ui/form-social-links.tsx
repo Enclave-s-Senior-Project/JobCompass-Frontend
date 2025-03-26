@@ -15,6 +15,7 @@ import { WebsiteService } from '@/services/website.service';
 import { handleErrorToast } from '@/lib/utils';
 import { toast } from 'sonner';
 import { EnterpriseContext } from '@/contexts';
+import { Skeleton } from '../ui/skeleton';
 
 export function FormSocialLinks({ useType }: { useType: 'candidate' | 'employer' }) {
     const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
@@ -24,7 +25,11 @@ export function FormSocialLinks({ useType }: { useType: 'candidate' | 'employer'
     const { userInfo } = useContext(UserContext);
     const { enterpriseInfo } = useContext(EnterpriseContext);
     // Candidate Query
-    const { data: candidateData, refetch: candidateRefetch } = useQuery({
+    const {
+        data: candidateData,
+        refetch: candidateRefetch,
+        isPending: isPendingQuerySLCandidate,
+    } = useQuery({
         queryKey: [queryKey.candidateSocialLinks, userInfo?.profileId],
         queryFn: async ({ queryKey }) => {
             if (useType !== 'candidate' || !queryKey[1]) return null;
@@ -50,7 +55,11 @@ export function FormSocialLinks({ useType }: { useType: 'candidate' | 'employer'
     });
 
     // Employer Query
-    const { data: employerData, refetch: employerRefetch } = useQuery({
+    const {
+        data: employerData,
+        refetch: employerRefetch,
+        isPending: isPendingQuerySLEnterprise,
+    } = useQuery({
         queryKey: [queryKey.enterpriseSocialLinks, enterpriseInfo?.enterpriseId],
         queryFn: async ({ queryKey }) => {
             if (useType !== 'employer' || !queryKey[1]) return null;
@@ -153,39 +162,49 @@ export function FormSocialLinks({ useType }: { useType: 'candidate' | 'employer'
     return (
         <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-4">
-                {socialLinks.map((socialLink, index) => (
-                    <div key={socialLink.websiteId} className="relative">
-                        <label className="text-sm text-gray-900 cursor-default">Social Link {index + 1}</label>
-                        <InputSocialLink
-                            name="link"
-                            valueInput={socialLink.socialLink}
-                            valueSelect={socialLink.socialType}
-                            onChangeInput={(e) => {
-                                setSocialLinks((prev) =>
-                                    prev.map((link) =>
-                                        link.websiteId === socialLink.websiteId
-                                            ? { ...link, socialLink: e.target.value }
-                                            : link
-                                    )
-                                );
-                            }}
-                            onChangeSelect={(value) => {
-                                setSocialLinks((prev) =>
-                                    prev.map((link) =>
-                                        link.websiteId === socialLink.websiteId ? { ...link, socialType: value } : link
-                                    )
-                                );
-                            }}
-                            error={errors?.[index]?.[0]}
-                            handleRemove={() => handleRemoveSocialLink(socialLink.websiteId ?? '')}
-                        />
-                        {errors?.[index]?.[0] && (
-                            <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
-                                {errors[index][0]}
-                            </p>
-                        )}
-                    </div>
-                ))}
+                {(useType === 'candidate' && isPendingQuerySLCandidate) ||
+                (useType === 'employer' && isPendingQuerySLEnterprise)
+                    ? Array.from({ length: 3 }).map((_, index) => (
+                          <div key={index} className="grid grid-cols-12 gap-2">
+                              <Skeleton className="rounded-sm col-span-3 h-12" />
+                              <Skeleton className="rounded-sm col-span-9 h-12" />
+                          </div>
+                      ))
+                    : socialLinks.map((socialLink, index) => (
+                          <div key={socialLink.websiteId} className="relative">
+                              <label className="text-sm text-gray-900 cursor-default">Social Link {index + 1}</label>
+                              <InputSocialLink
+                                  name="link"
+                                  valueInput={socialLink.socialLink}
+                                  valueSelect={socialLink.socialType}
+                                  onChangeInput={(e) => {
+                                      setSocialLinks((prev) =>
+                                          prev.map((link) =>
+                                              link.websiteId === socialLink.websiteId
+                                                  ? { ...link, socialLink: e.target.value }
+                                                  : link
+                                          )
+                                      );
+                                  }}
+                                  onChangeSelect={(value) => {
+                                      setSocialLinks((prev) =>
+                                          prev.map((link) =>
+                                              link.websiteId === socialLink.websiteId
+                                                  ? { ...link, socialType: value }
+                                                  : link
+                                          )
+                                      );
+                                  }}
+                                  error={errors?.[index]?.[0]}
+                                  handleRemove={() => handleRemoveSocialLink(socialLink.websiteId ?? '')}
+                              />
+                              {errors?.[index]?.[0] && (
+                                  <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                                      {errors[index][0]}
+                                  </p>
+                              )}
+                          </div>
+                      ))}
             </div>
             <div>
                 {socialLinks.length >= 7 && (
