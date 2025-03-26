@@ -279,6 +279,10 @@ const uploadCVSchema = z.object({
     ),
 });
 
+const updateCVSchema = z.object({
+    cvName: z.string().min(8, 'Resume name is at least 8 characters').max(20, 'Resume name is at most 20 characters'),
+});
+
 export {
     companyProfileFoundingSchema,
     companyProfileSchema,
@@ -294,4 +298,5 @@ export {
     addTagSchema,
     addEnterpriseSchema,
     uploadCVSchema,
+    updateCVSchema,
 };

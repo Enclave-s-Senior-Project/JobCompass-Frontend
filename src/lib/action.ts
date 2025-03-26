@@ -14,6 +14,7 @@ import {
     addTagSchema,
     addEnterpriseSchema,
     uploadCVSchema,
+    updateCVSchema,
 } from './zod-schemas';
 import { handleErrorToast } from './utils';
 import { ApplyJobService } from '@/services/applyJob.service';
@@ -686,6 +687,25 @@ export const uploadCV = async (currentState: any) => {
         cvUrl: fileUrl,
         isPublished: currentState?.isPublished,
         size: (currentState?.cvFile as File).size / (1024 * 1024),
+    });
+
+    return { ...currentState, success: true };
+};
+
+export const updateCV = async (currentState: any) => {
+    const validation = updateCVSchema.safeParse(currentState);
+    if (!validation.success) {
+        return {
+            ...currentState,
+            errors: validation.error.flatten().fieldErrors,
+            success: false,
+        };
+    }
+
+    await CVService.updateCV({
+        cvId: currentState?.cvId,
+        cvName: currentState?.cvName,
+        isPublished: currentState?.isPublished,
     });
 
     return { ...currentState, success: true };
