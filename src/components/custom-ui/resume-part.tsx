@@ -11,20 +11,17 @@ import { queryKey } from '@/lib/react-query/keys';
 import { handleErrorToast } from '@/lib/utils';
 import { CVService } from '@/services/cv.service';
 import { toast } from 'sonner';
-import { DetailedRequest } from '@/types';
 
 type ResumeContextType = {
     refetch: () => any;
     isLoading: boolean;
     deleteMutation: any;
-    updateMutation: any;
 };
 
 export const ResumePartContext = createContext<ResumeContextType>({
     refetch: () => {},
     isLoading: false,
     deleteMutation: () => new Promise(() => {}),
-    updateMutation: () => new Promise(() => {}),
 });
 
 export function ResumePart() {
@@ -66,20 +63,8 @@ export function ResumePart() {
         },
     });
 
-    const updateMutation = useMutation({
-        mutationFn: (payload: DetailedRequest.CVUpdate) => CVService.updateCV(payload),
-        onSuccess: (data) => {
-            if (data?.affected && data.affected > 0) toast.success('Your resume has been updated');
-            else toast.success('Update resume failed');
-            refetch();
-        },
-        onError: (error) => {
-            handleErrorToast(error);
-        },
-    });
-
     return (
-        <ResumePartContext.Provider value={{ refetch, isLoading, deleteMutation, updateMutation }}>
+        <ResumePartContext.Provider value={{ refetch, isLoading, deleteMutation }}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <Dialog open={showDialog} onOpenChange={setShowDialog}>
                     <DialogTrigger asChild>
@@ -97,7 +82,12 @@ export function ResumePart() {
                         <DialogHeader>
                             <DialogTitle className="font-normal">Add CV/Resume</DialogTitle>
                         </DialogHeader>
-                        <FormUploadResume onClose={() => setShowDialog(false)} refetchResume={refetch} />
+                        <FormUploadResume
+                            isEditing={false}
+                            initValue={null}
+                            onClose={() => setShowDialog(false)}
+                            refetchResume={refetch}
+                        />
                     </DialogContent>
                 </Dialog>
 

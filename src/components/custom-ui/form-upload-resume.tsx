@@ -4,26 +4,53 @@ import React, { FormEvent, useId, useState } from 'react';
 import { Input } from '../ui/input';
 import clsx from 'clsx';
 import { useMutation } from '@tanstack/react-query';
-import { uploadCV } from '@/lib/action';
+import { updateCV, uploadCV } from '@/lib/action';
 import { handleErrorToast } from '@/lib/utils';
 import { Button } from '../ui/button';
 
-type Props = {
-    onClose: () => void;
-    refetchResume: () => void;
+type FormFields = {
+    cvId?: string;
+    cvName: string;
+    cvFile: File | null;
+    isPublished: boolean;
 };
 
-export function FormUploadResume({ onClose, refetchResume }: Props) {
-    const [formValue, setFormValue] = useState({
-        cvName: '',
-        cvFile: null as File | null,
-        isPublished: false,
-    });
+type Props = {
+    initValue: FormFields | null;
+    onClose: () => void;
+    refetchResume: () => void;
+    isEditing: boolean;
+};
+
+const initFormValue: FormFields = {
+    cvId: '',
+    cvName: '',
+    cvFile: null as File | null,
+    isPublished: false,
+};
+
+export function FormUploadResume({ initValue, onClose, refetchResume, isEditing }: Props) {
+    const [formValue, setFormValue] = useState(initValue ? initValue : initFormValue);
     const [errors, setErrors] = useState({ cvName: '', cvFile: '', isPublished: '' });
     const checkboxId = useId();
 
-    const { mutate, isPending } = useMutation({
-        mutationFn: () => uploadCV(formValue),
+    const uploadMutation = useMutation({
+        mutationFn: (formValue: FormFields) => uploadCV(formValue),
+        onSuccess: (data) => {
+            if (!data?.success) {
+                setErrors(data?.errors);
+            } else {
+                resetForm();
+                refetchResume();
+            }
+        },
+        onError: (error) => {
+            handleErrorToast(error);
+        },
+    });
+
+    const updateMutation = useMutation({
+        mutationFn: (formValue: FormFields) => updateCV(formValue),
         onSuccess: (data) => {
             if (!data?.success) {
                 setErrors(data?.errors);
@@ -39,11 +66,16 @@ export function FormUploadResume({ onClose, refetchResume }: Props) {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        mutate();
+        if (isEditing) {
+            updateMutation.mutate(formValue);
+        } else {
+            uploadMutation.mutate(formValue);
+        }
     };
 
     const resetForm = () => {
         setFormValue({
+            cvId: '',
             cvName: '',
             cvFile: null,
             isPublished: false,
@@ -57,7 +89,13 @@ export function FormUploadResume({ onClose, refetchResume }: Props) {
             <div className="space-y-1 relative">
                 <label className="text-sm">CV/Resume Name</label>
                 <Input
-                    onChange={(e) => setFormValue((prev) => ({ ...prev, cvName: e.target.value }))}
+                    value={formValue.cvName}
+                    onChange={(e) =>
+                        setFormValue((prev) => ({
+                            ...prev,
+                            cvName: e.target.value,
+                        }))
+                    }
                     className={clsx(
                         'h-12 rounded-sm',
                         errors?.cvName
@@ -73,8 +111,14 @@ export function FormUploadResume({ onClose, refetchResume }: Props) {
             <div className="space-y-1 relative">
                 <label className="text-sm">Upload your CV/Resume</label>
                 <Input
+                    disabled={isEditing}
                     type="file"
-                    onChange={(e) => setFormValue((prev) => ({ ...prev, cvFile: e.target.files?.[0] || null }))}
+                    onChange={(e) =>
+                        setFormValue((prev) => ({
+                            ...prev,
+                            cvFile: e.target.files?.[0] || null,
+                        }))
+                    }
                     className={clsx(
                         'h-12 rounded-sm px-1 py-2.5',
                         errors?.cvFile
@@ -91,17 +135,31 @@ export function FormUploadResume({ onClose, refetchResume }: Props) {
                     id={checkboxId}
                     type="checkbox"
                     className="size-4"
-                    onChange={(e) => setFormValue((prev) => ({ ...prev, isPublished: e.target.checked }))}
+                    checked={formValue.isPublished}
+                    onChange={(e) =>
+                        setFormValue((prev) => ({
+                            ...prev,
+                            isPublished: e.target.checked,
+                        }))
+                    }
                 />
                 <label htmlFor={checkboxId} className="text-sm">
                     Enable public visibility
                 </label>
             </div>
             <div className="flex items-center justify-between">
-                <Button variant="secondary" type="reset" disabled={isPending}>
+                <Button
+                    variant="secondary"
+                    type="reset"
+                    disabled={uploadMutation.isPending || updateMutation.isPending}
+                >
                     Cancel
                 </Button>
-                <Button type="submit" isPending={isPending}>
+                <Button
+                    type="submit"
+                    isPending={uploadMutation.isPending || updateMutation.isPending}
+                    disabled={isEditing && JSON.stringify(formValue) === JSON.stringify(initValue)}
+                >
                     Save changes
                 </Button>
             </div>
