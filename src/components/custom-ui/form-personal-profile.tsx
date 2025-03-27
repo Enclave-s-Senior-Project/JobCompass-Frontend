@@ -203,7 +203,6 @@ export function FormPersonalProfile() {
                             name="maritalStatus"
                             value={formValue.maritalStatus}
                             onValueChange={(value: string) => {
-                                console.log(value);
                                 setFormValue((prev) => ({ ...prev, maritalStatus: value }));
                             }}
                         >

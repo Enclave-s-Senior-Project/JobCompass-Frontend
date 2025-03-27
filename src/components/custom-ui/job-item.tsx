@@ -76,7 +76,7 @@ export default function JobItem({ job }: JobItemProps) {
                         variant="third"
                         className="text-base font-semibold w-full md:w-auto"
                         onClick={() => {
-                            router.push(`/job/${job.jobId}`);
+                            router.push(`/employer-dashboard/my-jobs/${job.jobId}/applications`);
                         }}
                     >
                         View Applications

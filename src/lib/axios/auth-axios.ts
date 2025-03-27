@@ -39,7 +39,6 @@ export class AuthAxios extends BaseAxios {
                 return config;
             },
             (error) => {
-                console.log('Error here', error);
                 return Promise.reject(error);
             }
         );
