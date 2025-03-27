@@ -11,6 +11,7 @@ import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
 import { JobTypeEnum } from '@/lib/common-enum';
 import { toast } from 'sonner';
+import { toFormattedDate } from '@/lib/utils';
 
 export default function CardJobHorizontal(props: {
     job: Job;
@@ -92,7 +93,7 @@ export default function CardJobHorizontal(props: {
                             ) : (
                                 <span className="flex items-center gap-1 text-sm">
                                     <Calendar className="h-5 w-5" />{' '}
-                                    {`${new Date(job?.deadline).toLocaleString('default', { month: 'short', day: '2-digit', year: 'numeric' })}`}
+                                    {job?.deadline ? toFormattedDate(job?.deadline) : 'Not specified'}
                                 </span>
                             )}
                         </div>

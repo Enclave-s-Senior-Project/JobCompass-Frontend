@@ -8,7 +8,7 @@ import { Calendar, MapPin, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { LuArrowRight } from 'react-icons/lu';
 import { useSearchParams } from 'next/navigation';
-import { handleErrorToast } from '@/lib/utils';
+import { handleErrorToast, toFormattedDate } from '@/lib/utils';
 import { EnterpriseService } from '@/services/enterprises.service';
 import { useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
@@ -101,7 +101,9 @@ export default function CardEnterprisesHorizontal() {
                                     </span>
                                     <span className="flex items-center gap-1 text-sm">
                                         <Calendar className="h-5 w-5" />{' '}
-                                        {`${new Date(enterprise.foundedIn).toLocaleString('default', { month: 'short', day: '2-digit', year: 'numeric' })}`}
+                                        {enterprise?.foundedIn
+                                            ? toFormattedDate(enterprise.foundedIn)
+                                            : 'Not specified'}
                                     </span>
                                     <span className="flex items-center gap-1 text-sm">
                                         <Phone className="h-5 w-5" /> {enterprise.phone}

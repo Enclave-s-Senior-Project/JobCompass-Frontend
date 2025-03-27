@@ -21,6 +21,14 @@ type Permissions = {
         dataType: null;
         action: 'access';
     };
+    markCandidates: {
+        dataType: null;
+        action: 'allowed';
+    };
+    hireCandidate: {
+        dataType: null;
+        action: 'hire';
+    };
 };
 
 const ROLES = {
@@ -42,6 +50,12 @@ const ROLES = {
         enterpriseDashboard: {
             access: true,
         },
+        markCandidates: {
+            allowed: true,
+        },
+        hireCandidate: {
+            hire: true,
+        },
     },
     USER: {
         job: {
@@ -54,18 +68,21 @@ const ROLES = {
 } as const satisfies RolesWithPermissions;
 
 export function hasPermission<Resource extends keyof Permissions>(
-    user: User,
+    user: User | null,
     resource: Resource,
     action: Permissions[Resource]['action'],
     data?: Permissions[Resource]['dataType']
 ) {
-    return user.roles?.some((role) => {
-        const permission = (ROLES as RolesWithPermissions)[role][resource]?.[action];
-        if (permission == null) return false;
+    return (
+        user &&
+        user.roles?.some((role) => {
+            const permission = (ROLES as RolesWithPermissions)[role][resource]?.[action];
+            if (permission == null) return false;
 
-        if (typeof permission === 'boolean') return permission;
-        return data != null && permission(user, data);
-    });
+            if (typeof permission === 'boolean') return permission;
+            return data != null && permission(user, data);
+        })
+    );
 }
 
 export function getStoredTokenInfo() {
