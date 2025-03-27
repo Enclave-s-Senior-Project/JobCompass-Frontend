@@ -1,57 +1,106 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const publicPages = ['/', '/single-job/*', '/find-jobs', '/reset-password', '/find-candidates/candidate-profile'];
-const blockedPagesAfterAuth = ['/sign-in', '/sign-up', '/forget-password', '/auth/callback', '/email-verify'];
+export const basePathPublicStaticFiles = '/public/static';
+
+// Pages that don't require authentication
+export const publicPages = [
+    '/',
+    '/find-jobs',
+    '/single-job/:slug',
+    '/enterprises/:slug',
+    '/enterprises/:slug/jobs',
+    '/find-candidates/candidate-profile',
+    '/reset-password',
+];
+
+// Pages that should redirect to home if user is already logged in
+export const authPages = ['/sign-in', '/sign-up', '/forget-password', '/auth/callback', '/email-verify'];
+
+// Pages that require authentication
+export const privatePages = ['/candidate-dashboard', '/employer-dashboard', '/profile', '/settings'];
 
 export function middleware(req: NextRequest) {
-    const cookie = req.cookies.get('login')?.value;
-    let isLoggedIn = false;
     const pathname = req.nextUrl.pathname;
+    const isLoggedIn = checkAuthStatus(req);
 
-    // Check authentication status
-    try {
-        isLoggedIn = cookie ? JSON.parse(cookie) : false;
-    } catch {
-        isLoggedIn = false;
+    // Check if the requested path matches any known route pattern
+    const isValidRoute = isKnownRoute(pathname);
+    if (!isValidRoute) {
+        return NextResponse.rewrite(new URL('/not-found', req.url));
     }
 
-    // Check if the page is a public page or follows a wildcard pattern
-    const isPublicPage =
-        publicPages.includes(pathname) ||
-        publicPages.some((page) => new RegExp(`^${page.replace('*', '.*')}$`).test(pathname));
-
-    // If the page does not match any known route, let Next.js handle it (404)
-    const knownRoutes = [...publicPages, ...blockedPagesAfterAuth]; // Add any protected pages if necessary
-    const isKnownRoute = knownRoutes.some((page) => new RegExp(`^${page.replace('*', '.*')}$`).test(pathname));
-
-    if (!isKnownRoute) {
-        return NextResponse.next(); // Allow Next.js to return 404 for unknown routes
+    // Handle authentication routes (sign-in, sign-up, etc.)
+    if (isAuthPage(pathname)) {
+        return handleAuthPageAccess(req, isLoggedIn);
     }
 
-    // Case 1: Authenticated user trying to access blocked pages
-    if (isLoggedIn && blockedPagesAfterAuth.includes(pathname)) {
-        return NextResponse.redirect(new URL('/', req.url));
+    // Handle private routes (dashboard, profile, etc.)
+    if (isPrivatePage(pathname)) {
+        return handlePrivatePageAccess(req, isLoggedIn, pathname);
     }
 
-    // Case 2: Unauthenticated user trying to access protected pages
-    if (!isLoggedIn && !isPublicPage) {
-        return NextResponse.redirect(new URL(`/sign-in?redirect=${pathname}`, req.url));
-    }
-
+    // // Allow access to public pages
     return NextResponse.next();
 }
 
-// Optional: Configure matcher to apply middleware only to relevant routes
+function checkAuthStatus(req: NextRequest): boolean {
+    try {
+        const cookie = req.cookies.get('login')?.value;
+        return cookie ? JSON.parse(cookie) : false;
+    } catch {
+        return false;
+    }
+}
+
+function isKnownRoute(pathname: string): boolean {
+    const allKnownPaths = [...publicPages, ...authPages, ...privatePages];
+
+    return allKnownPaths.some((pattern) => {
+        // Convert route pattern to regex
+        const regexPattern = pattern
+            .replace(/:[^/]+/g, '[^/]+') // Replace :slug with any non-slash chars
+            .replace(/\*/g, '.*'); // Replace * with any chars
+        return new RegExp(`^${regexPattern}(/.*)?$`).test(pathname);
+    });
+}
+
+function isAuthPage(pathname: string): boolean {
+    return authPages.includes(pathname);
+}
+
+function isPrivatePage(pathname: string): boolean {
+    return privatePages.some((page) => pathname.startsWith(page));
+}
+
+function handleAuthPageAccess(req: NextRequest, isLoggedIn: boolean): NextResponse {
+    // Redirect authenticated users away from auth pages
+    if (isLoggedIn) {
+        return NextResponse.redirect(new URL('/', req.url));
+    }
+    return NextResponse.next();
+}
+
+function handlePrivatePageAccess(req: NextRequest, isLoggedIn: boolean, pathname: string): NextResponse {
+    // Redirect unauthenticated users to login
+    if (!isLoggedIn) {
+        return NextResponse.redirect(new URL(`/sign-in?redirect=${pathname}`, req.url));
+    }
+    return NextResponse.next();
+}
+
 export const config = {
     matcher: [
         /*
-         * Match all request paths except for the ones starting with:
-         * - api (API routes)
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico (favicon file)
+         * Match all paths except:
+         * 1. api routes (/api/*)
+         * 2. Next.js files (/_next/*)
+         * 3. Static assets (/static/*)
+         * 4. Root files (favicon.ico, etc)
          */
-        '/((?!api|_next/static|_next/image|favicon.ico).*)',
+        {
+            source: '/((?!api/|_next/|static/|favicon.ico|images/).*)',
+            missing: [{ type: 'header', key: 'next-router-prefetch' }],
+        },
     ],
 };

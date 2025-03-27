@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 before:border-t-white before:border-l-white before:border-r-transparent before:border-b-transparent before:border-t-[0] before:border-b-[100dvh] before:border-l-[78px] before:border-r-[78px]"
                 style={{
                     backgroundImage:
-                        "linear-gradient(rgba(4, 26, 60, 0.45), rgba(4, 26, 60, 0.9)), url('/background.jpg')",
+                        "linear-gradient(rgba(4, 26, 60, 0.45), rgba(4, 26, 60, 0.9)), url('/images/background.jpg')",
                     backgroundRepeat: 'no-repeat',
                     backgroundSize: 'cover',
                     backgroundPosition: '0 0',
