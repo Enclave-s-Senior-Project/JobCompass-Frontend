@@ -69,3 +69,11 @@ export const downloadFileViaURL = async (url: string) => {
         handleErrorToast(error);
     }
 };
+
+export const toFormattedDate = (date: string | Date) => {
+    return new Date(date).toLocaleString('default', { month: 'short', day: '2-digit', year: 'numeric' });
+};
+
+export function capitalizeFirstLetter(val: string) {
+    return String(val).charAt(0).toUpperCase() + String(val).slice(1).toLowerCase();
+}

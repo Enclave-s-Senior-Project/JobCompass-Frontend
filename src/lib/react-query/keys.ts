@@ -21,4 +21,6 @@ export const queryKey = {
     enterpriseJob: 'enterprise-job',
     ownResumes: 'own-resumes',
     candidatesApplied: 'candidates-applied',
+    userProfile: 'user-profile',
+    userResume: 'user-resume',
 };

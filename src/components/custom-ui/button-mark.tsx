@@ -11,6 +11,7 @@ export const ButtonMark = ({
     handleMark,
     size = 'icon-lg',
     mark,
+    disabled = false,
 }: {
     className?: string;
     handleUnMark?: () => void;
@@ -18,6 +19,7 @@ export const ButtonMark = ({
     size?: 'icon-xl' | 'icon-lg' | 'icon-md';
     mark?: boolean;
     onClick?: () => void;
+    disabled?: boolean;
 }) => {
     const [marked, setMarked] = useState(!!mark);
     const handleClick = () => {
@@ -31,6 +33,7 @@ export const ButtonMark = ({
     };
     return (
         <Button
+            disabled={disabled}
             type="button"
             className={cn(className)}
             size={size}

@@ -259,4 +259,10 @@ export namespace DetailedRequest {
     }
 
     export interface CVUpdate extends Pick<CVUpload, 'cvName' | 'isPublished'>, DeleteCv {}
+
+    export interface GetUserProfileByProfileId {
+        profileId: string;
+    }
+    export interface GetResumeByProfileId extends GetUserProfileByProfileId {}
+    export interface GetSocialLinksByProfileId extends GetUserProfileByProfileId {}
 }
