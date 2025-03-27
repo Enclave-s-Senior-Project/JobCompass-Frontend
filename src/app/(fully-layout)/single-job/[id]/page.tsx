@@ -78,7 +78,6 @@ function PageContentOfSingleJob() {
     };
     useEffect(() => {
         if (resultQuery) {
-            console.log(resultQuery);
             if (descriptionRef.current) {
                 descriptionRef.current.innerHTML = DOMPurify.sanitize(resultQuery.description || '');
             }

@@ -24,4 +24,5 @@ export const queryKey = {
     userProfile: 'user-profile',
     userResume: 'user-resume',
     appliedJob: 'applied-job',
+    getApplyJobs: 'get-apply-jobs',
 };
