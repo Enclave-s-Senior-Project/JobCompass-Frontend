@@ -17,7 +17,7 @@ import {
     updateCVSchema,
 } from './zod-schemas';
 import { handleErrorToast } from './utils';
-import { ApplyJobService } from '@/services/applyJob.service';
+import { ApplyJobService } from '@/services/apply-job.service';
 import { AuthService } from '@/services/auth.service';
 import { UploadService } from '@/services/upload.service';
 import { UserService } from '@/services/user.service';

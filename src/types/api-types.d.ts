@@ -1,5 +1,5 @@
 import { PersonalProfileType, UserType, Address, CandidateProfileType } from './common-types';
-import { CandidatesApplied, Categories, Enterprise, Job, Resume, SocialLink, Tag, User } from './entities';
+import { AppliedJob, CandidatesApplied, Categories, Enterprise, Job, Resume, SocialLink, Tag, User } from './entities';
 
 interface ResponseWithMeta<T> {
     meta: Meta;
@@ -95,6 +95,8 @@ export namespace DetailedResponse {
     export interface UpdateEntityResponse extends DeleteEntityResponse {
         generatedMaps: any[];
     }
+
+    export type AppliedJobResponse = AppliedJob[];
 }
 
 export namespace DetailedRequest {

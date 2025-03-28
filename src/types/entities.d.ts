@@ -1,5 +1,10 @@
 import { Address, OrganizationType, SocialType } from './common-types';
 
+interface baseEntity {
+    createdAt: string;
+    updatedAt: string;
+    isActive: boolean;
+}
 export interface Job {
     createdAt: string;
     updatedAt: string;
@@ -119,3 +124,12 @@ export interface CandidatesApplied {
 }
 
 export interface Resume extends CV {}
+
+export interface AppliedJob extends baseEntity {
+    appliedJobId: string;
+    coverLetter: string;
+    isDenied: boolean;
+    status: string;
+    job: Job;
+    address: Address[];
+}
