@@ -70,7 +70,7 @@ function PageContent() {
     });
 
     return (
-        <div className="min-h-[500px] flex flex-col justify-between p-6 md:pt-12 md:pl-12 md:pb-12 md:pr-0 space-y-2">
+        <div className="min-h-[500px] flex flex-col justify-between space-y-2">
             <div>
                 <div className="flex items-center">
                     <h5 className="text-lg text-gray-900 font-medium">Favorite Jobs</h5>&nbsp;

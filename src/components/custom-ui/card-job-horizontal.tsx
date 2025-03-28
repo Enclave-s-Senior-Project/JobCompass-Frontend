@@ -2,7 +2,6 @@
 import { Job } from '@/types';
 import { motion } from 'framer-motion';
 import { motionVariant } from '@/lib/motion-variants';
-import { Badge } from '@/components/ui/badge';
 import { Building2, Calendar, CircleX, DollarSign, EyeIcon, MapPin } from 'lucide-react';
 import { ButtonMark } from '../custom-ui/button-mark';
 import { Button } from '@/components/ui/button';
@@ -12,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { JobTypeEnum } from '@/lib/common-enum';
 import { toast } from 'sonner';
 import { toFormattedDate } from '@/lib/utils';
+import { BadgeJobType } from './global/badge-job-type';
 
 export default function CardJobHorizontal(props: {
     job: Job;
@@ -54,20 +54,7 @@ export default function CardJobHorizontal(props: {
                     <div className="space-y-3">
                         <h3 className="font-semibold text-xl flex items-center gap-2">
                             {job?.name}&nbsp;
-                            <Badge
-                                className={clsx(
-                                    'cursor-default border-none rounded-xl px-4 shadow-none',
-                                    JobTypeEnum.fulltime == job?.type
-                                        ? 'bg-primary-100 text-primary hover:text-white hover:bg-primary-400'
-                                        : JobTypeEnum.partTime == job?.type
-                                          ? 'bg-green-100 text-green hover:text-white hover:bg-green-400'
-                                          : JobTypeEnum.contract == job?.type
-                                            ? 'bg-warning-100 text-warning hover:text-white hover:bg-warning-400'
-                                            : ''
-                                )}
-                            >
-                                {job?.type}
-                            </Badge>
+                            {job?.type && <BadgeJobType type={job.type as JobTypeEnum} />}
                         </h3>
                         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                             <span className="flex items-center gap-1 text-sm">

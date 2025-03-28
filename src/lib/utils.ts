@@ -70,8 +70,10 @@ export const downloadFileViaURL = async (url: string) => {
     }
 };
 
-export const toFormattedDate = (date: string | Date) => {
-    return new Date(date).toLocaleString('default', { month: 'short', day: '2-digit', year: 'numeric' });
+export const toFormattedDate = (date: string | Date, withHour: boolean = false) => {
+    let format: Intl.DateTimeFormatOptions = { month: 'short', day: '2-digit', year: 'numeric' };
+    format = withHour ? { ...format, hour: '2-digit', minute: '2-digit' } : format;
+    return new Date(date).toLocaleString('default', format);
 };
 
 export function capitalizeFirstLetter(val: string) {
