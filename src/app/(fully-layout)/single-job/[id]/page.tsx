@@ -70,7 +70,7 @@ function PageContentOfSingleJob() {
         try {
             await JobService.removeFavoriteJob({ jobId });
             await refetch();
-            toast.success('Job added to favorite list');
+            toast.success('Job remove to favorite list');
         } catch (error: any) {
             handleErrorToast(error);
             toast.error('Oops! Something went wrong');

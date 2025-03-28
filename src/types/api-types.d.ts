@@ -83,7 +83,7 @@ export namespace DetailedResponse {
 
     export type GetCandidatesApplied = ResponseWithMeta<CandidatesApplied[]>;
 
-    export type GetCandidates = ResponseWithMeta<User[]>;
+    export type GetCandidates = ResponseWithMeta<(User & { is_favorite: boolean })[]>;
 
     export type UploadCV = Resume;
 

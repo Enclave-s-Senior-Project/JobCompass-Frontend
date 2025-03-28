@@ -16,7 +16,7 @@ export default function ListCandidates() {
         categories: [] as string[],
         gender: undefined,
     });
-
+    const [refetchFn, setRefetchFn] = useState<(() => void) | null>(null);
     const handleFilterChange = (filterName: string, value: any) => {
         setFilters({
             ...filters,
@@ -24,7 +24,17 @@ export default function ListCandidates() {
         });
     };
     const toggleFilterSidebar = () => {
-        setShowFilter((prev) => !prev);
+        setShowFilter((prev) => {
+            if (prev === true && refetchFn) {
+                setFilters({
+                    maritalStatus: undefined,
+                    categories: [],
+                    gender: undefined,
+                });
+                refetchFn();
+            }
+            return !prev;
+        });
     };
     return (
         <main className="min-h-dvh bg-white">
@@ -90,6 +100,7 @@ export default function ListCandidates() {
                         maritalStatus={filters?.maritalStatus}
                         gender={filters?.gender}
                         categories={filters.categories}
+                        onRefetch={(refetch) => setRefetchFn(() => refetch)}
                     />
                 </div>
             </div>

@@ -85,6 +85,7 @@ export default function Page() {
 
     const handleSearch = useCallback((filters: DetailedRequest.SearchFilterListJobsCredentials) => {
         setActiveFilters(filters);
+        console.log('hahah', activeFilters);
         setTemp((prev) => !prev);
     }, []);
     const removeFilter = useCallback((key: keyof DetailedRequest.SearchFilterListJobsCredentials) => {
