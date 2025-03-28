@@ -37,12 +37,14 @@ const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChang
             };
             return await TagService.searchTag(data);
         },
-        enabled: showDropdown, // Kích hoạt request khi dropdown được hiển thị
+        enabled: showDropdown,
         staleTime: 1000 * 60,
         refetchOnWindowFocus: false,
     });
 
     const handleSelect = (item: Tag) => {
+        if (selectedItems.length >= 3) return;
+
         if (!selectedItems.find((i) => i.tagId === item.tagId)) {
             const updatedItems = [...selectedItems, { tagId: item.tagId, name: item.name }];
             setSelectedItems(updatedItems);

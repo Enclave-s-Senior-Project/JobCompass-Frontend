@@ -2,9 +2,9 @@
 import { queryKey } from '@/lib/react-query/keys';
 import { handleErrorToast } from '@/lib/utils';
 import { DetailedRequest, Meta } from '@/types';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Skeleton } from '../ui/skeleton';
 import { FileX, MapPin, Phone, UserRound } from 'lucide-react';
@@ -13,7 +13,8 @@ import { Button } from '../ui/button';
 import { LuArrowRight } from 'react-icons/lu';
 import { PrimaryPagination } from '../ui/pagination';
 import { toast } from 'sonner';
-import { UserService } from '@/services/user.service';
+import { ButtonMark } from './button-mark';
+import { EnterpriseService } from '@/services/enterprises.service';
 
 export default function CardCandidateHorizontal(props: {
     perPage: number;
@@ -21,21 +22,26 @@ export default function CardCandidateHorizontal(props: {
     maritalStatus: string | undefined;
     categories: string[] | undefined;
     gender: string | undefined;
+    onRefetch?: (refetch: () => void) => void;
 }) {
     const ITEM_PER_PAGE = props.perPage;
-    const { option, maritalStatus, categories, gender } = props;
+    const { option, maritalStatus, categories, gender, onRefetch } = props;
     const [totalPages, setTotalPages] = useState(0);
     const search = useSearchParams();
     const page = Number(search.get('page') || 1);
     const order = (search.get('order')?.toUpperCase() as 'ASC' | 'DESC') || 'ASC';
-    const { data: resultQuery, isPending } = useQuery({
+    const {
+        refetch,
+        data: resultQuery,
+        isPending,
+    } = useQuery({
         queryKey: [
             queryKey.favoriteJobs,
             { order, page, take: ITEM_PER_PAGE, option, categories, gender, maritalStatus },
         ],
         queryFn: async ({ queryKey }) => {
             try {
-                const payload = await UserService.getCandidates(queryKey[1] as DetailedRequest.GetCandidates);
+                const payload = await EnterpriseService.getCandidates(queryKey[1] as DetailedRequest.GetCandidates);
                 if (Number(payload?.meta.pageCount) > 0) setTotalPages(Number(payload?.meta.pageCount) || 0);
                 return payload;
             } catch (error: any) {
@@ -46,6 +52,45 @@ export default function CardCandidateHorizontal(props: {
         refetchInterval: 1000 * 60,
         retry: 2,
         enabled: true,
+    });
+
+    useEffect(() => {
+        if (onRefetch) {
+            onRefetch(refetch);
+        }
+    }, [refetch, onRefetch]);
+    const addFavoriteEnterpriseMutation = useMutation({
+        mutationFn: async (candidate: string) => {
+            try {
+                await EnterpriseService.saveWishlistCandidates(candidate);
+                await refetch();
+            } catch (error: any) {
+                handleErrorToast(error);
+            }
+        },
+        onSuccess: () => {
+            toast.success('Candidate added to favorite list');
+        },
+        onError: () => {
+            toast.error('Failed to add Candidate to favorite list');
+        },
+    });
+
+    const removeFavoriteEnterpriseMutation = useMutation({
+        mutationFn: async (candidate: string) => {
+            try {
+                await EnterpriseService.removeWishlistCandidates(candidate);
+                await refetch();
+            } catch (error: any) {
+                handleErrorToast(error);
+            }
+        },
+        onSuccess: () => {
+            toast.success('Candidate added to favorite list');
+        },
+        onError: () => {
+            toast.error('Failed to add Candidate to favorite list');
+        },
     });
     return (
         <motion.div className="space-y-6 w-full pt-10">
@@ -108,6 +153,11 @@ export default function CardCandidateHorizontal(props: {
                             </div>
                         </div>
                         <div className="flex-1 flex items-center justify-end gap-3">
+                            <ButtonMark
+                                mark={candidates?.is_favorite}
+                                handleMark={() => addFavoriteEnterpriseMutation.mutate(candidates?.profileId)}
+                                handleUnMark={() => removeFavoriteEnterpriseMutation.mutate(candidates?.profileId)}
+                            />
                             <Button
                                 className="group"
                                 variant="third"

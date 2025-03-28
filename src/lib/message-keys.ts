@@ -12,6 +12,7 @@ const errorKeyMessage = {
     CODE_INVALID: 'Invalid code.',
     NOT_ALLOW: 'Token is expired or invalid.',
     EMAIL_ALREADY_EXISTS: 'This email was already used',
+    ALREADY_APPLIED: 'You have already applied for this job',
 };
 
 const successKeyMessage = {

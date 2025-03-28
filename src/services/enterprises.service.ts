@@ -1,6 +1,7 @@
 import { AuthAxios, BaseAxios } from '@/lib/axios';
 import { ApiResponse, DetailedRequest, DetailedResponse } from '@/types';
 import { AxiosError } from 'axios';
+import Error from 'next/error';
 import NextError from 'next/error';
 
 const authAxios = new AuthAxios('enterprise');
@@ -168,6 +169,62 @@ export class EnterpriseService {
         } catch (err) {
             if (err instanceof AxiosError) {
                 throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
+
+    public static async saveWishlistCandidates(id: string) {
+        try {
+            const dataResponse = await authAxios.post<ApiResponse<null>>('/wishlist/', { profileId: id });
+            return dataResponse.payload.value;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
+
+    public static async removeWishlistCandidates(id: string) {
+        try {
+            const dataResponse = await authAxios.delete<ApiResponse<null>>(`/wishlist/${id}`);
+            return dataResponse.payload.value;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
+
+    public static async getCandidates(data: DetailedRequest.GetCandidates) {
+        try {
+            let query = `order=${data.order || 'ASC'}&page=${data.page}&take=${data.take}`;
+            if (data.gender) {
+                query += `&gender=${data.gender}`;
+            }
+            if (data.maritalStatus) {
+                query += `&isMaried=${data.maritalStatus}`;
+            }
+            if (Array.isArray(data.categories) && data.categories.length > 0) {
+                const industryIds = data.categories.map((cat) => `industryId=${cat}`).join('&');
+                query += `&${industryIds}`;
+            }
+            const temp = await authAxios.get<ApiResponse<DetailedResponse.GetCandidates>>(`/candidate?${query}`);
+            return temp.payload.value;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new Error({
                     statusCode: Number(err.status || err.response?.status),
                     title: err.response?.data.message,
                 });

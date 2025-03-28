@@ -233,7 +233,7 @@ export default function PostJobForm() {
                             </p>
                         </div>
                         <div className="flex flex-col gap-y-2">
-                            <h1>Experience</h1>
+                            <h1>Experience (Year)</h1>
                             <Input
                                 className={clsx(
                                     'h-12 rounded-sm',
