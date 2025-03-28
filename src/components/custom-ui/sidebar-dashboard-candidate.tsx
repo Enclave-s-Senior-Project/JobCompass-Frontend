@@ -9,7 +9,7 @@ export function SidebarDashboardCandidate() {
             icon: <Layers />,
         },
         {
-            href: '/applied-jobs',
+            href: '/candidate-dashboard/applied-jobs',
             label: 'Applied Jobs',
             icon: <BriefcaseBusiness />,
         },

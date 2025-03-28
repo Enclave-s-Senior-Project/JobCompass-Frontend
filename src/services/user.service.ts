@@ -109,4 +109,19 @@ export class UserService {
             throw err;
         }
     }
+
+    public static async getAppliedJobs(data: DetailedRequest.GetAppliedJobByProfileId) {
+        try {
+            const res = await axios.get<ApiResponse<DetailedResponse.GetAppliedJob[]>>(`/${data.profileId}/applied-job`);
+            return res.payload.value;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new Error({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
 }

@@ -265,4 +265,5 @@ export namespace DetailedRequest {
     }
     export interface GetResumeByProfileId extends GetUserProfileByProfileId {}
     export interface GetSocialLinksByProfileId extends GetUserProfileByProfileId {}
+    export interface GetAppliedJobByProfileId extends GetUserProfileByProfileId {}
 }
