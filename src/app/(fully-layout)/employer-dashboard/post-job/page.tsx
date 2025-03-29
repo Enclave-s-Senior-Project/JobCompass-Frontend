@@ -83,7 +83,7 @@ export default function PostJobForm() {
         setSelectedCategory(value);
     };
     return (
-        <div className="container mx-auto p-6 ">
+        <div className="container mx-auto">
             <h1 className="text-2xl font-bold mb-6">Post a job</h1>
             <form
                 action={(formData) => {
