@@ -67,8 +67,8 @@ export function HeaderSection() {
                     </div>
                     <div
                         className={clsx(
-                            'w-full ml-0 lg:ml-8  lg:mr-auto lg:h-12 transition-all',
-                            showSearchMobile ? 'h-12' : 'h-0'
+                            'w-full ml-0 lg:ml-8  lg:mr-auto lg:h-12 transition-all lg:visible lg:opacity-100',
+                            showSearchMobile ? 'h-12 visible opacity-100' : 'h-0 invisible opacity-0'
                         )}
                     >
                         <Search />

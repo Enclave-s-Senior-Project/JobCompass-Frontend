@@ -3,6 +3,7 @@ import { twMerge } from 'tailwind-merge';
 import crypto from 'crypto';
 import { errorKeyMessage } from './message-keys';
 import { toast } from 'sonner';
+import { Address, AppliedJob } from '@/types';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -78,4 +79,22 @@ export const toFormattedDate = (date: string | Date, withHour: boolean = false) 
 
 export function capitalizeFirstLetter(val: string) {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1).toLowerCase();
+}
+
+export function getAppliedJobStatus(appliedJob: AppliedJob) {
+    return (
+        new Date(appliedJob?.job.deadline).getTime() > new Date().getTime() &&
+        appliedJob.isActive &&
+        !appliedJob.isDenied
+    );
+}
+
+export function getJobAddress(addresses: Address[]) {
+    return addresses?.length > 0
+        ? addresses?.map((address: Address) => `${address?.city}, ${address?.country}`).join('| ')
+        : 'Unknown location';
+}
+
+export function toDollarK(number: number) {
+    return Number(number) >= 1000 ? `${Number(number) / 1000}K` : number;
 }
