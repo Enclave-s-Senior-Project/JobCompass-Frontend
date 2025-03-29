@@ -1,8 +1,9 @@
+import React, { memo } from 'react';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import Image from 'next/image';
 import jobPlaceholder from '@/assets/images/placeholder/job-placeholder.jpg';
 import { Check, DollarSign, MapPin, X } from 'lucide-react';
-import { Address, AppliedJob } from '@/types';
+import { AppliedJob } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BadgeJobType } from '@/components/custom-ui/global/badge-job-type';
@@ -13,10 +14,11 @@ type Props = {
     items: AppliedJob[];
     isPending?: boolean;
 };
-export function AppliedJobList({ items = [], isPending = false }: Props) {
+
+export const AppliedJobList = memo(({ items = [], isPending = false }: Props) => {
     return (
         <Table className="hidden md:table">
-            {items.length === 0 && <TableCaption>There are no applications</TableCaption>}
+            {items.length === 0 && !isPending && <TableCaption>There are no applications</TableCaption>}
             <TableHeader>
                 <TableRow className="uppercase">
                     <TableHead>jobs</TableHead>
@@ -29,22 +31,12 @@ export function AppliedJobList({ items = [], isPending = false }: Props) {
                 {isPending
                     ? Array.from({ length: 5 }).map((_, index) => (
                           <TableRow key={index} className="border-p-primary">
-                              <TableCell>
-                                  <Skeleton className="w-full h-20" />
-                              </TableCell>
-                              <TableCell>
-                                  <Skeleton className="w-full h-20" />
-                              </TableCell>
-                              <TableCell>
-                                  <Skeleton className="w-full h-20" />
-                              </TableCell>
-                              <TableCell>
+                              <TableCell colSpan={4}>
                                   <Skeleton className="w-full h-20" />
                               </TableCell>
                           </TableRow>
                       ))
-                    : Array.isArray(items) &&
-                      items.map((appliedJob) => {
+                    : items.map((appliedJob) => {
                           const jobAddresses = getJobAddress(appliedJob?.job.addresses || []);
                           const status = getAppliedJobStatus(appliedJob);
 
@@ -54,6 +46,7 @@ export function AppliedJobList({ items = [], isPending = false }: Props) {
                                       <div className="flex items-center gap-4">
                                           <Image
                                               loading="lazy"
+                                              priority={false} // Preload the first image
                                               className="flex size-14 rounded-sm"
                                               width={56}
                                               height={56}
@@ -111,4 +104,5 @@ export function AppliedJobList({ items = [], isPending = false }: Props) {
             </TableBody>
         </Table>
     );
-}
+});
+AppliedJobList.displayName = 'AppliedJobList';

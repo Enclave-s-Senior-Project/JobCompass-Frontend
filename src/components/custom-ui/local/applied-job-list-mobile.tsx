@@ -1,3 +1,4 @@
+import React, { memo } from 'react';
 import { Card } from '@/components/ui/card';
 import { AppliedJob } from '@/types';
 import { Calendar, Check, DollarSign, MapPin, X } from 'lucide-react';
@@ -13,7 +14,8 @@ type Props = {
     items: AppliedJob[];
     isPending?: boolean;
 };
-export function AppliedJobListMobile({ items = [], isPending }: Props) {
+
+const AppliedJobListMobile = memo(({ items = [], isPending }: Props) => {
     return (
         <div className="md:hidden space-y-4">
             {isPending
@@ -26,6 +28,7 @@ export function AppliedJobListMobile({ items = [], isPending }: Props) {
                               <div className="flex items-start gap-2">
                                   <Image
                                       loading="lazy"
+                                      priority={false} // Preload the first image
                                       className="flex size-14 rounded-sm"
                                       width={56}
                                       height={56}
@@ -83,4 +86,7 @@ export function AppliedJobListMobile({ items = [], isPending }: Props) {
                   })}
         </div>
     );
-}
+});
+AppliedJobListMobile.displayName = 'AppliedJobListMobile';
+
+export default AppliedJobListMobile;
