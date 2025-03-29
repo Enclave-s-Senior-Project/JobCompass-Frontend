@@ -6,3 +6,9 @@ export enum JobTypeEnum {
     freelance = 'Freelance',
     internship = 'Internship',
 }
+
+export enum ApplyJobStatus {
+    PENDING = 'PENDING',
+    APPROVED = 'APPROVED',
+    DENIED = 'DENIED',
+}
