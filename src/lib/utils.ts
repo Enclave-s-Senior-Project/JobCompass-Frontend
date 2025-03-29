@@ -4,6 +4,7 @@ import crypto from 'crypto';
 import { errorKeyMessage } from './message-keys';
 import { toast } from 'sonner';
 import { Address, AppliedJob } from '@/types';
+import { ApplyJobStatus } from './common-enum';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -84,8 +85,7 @@ export function capitalizeFirstLetter(val: string) {
 export function getAppliedJobStatus(appliedJob: AppliedJob) {
     return (
         new Date(appliedJob?.job.deadline).getTime() > new Date().getTime() &&
-        appliedJob.isActive &&
-        !appliedJob.isDenied
+        appliedJob.status === ApplyJobStatus.APPROVED
     );
 }
 

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { memo } from 'react';
 import { ArrowLeft, ArrowRight, MoreHorizontal } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -101,87 +102,66 @@ PaginationEllipsis.displayName = 'PaginationEllipsis';
 
 const getPageNumbers = (meta: Meta) => {
     const rangeWithDots: Array<number | string> = [];
-    const currentPage = meta?.page;
-    const totalPages = meta?.pageCount;
+    const { page, pageCount } = meta;
 
-    // Always show first page
-    rangeWithDots.push(1);
-
-    if (currentPage <= 3) {
-        // Near start: show 2,3
-        for (let i = 2; i <= Math.min(3, totalPages - 1); i++) {
-            rangeWithDots.push(i);
-        }
-        if (totalPages > 4) {
-            rangeWithDots.push('ellipsis');
-        }
-    } else if (currentPage >= totalPages - 2) {
-        // Near end: show last 3 pages
-        if (totalPages > 4) {
-            rangeWithDots.push('ellipsis');
-        }
-        for (let i = Math.max(totalPages - 2, 2); i < totalPages; i++) {
-            rangeWithDots.push(i);
-        }
+    if (pageCount <= 5) {
+        for (let i = 1; i <= pageCount; i++) rangeWithDots.push(i);
     } else {
-        // Middle: show current page and one adjacent
-        rangeWithDots.push('ellipsis1');
-        rangeWithDots.push(currentPage);
-        rangeWithDots.push('ellipsis2');
-    }
-
-    // Always show last page if different from first
-    if (totalPages > 1) {
-        rangeWithDots.push(totalPages);
+        if (page > 3) rangeWithDots.push(1, 'ellipsis');
+        for (let i = Math.max(1, page - 1); i <= Math.min(page + 1, pageCount); i++) rangeWithDots.push(i);
+        if (page < pageCount - 2) rangeWithDots.push('ellipsis', pageCount);
     }
 
     return rangeWithDots;
 };
 
-const PrimaryPagination = ({
-    meta,
-    totalPages,
-    pagination,
-}: {
-    meta: Meta;
-    pagination: DetailedRequest.Pagination;
-    totalPages: number | string;
-}) => {
-    return (
-        <Pagination>
-            <PaginationContent>
-                <PaginationItem className="mr-2">
-                    <PaginationPrevious
-                        href={`?page=${Number(meta?.page) - 1}${pagination.order ? `&order=${pagination.order}` : ''}${pagination.options ? `&option=${pagination.options}` : ''}`}
-                        disabled={!meta?.hasPreviousPage}
-                    />
-                </PaginationItem>
-                {getPageNumbers({ ...meta, pageCount: totalPages } as Meta).map((pageNum, index) =>
-                    pageNum === 'ellipsis1' || pageNum === 'ellipsis2' || pageNum === 'ellipsis' ? (
-                        <PaginationItem key={index}>
-                            <PaginationEllipsis />
-                        </PaginationItem>
-                    ) : (
-                        <PaginationItem key={index}>
-                            <PaginationLink
-                                href={`?page=${pageNum}${pagination.order ? `&order=${pagination.order}` : ''}${pagination.options ? `&option=${pagination.options}` : ''}`}
-                                isActive={meta?.page === pageNum}
-                            >
-                                {pageNum}
-                            </PaginationLink>
-                        </PaginationItem>
-                    )
-                )}
-                <PaginationItem className="ml-2">
-                    <PaginationNext
-                        href={`?page=${Number(meta?.page) + 1}${pagination.order ? `&order=${pagination.order}` : ''}${pagination.options ? `&option=${pagination.options}` : ''}`}
-                        disabled={!meta?.hasNextPage}
-                    />
-                </PaginationItem>
-            </PaginationContent>
-        </Pagination>
-    );
-};
+const PrimaryPagination = memo(
+    ({
+        meta,
+        totalPages,
+        pagination,
+    }: {
+        meta: Meta;
+        pagination: DetailedRequest.Pagination;
+        totalPages: number | string;
+    }) => {
+        return (
+            <Pagination>
+                <PaginationContent>
+                    <PaginationItem className="mr-2">
+                        <PaginationPrevious
+                            href={`?page=${Number(meta?.page) - 1}${pagination.order ? `&order=${pagination.order}` : ''}${pagination.options ? `&option=${pagination.options}` : ''}`}
+                            disabled={!meta?.hasPreviousPage}
+                        />
+                    </PaginationItem>
+                    {getPageNumbers({ ...meta, pageCount: totalPages } as Meta).map((pageNum, index) =>
+                        pageNum === 'ellipsis1' || pageNum === 'ellipsis2' || pageNum === 'ellipsis' ? (
+                            <PaginationItem key={index}>
+                                <PaginationEllipsis />
+                            </PaginationItem>
+                        ) : (
+                            <PaginationItem key={index}>
+                                <PaginationLink
+                                    href={`?page=${pageNum}${pagination.order ? `&order=${pagination.order}` : ''}${pagination.options ? `&option=${pagination.options}` : ''}`}
+                                    isActive={meta?.page === pageNum}
+                                >
+                                    {pageNum}
+                                </PaginationLink>
+                            </PaginationItem>
+                        )
+                    )}
+                    <PaginationItem className="ml-2">
+                        <PaginationNext
+                            href={`?page=${Number(meta?.page) + 1}${pagination.order ? `&order=${pagination.order}` : ''}${pagination.options ? `&option=${pagination.options}` : ''}`}
+                            disabled={!meta?.hasNextPage}
+                        />
+                    </PaginationItem>
+                </PaginationContent>
+            </Pagination>
+        );
+    }
+);
+PrimaryPagination.displayName = 'PrimaryPagination';
 
 export {
     Pagination,

@@ -128,7 +128,6 @@ export interface Resume extends CV {}
 export interface AppliedJob extends baseEntity {
     appliedJobId: string;
     coverLetter: string;
-    isDenied: boolean;
     status: string;
     job: Job;
     address: Address[];
