@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BadgeJobType } from '@/components/custom-ui/global/badge-job-type';
 import { JobTypeEnum } from '@/lib/common-enum';
-import { toFormattedDate } from '@/lib/utils';
+import { getAppliedJobStatus, getJobAddress, toDollarK, toFormattedDate } from '@/lib/utils';
 
 type Props = {
     items: AppliedJob[];
@@ -15,7 +15,7 @@ type Props = {
 };
 export function AppliedJobList({ items = [], isPending = false }: Props) {
     return (
-        <Table>
+        <Table className="hidden md:table">
             {items.length === 0 && <TableCaption>There are no applications</TableCaption>}
             <TableHeader>
                 <TableRow className="uppercase">
@@ -32,7 +32,6 @@ export function AppliedJobList({ items = [], isPending = false }: Props) {
                               <TableCell>
                                   <Skeleton className="w-full h-20" />
                               </TableCell>
-
                               <TableCell>
                                   <Skeleton className="w-full h-20" />
                               </TableCell>
@@ -46,17 +45,8 @@ export function AppliedJobList({ items = [], isPending = false }: Props) {
                       ))
                     : Array.isArray(items) &&
                       items.map((appliedJob) => {
-                          const jobAddresses =
-                              appliedJob?.job.addresses && appliedJob?.job.addresses?.length > 0
-                                  ? appliedJob?.job.addresses
-                                        ?.map((address: Address) => `${address?.city}, ${address?.country}`)
-                                        .join('| ')
-                                  : 'Unknown location';
-
-                          const status =
-                              new Date(appliedJob?.job.deadline).getTime() > new Date().getTime() &&
-                              appliedJob.isActive &&
-                              !appliedJob.isDenied;
+                          const jobAddresses = getJobAddress(appliedJob?.job.addresses || []);
+                          const status = getAppliedJobStatus(appliedJob);
 
                           return (
                               <TableRow key={appliedJob.appliedJobId}>
@@ -75,12 +65,12 @@ export function AppliedJobList({ items = [], isPending = false }: Props) {
                                               alt={appliedJob?.job?.name}
                                           />
                                           <div className="space-y-2">
-                                              <p className="text-gray-900 font-medium text-base">
+                                              <div className="text-gray-900 font-medium text-base">
                                                   {appliedJob?.job?.name}&nbsp;
                                                   {appliedJob?.job?.type && (
                                                       <BadgeJobType type={appliedJob?.job?.type as JobTypeEnum} />
                                                   )}
-                                              </p>
+                                              </div>
                                               <div className="flex items-center text-sm text-gray-600 gap-4">
                                                   <span className="flex items-center gap-1 text-sm">
                                                       <MapPin className="h-5 w-5" />{' '}
@@ -88,13 +78,8 @@ export function AppliedJobList({ items = [], isPending = false }: Props) {
                                                   </span>
                                                   <span className="flex items-center gap-1 text-sm">
                                                       <DollarSign className="h-5 w-5" /> $
-                                                      {Number(appliedJob?.job?.lowestWage) >= 1000
-                                                          ? `${Number(appliedJob?.job?.lowestWage) / 1000}K`
-                                                          : appliedJob?.job?.lowestWage}{' '}
-                                                      - $
-                                                      {Number(appliedJob?.job?.highestWage) > 1000
-                                                          ? `${Number(appliedJob?.job?.highestWage) / 1000}K`
-                                                          : appliedJob?.job?.highestWage}
+                                                      {toDollarK(Number(appliedJob?.job?.lowestWage) || 0)} - $
+                                                      {toDollarK(Number(appliedJob?.job?.highestWage) || 0)}
                                                       /month
                                                   </span>
                                               </div>
