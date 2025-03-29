@@ -8,6 +8,7 @@ import { DetailedRequest, Meta } from '@/types';
 import { PrimaryPagination } from '@/components/ui/pagination';
 import { useSearchParams } from 'next/navigation';
 import { AppliedJobList } from '@/components/custom-ui/local/applied-job-list';
+import { AppliedJobListMobile } from '@/components/custom-ui/local/applied-job-list-mobile';
 
 export default function AppliedJobPage() {
     const search = useSearchParams();
@@ -35,8 +36,13 @@ export default function AppliedJobPage() {
                     <h5 className="text-lg text-gray-900 font-medium">Applied Jobs</h5>&nbsp;
                     <span className="text-base text-gray-400 font-normal">({data?.meta.itemCount})</span>
                 </div>
-                <div className="space-y-2">
-                    <AppliedJobList items={data?.data || []} isPending={isPending} />
+                <div>
+                    <div>
+                        <AppliedJobList items={data?.data || []} isPending={isPending} />
+                    </div>
+                    <div>
+                        <AppliedJobListMobile items={data?.data || []} isPending={isPending} />
+                    </div>
                 </div>
             </div>
             {Number(data?.meta?.pageCount) > 1 && (
