@@ -15,6 +15,7 @@ import { PrimaryPagination } from '../ui/pagination';
 import { toast } from 'sonner';
 import { ButtonMark } from './button-mark';
 import { EnterpriseService } from '@/services/enterprises.service';
+import { DialogDetailCandidate } from './dialog-detail-candidate';
 
 export default function CardCandidateHorizontal(props: {
     perPage: number;
@@ -158,7 +159,7 @@ export default function CardCandidateHorizontal(props: {
                                 handleMark={() => addFavoriteEnterpriseMutation.mutate(candidates?.profileId)}
                                 handleUnMark={() => removeFavoriteEnterpriseMutation.mutate(candidates?.profileId)}
                             />
-                            <Button
+                            {/* <Button
                                 className="group"
                                 variant="third"
                                 size="lg"
@@ -167,7 +168,8 @@ export default function CardCandidateHorizontal(props: {
                                 }}
                             >
                                 Apply Now <LuArrowRight className="group-hover:translate-x-2 transition-all" />
-                            </Button>
+                            </Button> */}
+                            <DialogDetailCandidate id={candidates?.profileId} />
                         </div>
                     </motion.div>
                 ))
