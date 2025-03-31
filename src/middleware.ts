@@ -13,6 +13,7 @@ export const publicPages = [
     '/find-candidates/candidate-profile',
     '/reset-password',
     '/find-candidates',
+    '/enterprises',
 ];
 
 // Pages that should redirect to home if user is already logged in

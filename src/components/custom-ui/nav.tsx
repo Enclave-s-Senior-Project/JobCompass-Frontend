@@ -14,11 +14,11 @@ const navigatePages = [
         label: 'Find Job',
     },
     {
-        href: '/employers',
+        href: '/enterprises',
         label: 'Employers',
     },
     {
-        href: '/candidates',
+        href: '/find-candidates',
         label: 'Candidates',
     },
     {
