@@ -54,24 +54,22 @@ function PageContent() {
 
     const removeFavoriteJobMutation = useMutation({
         mutationFn: async ({ jobId }: { jobId: string }) => {
-            try {
-                await JobService.removeFavoriteJob({ jobId });
-                await refetch();
-            } catch (error: any) {
-                handleErrorToast(error);
-            }
+            await JobService.removeFavoriteJob({ jobId });
+            await refetch();
+            await JobService.removeFavoriteJob({ jobId });
+            await refetch();
         },
         onSuccess: () => {
             toast.success('Job added to favorite list');
         },
-        onError: () => {
-            toast.error('Failed to add job to favorite list');
+        onError: (error) => {
+            handleErrorToast(error);
         },
     });
 
     return (
         <div className="min-h-[500px] flex flex-col justify-between space-y-2">
-            <div>
+            <div className="space-y-4">
                 <div className="flex items-center">
                     <h5 className="text-lg text-gray-900 font-medium">Favorite Jobs</h5>&nbsp;
                     <span className="text-base text-gray-400 font-normal">({resultQuery?.meta?.itemCount})</span>
@@ -95,7 +93,6 @@ function PageContent() {
                                       mark={true}
                                       showMarkButton={true}
                                   />
-                                  <Separator />
                               </Fragment>
                           ))}
                 </div>

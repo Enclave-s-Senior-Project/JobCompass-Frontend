@@ -196,7 +196,16 @@ function PageContentOfSingleJob() {
                                     className={`h-[24px] w-[24px] ${isFavorite ? 'text-blue-500' : 'text-gray-500'}`}
                                 />
                             </Button>
-                            <DialogApplyJob nameJob="Senior UX Designer" jobId={id} />
+                            <DialogApplyJob
+                                nameJob={resultQuery?.name || 'Unknown Job'}
+                                jobId={resultQuery?.jobId || id}
+                                trigger={
+                                    <Button className="flex-1 md:flex-none w-[248px] h-[56px] text-[16px]">
+                                        Apply Now
+                                        <ChevronRight className="ml-2 h-6 w-6" />
+                                    </Button>
+                                }
+                            />
                         </div>
                     </div>
                 </div>

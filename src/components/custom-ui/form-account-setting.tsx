@@ -50,7 +50,9 @@ export function FormAccountSetting() {
             {check ? (
                 <DialogAddEnterprises refetch={refetch} />
             ) : temp?.status === IsActive.ACTIVE ? (
-                <p className="uppercase text-semibold text-primary">You are an enterprise.</p>
+                <p className="font-semibold text-white py-2 px-4 bg-primary inline-block rounded-sm">
+                    You are an enterprise.
+                </p>
             ) : (
                 <div className="space-y-4 text-gray-600">
                     <div className="flex items-center space-x-2 text-yellow-600">

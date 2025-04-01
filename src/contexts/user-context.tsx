@@ -5,7 +5,7 @@ import { queryKey } from '@/lib/react-query/keys';
 import { handleErrorToast } from '@/lib/utils';
 import { AuthService } from '@/services/auth.service';
 import { User } from '@/types';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import React, { createContext, useEffect, useState } from 'react';
 
@@ -42,6 +42,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         retry: 2,
         enabled: isHydrated && JSON.parse(localStorage.getItem('logged') ?? 'false'),
         refetchInterval: 1000 * 60 * 5,
+        placeholderData: keepPreviousData,
     });
 
     const logoutMutation = useMutation({

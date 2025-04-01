@@ -12,6 +12,8 @@ import { JobTypeEnum } from '@/lib/common-enum';
 import { toast } from '@/lib/toast';
 import { toFormattedDate } from '@/lib/utils';
 import { BadgeJobType } from './global/badge-job-type';
+import Link from 'next/link';
+import { DialogApplyJob } from './dialog-apply-job';
 
 export default function CardJobHorizontal(props: {
     job: Job;
@@ -29,7 +31,7 @@ export default function CardJobHorizontal(props: {
     const router = useRouter();
     return (
         <motion.div
-            className="space-y-6 w-full rounded-xl border-2 border-input hover:border-primary bg-white"
+            className="space-y-6 w-full rounded-md border-2 border-input hover:border-primary bg-white"
             variants={motionVariant.containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -44,18 +46,22 @@ export default function CardJobHorizontal(props: {
             >
                 <div className="flex items-center gap-5">
                     <div className="w-16 h-w-16 bg-slate-100 rounded-lg flex items-center justify-center">
-                        <img
-                            loading="lazy"
-                            src={job?.enterprise?.logoUrl || ''}
-                            alt={job?.enterprise?.name || 'Company Logo'}
-                            className="w-[68px] h-[68px] object-cover rounded-md"
-                        />
+                        <Link href={`/single-job/${job?.jobId}`}>
+                            <img
+                                loading="lazy"
+                                src={job?.enterprise?.logoUrl || ''}
+                                alt={job?.enterprise?.name || 'Company Logo'}
+                                className="w-[68px] h-[68px] object-cover rounded-md"
+                            />
+                        </Link>
                     </div>
                     <div className="space-y-3">
-                        <h3 className="font-semibold text-xl flex items-center gap-2">
-                            {job?.name}&nbsp;
-                            {job?.type && <BadgeJobType type={job.type as JobTypeEnum} />}
-                        </h3>
+                        <Link href={`/single-job/${job?.jobId}`}>
+                            <h3 className="font-semibold text-xl flex items-center gap-2 hover:underline">
+                                {job?.name}&nbsp;
+                                {job?.type && <BadgeJobType type={job.type as JobTypeEnum} />}
+                            </h3>
+                        </Link>
                         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                             <span className="flex items-center gap-1 text-sm">
                                 <Building2 className="h-5 w-5" /> {job?.enterprise?.name}
@@ -94,19 +100,23 @@ export default function CardJobHorizontal(props: {
                             mark={!!props.mark}
                         />
                     )}
-                    <Button variant="outline" size="icon-lg" onClick={() => router.push(`/single-job/${job?.jobId}`)}>
-                        <EyeIcon />
-                    </Button>
-                    <Button
-                        className="group"
-                        variant="third"
-                        size="lg"
-                        onClick={() => {
-                            toast.info('This function is coming soon');
-                        }}
-                    >
-                        Apply Now <LuArrowRight className="group-hover:translate-x-2 transition-all" />
-                    </Button>
+
+                    <DialogApplyJob
+                        nameJob={job?.name || 'Unknown Job'}
+                        jobId={job?.jobId}
+                        trigger={
+                            <Button
+                                className="group"
+                                variant="third"
+                                size="lg"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                }}
+                            >
+                                Apply Now <LuArrowRight className="group-hover:translate-x-2 transition-all" />
+                            </Button>
+                        }
+                    />
                 </div>
             </div>
         </motion.div>
