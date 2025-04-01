@@ -96,8 +96,9 @@ export function FormSocialLinks({ useType }: { useType: 'candidate' | 'employer'
                 setErrors([]);
             }
         },
-        onError: () => {
-            toast.error('Oops! Please try again');
+        onError: (error) => {
+            handleErrorToast(error);
+            return null;
         },
     });
 

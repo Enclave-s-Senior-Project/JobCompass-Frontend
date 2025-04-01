@@ -124,10 +124,7 @@ export const forgetPasswordSubmit = async (currentState: any, formData: FormData
         const data = await AuthService.forgetPassword({ email: currentState.email });
         return { ...currentState, errors: {}, success: true, data };
     } catch (error: any) {
-        if (error.props.title) {
-            const errorMessage = errorKeyMessage[error.props.title as keyof typeof errorKeyMessage] || 'Oops!';
-            toast.error(errorMessage);
-        }
+        handleErrorToast(error);
     }
 
     return { ...currentState, errors: {}, success: false, data: {} };

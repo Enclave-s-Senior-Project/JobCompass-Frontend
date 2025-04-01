@@ -41,11 +41,12 @@ export const getClientSideCookie = (name: string): string | undefined => {
 };
 
 export const handleErrorToast = (err: any) => {
+    const defaultErrorMessage = 'Oops! Please try again';
     if (err.props?.title && errorKeyMessage) {
-        const errorMessage = errorKeyMessage[err.props.title as keyof typeof errorKeyMessage];
+        const errorMessage = errorKeyMessage[err.props.title as keyof typeof errorKeyMessage] || defaultErrorMessage;
         toast.error(errorMessage);
     } else {
-        toast.error('Oops! Please try again');
+        toast.error(defaultErrorMessage);
     }
 };
 
