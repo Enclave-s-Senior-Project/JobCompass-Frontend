@@ -60,6 +60,7 @@ export default function CardCandidateHorizontal(props: {
             onRefetch(refetch);
         }
     }, [refetch, onRefetch]);
+
     const addFavoriteEnterpriseMutation = useMutation({
         mutationFn: async (candidate: string) => {
             try {
@@ -93,8 +94,9 @@ export default function CardCandidateHorizontal(props: {
             toast.error('Failed to add Candidate to favorite list');
         },
     });
+
     return (
-        <motion.div className="space-y-6 w-full pt-10">
+        <motion.div className="space-y-3 w-full pt-10">
             {isPending ? (
                 [...Array(ITEM_PER_PAGE)].map((_, i) => (
                     <div key={i} className="flex items-center space-x-2">
@@ -136,20 +138,28 @@ export default function CardCandidateHorizontal(props: {
                             </div>
                             <div className="space-y-3">
                                 <h3 className="font-semibold text-xl flex items-center gap-2">
-                                    {candidates?.fullName}&nbsp;
+                                    {candidates?.fullName} 
                                 </h3>
                                 <span className="text-muted-foreground text-sm">{candidates?.fullName}</span>
                                 <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mt-2">
-                                    <span className="flex items-center gap-1 text-sm">
-                                        <MapPin className="h-5 w-5" />
-                                        {candidates?.nationality}
-                                    </span>
-                                    <span className="flex items-center gap-1 text-sm">
-                                        <Phone className="h-5 w-5" /> {candidates?.phone}
-                                    </span>
-                                    <span className="flex items-center gap-1 text-sm">
-                                        <UserRound className="h-5 w-5" /> {candidates?.gender}
-                                    </span>
+                                    {candidates?.nationality && (
+                                        <span className="flex items-center gap-1 text-sm">
+                                            <MapPin className="h-5 w-5" />
+                                            {candidates.nationality}
+                                        </span>
+                                    )}
+                                    {candidates?.phone && (
+                                        <span className="flex items-center gap-1 text-sm">
+                                            <Phone className="h-5 w-5" />
+                                            {candidates.phone}
+                                        </span>
+                                    )}
+                                    {candidates?.gender && (
+                                        <span className="flex items-center gap-1 text-sm">
+                                            <UserRound className="h-5 w-5" />
+                                            {candidates.gender}
+                                        </span>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -159,7 +169,7 @@ export default function CardCandidateHorizontal(props: {
                                 handleMark={() => addFavoriteEnterpriseMutation.mutate(candidates?.profileId)}
                                 handleUnMark={() => removeFavoriteEnterpriseMutation.mutate(candidates?.profileId)}
                             />
-                            {/* <Button
+                            <Button
                                 className="group"
                                 variant="third"
                                 size="lg"
@@ -168,8 +178,8 @@ export default function CardCandidateHorizontal(props: {
                                 }}
                             >
                                 Apply Now <LuArrowRight className="group-hover:translate-x-2 transition-all" />
-                            </Button> */}
-                            <DialogDetailCandidate id={candidates?.profileId} />
+                            </Button>
+                            {/* <DialogDetailCandidate id={candidates?.profileId} /> */}
                         </div>
                     </motion.div>
                 ))
