@@ -2,14 +2,12 @@
 import { Job } from '@/types';
 import { motion } from 'framer-motion';
 import { motionVariant } from '@/lib/motion-variants';
-import { Building2, Calendar, CircleX, DollarSign, EyeIcon, MapPin } from 'lucide-react';
+import { Building2, Calendar, CircleX, DollarSign, MapPin } from 'lucide-react';
 import { ButtonMark } from '../custom-ui/button-mark';
 import { Button } from '@/components/ui/button';
 import { LuArrowRight } from 'react-icons/lu';
 import clsx from 'clsx';
-import { useRouter } from 'next/navigation';
 import { JobTypeEnum } from '@/lib/common-enum';
-import { toast } from '@/lib/toast';
 import { toFormattedDate } from '@/lib/utils';
 import { BadgeJobType } from './global/badge-job-type';
 import Link from 'next/link';
@@ -28,7 +26,6 @@ export default function CardJobHorizontal(props: {
         job?.addresses?.[0]?.city && job?.addresses?.[0]?.country
             ? `${job?.addresses[0].city}, ${job?.addresses[0].country}`
             : 'Unknown location';
-    const router = useRouter();
     return (
         <motion.div
             className="space-y-6 w-full rounded-md border-2 border-input hover:border-primary bg-white"

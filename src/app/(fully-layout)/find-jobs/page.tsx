@@ -6,7 +6,7 @@ import SearchForm from '@/components/custom-ui/search-bar';
 import { DetailedRequest, Meta } from '@/types';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import ListCardJobs from '@/components/custom-ui/list-card-jobs';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import * as services from '@/services/job.service';
 import { useSearchParams } from 'next/navigation';
 import { queryKey } from '@/lib/react-query/keys';
@@ -67,6 +67,7 @@ export default function Page() {
         refetch,
         data: resultQuery,
         isPending,
+        isFetching,
     } = useQuery({
         queryKey: [queryKey.listJobs, { order, page, take: itemsPerPage, options: option }],
         queryFn: async ({ queryKey }) => {
@@ -89,6 +90,7 @@ export default function Page() {
         refetchInterval: 1000 * 60, // 1 minute
         retry: 2,
         enabled: true,
+        placeholderData: keepPreviousData,
     });
 
     const handleSearch = useCallback(
@@ -294,7 +296,7 @@ export default function Page() {
                         perPage={itemsPerPage}
                         option={option}
                         data={resultQuery?.data}
-                        isPending={isPending}
+                        isPending={isPending || isFetching}
                         meta={resultQuery?.meta as Meta}
                         totalPages={totalPages}
                         refetch={refetch}
