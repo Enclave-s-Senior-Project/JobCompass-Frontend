@@ -15,6 +15,7 @@ import { PrimaryPagination } from '../ui/pagination';
 import { toast } from 'sonner';
 import { ButtonMark } from './button-mark';
 import { EnterpriseService } from '@/services/enterprises.service';
+import { useRouter } from 'next/navigation';
 
 export default function CardCandidateHorizontal(props: {
     perPage: number;
@@ -24,6 +25,7 @@ export default function CardCandidateHorizontal(props: {
     gender: string | undefined;
     onRefetch?: (refetch: () => void) => void;
 }) {
+    const router = useRouter();
     const ITEM_PER_PAGE = props.perPage;
     const { option, maritalStatus, categories, gender, onRefetch } = props;
     const [totalPages, setTotalPages] = useState(0);
@@ -109,9 +111,9 @@ export default function CardCandidateHorizontal(props: {
             ) : !resultQuery?.data?.length ? (
                 <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4">
                     <FileX className="h-16 w-16 text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-semibold text-foreground mb-2">No enterprises found</h3>
+                    <h3 className="text-lg font-semibold text-foreground mb-2">No candidates found</h3>
                     <p className="text-muted-foreground max-w-[500px]">
-                        Currently, there are no enterprises listed. Please check back later or try searching with
+                        Currently, there are no candidates listed. Please check back later or try searching with
                         different criteria.
                     </p>
                 </div>
@@ -173,10 +175,10 @@ export default function CardCandidateHorizontal(props: {
                                 variant="third"
                                 size="lg"
                                 onClick={() => {
-                                    toast.info('This function is coming soon');
+                                    router.push(`/find-candidates/candidate-profile/${candidates?.profileId}`);
                                 }}
                             >
-                                Apply Now <LuArrowRight className="group-hover:translate-x-2 transition-all" />
+                                View detail <LuArrowRight className="group-hover:translate-x-2 transition-all" />
                             </Button>
                             {/* <DialogDetailCandidate id={candidates?.profileId} /> */}
                         </div>
