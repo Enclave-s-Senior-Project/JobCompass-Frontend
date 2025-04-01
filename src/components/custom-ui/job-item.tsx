@@ -11,6 +11,7 @@ import { motion } from 'framer-motion';
 import { motionVariant } from '@/lib/motion-variants';
 import { useRouter } from 'next/navigation';
 import * as services from '@/services/boost-job.service';
+import { handleErrorToast } from '@/lib/utils';
 
 interface JobItemProps {
     job: {
@@ -33,7 +34,7 @@ export default function JobItem({ job }: JobItemProps) {
                 jobId: job.jobId,
             });
         } catch (error) {
-            console.error('Error boosting job:', error);
+            handleErrorToast(error);
         }
     }
     return (
