@@ -6,7 +6,7 @@ import { queryKey } from '@/lib/react-query/keys';
 import { useEffect, useState } from 'react';
 import { DialogUpdateEnterprises } from './dialog-update-register-enterprise';
 import { AlertCircle } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 export enum IsActive {
     PENDING = 'PENDING',
     ACTIVE = 'ACTIVE',
@@ -45,11 +45,13 @@ export function FormAccountSetting() {
         setCheck(temp === null);
     }, [temp]);
     return (
-        <div className="space-y-8">
-            <h1>Contact Info</h1>
+        <div className="space-y-4">
+            <h3 className="font-semibold">Enterprise Registration</h3>
             {check ? (
                 <DialogAddEnterprises refetch={refetch} />
-            ) : temp?.status === IsActive.ACTIVE ? null : (
+            ) : temp?.status === IsActive.ACTIVE ? (
+                <p className="uppercase text-semibold text-primary">You are an enterprise.</p>
+            ) : (
                 <div className="space-y-4 text-gray-600">
                     <div className="flex items-center space-x-2 text-yellow-600">
                         <AlertCircle size={20} />

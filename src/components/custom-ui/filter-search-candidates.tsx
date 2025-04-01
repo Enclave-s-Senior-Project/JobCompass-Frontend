@@ -6,7 +6,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import { CategoryService } from '@/services/categories.service';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 interface FilterSidebarProps {
     filters: {
         maritalStatus: string | undefined;

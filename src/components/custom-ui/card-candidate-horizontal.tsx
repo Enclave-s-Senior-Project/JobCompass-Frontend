@@ -12,7 +12,7 @@ import { motionVariant } from '@/lib/motion-variants';
 import { Button } from '../ui/button';
 import { LuArrowRight } from 'react-icons/lu';
 import { PrimaryPagination } from '../ui/pagination';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { ButtonMark } from './button-mark';
 import { EnterpriseService } from '@/services/enterprises.service';
 import { useRouter } from 'next/navigation';

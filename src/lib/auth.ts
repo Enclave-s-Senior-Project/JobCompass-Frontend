@@ -29,6 +29,10 @@ type Permissions = {
         dataType: null;
         action: 'hire';
     };
+    navigationBar: {
+        dataType: null;
+        action: 'enterprise' | 'admin';
+    };
 };
 
 const ROLES = {
@@ -38,6 +42,10 @@ const ROLES = {
             update: false,
             delete: true,
             view: true,
+        },
+        navigationBar: {
+            admin: true,
+            enterprise: true,
         },
     },
     ENTERPRISE: {
@@ -55,6 +63,9 @@ const ROLES = {
         },
         hireCandidate: {
             hire: true,
+        },
+        navigationBar: {
+            enterprise: true,
         },
     },
     USER: {

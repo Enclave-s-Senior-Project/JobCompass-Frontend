@@ -10,7 +10,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import { handleErrorToast } from '@/lib/utils';
 import { CVService } from '@/services/cv.service';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 
 type ResumeContextType = {
     refetch: () => any;
@@ -59,6 +59,7 @@ export function ResumePart() {
             refetch();
         },
         onError: (error) => {
+            toast.dismiss();
             handleErrorToast(error);
         },
     });

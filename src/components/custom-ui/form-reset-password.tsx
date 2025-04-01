@@ -8,7 +8,7 @@ import { resetPassword } from '@/lib/action';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { routes } from '@/configs/routes';
 import { successKeyMessage } from '@/lib/message-keys';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 
 export function FormResetPassword() {
     const search = useSearchParams();

@@ -4,7 +4,7 @@ import { queryKey } from '@/lib/react-query/keys';
 import { EnterpriseService } from '@/services/enterprises.service';
 import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import CardJobHorizontal from './card-job-horizontal';
 import { Pagination, PaginationContent, PaginationItem } from '../ui/pagination';
 import { Button } from '../ui/button';

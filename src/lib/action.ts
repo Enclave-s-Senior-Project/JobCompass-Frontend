@@ -1,6 +1,4 @@
 import { CandidateProfileType, DetailedRequest, PersonalProfileType, SocialLink } from '@/types';
-import { toast } from 'sonner';
-import { errorKeyMessage } from './message-keys';
 import {
     applyJobCoverLetterSchema,
     forgetPasswordSchema,

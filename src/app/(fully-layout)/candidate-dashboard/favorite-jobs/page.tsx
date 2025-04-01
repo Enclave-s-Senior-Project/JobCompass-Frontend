@@ -10,10 +10,10 @@ import { DetailedRequest, Meta } from '@/types';
 import { Separator } from '@/components/ui/separator';
 import { handleErrorToast } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
-import { toast } from 'sonner';
 import CardJobHorizontal from '@/components/custom-ui/card-job-horizontal';
+import { toast } from '@/lib/toast';
 
-const ITEM_PER_PAGE = 1;
+const ITEM_PER_PAGE = 5;
 
 export default function JobWishListPage() {
     return (

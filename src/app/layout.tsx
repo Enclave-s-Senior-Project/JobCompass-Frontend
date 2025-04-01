@@ -4,7 +4,7 @@ import { inter } from '@/components/font';
 import ReactQueryProvider from '../contexts/react-query-provider';
 import { UserProvider } from '@/contexts/user-context';
 import { EnterpriseProvider } from '@/contexts/enterprise-context';
-import { Toaster } from '@/components/ui/sonner';
+import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
     title: 'JobCompass',
@@ -19,17 +19,7 @@ export default function RootLayout({
     return (
         <html suppressHydrationWarning={true} lang="en">
             <body className={`${inter.className} antialiased`}>
-                <Toaster
-                    richColors={true}
-                    position="top-right"
-                    theme="system"
-                    closeButton={true}
-                    toastOptions={{
-                        style: {
-                            borderRadius: '4px',
-                        },
-                    }}
-                />
+                <Toaster position="top-right" reverseOrder={false} gutter={8} />
                 <ReactQueryProvider>
                     <UserProvider>
                         <EnterpriseProvider>

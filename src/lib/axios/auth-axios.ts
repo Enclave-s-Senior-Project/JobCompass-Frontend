@@ -1,7 +1,7 @@
 import { InternalAxiosRequestConfig } from 'axios';
 import { BaseAxios } from './base-axios';
 import { clearLoginCookie, clearTokenInfo, getStoredTokenInfo, storeTokenInfo } from '../auth';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 
 export class AuthAxios extends BaseAxios {
     constructor(prefix: string) {

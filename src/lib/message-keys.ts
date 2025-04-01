@@ -15,15 +15,29 @@ const errorKeyMessage = {
     ALREADY_APPLIED: 'Already applied.',
     USER_NOT_ACTIVE: 'Account inactive or unverified.',
     EMAIL_NOT_EXISTS: 'Email not found.',
+    EMAIL_REQUIRED: 'Email is required.',
+    EMAIL_INVALID: 'Invalid email format.',
+    PASSWORD_WEAK: 'Password too weak.',
+    PASSWORD_TOO_LONG: 'Password too long.',
+    PASSWORD_TOO_SHORT: 'Password too short.',
+    PASSWORD_MUST_BE_STRING: 'Password must be a string.',
+    PASSWORD_REQUIRED: 'Password is required.',
+    TOKEN_MUST_BE_STRING: 'Token must be a string.',
+    TOKEN_REQUIRED: 'Token is required.',
+    IV_MUST_BE_STRING: 'IV must be a string.',
+    IV_REQUIRED: 'IV is required.',
+    TOKEN_EXPIRED: 'Token expired.',
+    NOT_ALLOW_RESET_PW: 'Password reset not allowed.',
+    CV_IN_USE: 'CV in use.',
 };
 
 const successKeyMessage = {
     FORGET_PASSWORD: 'Check email to reset password.',
     RESET_PASSWORD: 'Password reset successful.',
-    APPLY_JOB_SUCCESSFULL: 'Job applied successfully.',
-    POST_JOB_SUCCESSFULL: 'Job posted successfully.',
-    REGISTER_ENTERPRISE_SUCCESSFULL: 'Enterprise registered.',
-    UPDATE_REGISTER_ENTERPRISE_SUCCESSFULL: 'Enterprise updated.',
+    APPLY_JOB_SUCCESSFULL: 'Job application successful.',
+    POST_JOB_SUCCESSFULL: 'Job submission successful.',
+    REGISTER_ENTERPRISE_SUCCESSFULL: 'Enterprise registration successful.',
+    UPDATE_REGISTER_ENTERPRISE_SUCCESSFULL: 'Enterprise update successful.',
 };
 
 export { errorKeyMessage, successKeyMessage };
