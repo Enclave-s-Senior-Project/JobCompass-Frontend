@@ -1,14 +1,11 @@
 import { queryKey } from '@/lib/react-query/keys';
 import { handleErrorToast } from '@/lib/utils';
 import { UserService } from '@/services/user.service';
-import { DetailedRequest, Resume, User } from '@/types';
+import { DetailedRequest } from '@/types';
 import { useQueries } from '@tanstack/react-query';
-import { useParams } from 'next/navigation';
-import { UserCardProfile } from './local/user-card-profile';
 import { RichTextContent } from './global/rich-text-content';
 import ShareProfile from './share-profile';
 import UserRelatedInformation from './global/user-related-information';
-import { DownloadResume } from './global/download-resume';
 import { UserContactInformation } from './global/user-contact-information';
 
 export default function SingleCandidate(props: { id: string }) {

@@ -15,7 +15,6 @@ import { PrimaryPagination } from '../ui/pagination';
 import { toast } from 'sonner';
 import { ButtonMark } from './button-mark';
 import { EnterpriseService } from '@/services/enterprises.service';
-import { DialogDetailCandidate } from './dialog-detail-candidate';
 
 export default function CardCandidateHorizontal(props: {
     perPage: number;

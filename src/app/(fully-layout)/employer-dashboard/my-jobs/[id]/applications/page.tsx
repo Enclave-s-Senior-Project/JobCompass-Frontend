@@ -1,6 +1,6 @@
-'use client'
+'use client';
 import KanbanBoard from '@/components/applications/kanban-board';
-import { useParams } from "next/navigation";
+import { useParams } from 'next/navigation';
 export default function Home() {
     const { id } = useParams();
     return (

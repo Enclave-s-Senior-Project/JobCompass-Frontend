@@ -1,9 +1,8 @@
 'use client';
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Dialog, DialogContent } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { ChevronRight } from 'lucide-react';
-import { TextEditorApplyJob } from './form-apply-job-dialog';
 import SingleCandidate from './single-candidate';
 
 export function DialogDetailCandidate(props: { id: string }) {

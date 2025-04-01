@@ -121,17 +121,17 @@ interface KanbanBoardProps {
 
 export default function KanbanBoard({ jobId }: KanbanBoardProps) {
     const ITEM_PER_PAGE = 5;
-    const search = useSearchParams();   
-    
-    const page = Number(search.get("page") || 1);
-    const order = (search.get("order")?.toUpperCase() as "ASC" | "DESC") || "ASC";
-    const {
-        data: resultQuery,
-    } = useQuery({
+    const search = useSearchParams();
+
+    const page = Number(search.get('page') || 1);
+    const order = (search.get('order')?.toUpperCase() as 'ASC' | 'DESC') || 'ASC';
+    const { data: resultQuery } = useQuery({
         queryKey: [queryKey.getApplyJobs, { jobId, order, page, take: ITEM_PER_PAGE }],
         queryFn: async ({ queryKey }) => {
             try {
-                const payload = await ApplyJobService.listCandidatesApplyJob(queryKey[1] as DetailedRequest.GetAppliedJob);
+                const payload = await ApplyJobService.listCandidatesApplyJob(
+                    queryKey[1] as DetailedRequest.GetAppliedJob
+                );
                 return payload || { value: [], meta: { pageCount: 0 } }; // Ensure a valid return value
             } catch (error: any) {
                 handleErrorToast(error);
@@ -144,16 +144,15 @@ export default function KanbanBoard({ jobId }: KanbanBoardProps) {
         enabled: true,
         placeholderData: (prevData) => prevData || { value: [], meta: { pageCount: 0 } },
     });
-    
+
     // 🔹 Move setTotalPages to a useEffect to avoid modifying state inside queryFn
     useEffect(() => {
         if (resultQuery) {
-            setColumns(resultQuery as ColumnType[] || []);
+            setColumns((resultQuery as ColumnType[]) || []);
         }
     }, [resultQuery]);
-    
-    
-    const [columns, setColumns] = useState<ColumnType[]>(resultQuery as ColumnType[] || []);
+
+    const [columns, setColumns] = useState<ColumnType[]>((resultQuery as ColumnType[]) || []);
     const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
     const [, setActiveColumn] = useState<ColumnType | null>(null);
     const [activeApplicant, setActiveApplicant] = useState<Applicant | null>(null);
@@ -309,30 +308,30 @@ export default function KanbanBoard({ jobId }: KanbanBoardProps) {
 
     return (
         <DndContext
-        sensors={sensors}
-        collisionDetection={closestCorners}
-        onDragStart={handleDragStart}
-        onDragOver={handleDragOver}
-        onDragEnd={handleDragEnd}
-    >
-        <div className="flex gap-4 overflow-x-auto pb-4">
-            {Array.isArray(columns) && columns.length > 0 ? (
-                columns.map((column) => (
-                    <ColumnComponent
-                        key={column.id.toString()}
-                        column={column}
-                        isCreateColumn={column.id === 'create'}
-                    />
-                ))
-            ) : (
-                <p className="text-gray-500">No applications available.</p>
-            )}
-        </div>
+            sensors={sensors}
+            collisionDetection={closestCorners}
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDragEnd={handleDragEnd}
+        >
+            <div className="flex gap-4 overflow-x-auto pb-4">
+                {Array.isArray(columns) && columns.length > 0 ? (
+                    columns.map((column) => (
+                        <ColumnComponent
+                            key={column.id.toString()}
+                            column={column}
+                            isCreateColumn={column.id === 'create'}
+                        />
+                    ))
+                ) : (
+                    <p className="text-gray-500">No applications available.</p>
+                )}
+            </div>
 
-        <DragOverlay dropAnimation={dropAnimation}>
-            {activeId && activeApplicant ? <ApplicationCard applicant={activeApplicant} /> : null}
-        </DragOverlay>
-    </DndContext>
+            <DragOverlay dropAnimation={dropAnimation}>
+                {activeId && activeApplicant ? <ApplicationCard applicant={activeApplicant} /> : null}
+            </DragOverlay>
+        </DndContext>
     );
 }
 
