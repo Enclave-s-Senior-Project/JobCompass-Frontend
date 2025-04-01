@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import RichTextEditor from './rich-text-editor';
 import { Button } from '../ui/button';
 import { EnterpriseContext } from '@/contexts';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { settingEmployerFounding } from '@/lib/action';
 import { CompanyProfileFoundingType, FormErrors } from '@/types';
 

@@ -7,7 +7,7 @@ import { ButtonOptionsSignIn } from '@/components/custom-ui/button-options-sign-
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import clsx from 'clsx';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { useRouter } from 'next/navigation';
 import { successKeyMessage } from '@/lib/message-keys';
 

@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { ImageInput } from './image-input';
 import { settingEmployerProfile } from '@/lib/action';
 import { EnterpriseContext } from '@/contexts';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 
 type CompanyProfileType = {
     logoFile: File | null;

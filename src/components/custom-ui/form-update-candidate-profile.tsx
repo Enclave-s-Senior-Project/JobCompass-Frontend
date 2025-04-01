@@ -8,7 +8,7 @@ import RichTextEditor from './rich-text-editor';
 import { Button } from '../ui/button';
 import { languagesData } from '@/lib/data/languages.data';
 import { UserContext } from '@/contexts/user-context';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { InputSelectSingle, InputSelectSingleItem } from './input-select-single';
 import { queryKey } from '@/lib/react-query/keys';

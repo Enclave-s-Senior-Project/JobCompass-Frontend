@@ -27,10 +27,10 @@ import moment from 'moment';
 import DOMPurify from 'dompurify';
 import { Suspense, useContext, useEffect, useRef } from 'react';
 import { handleErrorToast } from '@/lib/utils';
-import { toast } from 'sonner';
 import { NotFound } from '@/components/custom-ui/not-found';
 import { UserContext } from '@/contexts';
 import { ListTag } from '@/components/custom-ui/list-tags';
+import { toast } from '@/lib/toast';
 
 export default function SingleJob() {
     return (

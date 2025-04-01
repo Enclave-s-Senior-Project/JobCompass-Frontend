@@ -24,7 +24,7 @@ export const privatePages = ['/candidate-dashboard/*', '/employer-dashboard/*', 
 
 export function middleware(req: NextRequest) {
     const pathname = req.nextUrl.pathname;
-    const isLoggedIn = checkAuthStatus(req);
+    const isLoggedIn = !!checkAuthStatus(req);
 
     // Check if the requested path matches any known route pattern
     const isValidRoute = isKnownRoute(pathname);
@@ -46,12 +46,12 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
 }
 
-function checkAuthStatus(req: NextRequest): boolean {
+function checkAuthStatus(req: NextRequest): string | null {
     try {
-        const cookie = req.cookies.get('login')?.value;
-        return cookie ? JSON.parse(cookie) : false;
+        const cookie = req.cookies.get('refresh-token')?.value;
+        return cookie ? JSON.parse(cookie) : null;
     } catch {
-        return false;
+        return null;
     }
 }
 

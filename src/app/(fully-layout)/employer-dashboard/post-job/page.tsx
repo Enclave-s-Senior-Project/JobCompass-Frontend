@@ -10,7 +10,6 @@ import { postJob } from '@/lib/action';
 import { Category, Tag } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { toast } from 'sonner';
 import { successKeyMessage } from '@/lib/message-keys';
 import { useRouter } from 'next/navigation';
 import MultiSelectSearchInput from '@/components/custom-ui/selected-tags';
@@ -20,6 +19,7 @@ import { AddressService } from '@/services/address.service';
 import MultiSelectCategoriesChildSearchInput from '@/components/custom-ui/select-categories-child';
 import { handleErrorToast } from '@/lib/utils';
 import { queryKey } from '@/lib/react-query/keys';
+import { toast } from '@/lib/toast';
 
 export default function PostJobForm() {
     const router = useRouter();

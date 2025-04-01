@@ -9,7 +9,7 @@ import { LuArrowRight } from 'react-icons/lu';
 import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
 import { JobTypeEnum } from '@/lib/common-enum';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { toFormattedDate } from '@/lib/utils';
 import { BadgeJobType } from './global/badge-job-type';
 

@@ -12,11 +12,24 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { PiUserCircle, PiTimer, PiUsers, PiSignOutFill, PiBuilding } from 'react-icons/pi';
 import { routes } from '@/configs/routes';
 import { useContext } from 'react';
 import { UserContext } from '@/contexts/user-context';
 import { hasPermission } from '@/lib/auth';
+import { Bookmark, BriefcaseBusiness, CircleUserRound, Clock4, LayoutDashboard, LogOut, Settings } from 'lucide-react';
+
+const commonNavigatePages = [
+    { href: '/candidate-dashboard/overview', icon: <LayoutDashboard />, label: 'Candidate Dashboard' },
+    { href: '/candidate-dashboard/settings/personal-profile', icon: <CircleUserRound />, label: 'Profile Settings' },
+    { href: '/candidate-dashboard/favorite-jobs', icon: <Bookmark />, label: 'Favorite Jobs' },
+    { href: '/candidate-dashboard/applied-jobs', icon: <Clock4 />, label: 'Applied Jobs' },
+];
+
+const enterpriseNavigatePages = [
+    { href: '/employer-dashboard/settings/overview', icon: <LayoutDashboard />, label: 'Enterprise Dashboard' },
+    { href: '/employer-dashboard/my-jobs', icon: <BriefcaseBusiness />, label: 'My Jobs' },
+    { href: '/employer-dashboard/settings/company-info', icon: <Settings />, label: 'Settings' },
+];
 
 export function SwitchSignIn() {
     const { userInfo, logoutHandle } = useContext(UserContext);
@@ -47,30 +60,31 @@ export function SwitchSignIn() {
                 <DropdownMenuContent className="rounded-sm" side="bottom" align="end">
                     <DropdownMenuLabel>Your Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className="pr-3 py-2 [&_svg]:size-5" asChild>
-                        <Link href="/candidate-dashboard/settings/personal-profile">
-                            <PiUserCircle /> Profile
-                        </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="pr-3 py-2 [&_svg]:size-5">
-                        <PiTimer />
-                        Requesting Jobs
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="pr-3 py-2 [&_svg]:size-5">
-                        <PiUsers />
-                        Candidates
-                    </DropdownMenuItem>
-                    {hasPermission(userInfo, 'enterpriseDashboard', 'access') && (
-                        <DropdownMenuItem className="pr-3 py-2 [&_svg]:size-5" asChild>
-                            <Link href="/employer-dashboard/settings/company-info">
-                                <PiBuilding />
-                                Enterprise
+                    {commonNavigatePages.map((link) => (
+                        <DropdownMenuItem key={link.href} className="pr-3 py-2 [&_svg]:size-5" asChild>
+                            <Link href={link.href}>
+                                {link.icon}&nbsp;{link.label}
                             </Link>
                         </DropdownMenuItem>
+                    ))}
+
+                    {hasPermission(userInfo, 'enterpriseDashboard', 'access') && (
+                        <>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuLabel>Enterprise</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            {enterpriseNavigatePages.map((link) => (
+                                <DropdownMenuItem key={link.href} className="pr-3 py-2 [&_svg]:size-5" asChild>
+                                    <Link href={link.href}>
+                                        {link.icon}&nbsp;{link.label}
+                                    </Link>
+                                </DropdownMenuItem>
+                            ))}
+                        </>
                     )}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem className="pr-3 py-2 [&_svg]:size-5" onClick={logoutHandle}>
-                        <PiSignOutFill />
+                        <LogOut />
                         Sign Out
                     </DropdownMenuItem>
                 </DropdownMenuContent>

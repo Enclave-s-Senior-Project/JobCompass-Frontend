@@ -10,7 +10,7 @@ import { settingPersonalProfile } from '@/lib/action';
 import { UserContext } from '@/contexts/user-context';
 import { PersonalProfileType } from '@/types';
 import { useMutation } from '@tanstack/react-query';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 type FormErrors = {

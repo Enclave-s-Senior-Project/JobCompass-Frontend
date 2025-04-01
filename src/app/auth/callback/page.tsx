@@ -3,9 +3,9 @@
 import { useContext, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { setLoginCookie, storeTokenInfo } from '@/lib/auth';
-import { toast } from 'sonner';
 import { UserContext } from '@/contexts';
 import { CompassLoadingQuick } from '@/components/custom-ui/loading';
+import { toast } from '@/lib/toast';
 
 const CallbackPage = () => {
     const router = useRouter();

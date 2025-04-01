@@ -2,9 +2,9 @@ import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import crypto from 'crypto';
 import { errorKeyMessage } from './message-keys';
-import { toast } from 'sonner';
 import { Address, AppliedJob } from '@/types';
 import { ApplyJobStatus } from './common-enum';
+import { toast } from '@/lib/toast';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));

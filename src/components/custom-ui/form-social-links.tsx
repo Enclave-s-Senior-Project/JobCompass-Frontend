@@ -13,7 +13,7 @@ import { queryKey } from '@/lib/react-query/keys';
 import { UserContext } from '@/contexts/user-context';
 import { WebsiteService } from '@/services/website.service';
 import { handleErrorToast } from '@/lib/utils';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { EnterpriseContext } from '@/contexts';
 import { Skeleton } from '../ui/skeleton';
 
@@ -29,6 +29,7 @@ export function FormSocialLinks({ useType }: { useType: 'candidate' | 'employer'
         data: candidateData,
         refetch: candidateRefetch,
         isPending: isPendingQuerySLCandidate,
+        isFetching: isLoadingQuerySLCandidate,
     } = useQuery({
         queryKey: [queryKey.candidateSocialLinks, userInfo?.profileId],
         queryFn: async ({ queryKey }) => {
@@ -59,6 +60,7 @@ export function FormSocialLinks({ useType }: { useType: 'candidate' | 'employer'
         data: employerData,
         refetch: employerRefetch,
         isPending: isPendingQuerySLEnterprise,
+        isFetching: isLoadingQuerySLEnterprise,
     } = useQuery({
         queryKey: [queryKey.enterpriseSocialLinks, enterpriseInfo?.enterpriseId],
         queryFn: async ({ queryKey }) => {
@@ -163,8 +165,8 @@ export function FormSocialLinks({ useType }: { useType: 'candidate' | 'employer'
     return (
         <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-4">
-                {(useType === 'candidate' && isPendingQuerySLCandidate) ||
-                (useType === 'employer' && isPendingQuerySLEnterprise)
+                {(useType === 'candidate' && (isPendingQuerySLCandidate || isLoadingQuerySLCandidate)) ||
+                (useType === 'employer' && (isPendingQuerySLEnterprise || isLoadingQuerySLEnterprise))
                     ? Array.from({ length: 3 }).map((_, index) => (
                           <div key={index} className="grid grid-cols-12 gap-2">
                               <Skeleton className="rounded-sm col-span-3 h-12" />

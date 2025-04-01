@@ -1,55 +1,85 @@
 'use client';
 
+import { UserContext } from '@/contexts';
+import { hasPermission } from '@/lib/auth';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useContext } from 'react';
 
-const navigatePages = [
+type NavigatePageType = {
+    href: string;
+    label: string;
+    role: 'enterprise' | 'admin' | 'all';
+};
+
+const commonNavigatePages: NavigatePageType[] = [
     {
         href: '/',
         label: 'Home',
+        role: 'all',
     },
     {
         href: '/find-jobs',
         label: 'Find Job',
-    },
-    {
-        href: '/enterprises',
-        label: 'Employers',
+        role: 'all',
     },
     {
         href: '/find-candidates',
         label: 'Candidates',
+        role: 'enterprise',
+    },
+    {
+        href: '/enterprises',
+        label: 'Employers',
+        role: 'all',
     },
     {
         href: '/pricing-plans',
         label: 'Pricing Plans',
+        role: 'all',
     },
     {
         href: '/customer-supports',
         label: 'Customer Supports',
+        role: 'all',
+    },
+    {
+        href: '/admin-dashboard',
+        label: 'Admin Dashboard',
+        role: 'admin',
     },
 ];
 
+function NavLink({ href, label, isActive }: { href: string; label: string; isActive: boolean }) {
+    return (
+        <Link
+            href={href}
+            className={clsx(
+                isActive ? 'text-primary font-medium lg:border-b-primary' : 'text-gray-600 font-normal',
+                'transition-all duration-200 py-2 lg:py-3 border-b-2 border-b-transparent text-base lg:text-sm hover:text-primary'
+            )}
+        >
+            {label}
+        </Link>
+    );
+}
+
 export function Nav() {
     const pathname = usePathname();
+    const { userInfo } = useContext(UserContext);
 
     return (
         <nav className="nav-section flex flex-col lg:flex-row items-center gap-x-6">
-            {navigatePages.map((page, index) => (
-                <Link
-                    key={index}
-                    href={page.href}
-                    className={clsx(
-                        pathname === page.href
-                            ? 'text-primary font-medium lg:border-b-primary'
-                            : 'text-gray-600 font-normal',
-                        'transition-all duration-200 py-2 lg:py-3 border-b-2 border-b-transparent text-base lg:text-sm hover:text-primary'
-                    )}
-                >
-                    {page.label}
-                </Link>
-            ))}
+            {commonNavigatePages.map((page, index) => {
+                const hasAccess = page.role === 'all' || hasPermission(userInfo, 'navigationBar', page.role);
+
+                return (
+                    hasAccess && (
+                        <NavLink key={index} href={page.href} label={page.label} isActive={pathname === page.href} />
+                    )
+                );
+            })}
         </nav>
     );
 }
