@@ -227,7 +227,10 @@ export namespace DetailedRequest {
         order?: 'ASC' | 'DESC';
         page?: number;
         take?: number;
-        status?: boolean;
+        query?: {
+            status?: boolean;
+            deadline?: boolean;
+        };
     }
 
     export interface GetEnterpriseJobs extends Pagination {
@@ -268,6 +271,9 @@ export namespace DetailedRequest {
     export interface GetResumeByProfileId extends GetUserProfileByProfileId {}
     export interface GetSocialLinksByProfileId extends GetUserProfileByProfileId {}
     export interface GetAppliedJob extends Pagination {
+        jobId: string;
+    }
+    export interface BoostJob {
         jobId: string;
     }
 }

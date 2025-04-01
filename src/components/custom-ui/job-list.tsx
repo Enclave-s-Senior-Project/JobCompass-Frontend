@@ -26,17 +26,25 @@ export default function JobsList({ jobStatus = 'All Jobs' }: JobsListProps) {
     const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
     const search = useSearchParams();
     const page = Number(search.get('page') || 1);
-    const order = (search.get('order')?.toUpperCase() as 'ASC' | 'DESC') || 'ASC';
-
-    // Map jobStatus to a backend-compatible filter
-    const statusFilter = jobStatus === 'Active Jobs' ? true : jobStatus === 'Expired Jobs' ? false : undefined;
-
-    // Fetch jobs with useQuery, optimized with backend filtering
+    let query: any = {};
+    switch (jobStatus) {
+        case 'All Jobs':
+            break;
+        case '1':
+            query.status = true;
+            break;
+        case '2':
+            query.status = false;
+            break;
+        case '3':
+            query.deadline = false;
+            break;
+        default:
+            query = {};
+    }
+    console.log('query', query);
     const { data: resultQuery } = useQuery({
-        queryKey: [
-            queryKey.jobsOfEnterprise,
-            { order, page, take: 5, enterpriseId: enterpriseInfo?.enterpriseId, status: statusFilter },
-        ],
+        queryKey: [queryKey.jobsOfEnterprise, { page, take: 5, enterpriseId: enterpriseInfo?.enterpriseId, query }],
         queryFn: async ({ queryKey }) => {
             try {
                 const params = queryKey[1];
@@ -47,7 +55,7 @@ export default function JobsList({ jobStatus = 'All Jobs' }: JobsListProps) {
 
                 const payload = await services.EnterpriseService.getAllJobsByEnterpriseId({
                     ...(params as DetailedRequest.ParamListJobsOfEnterprise),
-                    status: statusFilter,
+                    query,
                 });
 
                 setTotalPages((prev) => {
@@ -117,7 +125,6 @@ export default function JobsList({ jobStatus = 'All Jobs' }: JobsListProps) {
                         meta={resultQuery?.meta as Meta}
                         pagination={{
                             page,
-                            order,
                             take: 5,
                         }}
                         totalPages={totalPages}

@@ -127,12 +127,13 @@ export class EnterpriseService {
     }
     public static async getAllJobsByEnterpriseId(data: DetailedRequest.ParamListJobsOfEnterprise) {
         try {
+            const params = {
+                page: data.page,
+                take: data.take,
+                ...(typeof data.query === 'object' && data.query ? data.query : {}),
+            };
             const temp = await axios.get<ApiResponse<DetailedResponse.GetAllJobs>>(`/${data.enterpriseId}/jobs`, {
-                params: {
-                    order: data.order,
-                    page: data.page,
-                    take: data.take,
-                },
+                params,
             });
             return temp.payload.value;
         } catch (err) {
