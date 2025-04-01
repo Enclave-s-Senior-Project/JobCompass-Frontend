@@ -16,6 +16,7 @@ import { toast } from '@/lib/toast';
 import { ButtonMark } from './button-mark';
 import { EnterpriseService } from '@/services/enterprises.service';
 import { useRouter } from 'next/navigation';
+import defaultAvatar from '@/assets/images/avatar/default-avatar.jpg';
 
 export default function CardCandidateHorizontal(props: {
     perPage: number;
@@ -74,25 +75,21 @@ export default function CardCandidateHorizontal(props: {
         onSuccess: () => {
             toast.success('Candidate added to favorite list');
         },
-        onError: () => {
-            toast.error('Failed to add Candidate to favorite list');
+        onError: (error) => {
+            handleErrorToast(error);
         },
     });
 
     const removeFavoriteEnterpriseMutation = useMutation({
         mutationFn: async (candidate: string) => {
-            try {
-                await EnterpriseService.removeWishlistCandidates(candidate);
-                await refetch();
-            } catch (error: any) {
-                handleErrorToast(error);
-            }
+            await EnterpriseService.removeWishlistCandidates(candidate);
+            await refetch();
         },
         onSuccess: () => {
             toast.success('Candidate added to favorite list');
         },
-        onError: () => {
-            toast.error('Failed to add Candidate to favorite list');
+        onError: (error) => {
+            handleErrorToast(error);
         },
     });
 
@@ -121,7 +118,7 @@ export default function CardCandidateHorizontal(props: {
                 resultQuery.data.map((candidates) => (
                     <motion.div
                         key={candidates.profileId}
-                        className="w-full md:gap-24 flex gap-8 flex-wrap items-center justify-between p-5 border-2 rounded-xl border-gray-100 hover:border-primary hover:shadow-lg transition-colors"
+                        className="w-full md:gap-24 flex gap-8 flex-wrap items-center justify-between p-5 border-2 rounded-md border-gray-100 hover:border-primary hover:shadow-lg transition-colors"
                         variants={motionVariant.itemVariants}
                         initial="hidden"
                         whileInView="visible"
@@ -129,12 +126,12 @@ export default function CardCandidateHorizontal(props: {
                         whileHover={{ y: -2 }}
                     >
                         <div className="flex items-center gap-5">
-                            <div className="w-16 h-16 bg-slate-100 rounded-lg flex items-center justify-center">
+                            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center">
                                 <img
                                     loading="lazy"
-                                    src={candidates?.profileUrl || ''}
+                                    src={candidates?.profileUrl || defaultAvatar.src}
                                     alt={candidates?.fullName || 'Company Logo'}
-                                    className="w-[68px] h-[68px] object-cover rounded-md"
+                                    className="w-[68px] h-[68px] object-cover rounded-full"
                                 />
                             </div>
                             <div className="space-y-3">

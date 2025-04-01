@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { BadgeJobType } from '@/components/custom-ui/global/badge-job-type';
 import { JobTypeEnum } from '@/lib/common-enum';
 import { getAppliedJobStatus, getJobAddress, toDollarK, toFormattedDate } from '@/lib/utils';
+import Link from 'next/link';
 
 type Props = {
     items: AppliedJob[];
@@ -44,25 +45,29 @@ export const AppliedJobList = memo(({ items = [], isPending = false }: Props) =>
                               <TableRow key={appliedJob.appliedJobId}>
                                   <TableCell className="py-5">
                                       <div className="flex items-center gap-4">
-                                          <Image
-                                              loading="lazy"
-                                              priority={false} // Preload the first image
-                                              className="flex size-14 rounded-sm"
-                                              width={56}
-                                              height={56}
-                                              src={
-                                                  appliedJob?.job?.introImg ||
-                                                  appliedJob?.job?.enterprise?.logoUrl ||
-                                                  jobPlaceholder
-                                              }
-                                              alt={appliedJob?.job?.name}
-                                          />
+                                          <Link href={`/single-job/${appliedJob?.job.jobId}`}>
+                                              <Image
+                                                  loading="lazy"
+                                                  priority={false} // Preload the first image
+                                                  className="flex size-14 rounded-sm"
+                                                  width={56}
+                                                  height={56}
+                                                  src={
+                                                      appliedJob?.job?.introImg ||
+                                                      appliedJob?.job?.enterprise?.logoUrl ||
+                                                      jobPlaceholder
+                                                  }
+                                                  alt={appliedJob?.job?.name}
+                                              />
+                                          </Link>
                                           <div className="space-y-2">
-                                              <div className="text-gray-900 font-medium text-base">
-                                                  {appliedJob?.job?.name}&nbsp;
-                                                  {appliedJob?.job?.type && (
-                                                      <BadgeJobType type={appliedJob?.job?.type as JobTypeEnum} />
-                                                  )}
+                                              <div className="text-gray-900 font-medium text-base hover:underline">
+                                                  <Link href={`/single-job/${appliedJob?.job.jobId}`}>
+                                                      {appliedJob?.job?.name}&nbsp;
+                                                      {appliedJob?.job?.type && (
+                                                          <BadgeJobType type={appliedJob?.job?.type as JobTypeEnum} />
+                                                      )}
+                                                  </Link>
                                               </div>
                                               <div className="flex items-center text-sm text-gray-600 gap-4">
                                                   <span className="flex items-center gap-1 text-sm">

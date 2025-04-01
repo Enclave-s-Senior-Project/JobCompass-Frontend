@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { MouseEventHandler, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Bookmark } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -14,15 +14,17 @@ export const ButtonMark = ({
     disabled = false,
 }: {
     className?: string;
-    handleUnMark?: () => void;
-    handleMark?: () => void;
+    handleUnMark?: (e?: Event) => void;
+    handleMark?: (e?: Event) => void;
     size?: 'icon-xl' | 'icon-lg' | 'icon-md';
     mark?: boolean;
     onClick?: () => void;
     disabled?: boolean;
 }) => {
     const [marked, setMarked] = useState(!!mark);
-    const handleClick = () => {
+    const handleClick = (e: any) => {
+        e.stopPropagation();
+        e.preventDefault();
         if (marked && typeof handleUnMark === 'function') {
             setMarked(false);
             handleUnMark();
