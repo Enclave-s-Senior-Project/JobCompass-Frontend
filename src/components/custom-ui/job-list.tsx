@@ -42,7 +42,6 @@ export default function JobsList({ jobStatus = 'All Jobs' }: JobsListProps) {
         default:
             query = {};
     }
-    console.log('query', query);
     const { data: resultQuery } = useQuery({
         queryKey: [queryKey.jobsOfEnterprise, { page, take: 5, enterpriseId: enterpriseInfo?.enterpriseId, query }],
         queryFn: async ({ queryKey }) => {
