@@ -10,6 +10,7 @@ import {
 import { motion } from 'framer-motion';
 import { motionVariant } from '@/lib/motion-variants';
 import { useRouter } from 'next/navigation';
+import * as services from '@/services/boost-job.service';
 
 interface JobItemProps {
     job: {
@@ -26,6 +27,15 @@ interface JobItemProps {
 
 export default function JobItem({ job }: JobItemProps) {
     const router = useRouter();
+    async function handleButtonBoostJob() {
+        try {
+            await services.BoostJobService.bootJob({
+                jobId: job.jobId,
+            });
+        } catch (error) {
+            console.error('Error boosting job:', error);
+        }
+    }
     return (
         <motion.div
             className="py-4 px-8 md:px-0 bg-white cursor-pointer border-none"
@@ -90,13 +100,16 @@ export default function JobItem({ job }: JobItemProps) {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-56">
-                                <DropdownMenuItem className="p-0">
+                                <DropdownMenuItem className="p-0" onClick={handleButtonBoostJob}>
                                     <div className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary-50 w-full text-left transition-all">
                                         <Award className="size-5 mr-2" />
                                         Promote Job
                                     </div>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className="p-0">
+                                <DropdownMenuItem
+                                    className="p-0"
+                                    onClick={() => router.push(`/single-job/${job.jobId}`)}
+                                >
                                     <div className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary-50 w-full text-left transition-all">
                                         <Info className="size-5 mr-2" />
                                         View Detail
