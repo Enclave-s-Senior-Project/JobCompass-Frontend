@@ -7,7 +7,6 @@ import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import { JobService } from '@/services/job.service';
 import { DetailedRequest, Meta } from '@/types';
-import { Separator } from '@/components/ui/separator';
 import { handleErrorToast } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import CardJobHorizontal from '@/components/custom-ui/card-job-horizontal';
@@ -54,8 +53,6 @@ function PageContent() {
 
     const removeFavoriteJobMutation = useMutation({
         mutationFn: async ({ jobId }: { jobId: string }) => {
-            await JobService.removeFavoriteJob({ jobId });
-            await refetch();
             await JobService.removeFavoriteJob({ jobId });
             await refetch();
         },

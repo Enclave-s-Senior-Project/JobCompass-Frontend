@@ -12,6 +12,7 @@ import { toast } from '@/lib/toast';
 import { useRouter } from 'next/navigation';
 import { successKeyMessage } from '@/lib/message-keys';
 import clsx from 'clsx';
+import { handleErrorToast } from '@/lib/utils';
 
 export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void; jobId: string }) {
     const router = useRouter();
@@ -31,9 +32,9 @@ export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void; j
         queryFn: async () => {
             try {
                 const payload = await CVService.getOwnCV();
-                return payload;
+                return payload || null;
             } catch (error: any) {
-                console.log(error);
+                handleErrorToast(error);
             }
         },
         staleTime: 1000 * 60,
@@ -50,7 +51,7 @@ export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void; j
         }
         if (state.success) {
             toast.success(successKeyMessage.APPLY_JOB_SUCCESSFULL);
-            router.push('/single-job');
+            router.push('/single-job/' + jobId);
         }
     }, [state.success, state.errors, router, state.email]);
 
