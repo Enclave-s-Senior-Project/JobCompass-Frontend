@@ -40,7 +40,7 @@ export function FormAddEnterprises({ setOpen, refetch }: { setOpen: (value: bool
             setCheckLogo(false);
         }
         if (state.success) {
-            toast.success(successKeyMessage.REGISTER_ENTERPRISE_SUCCESSFULL);
+            toast.success(successKeyMessage.REGISTER_ENTERPRISE_SUCCESSFUL);
             setOpen(false);
             refetch();
         }

@@ -29,15 +29,16 @@ const errorKeyMessage = {
     TOKEN_EXPIRED: 'Token expired.',
     NOT_ALLOW_RESET_PW: 'Password reset not allowed.',
     CV_IN_USE: 'CV in use.',
+    JOB_ADDED_WISHLIST: 'This job was added.',
 };
 
 const successKeyMessage = {
     FORGET_PASSWORD: 'Check email to reset password.',
     RESET_PASSWORD: 'Password reset successful.',
-    APPLY_JOB_SUCCESSFULL: 'Job application successful.',
-    POST_JOB_SUCCESSFULL: 'Job submission successful.',
-    REGISTER_ENTERPRISE_SUCCESSFULL: 'Enterprise registration successful.',
-    UPDATE_REGISTER_ENTERPRISE_SUCCESSFULL: 'Enterprise update successful.',
+    APPLY_JOB_SUCCESSFUL: 'Job application successful.',
+    POST_JOB_SUCCESSFUL: 'Job submission successful.',
+    REGISTER_ENTERPRISE_SUCCESSFUL: 'Enterprise registration successful.',
+    UPDATE_REGISTER_ENTERPRISE_SUCCESSFUL: 'Enterprise update successful.',
 };
 
 export { errorKeyMessage, successKeyMessage };

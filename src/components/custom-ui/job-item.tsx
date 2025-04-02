@@ -51,7 +51,7 @@ export default function JobItem({ job }: JobItemProps) {
                     <h3 className="font-medium text-lg">{job.name}</h3>
                     <div className="flex items-center text-sm text-gray-500 mt-1">
                         <span>{job.type}</span>
-                        <span className="mx-2 hidden md:inline-block">•</span>
+                        <span className="mx-2 hidden md:inline-block"> | </span>
                         <div className="flex items-center">
                             {job.status === 'Expire' ? <Clock className="h-3 w-3 mr-1" /> : null}
                             <span>{job.timeRemaining}</span>

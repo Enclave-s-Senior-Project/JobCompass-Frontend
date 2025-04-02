@@ -41,7 +41,7 @@ export default function CardEnterprisesHorizontal() {
     });
 
     return (
-        <motion.div className="space-y-6 w-full pt-10">
+        <motion.div className="space-y-6 w-full pt-10 py-5">
             {isPending ? (
                 [...Array(ITEM_PER_PAGE)].map((_, i) => (
                     <div key={i} className="flex items-center space-x-2">

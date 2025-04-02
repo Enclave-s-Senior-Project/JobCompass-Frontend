@@ -50,7 +50,7 @@ export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void; j
             toast.error(state.errors.code[0]);
         }
         if (state.success) {
-            toast.success(successKeyMessage.APPLY_JOB_SUCCESSFULL);
+            toast.success(successKeyMessage.APPLY_JOB_SUCCESSFUL);
             router.push('/single-job/' + jobId);
         }
     }, [state.success, state.errors, router, state.email]);

@@ -18,35 +18,27 @@ export function JobCardTwoType(props: {
     const { job, viewType, refetch } = props;
     const removeFavoriteJobMutation = useMutation({
         mutationFn: async ({ jobId }: { jobId: string }) => {
-            try {
-                await JobService.removeFavoriteJob({ jobId });
-                await refetch();
-            } catch (error: any) {
-                handleErrorToast(error);
-            }
+            await JobService.removeFavoriteJob({ jobId });
+            await refetch();
         },
         onSuccess: () => {
             toast.success('Job added to favorite list');
         },
-        onError: () => {
-            toast.error('Failed to add job to favorite list');
+        onError: (error) => {
+            handleErrorToast(error);
         },
     });
 
     const addFavoriteJobMutation = useMutation({
         mutationFn: async ({ jobId }: { jobId: string }) => {
-            try {
-                await JobService.addFavoriteJob({ jobId });
-                await refetch();
-            } catch (error: any) {
-                handleErrorToast(error);
-            }
+            await JobService.addFavoriteJob({ jobId });
+            await refetch();
         },
         onSuccess: () => {
             toast.success('Job added to favorite list');
         },
-        onError: () => {
-            toast.error('Failed to add job to favorite list');
+        onError: (error) => {
+            handleErrorToast(error);
         },
     });
     return viewType === 'list' ? (
@@ -56,7 +48,7 @@ export function JobCardTwoType(props: {
                 handleUnMark={() => removeFavoriteJobMutation.mutate({ jobId: job.jobId })}
                 handleMark={() => addFavoriteJobMutation.mutate({ jobId: job.jobId })}
                 mark={job.isFavorite || false}
-                showMarkButton={false}
+                showMarkButton={true}
             />
             <Separator className="my-4" />
         </>

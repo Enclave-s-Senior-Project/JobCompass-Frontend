@@ -1,6 +1,6 @@
 'use client';
 
-import React, { MouseEventHandler, useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Bookmark } from 'lucide-react';
 import { cn } from '@/lib/utils';

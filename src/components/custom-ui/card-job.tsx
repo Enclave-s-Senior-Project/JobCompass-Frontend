@@ -1,7 +1,7 @@
 'use client';
 import { Job } from '@/types';
 import { motion } from 'framer-motion';
-import { Building2, Calendar, DollarSign, MapPin } from 'lucide-react';
+import { Building2, Calendar, HandCoins, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { motionVariant } from '@/lib/motion-variants';
 import { ListTag } from './list-tags';
@@ -25,7 +25,7 @@ export default function CardJob(props: { job: Job }) {
     if (job.lowestWage && job.highestWage) {
         infoItems.push(
             <div key="wage" className="flex flex-row items-center gap-1">
-                <DollarSign className="h-4 w-4" />
+                <HandCoins className="h-4 w-4" />
                 <span>
                     ${job.lowestWage}-${job.highestWage}
                 </span>
@@ -84,7 +84,7 @@ export default function CardJob(props: { job: Job }) {
                         <div className="flex items-center gap-2 text-sm text-[#636A80]">
                             {infoItems.map((item, index) => (
                                 <span key={index} className="flex items-center gap-2">
-                                    {index > 0 && <span>•</span>}
+                                    {index > 0 && <span> | </span>}
                                     {item}
                                 </span>
                             ))}

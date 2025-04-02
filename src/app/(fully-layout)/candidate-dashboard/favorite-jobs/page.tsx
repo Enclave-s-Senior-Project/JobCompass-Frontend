@@ -44,8 +44,6 @@ function PageContent() {
                 handleErrorToast(error);
             }
         },
-        staleTime: 1000 * 60, // 1 minute
-        refetchInterval: 1000 * 60, // 1 minute
         retry: 2,
         enabled: true,
         placeholderData: keepPreviousData,

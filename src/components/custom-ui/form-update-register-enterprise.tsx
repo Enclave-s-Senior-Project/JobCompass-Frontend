@@ -55,7 +55,7 @@ export function FormUpdateRegisterEnterprises(props: {
         }
         if (state.success) {
             fetchEnterpriseData();
-            toast.success(successKeyMessage.UPDATE_REGISTER_ENTERPRISE_SUCCESSFULL);
+            toast.success(successKeyMessage.UPDATE_REGISTER_ENTERPRISE_SUCCESSFUL);
             setOpen(false);
         }
     }, [state.success, state.errors]);

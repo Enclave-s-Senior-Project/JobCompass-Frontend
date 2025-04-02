@@ -26,7 +26,7 @@ const commonNavigatePages = [
 ];
 
 const enterpriseNavigatePages = [
-    { href: '/employer-dashboard/settings/overview', icon: <LayoutDashboard />, label: 'Enterprise Dashboard' },
+    { href: '/employer-dashboard/overview', icon: <LayoutDashboard />, label: 'Enterprise Dashboard' },
     { href: '/employer-dashboard/my-jobs', icon: <BriefcaseBusiness />, label: 'My Jobs' },
     { href: '/employer-dashboard/settings/company-info', icon: <Settings />, label: 'Settings' },
 ];

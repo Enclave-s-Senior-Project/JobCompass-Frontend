@@ -62,7 +62,7 @@ export default function PostJobForm() {
 
     useEffect(() => {
         if (state.success) {
-            toast.success(successKeyMessage.POST_JOB_SUCCESSFULL);
+            toast.success(successKeyMessage.POST_JOB_SUCCESSFUL);
             router.push('/');
         }
     }, [state.success, state.errors]);
