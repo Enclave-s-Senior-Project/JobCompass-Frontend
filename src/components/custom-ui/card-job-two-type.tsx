@@ -42,16 +42,13 @@ export function JobCardTwoType(props: {
         },
     });
     return viewType === 'list' ? (
-        <>
-            <CardJobHorizontal
-                job={job}
-                handleUnMark={() => removeFavoriteJobMutation.mutate({ jobId: job.jobId })}
-                handleMark={() => addFavoriteJobMutation.mutate({ jobId: job.jobId })}
-                mark={job.isFavorite || false}
-                showMarkButton={true}
-            />
-            <Separator className="my-4" />
-        </>
+        <CardJobHorizontal
+            job={job}
+            handleUnMark={() => removeFavoriteJobMutation.mutate({ jobId: job.jobId })}
+            handleMark={() => addFavoriteJobMutation.mutate({ jobId: job.jobId })}
+            mark={job.isFavorite || false}
+            showMarkButton={false}
+        />
     ) : (
         <CardJob job={job} />
     );

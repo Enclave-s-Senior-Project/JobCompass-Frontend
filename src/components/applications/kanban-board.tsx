@@ -20,10 +20,10 @@ import ColumnComponent from './column';
 import ApplicationCard from './application-card';
 import { queryKey } from '@/lib/react-query/keys';
 import { useSearchParams } from 'next/navigation';
-import { ApplyJobService } from '@/services/applyJob.service';
 import { DetailedRequest } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import { handleErrorToast } from '@/lib/utils';
+import { ApplyJobService } from '@/services';
 // Types
 export type Education = 'Master Degree' | 'Bachelor Degree' | 'Intermediate Degree' | 'High School Degree';
 
