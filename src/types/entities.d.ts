@@ -1,3 +1,4 @@
+import { JobStatusEnum } from '@/lib/common-enum';
 import { Address, OrganizationType, SocialType } from './common-types';
 
 interface baseEntity {
@@ -5,6 +6,7 @@ interface baseEntity {
     updatedAt: string;
     isActive: boolean;
 }
+
 export interface Job {
     createdAt: string;
     updatedAt: string;
@@ -19,8 +21,9 @@ export interface Job {
     experience: number;
     deadline: string;
     introImg: string;
-    status: boolean;
+    status: JobStatusEnum;
     education: string;
+    categories: Categories[];
     enterprise: Enterprise;
     tags: Tag[] | null;
     addresses: Address[] | null;
@@ -29,6 +32,8 @@ export interface Job {
     profiles: User[] | null;
     isFavorite: boolean | null;
     enterpriseBenefits: string | null;
+    applicationCount: number;
+    isBoost: boolean;
 }
 
 export interface Enterprise {

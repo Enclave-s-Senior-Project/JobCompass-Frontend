@@ -3,6 +3,7 @@ import { ApiResponse, DetailedRequest, DetailedResponse } from '@/types';
 import { AxiosError } from 'axios';
 import Error from 'next/error';
 import NextError from 'next/error';
+import { handleErrorApi } from '.';
 
 const authAxios = new AuthAxios('enterprise');
 const axios = new BaseAxios('enterprise');
@@ -224,13 +225,17 @@ export class EnterpriseService {
             const temp = await authAxios.get<ApiResponse<DetailedResponse.GetCandidates>>(`/candidate?${query}`);
             return temp.payload.value;
         } catch (err) {
-            if (err instanceof AxiosError) {
-                throw new Error({
-                    statusCode: Number(err.status || err.response?.status),
-                    title: err.response?.data.message,
-                });
-            }
-            throw err;
+            handleErrorApi(err);
+        }
+    }
+    public static async getOwnJobs(queries: DetailedRequest.GetMyJobs) {
+        try {
+            const dataResponse = await authAxios.get<ApiResponse<DetailedResponse.EnterpriseJobs>>('/me/jobs', {
+                params: queries,
+            });
+            return dataResponse.payload.value;
+        } catch (error) {
+            handleErrorApi(error);
         }
     }
 }

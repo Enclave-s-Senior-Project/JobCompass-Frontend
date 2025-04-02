@@ -1,36 +1,31 @@
 'use client';
-import { CheckCircle, Clock, MoreVertical, Award, Info, XCircle, Users } from 'lucide-react';
-import { Button } from '../ui/button';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { motion } from 'framer-motion';
-import { motionVariant } from '@/lib/motion-variants';
+
+import { Job } from '@/types';
+import { Card } from '@/components/ui/card';
+import Image from 'next/image';
+import { JobStatusEnum } from '@/lib/common-enum';
+import { capitalize } from 'lodash';
+import clsx from 'clsx';
+import { Award, Calendar, Info, MapPin, MoreVerticalIcon, UsersRound, XCircle, Zap, ZapOff } from 'lucide-react';
+import { handleErrorToast, toDollarK, toFormattedDate } from '@/lib/utils';
+import { getRandomFeatureColor } from '@/lib/random-color';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@radix-ui/react-select';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
+import { memo } from 'react';
 import { useRouter } from 'next/navigation';
-import * as services from '@/services/boost-job.service';
-import { handleErrorToast } from '@/lib/utils';
+import { BoostJobService } from '@/services';
 
 interface JobItemProps {
-    job: {
-        jobId: string;
-        name: string;
-        type: string;
-        timeRemaining: string;
-        status: string;
-        applications: number;
-    };
-    isMenuOpen: boolean;
-    onToggleMenu: () => void;
+    job: Job;
 }
 
-export default function JobItem({ job }: JobItemProps) {
+const JobItem = memo(({ job }: JobItemProps) => {
     const router = useRouter();
     async function handleButtonBoostJob() {
         try {
-            await services.BoostJobService.bootJob({
+            await BoostJobService.bootJob({
                 jobId: job.jobId,
             });
         } catch (error) {
@@ -38,95 +33,141 @@ export default function JobItem({ job }: JobItemProps) {
         }
     }
     return (
-        <motion.div
-            className="py-4 px-8 md:px-0 bg-white cursor-pointer border-none"
-            variants={motionVariant.itemVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-        >
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-center p-5 border-2 rounded-xl border-gray-100 hover:border-primary hover:shadow-lg transition-colors">
-                {/* Job Title and Info */}
-                <div className="col-span-12 md:col-span-4 flex flex-col">
-                    <h3 className="font-medium text-lg">{job.name}</h3>
-                    <div className="flex items-center text-sm text-gray-500 mt-1">
-                        <span>{job.type}</span>
-                        <span className="mx-2 hidden md:inline-block"> | </span>
-                        <div className="flex items-center">
-                            {job.status === 'Expire' ? <Clock className="h-3 w-3 mr-1" /> : null}
-                            <span>{job.timeRemaining}</span>
+        <Card key={job.jobId} className="p-2 md:p-4 rounded-md shadow-sm">
+            <div className="space-y-4">
+                <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-2">
+                        <Image
+                            src={job?.enterprise?.logoUrl || job?.introImg}
+                            alt={job?.name}
+                            className="size-16 rounded-md"
+                            width={64}
+                            height={64}
+                        />
+                        <div>
+                            <h3 className="text-lg font-semibold">{job?.name}</h3>
+                            <p className="text-sm text-gray-500">
+                                <span className="text-nowrap">{job?.categories?.[0]?.categoryName}</span>&nbsp;•&nbsp;
+                                {job?.type}&nbsp;•&nbsp;
+                                <i
+                                    className={clsx(
+                                        'not-italic text-white py-0.5 px-2 rounded-lg',
+                                        job?.status === JobStatusEnum.OPEN
+                                            ? 'bg-green-400'
+                                            : job?.status === JobStatusEnum.CLOSED
+                                              ? 'bg-warning-400'
+                                              : 'bg-danger-400'
+                                    )}
+                                >
+                                    {capitalize(job.status)}
+                                </i>
+                            </p>
                         </div>
                     </div>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon-md" className="shadow-none">
+                                <MoreVerticalIcon className="h-5 w-5 text-gray-500" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56">
+                            <DropdownMenuItem className="p-0" onClick={handleButtonBoostJob}>
+                                <div className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary-50 w-full text-left transition-all">
+                                    <Award className="size-5 mr-2" />
+                                    Promote Job
+                                </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="p-0" onClick={() => router.push(`/single-job/${job.jobId}`)}>
+                                <div className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary-50 w-full text-left transition-all">
+                                    <Info className="size-5 mr-2" />
+                                    View Detail
+                                </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="p-0">
+                                <div className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary-50 w-full text-left transition-all">
+                                    <XCircle className="size-5 mr-2" />
+                                    Make it Expire
+                                </div>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
-
-                {/* Status */}
-                <div className="col-span-6 md:col-span-2 flex md:justify-center items-center text-sm">
-                    {job.status === 'Active' ? (
-                        <div className="flex items-center text-green-500">
-                            <CheckCircle className="w-5 h-5 mr-1" />
-                            <span>Active</span>
+                <div className="space-y-2">
+                    <div className="flex items-start text-gray-700">
+                        <MapPin className="size-5" />
+                        &nbsp;
+                        {job?.addresses && job?.addresses.length > 0
+                            ? job.addresses
+                                  ?.map((address) => `${address.street}, ${address.city}, ${address.country}`)
+                                  .join('\n')
+                            : 'Unknown location'}
+                    </div>
+                    <div className="flex items-start text-gray-700">
+                        <Award className="size-5" />
+                        &nbsp;
+                        {job?.experience} years of experience
+                    </div>
+                    <div className="flex items-start text-gray-700">
+                        <Calendar className="size-5" />
+                        &nbsp;
+                        {toFormattedDate(job?.deadline)} (
+                        {job?.status === JobStatusEnum.EXPIRED
+                            ? 'Expired'
+                            : `${new Date(Date.now() - new Date(job?.deadline).getTime()).getDate()} days left`}
+                        )
+                    </div>
+                    <div className="flex items-start gap-2 flex-wrap">
+                        {job.tags?.map((tag) => {
+                            const color = getRandomFeatureColor();
+                            return (
+                                <span
+                                    key={tag.tagId}
+                                    className={clsx('px-2 py-0.5 rounded-lg', `text-${color.text} ${color.bg}`)}
+                                >
+                                    {tag.name}
+                                </span>
+                            );
+                        })}
+                    </div>
+                </div>
+                <div className="flex flex-col items-end mt-4 text-end gap-4">
+                    <div>
+                        <p className="text-sm text-gray-500">Salary range</p>
+                        <p>
+                            {toDollarK(Number(job?.lowestWage) || 0)} - {toDollarK(Number(job?.highestWage) || 0)} /
+                            month
+                        </p>
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500">Applications</p>
+                        <div className="flex items-center justify-end gap-1">
+                            <UsersRound className="size-4" /> {job?.applicationCount}
+                        </div>
+                    </div>
+                    <Separator className="w-full border-b" />
+                </div>
+                <div className="flex items-center justify-between">
+                    {job?.isBoost ? (
+                        <div className="flex items-center gap-2 text-base text-warning-500 font-semibold">
+                            <Zap className="size-6" />
+                            <Zap className="size-6" /> Boosted
                         </div>
                     ) : (
-                        <div className="flex items-center text-danger-500">
-                            <XCircle className="w-5 h-5 mr-1" />
-                            <span>Expire</span>
+                        <div className="flex items-center gap-2 text-base text-gray-500">
+                            <ZapOff className="size-6" /> Not boosted
                         </div>
                     )}
-                </div>
-
-                {/* Applications */}
-                <div className="col-span-6 md:col-span-3 flex md:justify-center items-center text-sm">
-                    <Users className="w-5 h-5 mr-2 text-gray-600" />
-                    <span className="text-gray-600">{job.applications} Applications</span>
-                </div>
-
-                {/* Actions */}
-                <div className="col-span-12 md:col-span-3 flex flex-col md:flex-row md:justify-between items-start md:items-center space-y-3 md:space-y-0">
                     <Button
-                        size="md"
-                        variant="third"
-                        className="text-base font-semibold w-full md:w-auto"
                         onClick={() => {
                             router.push(`/employer-dashboard/my-jobs/${job.jobId}/applications`);
                         }}
                     >
                         View Applications
                     </Button>
-
-                    <div className="md:ml-4">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon-md" className="shadow-none">
-                                    <MoreVertical className="h-5 w-5 text-gray-500" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-56">
-                                <DropdownMenuItem className="p-0" onClick={handleButtonBoostJob}>
-                                    <div className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary-50 w-full text-left transition-all">
-                                        <Award className="size-5 mr-2" />
-                                        Promote Job
-                                    </div>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    className="p-0"
-                                    onClick={() => router.push(`/single-job/${job.jobId}`)}
-                                >
-                                    <div className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary-50 w-full text-left transition-all">
-                                        <Info className="size-5 mr-2" />
-                                        View Detail
-                                    </div>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem className="p-0">
-                                    <div className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary-50 w-full text-left transition-all">
-                                        <XCircle className="size-5 mr-2" />
-                                        Make it Expire
-                                    </div>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
                 </div>
             </div>
-        </motion.div>
+        </Card>
     );
-}
+});
+
+export { JobItem };

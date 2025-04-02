@@ -1,5 +1,6 @@
 'use client';
 
+import { NotPermission } from '@/components/custom-ui/global/not-permission';
 import { SidebarDashboardEmployer } from '@/components/custom-ui/sidebar-dashboard-employer';
 import { UserContext } from '@/contexts/user-context';
 import { hasPermission } from '@/lib/auth';
@@ -25,6 +26,6 @@ export default function EmployeeDashboardLayout({ children }: { children: React.
             </div>
         </div>
     ) : (
-        <div>Not found</div>
+        <NotPermission />
     );
 }

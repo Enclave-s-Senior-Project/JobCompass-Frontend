@@ -15,7 +15,7 @@ export const queryKey = {
     categoriesPrimary: 'categories-primary',
     tagList: 'searchTags',
     jobsOfEnterprise: 'jobs-of-enterprise',
-    countTotalJobsOfEnterpriseId: 'count-total-jobs-of-enterprise-id',
+    ownEnterpriseJobs: 'own-enterprise-jobs',
     listJobs: 'list-jobs',
     filterJob: 'filter-job',
     enterpriseJob: 'enterprise-job',
@@ -25,4 +25,5 @@ export const queryKey = {
     userResume: 'user-resume',
     appliedJob: 'applied-job',
     getApplyJobs: 'get-apply-jobs',
+    enterpriseAddresses: 'enterprise-addresses',
 };

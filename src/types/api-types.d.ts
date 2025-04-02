@@ -1,3 +1,4 @@
+import { FilterValues } from '@/components/custom-ui/local/filter-my-jobs';
 import { PersonalProfileType, UserType, Address, CandidateProfileType } from './common-types';
 import { AppliedJob, CandidatesApplied, Categories, Enterprise, Job, Resume, SocialLink, Tag, User } from './entities';
 
@@ -275,5 +276,10 @@ export namespace DetailedRequest {
     }
     export interface BoostJob {
         jobId: string;
+    }
+
+    export interface GetMyJobs extends Pagination, FilterValues {
+        search: string;
+        sort: string;
     }
 }
