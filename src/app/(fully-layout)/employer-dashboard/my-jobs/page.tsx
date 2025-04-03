@@ -2,20 +2,20 @@
 
 import { JobsList } from '@/components/custom-ui/job-list';
 import { queryKey } from '@/lib/react-query/keys';
-import { useQuery } from '@tanstack/react-query';
-import { useEffect, useId, useState } from 'react';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useId, useState } from 'react';
 import clsx from 'clsx';
-import CountUp from 'react-countup';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { handleErrorToast } from '@/lib/utils';
 import { EnterpriseService } from '@/services/enterprises.service';
-import { PrimaryPagination } from '@/components/ui/pagination';
+import { Pagination, PaginationContent, PaginationItem } from '@/components/ui/pagination';
 import { Input } from '@/components/ui/input';
 import { HiMiniMagnifyingGlass } from 'react-icons/hi2';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ListFilterPlus } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight, ListFilterPlus } from 'lucide-react';
 import { FilterMyJobs, FilterValues, defaultFilters } from '@/components/custom-ui/local/filter-my-jobs';
 import { useDebounce } from '@/hooks/useDebounce';
+import { Meta } from '@/types';
 
 type OrderByType = 'latest' | 'oldest' | 'deadline' | 'boosted';
 
@@ -26,15 +26,23 @@ const orderByOptions: Array<{ label: string; value: OrderByType }> = [
     { label: 'Boosted', value: 'boosted' },
 ];
 
+const LIMIT_ITEMS = 5;
+
+const defaultMeta: Meta = {
+    itemCount: 0,
+    page: 0,
+    take: LIMIT_ITEMS,
+    hasNextPage: false,
+    hasPreviousPage: false,
+    pageCount: 0,
+};
+
 export default function JobsPage() {
     const [showFilter, setShowFilter] = useState(false);
     const [sortBy, setSortBy] = useState<OrderByType>('latest');
     const [search, setSearch] = useState('');
     const [filters, setFilters] = useState<FilterValues>({ ...defaultFilters });
-    const [pagination, setPagination] = useState({
-        page: 1,
-        take: 5,
-    });
+    const [page, setPage] = useState(1);
 
     const searchDebounced = useDebounce(search, 700);
 
@@ -44,16 +52,16 @@ export default function JobsPage() {
     const handleApplyFilters = (newFilters: FilterValues) => {
         setFilters(newFilters);
         // Reset to first page when filters change
-        setPagination((prev) => ({ ...prev, page: 1 }));
     };
 
     // Get jobs with filters
-    const { data, isLoading } = useQuery({
-        queryKey: [queryKey.ownEnterpriseJobs, filters, sortBy, searchDebounced, pagination],
-        queryFn: () => {
+    const { data, isPending } = useQuery({
+        queryKey: [queryKey.ownEnterpriseJobs, filters, sortBy, searchDebounced, page],
+        queryFn: async () => {
             try {
-                return EnterpriseService.getOwnJobs({
-                    ...pagination,
+                return await EnterpriseService.getOwnJobs({
+                    page: page,
+                    take: LIMIT_ITEMS,
                     jobType: filters.jobType,
                     jobStatus: filters.jobStatus,
                     jobLocation: filters.jobLocation,
@@ -67,13 +75,13 @@ export default function JobsPage() {
                 handleErrorToast(error);
             }
         },
+        placeholderData: keepPreviousData,
         retry: 2,
     });
 
     // Handle search
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value);
-        setPagination((prev) => ({ ...prev, page: 1 }));
     };
 
     // Handle order change
@@ -82,19 +90,18 @@ export default function JobsPage() {
     };
 
     return (
-        <div className="container mx-auto py-8 px-4">
-            <div className="flex justify-between items-center mb-6">
+        <div className="container mx-auto space-y-4">
+            <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-semibold">
                     My Jobs&nbsp;
-                    <span className="text-gray-500 text-lg">
-                        (<CountUp start={0} end={data?.meta.itemCount || 0} duration={2.5} separator="," />)
-                    </span>
+                    <span className="text-gray-500 text-lg">({data?.meta?.itemCount || 0})</span>
                 </h1>
             </div>
+            {/* Search bar */}
             <div className="flex items-center flex-wrap gap-2">
                 <div
                     className="h-12 flex-1 flex items-center border border-primary-100 rounded-sm 
-        focus-within:border-primary focus-within:ring-1 focus-within:ring-primary"
+                            focus-within:border-primary focus-within:ring-1 focus-within:ring-primary"
                 >
                     <label htmlFor={inputId} className="p-2">
                         <HiMiniMagnifyingGlass className="size-6 text-primary" />
@@ -135,14 +142,18 @@ export default function JobsPage() {
                 </Select>
             </div>
 
-            <JobsList jobs={data?.data || []} isLoading={isLoading} />
+            <div>
+                <SimplePagination meta={data?.meta || defaultMeta} onPageChange={setPage} />
+            </div>
 
-            {/* Pagination */}
-            {data?.meta && data?.meta.pageCount > 1 && (
-                <div className="bg-white px-4 py-3 flex items-center justify-between border-gray-200 sm:px-6 mt-4">
-                    <PrimaryPagination meta={data?.meta} pagination={pagination} totalPages={data?.meta.pageCount} />
+            <div className="grid grid-cols-5 gap-2">
+                <div className="col-span-2">
+                    <JobsList jobs={data?.data || []} isLoading={isPending} />
                 </div>
-            )}
+                <div className="quick-show-single-job-details sticky col-span-3 bg-warning-50 h-full rounded-md">
+                    
+                </div>
+            </div>
 
             <FilterMyJobs
                 open={showFilter}
@@ -150,6 +161,62 @@ export default function JobsPage() {
                 filters={filters}
                 onApplyFilters={handleApplyFilters}
             />
+
+            <div>
+                <SimplePagination meta={data?.meta || defaultMeta} onPageChange={setPage} />
+            </div>
         </div>
     );
 }
+
+const SimplePagination = ({
+    meta,
+    onPageChange,
+}: {
+    meta: Meta;
+    onPageChange: React.Dispatch<React.SetStateAction<number>>;
+}) => {
+    const handleNextPage = () => {
+        if (meta.hasNextPage) {
+            onPageChange((page) => page + 1);
+        }
+    };
+
+    const handleBackPage = () => {
+        if (meta.hasPreviousPage) {
+            onPageChange((page) => page - 1);
+        }
+    };
+
+    return (
+        <Pagination className="justify-start">
+            <PaginationContent className="gap-1">
+                <PaginationItem>
+                    <Button
+                        size="icon-md"
+                        variant="outline-secondary"
+                        onClick={handleBackPage}
+                        disabled={!meta.hasPreviousPage}
+                    >
+                        <ChevronLeft />
+                    </Button>
+                </PaginationItem>
+                <PaginationItem>
+                    <Button
+                        size="icon-md"
+                        variant="outline-secondary"
+                        onClick={handleNextPage}
+                        disabled={!meta.hasNextPage}
+                    >
+                        <ChevronRight />
+                    </Button>
+                </PaginationItem>
+                <PaginationItem>
+                    <p className="text-nowrap text-sm italic text-gray-600">
+                        {meta.page} of {meta.pageCount} pages
+                    </p>
+                </PaginationItem>
+            </PaginationContent>
+        </Pagination>
+    );
+};

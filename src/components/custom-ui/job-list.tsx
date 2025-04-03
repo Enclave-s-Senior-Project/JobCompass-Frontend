@@ -1,5 +1,6 @@
 import { Job } from '@/types';
 import { JobItem } from './job-item';
+import { Skeleton } from '@/components/ui/skeleton';
 interface JobsListProps {
     jobs: Job[];
     isLoading?: boolean;
@@ -7,10 +8,16 @@ interface JobsListProps {
 
 export function JobsList({ jobs = [], isLoading = false }: JobsListProps) {
     return (
-        <div className="overflow-hidden py-4 space-y-4">
-            {jobs.map((job) => (
-                <JobItem key={job.jobId} job={job} />
-            ))}
+        <div className="overflow-hidden space-y-4">
+            {isLoading ? (
+                <div className='space-y-4'>
+                    <Skeleton className="w-full h-64"></Skeleton>
+                        <Skeleton className="w-full h-64"></Skeleton>
+                        <Skeleton className="w-full h-64"></Skeleton>
+                </div>
+            ) : (
+                jobs.map((job) => <JobItem key={job.jobId} job={job} />)
+            )}
         </div>
     );
 }

@@ -20,7 +20,7 @@ export default function EmployeeDashboardLayout({ children }: { children: React.
                 <section className="col-span-5 md:col-span-1 mt-6">
                     <SidebarDashboardEmployer />
                 </section>
-                <section className="p-6 md:pt-12 md:pl-12 md:pb-12 md:pr-0 col-span-5 md:col-span-4 border-l">
+                <section className="p-2 md:pt-6 md:pl-6 md:pb-6 md:pr-0 col-span-5 md:col-span-4 border-l">
                     {children}
                 </section>
             </div>
