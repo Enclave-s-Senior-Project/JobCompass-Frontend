@@ -278,8 +278,8 @@ export namespace DetailedRequest {
         jobId: string;
     }
 
-    export interface GetMyJobs extends Pagination, FilterValues {
-        search: string;
-        sort: string;
+    export interface GetMyJobs extends Partial<Pagination>, Partial<FilterValues> {
+        search?: string;
+        sort?: string;
     }
 }

@@ -30,6 +30,7 @@ const errorKeyMessage = {
     NOT_ALLOW_RESET_PW: 'Password reset not allowed.',
     CV_IN_USE: 'CV in use.',
     JOB_ADDED_WISHLIST: 'This job was added.',
+    INVALID_ID: 'Invalid id',
 };
 
 const successKeyMessage = {

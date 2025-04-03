@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn, handleErrorToast } from '@/lib/utils';
 import { EnterpriseService } from '@/services/enterprises.service';
-import { Pagination, PaginationContent, PaginationItem } from '@/components/ui/pagination';
+import { SimplePagination } from '@/components/ui/pagination';
 import { Input } from '@/components/ui/input';
 import { HiMiniMagnifyingGlass } from 'react-icons/hi2';
 import { Button } from '@/components/ui/button';
@@ -18,14 +18,16 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { Meta } from '@/types';
 import { JobService } from '@/services';
 import { JobQuickView } from '@/components/custom-ui/global/job-quick-view';
+import { Skeleton } from '@/components/ui/skeleton';
 
-type OrderByType = 'latest' | 'oldest' | 'deadline' | 'boosted';
+type OrderByType = 'ASC' | 'DESC' | 'LATEST' | 'NEWEST' | 'DEADLINE';
 
 const orderByOptions: Array<{ label: string; value: OrderByType }> = [
-    { label: 'Latest', value: 'latest' },
-    { label: 'Oldest', value: 'oldest' },
-    { label: 'Deadline', value: 'deadline' },
-    { label: 'Boosted', value: 'boosted' },
+    { label: 'Newest', value: 'NEWEST' },
+    { label: 'Latest', value: 'LATEST' },
+    { label: 'Deadline', value: 'DEADLINE' },
+    { label: 'Name (A-Z)', value: 'ASC' },
+    { label: 'Name (Z-A)', value: 'DESC' },
 ];
 
 const LIMIT_ITEMS = 5;
@@ -41,7 +43,7 @@ const defaultMeta: Meta = {
 
 export default function JobsPage() {
     const [showFilter, setShowFilter] = useState(false);
-    const [sortBy, setSortBy] = useState<OrderByType>('latest');
+    const [sortBy, setSortBy] = useState<OrderByType>('NEWEST');
     const [search, setSearch] = useState('');
     const [filters, setFilters] = useState<FilterValues>({ ...defaultFilters });
     const [page, setPage] = useState(1);
@@ -58,23 +60,22 @@ export default function JobsPage() {
     };
 
     // Get jobs with filters
-    const { data, isPending } = useQuery({
+    const { data, isFetching } = useQuery({
         queryKey: [queryKey.ownEnterpriseJobs, filters, sortBy, searchDebounced, page],
         queryFn: async () => {
             try {
                 return await EnterpriseService.getOwnJobs({
                     page: page,
                     take: LIMIT_ITEMS,
-                    jobType: filters.jobType,
-                    jobStatus: filters.jobStatus,
-                    jobLocation: filters.jobLocation,
-                    jobExperience: filters.jobExperience,
-                    jobBoost: filters.jobBoost,
-                    search: searchDebounced || '',
+                    jobType: filters.jobType === 'all' ? undefined : filters.jobType.toString(),
+                    jobStatus: filters.jobStatus === 'all' ? undefined : filters.jobStatus.toString(),
+                    jobLocation: filters.jobLocation === 'all' ? undefined : filters.jobLocation.toString(),
+                    jobExperience: filters.jobExperience === 'all' ? undefined : filters.jobExperience.toString(),
+                    jobBoost: filters.jobBoost === 'all' ? undefined : filters.jobBoost.toString(),
+                    search: searchDebounced || undefined,
                     sort: sortBy,
                 });
             } catch (error) {
-                console.error('Error fetching my jobs(enterprise):', error);
                 handleErrorToast(error);
             }
         },
@@ -82,22 +83,24 @@ export default function JobsPage() {
         retry: 2,
     });
 
-    const { data: resultQuery, refetch } = useQuery({
+    const { data: jobDetails, isPending: isPendingQuerySpecifiedJob } = useQuery({
         queryKey: [queryKey.detailJob, selectedJobId],
         queryFn: async () => {
             try {
                 if (selectedJobId) return await JobService.detailJob(selectedJobId, { userId: '' });
             } catch (error: any) {
-                console.log(error);
                 handleErrorToast(error);
             }
         },
         enabled: !!selectedJobId,
+        staleTime: 1000 * 60 * 1,
     });
 
     useEffect(() => {
-        console.log(resultQuery);
-    }, [resultQuery]);
+        if (data?.data?.[0]?.jobId) {
+            setSelectedJobId(data?.data?.[0]?.jobId);
+        }
+    }, [data?.data]);
 
     // Handle search
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -135,15 +138,7 @@ export default function JobsPage() {
                         placeholder="Job title, tags..."
                     />
                 </div>
-                <Button
-                    variant="outline-secondary"
-                    size="md"
-                    onClick={() => setShowFilter((prev) => !prev)}
-                    className="shadow-none min-h-12 text-sm max-h-10 text-gray-900"
-                >
-                    <ListFilterPlus />
-                    Filter <ChevronDown className={clsx('transition-all', showFilter ? 'rotate-90' : '-rotate-90')} />
-                </Button>
+
                 <Select value={sortBy} onValueChange={handleOrderChange}>
                     <SelectTrigger
                         className={clsx(
@@ -160,22 +155,52 @@ export default function JobsPage() {
                         ))}
                     </SelectContent>
                 </Select>
+
+                <Button
+                    variant="outline-secondary"
+                    size="md"
+                    onClick={() => setShowFilter((prev) => !prev)}
+                    className="shadow-none min-h-12 text-sm max-h-10 text-gray-900"
+                >
+                    <ListFilterPlus />
+                    Filter <ChevronDown className={clsx('transition-all', showFilter ? 'rotate-90' : '-rotate-90')} />
+                </Button>
             </div>
 
             <div>
                 <SimplePagination meta={data?.meta || defaultMeta} onPageChange={setPage} />
             </div>
 
-            <div className="grid grid-cols-5 gap-2">
-                <div className={cn(selectedJobId ? 'col-span-2' : 'col-span-5')}>
-                    <JobsList jobs={data?.data || []} isLoading={isPending} onSelectItem={setSelectedJobId} />
+            {/* Main content of jobs management */}
+            {data?.data && data?.data.length > 0 ? (
+                <div className="grid grid-cols-5 gap-2">
+                    {/* Show list own jobs */}
+                    <div className={cn('col-span-5 lg:col-span-2')}>
+                        <JobsList jobs={data?.data || []} isLoading={isFetching} onSelectItem={setSelectedJobId} />
+                    </div>
+                    {/* Job quick view details */}
+                    {isPendingQuerySpecifiedJob ? (
+                        <div className="flex flex-col lg:col-span-3 h-full gap-2">
+                            <Skeleton className="w-full h-1/4" />
+                            <Skeleton className="w-full h-2/4" />
+                            <Skeleton className="w-full h-1/4" />
+                        </div>
+                    ) : (
+                        <div
+                            className={cn(
+                                'hidden lg:block col-span-3 h-[calc(100vh-50px)]', // Adjust height based on your layout
+                                selectedJobId ? 'sticky top-4' : 'relative' // Sticky when a job is selected
+                            )}
+                        >
+                            {jobDetails && data?.data && data?.data.length > 0 && <JobQuickView job={jobDetails} />}
+                        </div>
+                    )}
                 </div>
-                {/* Job quick view details */}
-                <div className="sticky top-0 left-0 ring-0 col-span-3 h-full rounded-md">
-                    {resultQuery && <JobQuickView job={resultQuery} />}
-                </div>
-            </div>
+            ) : (
+                <p className="text-center text-gray-700 text-sm">There are no available jobs.</p>
+            )}
 
+            {/* For filter jobs */}
             <FilterMyJobs
                 open={showFilter}
                 onOpenChange={setShowFilter}
@@ -189,55 +214,3 @@ export default function JobsPage() {
         </div>
     );
 }
-
-const SimplePagination = ({
-    meta,
-    onPageChange,
-}: {
-    meta: Meta;
-    onPageChange: React.Dispatch<React.SetStateAction<number>>;
-}) => {
-    const handleNextPage = () => {
-        if (meta.hasNextPage) {
-            onPageChange((page) => page + 1);
-        }
-    };
-
-    const handleBackPage = () => {
-        if (meta.hasPreviousPage) {
-            onPageChange((page) => page - 1);
-        }
-    };
-
-    return (
-        <Pagination className="justify-start">
-            <PaginationContent className="gap-1">
-                <PaginationItem>
-                    <Button
-                        size="icon-md"
-                        variant="outline-secondary"
-                        onClick={handleBackPage}
-                        disabled={!meta.hasPreviousPage}
-                    >
-                        <ChevronLeft />
-                    </Button>
-                </PaginationItem>
-                <PaginationItem>
-                    <Button
-                        size="icon-md"
-                        variant="outline-secondary"
-                        onClick={handleNextPage}
-                        disabled={!meta.hasNextPage}
-                    >
-                        <ChevronRight />
-                    </Button>
-                </PaginationItem>
-                <PaginationItem>
-                    <p className="text-nowrap text-sm italic text-gray-600">
-                        {meta.page} of {meta.pageCount} pages
-                    </p>
-                </PaginationItem>
-            </PaginationContent>
-        </Pagination>
-    );
-};
