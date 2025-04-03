@@ -1,6 +1,6 @@
 'use client';
 
-import { Job } from '@/types';
+import { Job, Tag } from '@/types';
 import { Card } from '@/components/ui/card';
 import Image from 'next/image';
 import { JobStatusEnum } from '@/lib/common-enum';
@@ -33,20 +33,20 @@ const JobItem = memo(({ job }: JobItemProps) => {
         }
     }
     return (
-        <Card key={job.jobId} className="p-2 md:p-4 rounded-md shadow-sm">
+        <Card key={job.jobId} className="p-2 md:p-4 rounded-md shadow-sm hover:drop-shadow-md hover:shadow-lg cursor-pointer transition-all">
             <div className="space-y-4">
                 <div className="flex items-start justify-between">
                     <div className="flex items-start gap-2">
                         <Image
                             src={job?.enterprise?.logoUrl || job?.introImg}
                             alt={job?.name}
-                            className="size-16 rounded-md"
+                            className="size-16 rounded-md object-cover object-center"
                             width={64}
                             height={64}
                         />
                         <div>
                             <h3 className="text-lg font-semibold">{job?.name}</h3>
-                            <p className="text-sm text-gray-500">
+                            <p className="text-sm text-gray-500 flex items-center flex-wrap">
                                 <span className="text-nowrap">{job?.categories?.[0]?.categoryName}</span>&nbsp;•&nbsp;
                                 {job?.type}&nbsp;•&nbsp;
                                 <i
@@ -92,8 +92,8 @@ const JobItem = memo(({ job }: JobItemProps) => {
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
-                <div className="space-y-2">
-                    <div className="flex items-start text-gray-700">
+                <div className="space-y-2 text-sm text-gray-800">
+                    <div className="flex items-start">
                         <MapPin className="size-5" />
                         &nbsp;
                         {job?.addresses && job?.addresses.length > 0
@@ -102,12 +102,12 @@ const JobItem = memo(({ job }: JobItemProps) => {
                                   .join('\n')
                             : 'Unknown location'}
                     </div>
-                    <div className="flex items-start text-gray-700">
+                    <div className="flex items-start">
                         <Award className="size-5" />
                         &nbsp;
                         {job?.experience} years of experience
                     </div>
-                    <div className="flex items-start text-gray-700">
+                    <div className="flex items-start">
                         <Calendar className="size-5" />
                         &nbsp;
                         {toFormattedDate(job?.deadline)} (
@@ -117,17 +117,7 @@ const JobItem = memo(({ job }: JobItemProps) => {
                         )
                     </div>
                     <div className="flex items-start gap-2 flex-wrap">
-                        {job.tags?.map((tag) => {
-                            const color = getRandomFeatureColor();
-                            return (
-                                <span
-                                    key={tag.tagId}
-                                    className={clsx('px-2 py-0.5 rounded-lg', `text-${color.text} ${color.bg}`)}
-                                >
-                                    {tag.name}
-                                </span>
-                            );
-                        })}
+                        {job.tags?.map((tag) => <TagBadge key={tag.tagId} tag={tag} />)}
                     </div>
                 </div>
                 <div className="flex flex-col items-end mt-4 text-end gap-4">
@@ -148,9 +138,9 @@ const JobItem = memo(({ job }: JobItemProps) => {
                 </div>
                 <div className="flex items-center justify-between">
                     {job?.isBoost ? (
-                        <div className="flex items-center gap-2 text-base text-warning-500 font-semibold">
+                        <div className="flex items-center gap-2 text-base text-warning-500 font-semibold uppercase">
                             <Zap className="size-6" />
-                            <Zap className="size-6" /> Boosted
+                            Boosted
                         </div>
                     ) : (
                         <div className="flex items-center gap-2 text-base text-gray-500">
@@ -169,5 +159,17 @@ const JobItem = memo(({ job }: JobItemProps) => {
         </Card>
     );
 });
+
+const TagBadge = ({ tag }: { tag: Tag }) => {
+    const color = getRandomFeatureColor();
+    return (
+        <span
+            key={tag.tagId}
+            className={clsx('px-2 py-0.5 rounded-lg', `text-${color.text} ${color.bg}`)}
+        >
+            {tag.name}
+        </span>
+    );
+}
 
 export { JobItem };
