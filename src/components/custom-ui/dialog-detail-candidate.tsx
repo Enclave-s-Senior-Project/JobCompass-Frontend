@@ -15,9 +15,19 @@ export function DialogDetailCandidate(props: { id: string }) {
                 View Detail
                 <ChevronRight className="ml-2 h-6 w-6" />
             </Button>
-            <DialogContent className="w-[1024px] h-[900px] max-w-none">
-                <div className="space-y-6 pt-4">
-                    <SingleCandidate id={temp} />
+            <DialogContent className="w-[1024px] max-w-none h-[90vh] max-h-[900px] rounded-lg overflow-hidden">
+                {/* Div wrapper để scrollbar bo tròn */}
+                <div
+                    className="h-full overflow-y-auto 
+    scrollbar-thin 
+    scrollbar-thumb-rounded-full 
+    scrollbar-thumb-gray-300 
+    scrollbar-track-gray-100/30
+    pr-2"
+                >
+                    <div className="space-y-6 pt-2">
+                        <SingleCandidate id={temp} />
+                    </div>
                 </div>
             </DialogContent>
         </Dialog>

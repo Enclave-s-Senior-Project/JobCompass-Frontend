@@ -132,3 +132,30 @@ export interface AppliedJob extends baseEntity {
     job: Job;
     address: Address[];
 }
+
+export interface GetDetailCandidate {
+    createdAt: string;
+    updatedAt: string;
+    isActive: boolean;
+    profileId: string;
+    fullName: string;
+    profileUrl?: string;
+    pageUrl?: string;
+    introduction?: string;
+    phone?: string;
+    view: number;
+    gender?: string;
+    education?: string;
+    nationality?: string;
+    dateOfBirth?: string;
+    maritalStatus?: string;
+    isPremium: boolean;
+    expiredPremium?: any;
+    experience?: string;
+    account_id: string;
+    roles: Role[];
+    industry: Pick<Categories, 'categoryId' | 'categoryName'>;
+    majority: Pick<Categories, 'categoryId' | 'categoryName'>;
+    isFavorite?: boolean;
+    coverLetter?: string;
+}
