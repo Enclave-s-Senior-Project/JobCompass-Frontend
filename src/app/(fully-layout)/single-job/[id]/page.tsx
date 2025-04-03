@@ -31,6 +31,9 @@ import { NotFound } from '@/components/custom-ui/not-found';
 import { UserContext } from '@/contexts';
 import { ListTag } from '@/components/custom-ui/list-tags';
 import { toast } from '@/lib/toast';
+import RichTextEditor from '@/components/custom-ui/rich-text-editor';
+import { RichTextContent } from '@/components/custom-ui/global/rich-text-content';
+import { Job } from '@/types';
 
 export default function SingleJob() {
     return (
@@ -143,27 +146,6 @@ function PageContentOfSingleJob() {
                                     <ListTag tag={resultQuery?.tags ?? []} />
                                 </div>
                                 <div className="flex flex-wrap gap-5 text-sm text-muted-foreground mt-2">
-                                    {/* <span className="flex flex-row gap-1 text-[#474C54]">
-                                        {resultQuery?.enterprise?.bio ? (
-                                            <>
-                                                <Link2 className="w-5 h-5 text-[#0066FF]" />
-                                                {resultQuery?.enterprise?.bio.length > 30 ? (
-                                                    <TooltipProvider>
-                                                        <Tooltip>
-                                                            <TooltipTrigger>
-                                                                {resultQuery?.enterprise?.bio.substring(0, 30) + '...'}
-                                                            </TooltipTrigger>
-                                                            <TooltipContent>
-                                                                {resultQuery?.enterprise?.bio}
-                                                            </TooltipContent>
-                                                        </Tooltip>
-                                                    </TooltipProvider>
-                                                ) : (
-                                                    <p>{resultQuery?.enterprise?.bio}</p>
-                                                )}
-                                            </>
-                                        ) : null}
-                                    </span> */}
                                     <span className="flex flex-row gap-1 text-[#474C54]">
                                         <Phone className="w-5 h-5 text-[#0066FF] " />
                                         {resultQuery?.enterprise?.phone}
@@ -214,13 +196,16 @@ function PageContentOfSingleJob() {
                 <div className="px-2 sm:px-0 grid grid-cols-12 gap-4 md:gap-8 lg:gap-14">
                     <div className="col-span-12 md:col-span-7 space-y-9">
                         <div className="space-y-4">
-                            <div ref={descriptionRef}></div>
+                            <p className="text-xl font-semibold text-primary-700">Job Description</p>
+                            <RichTextContent content={resultQuery?.description || 'No description.'} />
                         </div>
                         <div className="space-y-4">
-                            <div ref={responsibilityRef}></div>
+                            <p className="text-xl font-semibold text-primary-700">Responsibilities</p>
+                            <RichTextContent content={resultQuery?.responsibility || 'No responsibility.'} />
                         </div>
                         <div className="space-y-4">
-                            <div ref={benefitsRef}></div>
+                            <p className="text-xl font-semibold text-primary-700">Benefits</p>
+                            <RichTextContent content={resultQuery?.enterpriseBenefits || 'No benefit.'} />
                         </div>
                         {/* Share profile for breakpoint from md */}
                         <div className="hidden md:block">
@@ -233,31 +218,31 @@ function PageContentOfSingleJob() {
                             <div className="w-full grid grid-cols-3 gap-y-6">
                                 <div className="flex flex-col items-start">
                                     <NotepadText className="mb-3 size-6 text-primary" />
-                                    <p className="mb-1 uppercase text-gray-500 text-[12px]">JOB POSTED:</p>
+                                    <p className="mb-1 uppercase text-gray-500 text-[12px]">JOB POSTED</p>
                                     <p className="text-sm font-medium">
                                         {moment(resultQuery?.createdAt).format('YYYY-MM-DD')}
                                     </p>
                                 </div>
                                 <div className="flex flex-col items-start">
                                     <Clock8 className="mb-3 size-6 text-primary" />
-                                    <p className="mb-1 uppercase text-gray-500 text-[12px]">JOB EXPIRE IN:</p>
+                                    <p className="mb-1 uppercase text-gray-500 text-[12px]">JOB EXPIRE IN</p>
                                     <p className="text-sm font-medium">{resultQuery?.deadline}</p>
                                 </div>
                                 <div className="flex flex-col items-start">
                                     <BriefcaseBusiness className="mb-3 size-6 text-primary" />
-                                    <p className="mb-1 uppercase text-gray-500 text-[12px]">EDUCATION:</p>
+                                    <p className="mb-1 uppercase text-gray-500 text-[12px]">EDUCATION</p>
                                     <p className="text-sm font-medium">{resultQuery?.education}</p>
                                 </div>
                                 <div className="flex flex-col items-start">
                                     <Wallet className="mb-3 size-6 text-primary" />
-                                    <p className="mb-1 uppercase text-gray-500 text-[12px]">SALARY:</p>
+                                    <p className="mb-1 uppercase text-gray-500 text-[12px]">SALARY</p>
                                     <p className="text-sm">
                                         ${resultQuery?.lowestWage} - {resultQuery?.highestWage}
                                     </p>
                                 </div>
                                 <div className="flex flex-col items-start">
                                     <MapPin className="mb-3 size-6 text-primary" />
-                                    <p className="mb-1 uppercase text-gray-500 text-[12px]">LOCATION:</p>
+                                    <p className="mb-1 uppercase text-gray-500 text-[12px]">LOCATION</p>
                                     <p className="text-sm font-medium">
                                         {resultQuery?.addresses?.[0]?.country ?? 'Unknown Country'} -
                                         {resultQuery?.addresses?.[0]?.city ?? 'Unknown City'}
@@ -265,7 +250,7 @@ function PageContentOfSingleJob() {
                                 </div>
                                 <div className="flex flex-col items-start">
                                     <BriefcaseBusiness className="mb-3 size-6 text-primary" />
-                                    <p className="mb-1 uppercase text-gray-700 text-[12px]">JOB TYPE:</p>
+                                    <p className="mb-1 uppercase text-gray-700 text-[12px]">JOB TYPE</p>
                                     <p className="text-sm font-medium">{resultQuery?.type}</p>
                                 </div>
                             </div>

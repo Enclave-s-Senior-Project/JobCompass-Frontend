@@ -3,10 +3,10 @@
 import { JobsList } from '@/components/custom-ui/job-list';
 import { queryKey } from '@/lib/react-query/keys';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import clsx from 'clsx';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { handleErrorToast } from '@/lib/utils';
+import { cn, handleErrorToast } from '@/lib/utils';
 import { EnterpriseService } from '@/services/enterprises.service';
 import { Pagination, PaginationContent, PaginationItem } from '@/components/ui/pagination';
 import { Input } from '@/components/ui/input';
@@ -16,6 +16,8 @@ import { ChevronDown, ChevronLeft, ChevronRight, ListFilterPlus } from 'lucide-r
 import { FilterMyJobs, FilterValues, defaultFilters } from '@/components/custom-ui/local/filter-my-jobs';
 import { useDebounce } from '@/hooks/useDebounce';
 import { Meta } from '@/types';
+import { JobService } from '@/services';
+import { JobQuickView } from '@/components/custom-ui/global/job-quick-view';
 
 type OrderByType = 'latest' | 'oldest' | 'deadline' | 'boosted';
 
@@ -43,6 +45,7 @@ export default function JobsPage() {
     const [search, setSearch] = useState('');
     const [filters, setFilters] = useState<FilterValues>({ ...defaultFilters });
     const [page, setPage] = useState(1);
+    const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
 
     const searchDebounced = useDebounce(search, 700);
 
@@ -78,6 +81,23 @@ export default function JobsPage() {
         placeholderData: keepPreviousData,
         retry: 2,
     });
+
+    const { data: resultQuery, refetch } = useQuery({
+        queryKey: [queryKey.detailJob, selectedJobId],
+        queryFn: async () => {
+            try {
+                if (selectedJobId) return await JobService.detailJob(selectedJobId, { userId: '' });
+            } catch (error: any) {
+                console.log(error);
+                handleErrorToast(error);
+            }
+        },
+        enabled: !!selectedJobId,
+    });
+
+    useEffect(() => {
+        console.log(resultQuery);
+    }, [resultQuery]);
 
     // Handle search
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -147,11 +167,12 @@ export default function JobsPage() {
             </div>
 
             <div className="grid grid-cols-5 gap-2">
-                <div className="col-span-2">
-                    <JobsList jobs={data?.data || []} isLoading={isPending} />
+                <div className={cn(selectedJobId ? 'col-span-2' : 'col-span-5')}>
+                    <JobsList jobs={data?.data || []} isLoading={isPending} onSelectItem={setSelectedJobId} />
                 </div>
-                <div className="quick-show-single-job-details sticky col-span-3 bg-warning-50 h-full rounded-md">
-                    
+                {/* Job quick view details */}
+                <div className="sticky top-0 left-0 ring-0 col-span-3 h-full rounded-md">
+                    {resultQuery && <JobQuickView job={resultQuery} />}
                 </div>
             </div>
 

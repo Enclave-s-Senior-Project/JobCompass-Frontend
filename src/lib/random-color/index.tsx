@@ -19,11 +19,12 @@ const getBackgroundColor = (color: string): string => {
 };
 
 const featureColors = [
-    { bg: 'bg-danger-100', text: 'danger-600' },
-    { bg: 'bg-blue-100', text: 'blue-600' },
-    { bg: 'bg-green-100', text: 'green-600' },
-    { bg: 'bg-yellow-100', text: 'yellow-600' },
-    { bg: 'bg-purple-100', text: 'purple-600' },
+    { bg: 'bg-red-100', text: 'text-red-600' },
+    { bg: 'bg-blue-100', text: 'text-blue-600' },
+    { bg: 'bg-green-100', text: 'text-green-600' },
+    { bg: 'bg-yellow-100', text: 'text-yellow-600' },
+    { bg: 'bg-orange-100', text: 'text-orange-600' },
+    { bg: 'bg-purple-100', text: 'text-purple-600' },
 ];
 
 // Đảm bảo index luôn nằm trong phạm vi của featureColors
