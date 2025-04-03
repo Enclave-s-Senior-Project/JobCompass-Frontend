@@ -21,7 +21,7 @@ export function ContentAddTag(props: { setOpen: (value: boolean) => void; refetc
             toast.error('Oops! Something went wrong');
         }
         if (state.success) {
-            toast.success(successKeyMessage.APPLY_JOB_SUCCESSFULL);
+            toast.success(successKeyMessage.APPLY_JOB_SUCCESSFUL);
             refetch();
             setOpen(false);
         }

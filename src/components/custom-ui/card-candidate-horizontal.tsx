@@ -17,7 +17,6 @@ import { ButtonMark } from './button-mark';
 import { EnterpriseService } from '@/services/enterprises.service';
 import { useRouter } from 'next/navigation';
 import defaultAvatar from '@/assets/images/avatar/default-avatar.jpg';
-import { DialogDetailCandidate } from './dialog-detail-candidate';
 
 export default function CardCandidateHorizontal(props: {
     perPage: number;
