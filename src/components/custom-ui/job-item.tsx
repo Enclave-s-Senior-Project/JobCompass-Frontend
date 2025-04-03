@@ -16,6 +16,7 @@ import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { memo } from 'react';
 import { useRouter } from 'next/navigation';
 import { BoostJobService } from '@/services';
+import { differenceInDays } from 'date-fns';
 
 interface JobItemProps {
     job: Job;
@@ -86,13 +87,13 @@ const JobItem = memo(({ job, onSelect }: JobItemProps) => {
                             <DropdownMenuItem className="p-0" onClick={() => router.push(`/single-job/${job.jobId}`)}>
                                 <div className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary-50 w-full text-left transition-all">
                                     <Info className="size-5 mr-2" />
-                                    View Detail
+                                    Update Job
                                 </div>
                             </DropdownMenuItem>
                             <DropdownMenuItem className="p-0">
-                                <div className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary-50 w-full text-left transition-all">
+                                <div className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-danger hover:bg-danger-50 w-full text-left transition-all">
                                     <XCircle className="size-5 mr-2" />
-                                    Make it Expire
+                                    Close Job
                                 </div>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -119,7 +120,7 @@ const JobItem = memo(({ job, onSelect }: JobItemProps) => {
                         {toFormattedDate(job?.deadline)} (
                         {job?.status === JobStatusEnum.EXPIRED
                             ? 'Expired'
-                            : `${new Date(Date.now() - new Date(job?.deadline).getTime()).getDate()} days left`}
+                            : `${differenceInDays(new Date(job?.deadline), Date.now())} days left`}
                         )
                     </div>
                     <div className="flex items-start gap-2 flex-wrap">

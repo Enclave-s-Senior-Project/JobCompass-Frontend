@@ -30,6 +30,7 @@ import { RichTextContent } from './rich-text-content';
 import Link from 'next/link';
 import { FaFacebookF, FaLinkedin, FaXTwitter } from 'react-icons/fa6';
 import { getRandomFeatureColor } from '@/lib/random-color';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 type Props = {
     job: Job;
@@ -39,7 +40,7 @@ export function JobQuickView({ job }: Props) {
     const daysLeft = differenceInDays(new Date(job?.deadline), Date.now());
 
     return (
-        <Card className="w-full max-w-3xl overflow-hidden hover:shadow-lg transition-all duration-300 group rounded-md">
+        <Card className="h-full w-full overflow-y-auto scrollbar max-w-3xl hover:shadow-lg transition-all duration-300 group rounded-md">
             {/* Colorful top border based on job status */}
             <div className="h-1.5 w-full" />
 
@@ -111,6 +112,22 @@ export function JobQuickView({ job }: Props) {
                     </div>
 
                     <div className="flex items-center gap-2">
+                        <TooltipProvider>
+                            <Tooltip delayDuration={200}>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        size="icon-md"
+                                        className="rounded-full h-9 w-9 hover:bg-gray-100"
+                                    >
+                                        <Link href={`/single-job/${job?.jobId}`} className="p-2">
+                                            <Eye className="h-5 w-5" />
+                                        </Link>
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent side="bottom">View details</TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button
@@ -288,7 +305,14 @@ export function JobQuickView({ job }: Props) {
                                 {job?.tags.map((tag, index) => {
                                     const { bg, text } = getRandomFeatureColor();
                                     return (
-                                        <Badge key={index} className={cn('rounded-full px-3 py-0.5', bg, text)}>
+                                        <Badge
+                                            key={index}
+                                            className={cn(
+                                                `rounded-full px-3 py-0.5 hover:${bg} hover:${text}`,
+                                                bg,
+                                                text
+                                            )}
+                                        >
                                             {tag.name}
                                         </Badge>
                                     );
@@ -339,17 +363,6 @@ export function JobQuickView({ job }: Props) {
                         )}
                     </div>
                 </CardContent>
-
-                {/* Footer with apply button */}
-                <CardFooter className="flex justify-between items-center p-0 pt-4 border-t">
-                    <div className="ml-auto">
-                        <Button variant="outline" size="md">
-                            <Link href={`/single-job/${job?.jobId}`} className="w-full h-full">
-                                View Details
-                            </Link>
-                        </Button>
-                    </div>
-                </CardFooter>
             </div>
         </Card>
     );

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { memo } from 'react';
-import { ArrowLeft, ArrowRight, MoreHorizontal } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { ButtonProps, buttonVariants } from '@/components/ui/button';
+import { Button, ButtonProps, buttonVariants } from '@/components/ui/button';
 import { Url } from 'next/dist/shared/lib/router/router';
 import Link from 'next/link';
 import { DetailedRequest, Meta } from '@/types';
@@ -163,7 +163,61 @@ const PrimaryPagination = memo(
 );
 PrimaryPagination.displayName = 'PrimaryPagination';
 
+const SimplePagination = ({
+    meta,
+    onPageChange,
+}: {
+    meta: Meta;
+    onPageChange: React.Dispatch<React.SetStateAction<number>>;
+}) => {
+    const handleNextPage = () => {
+        if (meta.hasNextPage) {
+            onPageChange((page) => page + 1);
+        }
+    };
+
+    const handleBackPage = () => {
+        if (meta.hasPreviousPage) {
+            onPageChange((page) => page - 1);
+        }
+    };
+
+    return (
+        <Pagination className="justify-start">
+            <PaginationContent className="gap-1">
+                <PaginationItem>
+                    <Button
+                        size="icon-md"
+                        variant="outline-secondary"
+                        onClick={handleBackPage}
+                        disabled={!meta.hasPreviousPage}
+                    >
+                        <ChevronLeft />
+                    </Button>
+                </PaginationItem>
+                <PaginationItem>
+                    <Button
+                        size="icon-md"
+                        variant="outline-secondary"
+                        onClick={handleNextPage}
+                        disabled={!meta.hasNextPage}
+                    >
+                        <ChevronRight />
+                    </Button>
+                </PaginationItem>
+                <PaginationItem>
+                    <p className="text-nowrap text-sm italic text-gray-600">
+                        {meta.page} of {meta.pageCount} pages
+                    </p>
+                </PaginationItem>
+            </PaginationContent>
+        </Pagination>
+    );
+};
+SimplePagination.displayName = 'SimplePagination';
+
 export {
+    getPageNumbers,
     Pagination,
     PaginationContent,
     PaginationLink,
@@ -171,6 +225,6 @@ export {
     PaginationPrevious,
     PaginationNext,
     PaginationEllipsis,
-    getPageNumbers,
     PrimaryPagination,
+    SimplePagination,
 };
