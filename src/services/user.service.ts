@@ -1,5 +1,5 @@
 import { AuthAxios, BaseAxios } from '@/lib/axios';
-import { ApiResponse, DetailedRequest, DetailedResponse, Resume, SocialLink, User } from '@/types';
+import { ApiResponse, DetailedRequest, DetailedResponse, GetDetailCandidate, Resume, SocialLink, User } from '@/types';
 import { AxiosError } from 'axios';
 import Error from 'next/error';
 
@@ -98,6 +98,22 @@ export class UserService {
     public static async getSocialLinks(data: DetailedRequest.GetSocialLinksByProfileId) {
         try {
             const res = await axios.get<ApiResponse<SocialLink[]>>(`/${data.profileId}/social-link`);
+            return res.payload.value;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new Error({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
+
+    public static async getDetailCandidates(data: DetailedRequest.GetUserProfileByProfileId) {
+        try {
+            const res = await authAxios.get<ApiResponse<GetDetailCandidate>>(`/candidate/${data.profileId}`);
+            console.log('res', res);
             return res.payload.value;
         } catch (err) {
             if (err instanceof AxiosError) {
