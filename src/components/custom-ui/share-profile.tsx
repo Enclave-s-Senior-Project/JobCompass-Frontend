@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '../ui/button';
-import { FaFacebookF, FaPinterest, FaXTwitter } from 'react-icons/fa6';
+import { FaFacebookF, FaLinkedin, FaPinterest, FaXTwitter } from 'react-icons/fa6';
 
 export default function ShareProfile() {
     return (
@@ -13,8 +13,8 @@ export default function ShareProfile() {
                 <Button variant="outline" size="lg" className="[&_svg]:size-[18px] text-black hover:text-black">
                     <FaXTwitter /> X (Twitter)
                 </Button>
-                <Button variant="outline" size="lg" className="[&_svg]:size-[18px] text-red-700 hover:text-red-700">
-                    <FaPinterest /> Pinterest
+                <Button variant="outline" size="lg" className="[&_svg]:size-[18px] text-blue-600 hover:text-blue-600">
+                    <FaLinkedin /> LinkedIn
                 </Button>
             </div>
         </div>

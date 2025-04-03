@@ -19,9 +19,10 @@ import { BoostJobService } from '@/services';
 
 interface JobItemProps {
     job: Job;
+    onSelect?: (jobId: string) => void;
 }
 
-const JobItem = memo(({ job }: JobItemProps) => {
+const JobItem = memo(({ job, onSelect }: JobItemProps) => {
     const router = useRouter();
     async function handleButtonBoostJob() {
         try {
@@ -33,16 +34,21 @@ const JobItem = memo(({ job }: JobItemProps) => {
         }
     }
     return (
-        <Card key={job.jobId} className="p-2 md:p-4 rounded-md shadow-sm hover:drop-shadow-md hover:shadow-lg cursor-pointer transition-all">
+        <Card
+            key={job.jobId}
+            className="p-2 md:p-4 rounded-md shadow-sm hover:drop-shadow-md hover:shadow-lg cursor-pointer transition-all"
+            onClick={() => typeof onSelect === 'function' && onSelect(job.jobId)}
+        >
             <div className="space-y-4">
                 <div className="flex items-start justify-between">
                     <div className="flex items-start gap-2">
                         <Image
+                            quality={100}
                             src={job?.enterprise?.logoUrl || job?.introImg}
                             alt={job?.name}
                             className="size-16 rounded-md object-cover object-center"
-                            width={64}
-                            height={64}
+                            width={500}
+                            height={500}
                         />
                         <div>
                             <h3 className="text-lg font-semibold">{job?.name}</h3>
@@ -163,13 +169,10 @@ const JobItem = memo(({ job }: JobItemProps) => {
 const TagBadge = ({ tag }: { tag: Tag }) => {
     const color = getRandomFeatureColor();
     return (
-        <span
-            key={tag.tagId}
-            className={clsx('px-2 py-0.5 rounded-lg', `text-${color.text} ${color.bg}`)}
-        >
+        <span key={tag.tagId} className={clsx('px-2 py-0.5 rounded-lg', color.text, color.bg)}>
             {tag.name}
         </span>
     );
-}
+};
 
 export { JobItem };

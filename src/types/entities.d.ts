@@ -34,6 +34,10 @@ export interface Job {
     enterpriseBenefits: string | null;
     applicationCount: number;
     isBoost: boolean;
+    views: number;
+    requirements: string;
+    categories: Categories[];
+    specializations: Categories[];
 }
 
 export interface Enterprise {
