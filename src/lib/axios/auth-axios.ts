@@ -69,6 +69,7 @@ export class AuthAxios extends BaseAxios {
                     } catch (error) {
                         // Error already handled in _refreshToken
                         // Just continue without setting Authorization header
+                        console.error('Error refreshing token:', error);
                     }
                 }
 

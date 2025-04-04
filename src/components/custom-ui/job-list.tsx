@@ -5,9 +5,11 @@ interface JobsListProps {
     jobs: Job[];
     isLoading?: boolean;
     onSelectItem?: (jobId: string) => void;
+    refetchJob: () => void;
+    refetchDetailJob: () => void;
 }
 
-export function JobsList({ jobs = [], isLoading = false, onSelectItem }: JobsListProps) {
+export function JobsList({ jobs = [], isLoading = false, onSelectItem, refetchJob, refetchDetailJob }: JobsListProps) {
     return (
         <div className="overflow-hidden space-y-4">
             {isLoading ? (
@@ -17,7 +19,15 @@ export function JobsList({ jobs = [], isLoading = false, onSelectItem }: JobsLis
                     <Skeleton className="w-full h-64"></Skeleton>
                 </div>
             ) : (
-                jobs.map((job) => <JobItem key={job.jobId} job={job} onSelect={onSelectItem} />)
+                jobs.map((job) => (
+                    <JobItem
+                        refetchDetailJob={refetchDetailJob}
+                        refetchJob={refetchJob}
+                        key={job.jobId}
+                        job={job}
+                        onSelect={onSelectItem}
+                    />
+                ))
             )}
         </div>
     );

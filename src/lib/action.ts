@@ -704,3 +704,51 @@ export const updateCV = async (currentState: any) => {
 
     return { ...currentState, success: true };
 };
+
+export const updateJob = async (currentState: any, formData: FormData) => {
+    currentState.title = formData.get('title')?.toString() ?? '';
+    currentState.tags = formData.getAll('tags[]');
+    currentState.minSalary = formData.get('minSalary');
+    currentState.maxSalary = formData.get('maxSalary');
+    currentState.education = formData.get('education')?.toString() ?? '';
+    currentState.experience = Number(formData.get('experience'));
+    currentState.jobType = formData.get('jobType')?.toString() ?? '';
+    currentState.expirationDate = formData.get('expirationDate')?.toString() ?? '';
+    currentState.description = formData.get('description')?.toString() ?? '';
+    currentState.responsibilities = formData.get('responsibilities')?.toString() ?? '';
+    currentState.category = formData.get('category')?.toString() ?? '';
+    currentState.address = formData.get('address')?.toString() ?? '';
+    currentState.education = formData.get('education')?.toString() ?? '';
+    currentState.benefit = formData.get('benefit')?.toString() ?? '';
+    currentState.specializations = formData.getAll('specializations[]');
+    currentState.jobId = formData.get('jobId')?.toString() ?? '';
+    const validation = postJobSchema.safeParse(currentState);
+    if (!validation.success) {
+        return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
+    }
+    try {
+        await JobService.updateJob(currentState.jobId, {
+            name: currentState.title,
+            lowestWage: currentState.minSalary,
+            highestWage: currentState.maxSalary,
+            description: currentState.description,
+            responsibility: currentState.responsibilities,
+            type: currentState.jobType,
+            experience: currentState.experience,
+            deadline: currentState.expirationDate,
+            introImg: '',
+            status: false,
+            education: currentState.education,
+            tagIds: currentState.tags,
+            categoryIds: [currentState.category],
+            address: [currentState.address],
+            enterpriseBenefits: currentState.benefit,
+            specializationIds: currentState.specializations,
+        });
+        return { ...currentState, errors: {}, success: true };
+    } catch (error: any) {
+        handleErrorToast(error);
+    }
+
+    return { ...currentState, errors: {}, success: false, data: null };
+};

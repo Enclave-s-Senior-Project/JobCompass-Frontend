@@ -1,7 +1,6 @@
 import { AuthAxios, BaseAxios } from '@/lib/axios';
 import { ApiResponse, DetailedRequest, DetailedResponse } from '@/types';
 import { AxiosError } from 'axios';
-import Error from 'next/error';
 import NextError from 'next/error';
 import { handleErrorApi } from '.';
 

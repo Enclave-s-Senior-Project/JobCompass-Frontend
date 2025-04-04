@@ -6,7 +6,6 @@ import { useMutation } from '@tanstack/react-query';
 import { JobService } from '@/services/job.service';
 import { handleErrorToast } from '@/lib/utils';
 import { toast } from '@/lib/toast';
-import { Separator } from '@/components/ui/separator';
 
 export function JobCardTwoType(props: {
     job: Job;

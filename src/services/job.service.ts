@@ -113,4 +113,19 @@ export class JobService {
             throw err;
         }
     }
+
+    public static async updateJob(idJob: string, data: DetailedRequest.postJobCredentials) {
+        try {
+            const dataResponse = await authAxios.put<ApiResponse<null>>(`/${idJob}`, data);
+            return dataResponse.payload.value;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
 }

@@ -120,7 +120,7 @@ export interface Categories {
     isActive: any;
     categoryId: string;
     categoryName: string;
-    parent: any;
+    parent?: any;
 }
 
 export interface CandidatesApplied {
