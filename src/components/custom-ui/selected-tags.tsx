@@ -11,13 +11,15 @@ import { queryKey } from '@/lib/react-query/keys';
 interface MultiSelectSearchInputProps {
     onChange: (selectedItems: string[]) => void;
     error?: string;
+    defaultValue?: Tag[];
 }
+
 enum OrderType {
     ASC = 'ASC',
     DESC = 'DESC',
 }
 
-const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChange, error }) => {
+const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChange, error, defaultValue = [] }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedItems, setSelectedItems] = useState<{ tagId: string; name: string }[]>([]);
     const [showDropdown, setShowDropdown] = useState(false);
@@ -41,6 +43,18 @@ const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChang
         staleTime: 1000 * 60,
         refetchOnWindowFocus: false,
     });
+
+    // Đồng bộ defaultValue với selectedItems khi component mount hoặc defaultValue thay đổi
+    useEffect(() => {
+        if (defaultValue.length > 0 && selectedItems.length === 0) {
+            const initialItems = defaultValue.map((tag) => ({
+                tagId: tag.tagId,
+                name: tag.name,
+            }));
+            setSelectedItems(initialItems);
+            onChange(initialItems.map((i) => i.tagId)); // Gọi onChange để đồng bộ với component cha
+        }
+    }, [defaultValue, onChange]);
 
     const handleSelect = (item: Tag) => {
         if (selectedItems.length >= 3) return;
@@ -86,7 +100,7 @@ const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChang
                     'flex items-center flex-wrap gap-1 border-2 rounded-md p-2 bg-white h-12',
                     error
                         ? 'border-2 border-danger ring-danger'
-                        : ' focus-within:border-primary focus-within:ring-primary'
+                        : 'focus-within:border-primary focus-within:ring-primary'
                 )}
             >
                 {selectedItems.map((item) => (
@@ -98,14 +112,11 @@ const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChang
                     </div>
                 ))}
                 <input
-                    className="flex-1 border-none outline-none min-w-[200px] "
+                    className="flex-1 border-none outline-none min-w-[200px]"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onFocus={() => setShowDropdown(true)}
                     onKeyDown={handleKeyDown}
-                    // aria-expanded={showDropdown}
-                    // aria-controls="search-dropdown"
-                    // aria-haspopup="listbox"
                 />
             </div>
 

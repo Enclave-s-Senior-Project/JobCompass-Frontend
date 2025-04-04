@@ -12,7 +12,7 @@ import { SimplePagination } from '@/components/ui/pagination';
 import { Input } from '@/components/ui/input';
 import { HiMiniMagnifyingGlass } from 'react-icons/hi2';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronLeft, ChevronRight, ListFilterPlus } from 'lucide-react';
+import { ChevronDown, ListFilterPlus } from 'lucide-react';
 import { FilterMyJobs, FilterValues, defaultFilters } from '@/components/custom-ui/local/filter-my-jobs';
 import { useDebounce } from '@/hooks/useDebounce';
 import { Meta } from '@/types';
@@ -60,7 +60,11 @@ export default function JobsPage() {
     };
 
     // Get jobs with filters
-    const { data, isFetching } = useQuery({
+    const {
+        data,
+        isFetching,
+        refetch: refetchJobs,
+    } = useQuery({
         queryKey: [queryKey.ownEnterpriseJobs, filters, sortBy, searchDebounced, page],
         queryFn: async () => {
             try {
@@ -83,7 +87,11 @@ export default function JobsPage() {
         retry: 2,
     });
 
-    const { data: jobDetails, isPending: isPendingQuerySpecifiedJob } = useQuery({
+    const {
+        data: jobDetails,
+        isPending: isPendingQuerySpecifiedJob,
+        refetch: refetchDetailJob,
+    } = useQuery({
         queryKey: [queryKey.detailJob, selectedJobId],
         queryFn: async () => {
             try {
@@ -176,7 +184,13 @@ export default function JobsPage() {
                 <div className="grid grid-cols-5 gap-2">
                     {/* Show list own jobs */}
                     <div className={cn('col-span-5 lg:col-span-2')}>
-                        <JobsList jobs={data?.data || []} isLoading={isFetching} onSelectItem={setSelectedJobId} />
+                        <JobsList
+                            refetchJob={refetchJobs}
+                            jobs={data?.data || []}
+                            isLoading={isFetching}
+                            onSelectItem={setSelectedJobId}
+                            refetchDetailJob={refetchDetailJob}
+                        />
                     </div>
                     {/* Job quick view details */}
                     {isPendingQuerySpecifiedJob ? (

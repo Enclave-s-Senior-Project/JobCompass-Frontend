@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '../ui/button';
-import { FaFacebookF, FaLinkedin, FaPinterest, FaXTwitter } from 'react-icons/fa6';
+import { FaFacebookF, FaLinkedin, FaXTwitter } from 'react-icons/fa6';
 
 export default function ShareProfile() {
     return (

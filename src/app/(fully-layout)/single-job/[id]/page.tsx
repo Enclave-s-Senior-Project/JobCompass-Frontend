@@ -31,9 +31,7 @@ import { NotFound } from '@/components/custom-ui/not-found';
 import { UserContext } from '@/contexts';
 import { ListTag } from '@/components/custom-ui/list-tags';
 import { toast } from '@/lib/toast';
-import RichTextEditor from '@/components/custom-ui/rich-text-editor';
 import { RichTextContent } from '@/components/custom-ui/global/rich-text-content';
-import { Job } from '@/types';
 
 export default function SingleJob() {
     return (

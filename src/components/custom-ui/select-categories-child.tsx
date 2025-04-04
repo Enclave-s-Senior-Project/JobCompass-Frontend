@@ -12,7 +12,9 @@ interface MultiSelectSearchInputProps {
     categoryId: string;
     onChange: (selectedItems: string[]) => void;
     error?: string;
+    defaultValue?: Categories[]; // Thêm defaultValue với kiểu Category[]
 }
+
 enum OrderType {
     ASC = 'ASC',
     DESC = 'DESC',
@@ -22,6 +24,7 @@ const MultiSelectCategoriesChildSearchInput: React.FC<MultiSelectSearchInputProp
     onChange,
     error,
     categoryId,
+    defaultValue = [], // Giá trị mặc định là mảng rỗng
 }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedItems, setSelectedItems] = useState<{ categoriesId: string; name: string }[]>([]);
@@ -43,10 +46,22 @@ const MultiSelectCategoriesChildSearchInput: React.FC<MultiSelectSearchInputProp
             };
             return await CategoryService.getCategoriesChildren(id, data);
         },
-        enabled: showDropdown,
+        enabled: showDropdown && !!categoryId, // Chỉ chạy khi có categoryId
         staleTime: 1000 * 60,
         refetchOnWindowFocus: false,
     });
+
+    // Đồng bộ defaultValue với selectedItems khi component mount hoặc defaultValue thay đổi
+    useEffect(() => {
+        if (defaultValue.length > 0 && selectedItems.length === 0) {
+            const initialItems = defaultValue.map((category) => ({
+                categoriesId: category.categoryId,
+                name: category.categoryName,
+            }));
+            setSelectedItems(initialItems);
+            onChange(initialItems.map((i) => i.categoriesId)); // Gọi onChange để đồng bộ với component cha
+        }
+    }, [defaultValue, onChange]);
 
     const handleSelect = (item: Categories) => {
         if (!selectedItems.find((i) => i.categoriesId === item.categoryId)) {
@@ -116,9 +131,6 @@ const MultiSelectCategoriesChildSearchInput: React.FC<MultiSelectSearchInputProp
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onFocus={() => setShowDropdown(true)}
                     onKeyDown={handleKeyDown}
-                    // aria-expanded={showDropdown}
-                    // aria-controls="search-dropdown"
-                    // aria-haspopup="listbox"
                 />
             </div>
 
@@ -129,7 +141,7 @@ const MultiSelectCategoriesChildSearchInput: React.FC<MultiSelectSearchInputProp
                     role="listbox"
                 >
                     <CardContent className="p-1">
-                        {!categoryId ? ( // Kiểm tra nếu categoryId rỗng
+                        {!categoryId ? (
                             <p className="p-2 text-gray-500 text-sm">Please select a Job Category first.</p>
                         ) : isLoading ? (
                             <p>Loading...</p>
@@ -149,7 +161,7 @@ const MultiSelectCategoriesChildSearchInput: React.FC<MultiSelectSearchInputProp
                                 </div>
                             ))
                         ) : (
-                            <p className="p-2 text-gray-500 text-sm">No tags found</p>
+                            <p className="p-2 text-gray-500 text-sm">No categories found</p>
                         )}
                     </CardContent>
                 </Card>
