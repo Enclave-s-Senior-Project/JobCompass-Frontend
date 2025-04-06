@@ -195,6 +195,8 @@ const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob }: JobItemPr
     );
 });
 
+JobItem.displayName = 'JobItem';
+
 const TagBadge = ({ tag }: { tag: Tag }) => {
     const color = getRandomFeatureColor();
     return (

@@ -8,11 +8,11 @@ export function BadgeJobType({ type }: { type: JobTypeEnum }) {
         <Badge
             className={clsx(
                 'cursor-default border-none rounded-xl px-4 shadow-none',
-                JobTypeEnum.fulltime == type
+                JobTypeEnum.FULL_TIME == type
                     ? 'bg-primary-100 text-primary hover:text-white hover:bg-primary-400'
-                    : JobTypeEnum.partTime == type
+                    : JobTypeEnum.PART_TIME == type
                       ? 'bg-green-100 text-green hover:text-white hover:bg-green-400'
-                      : JobTypeEnum.contract == type
+                      : JobTypeEnum.CONTRACT == type
                         ? 'bg-warning-100 text-warning hover:text-white hover:bg-warning-400'
                         : ''
             )}
