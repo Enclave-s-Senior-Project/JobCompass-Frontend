@@ -23,7 +23,7 @@ export default function TermsPage() {
             </li>
             <li>Aenean vel metus leo. Vivamus nec neque a libero sodales aliquam a et dolor.</li>
             <li>Vestibulum rhoncus sagittis dolor vel finibus.</li>
-            <li>Integer feugiat lacus ut efficitur mattis. Sed quis molestie velit.</li>
+            <li>Integer feugiat lacus ut  git efficitur mattis. Sed quis molestie velit.</li>
           </ul>
         </section>
 
@@ -37,8 +37,7 @@ export default function TermsPage() {
             mattis lacus tristique eu. Donec nec ex convallis, ultricies eros ut, mollis libero. Ut scelerisque lacus
             interdum consectetur sodales.
           </p>
-          <ul className="list-disc pl-6 space-y-2 text-gray-700">
-            <li>In ac turpis mi. Donec quis semper neque. Nulla cursus gravida interdum.</li>
+          <ul className="list-disc pl-6 space-y-2 text-gray-700">PB48-Code frontend Term of services <li>In ac turpis mi. Donec quis semper neque. Nulla cursus gravida interdum.</li>
             <li>Curabitur luctus sapien augue.</li>
             <li>mattis faucibus nisl vehicula nec, Mauris at scelerisque lorem.</li>
             <li>Nullam tempus felis ipsum, sagittis malesuada nulla vulputate et. Aenean vel metus leo.</li>
