@@ -137,21 +137,21 @@ body {
 
 @layer utilities {
     .scrollbar::-webkit-scrollbar {
-      width: 6px;
-      height: 20px;
+        width: 6px;
+        height: 20px;
     }
-  
+
     .scrollbar::-webkit-scrollbar-track {
         background: rgba(240, 240, 240, 1); /* Light gray track */
         border-radius: 10px;
     }
-  
+
     .scrollbar::-webkit-scrollbar-thumb {
         background: rgba(160, 160, 160, 0.5); /* Medium gray thumb */
         border-radius: 10px;
     }
-  
+
     .scrollbar::-webkit-scrollbar-thumb:hover {
-        background: rgba(160, 160, 160, 0.7)
+        background: rgba(160, 160, 160, 0.7);
     }
-  }
+}

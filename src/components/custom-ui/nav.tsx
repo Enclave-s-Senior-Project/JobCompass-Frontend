@@ -45,6 +45,11 @@ const commonNavigatePages: NavigatePageType[] = [
         role: 'all',
     },
     {
+        href: '/terms-of-service',
+        label: 'Terms of Service',
+        role: 'all',
+    },
+    {
         href: '/admin-dashboard',
         label: 'Admin Dashboard',
         role: 'admin',

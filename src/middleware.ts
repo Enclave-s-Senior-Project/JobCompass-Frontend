@@ -18,6 +18,7 @@ export const publicPages = [
     '/not-found',
     '/error',
     '/auth/callback',
+    '/terms-of-service',
 ];
 
 // Pages that should redirect to home if user is already logged in
