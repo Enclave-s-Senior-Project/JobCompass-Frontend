@@ -24,9 +24,10 @@ interface JobItemProps {
     onSelect?: (jobId: string) => void;
     refetchJob: () => void;
     refetchDetailJob: () => void;
+    temp?: boolean;
 }
 
-const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob }: JobItemProps) => {
+const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true }: JobItemProps) => {
     const [openDialogEdit, setOpenDialogEdit] = useState(false);
     const router = useRouter();
     async function handleButtonBoostJob() {
@@ -98,33 +99,35 @@ const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob }: JobItemPr
                                 </p>
                             </div>
                         </div>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon-md" className="shadow-none">
-                                    <MoreVerticalIcon className="h-5 w-5 text-gray-500" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-56">
-                                <DropdownMenuItem className="p-0" onClick={handleButtonBoostJob}>
-                                    <div className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary-50 w-full text-left transition-all">
-                                        <Award className="size-5 mr-2" />
-                                        Promote Job
-                                    </div>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem className="p-0" onClick={() => setOpenDialogEdit(true)}>
-                                    <div className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary-50 w-full text-left transition-all">
-                                        <Info className="size-5 mr-2" />
-                                        Update Job
-                                    </div>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem className="p-0">
-                                    <div className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-danger hover:bg-danger-50 w-full text-left transition-all">
-                                        <XCircle className="size-5 mr-2" />
-                                        Close Job
-                                    </div>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        {temp && (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="icon-md" className="shadow-none">
+                                        <MoreVerticalIcon className="h-5 w-5 text-gray-500" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-56">
+                                    <DropdownMenuItem className="p-0" onClick={handleButtonBoostJob}>
+                                        <div className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary-50 w-full text-left transition-all">
+                                            <Award className="size-5 mr-2" />
+                                            Promote Job
+                                        </div>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem className="p-0" onClick={() => setOpenDialogEdit(true)}>
+                                        <div className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary-50 w-full text-left transition-all">
+                                            <Info className="size-5 mr-2" />
+                                            Update Job
+                                        </div>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem className="p-0">
+                                        <div className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-danger hover:bg-danger-50 w-full text-left transition-all">
+                                            <XCircle className="size-5 mr-2" />
+                                            Close Job
+                                        </div>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        )}
                     </div>
                     <div className="space-y-2 text-sm text-gray-800">
                         <div className="flex items-start">

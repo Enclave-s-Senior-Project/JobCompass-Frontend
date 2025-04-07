@@ -98,6 +98,10 @@ export namespace DetailedResponse {
     }
 
     export type AppliedJobResponse = AppliedJob[];
+
+    export type GetDetailEnterprise = Enterprise & {
+        jobs: Job[];
+    };
 }
 
 export namespace DetailedRequest {

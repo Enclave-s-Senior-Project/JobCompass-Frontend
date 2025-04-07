@@ -237,4 +237,13 @@ export class EnterpriseService {
             handleErrorApi(error);
         }
     }
+
+    public static async getEnterpriseById(id: string) {
+        try {
+            const dataResponse = await axios.get<ApiResponse<DetailedResponse.GetDetailEnterprise>>(`/${id}`);
+            return dataResponse.payload;
+        } catch (error) {
+            handleErrorApi(error);
+        }
+    }
 }

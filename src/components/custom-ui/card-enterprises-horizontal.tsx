@@ -16,6 +16,7 @@ import { useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FileX } from 'lucide-react';
 import { PrimaryPagination } from '@/components/ui/pagination';
+import { useRouter } from 'next/navigation';
 
 const ITEM_PER_PAGE = 4;
 export default function CardEnterprisesHorizontal() {
@@ -23,6 +24,7 @@ export default function CardEnterprisesHorizontal() {
     const search = useSearchParams();
     const page = Number(search.get('page') || 1);
     const order = (search.get('order')?.toUpperCase() as 'ASC' | 'DESC') || 'ASC';
+    const router = useRouter();
     const { data: resultQuery, isPending } = useQuery({
         queryKey: [queryKey.favoriteJobs, { order, page, take: ITEM_PER_PAGE }],
         queryFn: async ({ queryKey }) => {
@@ -112,8 +114,18 @@ export default function CardEnterprisesHorizontal() {
                             </div>
                         </div>
                         <div className="flex-1 flex items-center justify-end gap-3">
-                            <Button className="group" variant="third" size="lg">
+                            {/* <Button className="group" variant="third" size="lg">
                                 Apply Now <LuArrowRight className="group-hover:translate-x-2 transition-all" />
+                            </Button> */}
+                            <Button
+                                className="group"
+                                variant="third"
+                                size="lg"
+                                onClick={() => {
+                                    router.push(`/enterprises/${enterprise?.enterpriseId}`);
+                                }}
+                            >
+                                View Detail <LuArrowRight className="group-hover:translate-x-2 transition-all" />
                             </Button>
                         </div>
                     </motion.div>

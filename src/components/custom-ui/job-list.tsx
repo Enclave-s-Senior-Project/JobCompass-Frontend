@@ -7,9 +7,17 @@ interface JobsListProps {
     onSelectItem?: (jobId: string) => void;
     refetchJob: () => void;
     refetchDetailJob: () => void;
+    temp?: boolean;
 }
 
-export function JobsList({ jobs = [], isLoading = false, onSelectItem, refetchJob, refetchDetailJob }: JobsListProps) {
+export function JobsList({
+    jobs = [],
+    isLoading = false,
+    onSelectItem,
+    refetchJob,
+    refetchDetailJob,
+    temp = true,
+}: JobsListProps) {
     return (
         <div className="overflow-hidden space-y-4">
             {isLoading ? (
@@ -26,6 +34,7 @@ export function JobsList({ jobs = [], isLoading = false, onSelectItem, refetchJo
                         key={job.jobId}
                         job={job}
                         onSelect={onSelectItem}
+                        temp={temp}
                     />
                 ))
             )}
