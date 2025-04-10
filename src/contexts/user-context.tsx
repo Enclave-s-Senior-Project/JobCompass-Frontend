@@ -1,11 +1,13 @@
 'use client';
 
 import { clearLoginCookie, clearTokenInfo, clearUserAndEnterpriseInfoLocalStorage } from '@/lib/auth';
+import { messaging } from '@/lib/firebase';
 import { queryKey } from '@/lib/react-query/keys';
 import { handleErrorToast } from '@/lib/utils';
 import { AuthService } from '@/services/auth.service';
 import { User } from '@/types';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getToken } from 'firebase/messaging';
 import { useRouter } from 'next/navigation';
 import React, { createContext, useEffect, useState } from 'react';
 
@@ -26,6 +28,21 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         const storedUser = localStorage.getItem('user');
         setLocalUser(storedUser ? JSON.parse(storedUser) : null);
         setIsHydrated(true);
+    }, []);
+
+    useEffect(() => {
+        const syncToken = async () => {
+            const currentToken = await getToken(messaging, { vapidKey: process.env.NEXT_PUBLIC_APP_FIREBASE_PAIR_KEY });
+            // if (currentToken) {
+            //     await fetch('/api/save-fcm-token', {
+            //         method: 'POST',
+            //         body: JSON.stringify({ token: currentToken }),
+            //         headers: { 'Content-Type': 'application/json' },
+            //     });
+            // }
+            console.log({ currentToken });
+        };
+        if (typeof window !== undefined) syncToken();
     }, []);
 
     const { data: fetchedUser, refetch: refreshMe } = useQuery({

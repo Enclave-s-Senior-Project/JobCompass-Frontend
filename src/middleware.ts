@@ -74,8 +74,8 @@ function isStaticFile(pathname: string): boolean {
 
 function checkAuthStatus(req: NextRequest): string | null {
     try {
-        const cookie = req.cookies.get('refresh-token')?.value;
-        return cookie || null;
+        const cookie = req.cookies.get('login')?.value;
+        return JSON.parse(cookie || 'false');
     } catch {
         return null;
     }
