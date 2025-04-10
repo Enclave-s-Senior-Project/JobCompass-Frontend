@@ -286,4 +286,9 @@ export namespace DetailedRequest {
         search?: string;
         sort?: string;
     }
+
+    export interface CreateOrder {
+        amountPaid: number;
+        premiumType: string;
+    }
 }
