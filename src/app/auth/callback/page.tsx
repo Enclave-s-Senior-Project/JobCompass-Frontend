@@ -16,6 +16,7 @@ const CallbackPage = () => {
         const tokenType = searchParams.get('tokenType');
         const accessToken = searchParams.get('accessToken');
         const accessTokenExpires = Number(searchParams.get('accessTokenExpires'));
+        const refreshTokenExpires = Number(searchParams.get('refreshTokenExpires'));
 
         if (!JSON.parse(sessionStorage.getItem('onLoginOauth2') || 'false')) {
             router.back();
@@ -24,7 +25,7 @@ const CallbackPage = () => {
         if (tokenType && accessToken && accessTokenExpires) {
             sessionStorage.removeItem('onLoginOauth2'); // remove after checking
             storeTokenInfo(accessToken, tokenType, accessTokenExpires);
-            setLoginCookie();
+            setLoginCookie(refreshTokenExpires);
 
             refreshMe();
 

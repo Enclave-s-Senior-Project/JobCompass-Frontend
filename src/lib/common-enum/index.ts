@@ -22,3 +22,11 @@ export enum JobStatusEnum {
     CLOSED = 'CLOSED',
     EXPIRED = 'EXPIRED',
 }
+
+export enum NotificationType {
+    JOB_EXPIRED = 'job_expired',
+    JOB_APPLIED = 'job_applied',
+    APPLICATION_ACCEPTED = 'application_accepted',
+    APPLICATION_REJECTED = 'application_rejected',
+    // ADD MORE WHEN NEEDED
+}

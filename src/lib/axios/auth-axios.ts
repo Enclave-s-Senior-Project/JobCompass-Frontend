@@ -5,6 +5,7 @@ import {
     clearTokenInfo,
     clearUserAndEnterpriseInfoLocalStorage,
     getStoredTokenInfo,
+    setLoginCookie,
     storeTokenInfo,
 } from '../auth';
 import { toast } from '@/lib/toast';
@@ -63,13 +64,14 @@ export class AuthAxios extends BaseAxios {
                         const res = await this._refreshToken();
                         if (res) {
                             storeTokenInfo(res.accessToken, res.tokenType, res.accessTokenExpires);
+                            setLoginCookie(res.refreshTokenExpires)
                             config.headers['Authorization'] = `${res.tokenType} ${res.accessToken}`;
                             return config;
                         }
-                    } catch (error) {
-                        // Error already handled in _refreshToken
-                        // Just continue without setting Authorization header
-                        console.error('Error refreshing token:', error);
+                    } catch  {
+                        clearLoginCookie()
+                        clearTokenInfo()
+                        clearUserAndEnterpriseInfoLocalStorage()
                     }
                 }
 

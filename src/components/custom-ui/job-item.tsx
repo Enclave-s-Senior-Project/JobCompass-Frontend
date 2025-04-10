@@ -207,4 +207,6 @@ const TagBadge = ({ tag }: { tag: Tag }) => {
     );
 };
 
+JobItem.displayName = 'JobItem';
+
 export { JobItem };

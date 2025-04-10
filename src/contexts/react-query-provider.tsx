@@ -18,4 +18,4 @@ const ReactQueryProvider = ({ children }: { children: React.ReactNode }) => {
     return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 };
 
-export default ReactQueryProvider;
+export { ReactQueryProvider };

@@ -1,4 +1,4 @@
-import { JobStatusEnum } from '@/lib/common-enum';
+import { JobStatusEnum, NotificationType } from '@/lib/common-enum';
 import { Address, OrganizationType, SocialType } from './common-types';
 
 interface baseEntity {
@@ -167,4 +167,15 @@ export interface GetDetailCandidate {
     majority: Pick<Categories, 'categoryId' | 'categoryName'>;
     isFavorite?: boolean;
     coverLetter?: string;
+}
+
+export interface Notification {
+    notificationId: string;
+    type: NotificationType;
+    link?: string;
+    title: string;
+    message: string;
+    isRead: boolean;
+    createdAt?: string;
+    updatedAt?: string;
 }

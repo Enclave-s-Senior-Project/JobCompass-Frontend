@@ -9,6 +9,17 @@ export default {
     ],
     theme: {
         extend: {
+            keyframes: {
+                shake: {
+                    '0%, 100%': { transform: 'rotate(0)' },
+                    '25%': { transform: 'rotate(-10deg)' },
+                    '50%': { transform: 'rotate(10deg)' },
+                    '75%': { transform: 'rotate(-10deg)' },
+                }
+            },
+            animation: {
+                shake: 'shake 1s ease-in-out infinite',
+            },
             colors: {
                 background: 'hsl(var(--background))',
                 foreground: 'hsl(var(--foreground))',

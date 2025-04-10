@@ -14,7 +14,6 @@ import { toast } from '@/lib/toast';
 import clsx from 'clsx';
 import { routes } from '@/configs/routes';
 import { UserContext } from '@/contexts/user-context';
-import { setLoginCookie } from '@/lib/auth';
 import { errorKeyMessage } from '@/lib/message-keys';
 
 interface Props {
@@ -53,7 +52,6 @@ export function FormSignIn({ error_code, redirect }: Props) {
             refreshMe();
             // set cookies and redirect to dashboard
             toast.success('Login successful');
-            setLoginCookie();
             router.push(redirect ?? '/');
         }
     }, [state.success, state.errors, router]);

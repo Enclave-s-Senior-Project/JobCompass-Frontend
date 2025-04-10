@@ -1,6 +1,17 @@
 import { FilterValues } from '@/components/custom-ui/local/filter-my-jobs';
 import { PersonalProfileType, UserType, Address, CandidateProfileType } from './common-types';
-import { AppliedJob, CandidatesApplied, Categories, Enterprise, Job, Resume, SocialLink, Tag, User } from './entities';
+import {
+    AppliedJob,
+    CandidatesApplied,
+    Categories,
+    Enterprise,
+    Job,
+    Notification,
+    Resume,
+    SocialLink,
+    Tag,
+    User,
+} from './entities';
 
 interface ResponseWithMeta<T> {
     meta: Meta;
@@ -30,6 +41,7 @@ export namespace DetailedResponse {
         tokenType: string;
         accessToken: string;
         accessTokenExpires: number;
+        refreshTokenExpires: number;
     }
     export interface SignIn extends RefreshToken {
         user: UserType;
@@ -102,6 +114,10 @@ export namespace DetailedResponse {
     export type GetDetailEnterprise = Enterprise & {
         jobs: Job[];
     };
+
+    export interface GetNotifications extends ResponseWithMeta<Notification[]> {}
+
+    export type GetNotification = Notification;
 }
 
 export namespace DetailedRequest {
@@ -285,6 +301,9 @@ export namespace DetailedRequest {
     export interface GetMyJobs extends Partial<Pagination>, Partial<FilterValues> {
         search?: string;
         sort?: string;
+    }
+    export interface CreateFcmToken {
+        token: string;
     }
 
     export interface CreateOrder {

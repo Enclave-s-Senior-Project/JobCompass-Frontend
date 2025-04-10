@@ -1,13 +1,12 @@
 'use client';
 
+import { useFirebaseMessaging } from '@/hooks/use-firebase-messaging';
 import { clearLoginCookie, clearTokenInfo, clearUserAndEnterpriseInfoLocalStorage } from '@/lib/auth';
-import { messaging } from '@/lib/firebase';
 import { queryKey } from '@/lib/react-query/keys';
 import { handleErrorToast } from '@/lib/utils';
 import { AuthService } from '@/services/auth.service';
 import { User } from '@/types';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getToken } from 'firebase/messaging';
 import { useRouter } from 'next/navigation';
 import React, { createContext, useEffect, useState } from 'react';
 
@@ -30,28 +29,21 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         setIsHydrated(true);
     }, []);
 
-    useEffect(() => {
-        const syncToken = async () => {
-            const currentToken = await getToken(messaging, { vapidKey: process.env.NEXT_PUBLIC_APP_FIREBASE_PAIR_KEY });
-            // if (currentToken) {
-            //     await fetch('/api/save-fcm-token', {
-            //         method: 'POST',
-            //         body: JSON.stringify({ token: currentToken }),
-            //         headers: { 'Content-Type': 'application/json' },
-            //     });
-            // }
-            console.log({ currentToken });
-        };
-        if (typeof window !== undefined) syncToken();
-    }, []);
+    // Get token permission notification firebase cloud messaging
+    useFirebaseMessaging(localUser);
 
     const { data: fetchedUser, refetch: refreshMe } = useQuery({
         queryKey: [queryKey.me],
         queryFn: async () => {
             const data = await AuthService.getMe();
-            localStorage.setItem('user', JSON.stringify(data.value));
+
             if (data.value) {
-                setLocalUser(data.value);
+                const oldUser = localStorage.getItem('user');
+                const stringifyUser = JSON.stringify(data.value);
+                if (oldUser !== stringifyUser) {
+                    localStorage.setItem('user', JSON.stringify(data.value));
+                    setLocalUser(data.value);
+                }
             }
             return data.value;
         },
