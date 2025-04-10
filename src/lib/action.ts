@@ -24,7 +24,7 @@ import { getBackgroundColor, getRandomColor } from './random-color';
 import { TagService } from '@/services/tag.service';
 import { JobService } from '@/services/job.service';
 import { EnterpriseService } from '@/services/enterprises.service';
-import { storeTokenInfo } from './auth';
+import { setLoginCookie, storeTokenInfo } from './auth';
 import { CVService } from '@/services/cv.service';
 
 export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, formData: FormData) => {
@@ -49,7 +49,10 @@ export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, 
     try {
         const res = await AuthService.login(data);
         if (res.value)
+           {
             storeTokenInfo(res.value?.accessToken as string, res.value?.tokenType, res.value?.accessTokenExpires);
+            setLoginCookie(res.value?.refreshTokenExpires);
+           }
         return {
             ...currentState,
             errors: {},

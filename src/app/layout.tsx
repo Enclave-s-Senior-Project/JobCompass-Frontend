@@ -1,10 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { inter } from '@/components/font';
-import ReactQueryProvider from '../contexts/react-query-provider';
-import { UserProvider } from '@/contexts/user-context';
-import { EnterpriseProvider } from '@/contexts/enterprise-context';
 import { Toaster } from 'react-hot-toast';
+import { EnterpriseProvider, NotificationProvider, ReactQueryProvider, UserProvider } from '@/contexts';
 
 export const metadata: Metadata = {
     title: 'JobCompass',
@@ -23,7 +21,9 @@ export default function RootLayout({
                 <ReactQueryProvider>
                     <UserProvider>
                         <EnterpriseProvider>
-                            <main>{children}</main>
+                            <NotificationProvider>
+                                <main>{children}</main>
+                            </NotificationProvider>
                         </EnterpriseProvider>
                     </UserProvider>
                 </ReactQueryProvider>

@@ -10,6 +10,7 @@ import { TagService } from './tag.service';
 import { UploadService } from './upload.service';
 import { UserService } from './user.service';
 import { WebsiteService } from './website.service';
+import { FcmTokenService } from './fcm-token.service';
 import Error from 'next/error';
 
 const handleErrorApi = (err: any) => {
@@ -35,4 +36,5 @@ export {
     UploadService,
     UserService,
     WebsiteService,
+    FcmTokenService,
 };

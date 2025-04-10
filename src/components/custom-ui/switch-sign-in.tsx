@@ -1,7 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { PiBellRinging } from 'react-icons/pi';
-import { Badge, badgeVariants } from '@/components/ui/badge';
-import { clsx } from 'clsx';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import {
@@ -17,6 +14,7 @@ import { useContext } from 'react';
 import { UserContext } from '@/contexts/user-context';
 import { hasPermission } from '@/lib/auth';
 import { Bookmark, BriefcaseBusiness, CircleUserRound, Clock4, LayoutDashboard, LogOut, Settings } from 'lucide-react';
+import { NotificationAlert } from './local/notification-alert';
 
 const commonNavigatePages = [
     { href: '/candidate-dashboard/overview', icon: <LayoutDashboard />, label: 'Candidate Dashboard' },
@@ -36,10 +34,8 @@ export function SwitchSignIn() {
 
     return userInfo ? (
         <div className="flex items-center justify-between lg:justify-normal gap-2 lg:gap-6">
-            <div className="relative">
-                {/*notification*/}
-                <PiBellRinging className="size-6 "></PiBellRinging>
-                <Badge className={clsx(badgeVariants({ variant: 'notify' }), 'absolute top-0 right-0 size-2.5')} />
+            <div>
+                <NotificationAlert />
             </div>
             {/*if there is enterprise role, this will be shown*/}
             {hasPermission(userInfo, 'job', 'create') && (

@@ -124,12 +124,12 @@ export function clearUserAndEnterpriseInfoLocalStorage() {
     localStorage.removeItem('enterprise');
 }
 
-export function setLoginCookie() {
-    document.cookie = 'login=true; path=/';
+export function setLoginCookie(expire: number) {
+    document.cookie = `login=true; path=/; Max-Age=${expire};`;
 }
 
 export function clearLoginCookie() {
-    document.cookie = 'login=false; path=/';
+    document.cookie = 'login=false; path=/;';
 }
 
 // USAGE:
