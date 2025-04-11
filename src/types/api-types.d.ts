@@ -215,6 +215,7 @@ export namespace DetailedRequest {
         address: string[];
         enterpriseBenefits: string;
         specializationIds: string[];
+        requirements: string;
     }
     export interface PostEnterprisesCredentials {
         name: string;
