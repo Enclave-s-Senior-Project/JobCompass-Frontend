@@ -73,7 +73,7 @@ export function FormAddEnterprises({ setOpen, refetch }: { setOpen: (value: bool
                             isError={checkLogo}
                         />
                     </div>
-                    <p className="text-red-500 text-[12px] font-medium">
+                    <p className="text-red-500 text-[12px] font-medium pt-5">
                         {Array.isArray(state.errors?.logo) ? state.errors.logo[0] : state.errors?.logo}
                     </p>
                 </div>
