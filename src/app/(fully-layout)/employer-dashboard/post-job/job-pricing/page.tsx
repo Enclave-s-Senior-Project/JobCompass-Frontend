@@ -20,6 +20,7 @@ export default function JobPricing() {
             const paymentUrl = await TransactionService.createOrder(data);
             router.push(paymentUrl);
         } catch (error) {
+            console.log(error);
             toast.error('Oops! Something went wrong');
         }
     };

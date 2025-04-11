@@ -12,7 +12,7 @@ import { useActionState, useContext, useEffect, useState } from 'react';
 import { updateJob } from '@/lib/action';
 import { Categories, Category, Job, Tag } from '@/types';
 import { useQuery } from '@tanstack/react-query';
-import { queryKey } from '@/lib/react-query/keys';
+import { queryKey } from '@/lib/react-query/keys';  
 import { CategoryService } from '@/services/categories.service';
 import { AddressService } from '@/services/address.service';
 import { handleErrorToast } from '@/lib/utils';
