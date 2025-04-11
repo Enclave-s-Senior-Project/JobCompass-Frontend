@@ -160,6 +160,7 @@ const postJobSchema = z
             .min(1, 'Category is required'),
         benefit: z.string().min(20, 'Benefit is required and must be at least 20 characters'),
         specializations: z.array(z.string()).min(1, 'At least one specializations is required'),
+        requirements: z.string().min(20, 'Requirements is required and must be at least 20 characters'),
     })
     .refine((data) => Number(data.minSalary) <= Number(data.maxSalary), {
         message: 'Minimum salary must be less than or equal to maximum salary',

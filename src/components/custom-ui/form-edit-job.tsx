@@ -27,8 +27,9 @@ export function EditJob(props: {
     onSuccess?: () => void;
     refetchJob: () => void;
     refetchDetailJob: () => void;
+    onCloseDialog: () => void;
 }) {
-    const { id, onSuccess, refetchJob, refetchDetailJob } = props;
+    const { id, onSuccess, refetchJob, refetchDetailJob, onCloseDialog } = props;
     const [job, setJob] = useState<Job | null>(null);
     const { userInfo } = useContext(UserContext);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -44,12 +45,13 @@ export function EditJob(props: {
         address: '',
         benefit: '',
         jobSpecialization: [] as Category[],
+        requirements: '',
     });
-
     const [description, setDescription] = useState('');
     const [responsibilities, setResponsibility] = useState('');
     const [benefit, setBenefit] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
+    const [requirements, setRequirements] = useState('');
     const [jobSpecializations, setJobSpecializations] = useState<string[]>([]);
 
     const {
@@ -83,12 +85,14 @@ export function EditJob(props: {
             setResponsibility(fetchedJob.responsibility || '');
             setBenefit(fetchedJob.enterpriseBenefits || '');
             setSelectedTags(fetchedJob.tags?.map((tag: Tag) => tag.tagId) || []);
+            setRequirements(fetchedJob.requirements);
         }
     }, [resultQuery]);
 
     useEffect(() => {
         if (state.success) {
             toast.success(successKeyMessage.POST_JOB_SUCCESSFUL);
+            onCloseDialog();
             refetchJob();
             refetchDetailJob();
         }
@@ -97,6 +101,7 @@ export function EditJob(props: {
     const handleResponsibility = (content: string) => setResponsibility(content);
     const handleBenefit = (content: string) => setBenefit(content);
     const handleCategoryChange = (value: string) => setSelectedCategory(value);
+    const handleRequirements = (content: string) => setRequirements(content);
 
     if (isLoading || !job) {
         return <div>Loading job data...</div>;
@@ -111,6 +116,7 @@ export function EditJob(props: {
                 selectedTags.forEach((tagId) => formData.append('tags[]', tagId));
                 jobSpecializations.forEach((specialization) => formData.append('specializations[]', specialization));
                 formData.set('jobId', id);
+                formData.set('requirements', requirements);
                 return onSubmit(formData);
             }}
             className="space-y-4 bg-white"
@@ -203,7 +209,7 @@ export function EditJob(props: {
                                     : 'focus-visible:border-primary focus-visible:ring-primary'
                             )}
                             type="number"
-                            defaultValue={job.highestWage} // Sử dụng job.highestWage
+                            defaultValue={job.highestWage}
                             name="maxSalary"
                         />
                         <p className="text-red-500 text-[12px] font-medium">{state.errors?.maxSalary?.[0]}</p>
@@ -264,8 +270,8 @@ export function EditJob(props: {
                                 <SelectValue placeholder="Select..." />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="fulltime">Full Time</SelectItem>
-                                <SelectItem value="parttime">Part Time</SelectItem>
+                                <SelectItem value="Full Time">Full Time</SelectItem>
+                                <SelectItem value="Part Time">Part Time</SelectItem>
                                 <SelectItem value="Contract">Contract</SelectItem>
                             </SelectContent>
                         </Select>
@@ -365,12 +371,35 @@ export function EditJob(props: {
                         </div>
                         <p className="text-red-500 text-[12px] font-medium">{state.errors?.benefit?.[0]}</p>
                     </div>
+                    <div className="flex flex-col gap-y-2">
+                        <h1>Requirements</h1>
+                        <div className="focus-visible:border-primary focus-visible:ring-primary">
+                            <RichTextEditor
+                                onChange={handleRequirements}
+                                initialContent={requirements}
+                                hasError={!!state.errors?.requirements}
+                            />
+                        </div>
+                        <p className=" text-red-500 text-[12px] font-medium ">
+                            {state.errors?.requirements && state.errors.requirements[0]}
+                        </p>
+                    </div>
                 </div>
             </div>
-
-            <Button type="submit" className="group w-full md:w-auto">
-                Update Job <LuArrowRight className="group-hover:translate-x-2 transition-all duration-100" />
-            </Button>
+            <div className="flex flex-row justify-between">
+                <Button
+                    type="button"
+                    className="group w-full md:w-auto"
+                    onClick={() => {
+                        onCloseDialog();
+                    }}
+                >
+                    Cancel
+                </Button>
+                <Button type="submit" className="group w-full md:w-auto">
+                    Update Job <LuArrowRight className="group-hover:translate-x-2 transition-all duration-100" />
+                </Button>
+            </div>
         </form>
     );
 }
