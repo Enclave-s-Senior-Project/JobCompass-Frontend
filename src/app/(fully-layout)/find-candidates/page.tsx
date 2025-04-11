@@ -1,9 +1,11 @@
 'use client';
 import CardCandidateHorizontal from '@/components/custom-ui/card-candidate-horizontal';
-import FilterSidebar from '@/components/custom-ui/filter-search-candidates';
+import FilterSidebarCandidate, {
+    defaultFiltersSidebar,
+    FilterValuesSidebar,
+} from '@/components/custom-ui/local/filter-candidate';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { AnimatePresence, motion } from 'framer-motion';
 import { SlidersHorizontal } from 'lucide-react';
 import { useState } from 'react';
 
@@ -11,40 +13,26 @@ export default function ListCandidates() {
     const [showFilter, setShowFilter] = useState(false);
     const [option, setOption] = useState('ASC');
     const [itemsPerPage, setItemsPerPage] = useState(6);
-    const [filters, setFilters] = useState({
-        maritalStatus: undefined,
-        categories: [] as string[],
-        gender: undefined,
-    });
+    const [filters, setFilters] = useState<FilterValuesSidebar>({ ...defaultFiltersSidebar });
     const [refetchFn, setRefetchFn] = useState<(() => void) | null>(null);
-    const handleFilterChange = (filterName: string, value: any) => {
-        setFilters({
-            ...filters,
-            [filterName]: value,
-        });
+
+    // Handle applying filters
+    const handleApplyFilters = (newFilters: FilterValuesSidebar) => {
+        setFilters(newFilters);
+        if (refetchFn) {
+            refetchFn();
+        }
     };
-    const toggleFilterSidebar = () => {
-        setShowFilter((prev) => {
-            if (prev === true && refetchFn) {
-                setFilters({
-                    maritalStatus: undefined,
-                    categories: [],
-                    gender: undefined,
-                });
-                refetchFn();
-            }
-            return !prev;
-        });
-    };
+
     return (
         <main className="min-h-dvh bg-white">
-            <div className="flex flex-col md:flex-row  justify-between items-center max-w-screen-xl mx-auto mb-6 mt-6 gap-5">
+            <div className="flex flex-col md:flex-row justify-between items-center max-w-screen-xl mx-auto mb-6 mt-6 gap-5">
                 <div className="flex md:flex-col">
                     <Button
                         type="submit"
                         variant="primary"
                         className="text-white w-full md:w-[130px] rounded-sm text-[16px]"
-                        onClick={toggleFilterSidebar}
+                        onClick={() => setShowFilter((prev) => !prev)}
                     >
                         <SlidersHorizontal />
                         Filter
@@ -53,11 +41,11 @@ export default function ListCandidates() {
                 <div className="flex flex-wrap items-center gap-4">
                     <Select onValueChange={(value) => setOption(value)}>
                         <SelectTrigger className="text-sm border-[1px] rounded-md px-2 py-1.5 h-[48px] w-[180px] bg-[#FFFFFF] focus:ring-0 focus:ring-offset-0">
-                            <SelectValue placeholder={option === 'ASC' ? 'Lastest' : 'Oldest'} />
+                            <SelectValue placeholder={option === 'ASC' ? 'Latest' : 'Oldest'} />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                <SelectItem value="ASC">Lastest</SelectItem>
+                                <SelectItem value="ASC">Latest</SelectItem>
                                 <SelectItem value="DESC">Oldest</SelectItem>
                             </SelectGroup>
                         </SelectContent>
@@ -76,30 +64,22 @@ export default function ListCandidates() {
                         </SelectContent>
                     </Select>
                 </div>
+                <FilterSidebarCandidate
+                    open={showFilter}
+                    onOpenChange={setShowFilter}
+                    filters={filters}
+                    onApplyFilters={handleApplyFilters}
+                />
             </div>
+
             <div className="flex flex-col md:flex-row justify-between items-start max-w-screen-xl mx-auto mb-6 mt-6 gap-5">
-                {showFilter && (
-                    <div className="w-full md:w-64">
-                        <AnimatePresence>
-                            <motion.div
-                                initial={{ opacity: 0, x: -100 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -100 }}
-                                transition={{ duration: 0.3 }}
-                                className="border rounded-md p-4"
-                            >
-                                <FilterSidebar filters={filters} onFilterChange={handleFilterChange} />
-                            </motion.div>
-                        </AnimatePresence>
-                    </div>
-                )}
-                <div className={`w-full ${showFilter ? 'md:w-[calc(100%-16rem)]' : 'md:w-full'}`}>
+                <div className="w-full">
                     <CardCandidateHorizontal
                         perPage={itemsPerPage || 6}
                         option={option}
-                        maritalStatus={filters?.maritalStatus}
-                        gender={filters?.gender}
-                        categories={filters.categories}
+                        maritalStatus={filters.maritalStatus === 'all' ? undefined : filters.maritalStatus}
+                        gender={filters.gender === 'all' ? undefined : filters.gender}
+                        categories={filters.categories.length ? filters.categories : undefined}
                         onRefetch={(refetch) => setRefetchFn(() => refetch)}
                     />
                 </div>

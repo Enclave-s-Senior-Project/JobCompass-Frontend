@@ -35,12 +35,14 @@ export default function PostJobForm() {
         address: '',
         benefit: '',
         jobSpecialization: [] as Category[],
+        requirements: '',
     });
     const [description, setDescription] = useState(state.description);
     const [responsibilities, setResponsibility] = useState(state.responsibilities);
     const [benefit, setBenefit] = useState(state.benefit);
     const [selectedCategory, setSelectedCategory] = useState('');
     const [jobSpecializations, setJobSpecializations] = useState<string[]>([]);
+    const [requirements, setRequirements] = useState(state.requirements);
 
     const { data: resultQuery, refetch } = useQuery({
         queryKey: [queryKey.listCategory],
@@ -82,6 +84,10 @@ export default function PostJobForm() {
     const handleCategoryChange = (value: string) => {
         setSelectedCategory(value);
     };
+
+    const handleRequirements = (value: string) => {
+        setRequirements(value);
+    };
     return (
         <div className="container mx-auto">
             <h1 className="text-2xl font-bold mb-6">Post a job</h1>
@@ -90,6 +96,7 @@ export default function PostJobForm() {
                     formData.set('description', description);
                     formData.set('responsibilities', responsibilities);
                     formData.set('benefit', benefit);
+                    formData.set('requirements', requirements);
                     selectedTags.forEach((tagId) => {
                         formData.append('tags[]', tagId);
                     });
@@ -263,9 +270,9 @@ export default function PostJobForm() {
                                     <SelectValue placeholder="Select..." />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="fulltime">Full Time</SelectItem>
-                                    <SelectItem value="parttime">Part Time</SelectItem>
-                                    <SelectItem value="contract">Contract</SelectItem>
+                                    <SelectItem value="Full Time">Full Time</SelectItem>
+                                    <SelectItem value="Part Time">Part Time</SelectItem>
+                                    <SelectItem value="Contract">Contract</SelectItem>
                                 </SelectContent>
                             </Select>
                             <p className=" text-red-500 text-[12px] font-medium ">
@@ -371,6 +378,19 @@ export default function PostJobForm() {
                             </div>
                             <p className=" text-red-500 text-[12px] font-medium ">
                                 {state.errors?.benefit && state.errors.benefit[0]}
+                            </p>
+                        </div>
+                        <div className="flex flex-col gap-y-2">
+                            <h1>Requirements</h1>
+                            <div className="focus-visible:border-primary focus-visible:ring-primary">
+                                <RichTextEditor
+                                    onChange={handleRequirements}
+                                    initialContent={requirements}
+                                    hasError={!!state.errors?.requirements}
+                                />
+                            </div>
+                            <p className=" text-red-500 text-[12px] font-medium ">
+                                {state.errors?.requirements && state.errors.requirements[0]}
                             </p>
                         </div>
                     </div>

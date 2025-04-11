@@ -410,6 +410,7 @@ export const postJob = async (currentState: any, formData: FormData) => {
     currentState.education = formData.get('education')?.toString() ?? '';
     currentState.benefit = formData.get('benefit')?.toString() ?? '';
     currentState.specializations = formData.getAll('specializations[]');
+    currentState.requirements = formData.get('requirements')?.toString() ?? '';
     const validation = postJobSchema.safeParse(currentState);
     if (!validation.success) {
         return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
@@ -432,6 +433,7 @@ export const postJob = async (currentState: any, formData: FormData) => {
             address: [currentState.address],
             enterpriseBenefits: currentState.benefit,
             specializationIds: currentState.specializations,
+            requirements: currentState.requirements,
         });
         return { ...currentState, errors: {}, success: true };
     } catch (error: any) {
@@ -725,6 +727,7 @@ export const updateJob = async (currentState: any, formData: FormData) => {
     currentState.benefit = formData.get('benefit')?.toString() ?? '';
     currentState.specializations = formData.getAll('specializations[]');
     currentState.jobId = formData.get('jobId')?.toString() ?? '';
+    currentState.requirements = formData.get('requirements')?.toString() ?? '';
     const validation = postJobSchema.safeParse(currentState);
     if (!validation.success) {
         return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
@@ -747,6 +750,7 @@ export const updateJob = async (currentState: any, formData: FormData) => {
             address: [currentState.address],
             enterpriseBenefits: currentState.benefit,
             specializationIds: currentState.specializations,
+            requirements: currentState.requirements,
         });
         return { ...currentState, errors: {}, success: true };
     } catch (error: any) {
