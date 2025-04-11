@@ -57,6 +57,7 @@ const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true
                                 id={job?.jobId}
                                 onSuccess={handleUpdateSuccess}
                                 refetchDetailJob={refetchDetailJob}
+                                onCloseDialog={() => setOpenDialogEdit(false)}
                             />
                         </div>
                     </div>
