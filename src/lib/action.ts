@@ -48,11 +48,10 @@ export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, 
 
     try {
         const res = await AuthService.login(data);
-        if (res.value)
-           {
+        if (res.value) {
             storeTokenInfo(res.value?.accessToken as string, res.value?.tokenType, res.value?.accessTokenExpires);
             setLoginCookie(res.value?.refreshTokenExpires);
-           }
+        }
         return {
             ...currentState,
             errors: {},

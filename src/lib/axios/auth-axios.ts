@@ -64,14 +64,14 @@ export class AuthAxios extends BaseAxios {
                         const res = await this._refreshToken();
                         if (res) {
                             storeTokenInfo(res.accessToken, res.tokenType, res.accessTokenExpires);
-                            setLoginCookie(res.refreshTokenExpires)
+                            setLoginCookie(res.refreshTokenExpires);
                             config.headers['Authorization'] = `${res.tokenType} ${res.accessToken}`;
                             return config;
                         }
-                    } catch  {
-                        clearLoginCookie()
-                        clearTokenInfo()
-                        clearUserAndEnterpriseInfoLocalStorage()
+                    } catch {
+                        clearLoginCookie();
+                        clearTokenInfo();
+                        clearUserAndEnterpriseInfoLocalStorage();
                     }
                 }
 

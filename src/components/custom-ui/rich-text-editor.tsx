@@ -19,6 +19,7 @@ type TextEditorProps = {
     className?: string;
     hasError?: boolean;
     value?: string;
+    disabled?: boolean;
 };
 
 export default function RichTextEditor({
@@ -29,6 +30,7 @@ export default function RichTextEditor({
     placement = 'outside-top',
     className,
     hasError = false,
+    disabled,
 }: TextEditorProps) {
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -59,9 +61,10 @@ export default function RichTextEditor({
         editorProps: {
             attributes: {
                 class: cn(
-                    'focus-visible:ring-primary min-h-[150px] max-h-[300px] h-[300px] overflow-auto cursor-text rounded-md border py-2 px-3 ring-offset-background focus-within:outline-none focus-within:ring-2',
+                    'focus-visible:ring-primary min-h-[150px] max-h-[300px] h-[300px] overflow-auto rounded-md border py-2 px-3 ring-offset-background focus-within:outline-none focus-within:ring-2 shadow-sm',
                     placement === 'inside-top' ? 'pt-10' : placement === 'inside-bottom' ? 'pb-10' : '',
                     hasError ? 'border-2 border-danger focus:border-danger focus:ring-0' : 'border-input',
+                    disabled ? 'border-gray-50 text-gray-400' : 'border-input',
                     className
                 ),
             },
@@ -73,19 +76,26 @@ export default function RichTextEditor({
         <div
             className={clsx(
                 'relative',
-                placement === 'outside-bottom' ? 'pb-11' : placement === 'outside-top' ? 'pt-11' : ''
+                placement === 'outside-bottom' ? 'pb-11' : placement === 'outside-top' ? 'pt-11' : '',
+                disabled ? 'cursor-not-allowed' : 'pointer-events-auto'
             )}
         >
             <div
                 className={clsx(
                     'z-10 absolute left-0',
-                    placement.includes('top') ? 'top-0' : placement.includes('bottom') ? 'bottom-0' : ''
+                    placement.includes('top') ? 'top-0' : placement.includes('bottom') ? 'bottom-0' : '',
+                    disabled ? 'pointer-events-none' : 'pointer-events-auto'
                 )}
             >
                 <TextEditorMenuBar editor={editor} />
             </div>
-            <EditorContent editor={editor} />
+            <EditorContent
+                editor={editor}
+                disabled={disabled}
+                className={cn(disabled ? 'pointer-events-none' : 'pointer-events-auto')}
+            />
             <input
+                disabled={disabled}
                 ref={inputRef}
                 name={name}
                 value={value}
