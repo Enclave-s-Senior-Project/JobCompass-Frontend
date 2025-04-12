@@ -9,6 +9,8 @@ import { ImageInput } from './image-input';
 import { settingEmployerProfile } from '@/lib/action';
 import { EnterpriseContext } from '@/contexts';
 import { toast } from '@/lib/toast';
+import { Edit, XCircle } from 'lucide-react';
+import { handleErrorToast } from '@/lib/utils';
 
 type CompanyProfileType = {
     logoFile: File | null;
@@ -30,6 +32,7 @@ type FormErrors = {
 
 export function FormCompanyProfile() {
     const { enterpriseInfo, refetchEnterpriseInfo } = useContext(EnterpriseContext);
+    const [editable, setEditable] = useState(false);
     const [canSubmit, setCanSubmit] = useState(false);
     const [errors, setErrors] = useState<FormErrors>({
         logoFile: [],
@@ -121,6 +124,10 @@ export function FormCompanyProfile() {
         if (nameInput) setFormValue((prev) => ({ ...prev, [nameInput]: value }));
     };
 
+    const handleToggleEditable = () => {
+        setEditable((prev) => !prev);
+    };
+
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setIsPending(true);
@@ -148,8 +155,7 @@ export function FormCompanyProfile() {
             toast.success('Profile updated successfully');
             setCanSubmit(false);
         } catch (error) {
-            console.error('Failed to save profile:', error);
-            toast.error('Oops! Something went wrong');
+            handleErrorToast(error);
         } finally {
             setIsPending(false);
         }
@@ -157,11 +163,25 @@ export function FormCompanyProfile() {
 
     return (
         <form className="space-y-8" onSubmit={handleSubmit}>
+            <div className="flex items-center justify-between">
+                <h5 className="text-lg font-medium text-gray-900">Logo & Banner Image</h5>
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="md"
+                    className={clsx('text-sm', editable ? 'text-red-500 border-red-100 hover:border-red-500' : '')}
+                    onClick={handleToggleEditable}
+                >
+                    {editable ? <XCircle /> : <Edit />}
+                    {editable ? 'Cancel' : 'Edit'}
+                </Button>
+            </div>
             <div className="space-y-4">
                 <div className="flex items-center gap-4 select-none">
                     <div className="w-24 md:w-40 lg:w-60">
                         <label className="text-sm text-gray-900 cursor-default">Profile Picture</label>
                         <ImageInput
+                            disabled={!editable}
                             name="logoFile"
                             value={formValue.logoUrl}
                             isAvatar={true}
@@ -171,6 +191,7 @@ export function FormCompanyProfile() {
                     <div className="flex-1">
                         <label className="text-sm text-gray-900 cursor-default">Background Picture</label>
                         <ImageInput
+                            disabled={!editable}
                             name="backgroundFile"
                             value={formValue.backgroundImageUrl}
                             onChange={handleChangeInputValue}
@@ -181,6 +202,7 @@ export function FormCompanyProfile() {
                     <div className="relative col-span-2 lg:col-span-1">
                         <label className="text-sm text-gray-900 cursor-default">Company Name</label>
                         <Input
+                            disabled={!editable}
                             name="name"
                             placeholder="Company Name"
                             type="text"
@@ -200,6 +222,7 @@ export function FormCompanyProfile() {
                     <div className="relative col-span-2 lg:col-span-1">
                         <label className="text-sm text-gray-900 cursor-default">Phone</label>
                         <Input
+                            disabled={!editable}
                             name="phone"
                             placeholder="+1233456789"
                             type="text"
@@ -219,6 +242,7 @@ export function FormCompanyProfile() {
                     <div className="col-span-2">
                         <label className="text-sm text-gray-900 cursor-default">About Us</label>
                         <RichTextEditor
+                            disabled={!editable}
                             name="description"
                             value={formValue.description}
                             onChange={handleChangeRichEditor}
@@ -228,11 +252,13 @@ export function FormCompanyProfile() {
                     </div>
                 </div>
             </div>
-            <div>
-                <Button size="xl" isPending={isPending} disabled={!canSubmit}>
-                    Save Changes
-                </Button>
-            </div>
+            {editable && (
+                <div>
+                    <Button size="xl" isPending={isPending} disabled={!canSubmit}>
+                        Save Changes
+                    </Button>
+                </div>
+            )}
         </form>
     );
 }

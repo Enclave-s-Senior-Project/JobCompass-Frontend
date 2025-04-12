@@ -13,6 +13,7 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from '@/lib/toast';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Edit, XCircle } from 'lucide-react';
+import { handleErrorToast } from '@/lib/utils';
 
 type FormErrors = {
     avatarFile: (string | null)[];
@@ -63,8 +64,8 @@ export function FormPersonalProfile() {
             }
             return res;
         },
-        onError: () => {
-            toast.error('Oops! Something went wrong');
+        onError: (error) => {
+            handleErrorToast(error);
         },
     });
 

@@ -15,7 +15,7 @@ import { queryKey } from '@/lib/react-query/keys';
 import { CategoryService } from '@/services/categories.service';
 import { useDebounce } from '@/hooks/useDebounce';
 import { handleErrorToast } from '@/lib/utils';
-import { Edit, X, XCircle } from 'lucide-react';
+import { Edit, XCircle } from 'lucide-react';
 
 type FormErrors = {
     nationality: (string | null)[];
@@ -58,8 +58,8 @@ export function FormUpdateCandidateProfile() {
         queryFn: async ({ queryKey }) => {
             try {
                 return await CategoryService.getPrimaryCategories({ options: queryKey[1], take: 20 });
-            } catch {
-                toast.error('Oops! Something went wrong');
+            } catch (error) {
+                handleErrorToast(error);
             }
         },
     });
@@ -69,8 +69,8 @@ export function FormUpdateCandidateProfile() {
         queryFn: async ({ queryKey }) => {
             try {
                 return await CategoryService.getCategoriesChildren(queryKey[1], { options: queryKey[2], take: 20 });
-            } catch {
-                toast.error('Oops! Something went wrong');
+            } catch (error) {
+                handleErrorToast(error);
             }
         },
         enabled: !!inputValueIndustry.selectValue, // query if industry is selected
