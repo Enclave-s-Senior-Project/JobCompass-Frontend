@@ -12,6 +12,7 @@ import { PersonalProfileType } from '@/types';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from '@/lib/toast';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Edit, XCircle } from 'lucide-react';
 
 type FormErrors = {
     avatarFile: (string | null)[];
@@ -26,6 +27,7 @@ type FormErrors = {
 
 export function FormPersonalProfile() {
     const { refreshMe, userInfo } = useContext(UserContext);
+    const [editable, setEditable] = useState(false);
     const [canSubmit, setCanSubmit] = useState(false);
     const [errors, setErrors] = useState<FormErrors>({
         avatarFile: [],
@@ -105,7 +107,9 @@ export function FormPersonalProfile() {
     const handleChangeRichEditor = (value: string, nameInput?: string) => {
         if (nameInput) setFormValue((prev) => ({ ...prev, [nameInput]: value }));
     };
-
+    const handleToggleEditable = () => {
+        setEditable((prev) => !prev);
+    };
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         submitMutation();
@@ -113,11 +117,25 @@ export function FormPersonalProfile() {
 
     return (
         <form className="space-y-8" onSubmit={handleSubmit}>
+            <div className="flex items-center justify-between">
+                <h5 className="text-lg font-medium text-gray-900">Basic Information</h5>
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="md"
+                    className={clsx('text-sm', editable ? 'text-red-500 border-red-100 hover:border-red-500' : '')}
+                    onClick={handleToggleEditable}
+                >
+                    {editable ? <XCircle /> : <Edit />}
+                    {editable ? 'Cancel' : 'Edit'}
+                </Button>
+            </div>
             <div className="space-y-4">
                 <div className="flex items-center gap-4 select-none">
                     <div className="w-24 md:w-40 lg:w-60">
                         <label className="text-sm text-gray-900 cursor-default">Profile Picture</label>
                         <ImageInput
+                            disabled={!editable}
                             name="avatarFile"
                             value={formValue?.avatarUrl}
                             isAvatar={true}
@@ -127,6 +145,7 @@ export function FormPersonalProfile() {
                     <div className="flex-1">
                         <label className="text-sm text-gray-900 cursor-default">Background Picture</label>
                         <ImageInput
+                            disabled={!editable}
                             name="backgroundFile"
                             value={formValue?.backgroundUrl}
                             onChange={handleChangeInputValue}
@@ -139,6 +158,7 @@ export function FormPersonalProfile() {
                             Full name
                         </label>
                         <Input
+                            disabled={!editable}
                             value={formValue?.fullName}
                             name="fullName"
                             placeholder="John Smith"
@@ -160,6 +180,7 @@ export function FormPersonalProfile() {
                             Phone
                         </label>
                         <Input
+                            disabled={!editable}
                             name="phone"
                             placeholder="+1233456789"
                             type="text"
@@ -179,6 +200,7 @@ export function FormPersonalProfile() {
                     <div className="relative col-span-1">
                         <label className="text-sm text-gray-900 cursor-default">Date Of Birth</label>
                         <Input
+                            disabled={!editable}
                             value={formValue.dateOfBirth}
                             onChange={(e: ChangeEvent<HTMLInputElement>) => {
                                 setFormValue((prev) => ({ ...prev, dateOfBirth: e.target.value }));
@@ -200,6 +222,7 @@ export function FormPersonalProfile() {
                     <div className="relative col-span-1">
                         <label className="text-sm text-gray-900 cursor-default">Marital Status</label>
                         <Select
+                            disabled={!editable}
                             name="maritalStatus"
                             value={formValue.maritalStatus}
                             onValueChange={(value: string) => {
@@ -233,6 +256,7 @@ export function FormPersonalProfile() {
                             Education
                         </label>
                         <RichTextEditor
+                            disabled={!editable}
                             name="education"
                             onChange={handleChangeRichEditor}
                             placement="inside-bottom"
@@ -245,6 +269,7 @@ export function FormPersonalProfile() {
                             Experience
                         </label>
                         <RichTextEditor
+                            disabled={!editable}
                             name="experience"
                             value={formValue.experience}
                             onChange={handleChangeRichEditor}
@@ -254,11 +279,13 @@ export function FormPersonalProfile() {
                     </div>
                 </div>
             </div>
-            <div>
-                <Button size="xl" isPending={isPending} disabled={!canSubmit}>
-                    Save Changes
-                </Button>
-            </div>
+            {editable && (
+                <div>
+                    <Button size="xl" isPending={isPending} disabled={!canSubmit}>
+                        Save Changes
+                    </Button>
+                </div>
+            )}
         </form>
     );
 }

@@ -14,6 +14,8 @@ import { InputSelectSingle, InputSelectSingleItem } from './input-select-single'
 import { queryKey } from '@/lib/react-query/keys';
 import { CategoryService } from '@/services/categories.service';
 import { useDebounce } from '@/hooks/useDebounce';
+import { handleErrorToast } from '@/lib/utils';
+import { Edit, X, XCircle } from 'lucide-react';
 
 type FormErrors = {
     nationality: (string | null)[];
@@ -34,6 +36,7 @@ export function FormUpdateCandidateProfile() {
         introduction: [],
     };
 
+    const [editable, setEditable] = useState(false);
     const [nationality, setNationality] = useState(userInfo?.nationality ?? '');
     const [gender, setGender] = useState(userInfo?.gender ?? '');
     const [introduction, setIntroduction] = useState(userInfo?.introduction ?? '');
@@ -87,12 +90,13 @@ export function FormUpdateCandidateProfile() {
             setErrors(errors as FormErrors);
             if (success) {
                 refreshMe();
+                setEditable(false);
                 toast.success('Updated user is successfully!');
             }
             return res;
         },
-        onError: () => {
-            toast.error('Oops! Something went wrong');
+        onError: (error) => {
+            handleErrorToast(error);
         },
     });
 
@@ -125,18 +129,35 @@ export function FormUpdateCandidateProfile() {
         setCanSubmit(hasChanges);
     };
 
+    const handleToggleEditable = () => {
+        setEditable((prev) => !prev);
+    };
+
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        submitMutation();
+        if (editable) submitMutation();
     };
 
     return (
         <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="flex items-center justify-between">
+                <h5 className="text-lg font-medium text-gray-900">Candidate Information</h5>
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="md"
+                    className={clsx('text-sm', editable ? 'text-red-500 border-red-100 hover:border-red-500' : '')}
+                    onClick={handleToggleEditable}
+                >
+                    {editable ? <XCircle /> : <Edit />}
+                    {editable ? 'Cancel' : 'Edit'}
+                </Button>
+            </div>
             <div className="grid grid-cols-2 gap-4">
                 {/* nationality */}
                 <div className="relative col-span-1">
                     <label className="text-sm text-gray-900 cursor-default">Nationality</label>
-                    <Select name="nationality" value={nationality} onValueChange={setNationality}>
+                    <Select name="nationality" value={nationality} onValueChange={setNationality} disabled={!editable}>
                         <SelectTrigger
                             className={clsx(
                                 'h-12 text-base rounded-sm',
@@ -167,7 +188,7 @@ export function FormUpdateCandidateProfile() {
                 {/* gender */}
                 <div className="relative col-span-1">
                     <label className="text-sm text-gray-900 cursor-default">Gender</label>
-                    <Select name="gender" value={gender} onValueChange={setGender}>
+                    <Select name="gender" value={gender} onValueChange={setGender} disabled={!editable}>
                         <SelectTrigger
                             className={clsx(
                                 'h-12 text-base rounded-sm',
@@ -194,6 +215,7 @@ export function FormUpdateCandidateProfile() {
                 <div className="relative col-span-1">
                     <label className="text-sm text-gray-900 cursor-default">Industry</label>
                     <InputSelectSingle
+                        disabled={!editable}
                         placeholder="Select..."
                         inputValue={inputValueIndustry.inputValue}
                         onChangeInputValue={(value: string) =>
@@ -220,6 +242,7 @@ export function FormUpdateCandidateProfile() {
                 <div className="relative col-span-1">
                     <label className="text-sm text-gray-900 cursor-default">Majority</label>
                     <InputSelectSingle
+                        disabled={!editable}
                         placeholder="Select..."
                         inputValue={inputValueMajority.inputValue}
                         onChangeInputValue={(value: string) =>
@@ -246,6 +269,7 @@ export function FormUpdateCandidateProfile() {
                 <div className="relative col-span-2">
                     <label className="text-sm text-gray-900 cursor-default">Introduction (Bio)</label>
                     <RichTextEditor
+                        disabled={!editable}
                         placement="inside-bottom"
                         name="introduction"
                         value={introduction}
@@ -253,11 +277,13 @@ export function FormUpdateCandidateProfile() {
                     />
                 </div>
             </div>
-            <div>
-                <Button size="xl" variant="primary" type="submit" isPending={isPending} disabled={!canSubmit}>
-                    Save changes
-                </Button>
-            </div>
+            {editable && (
+                <div>
+                    <Button size="xl" variant="primary" type="submit" isPending={isPending} disabled={!canSubmit}>
+                        Save changes
+                    </Button>
+                </div>
+            )}
         </form>
     );
 }

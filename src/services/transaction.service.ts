@@ -1,9 +1,8 @@
 import NextError from 'next/error';
-import { AuthAxios, BaseAxios } from '@/lib/axios';
+import { AuthAxios } from '@/lib/axios';
 import { ApiResponse, DetailedRequest } from '@/types';
 import { AxiosError } from 'axios';
 
-const axios = new BaseAxios('transaction');
 const authAxios = new AuthAxios('transaction');
 
 export class TransactionService {

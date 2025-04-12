@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { cn } from '@/lib/utils';
 
 interface InputSelectSingleProps {
+    disabled?: boolean;
     children: any;
     inputValue: string;
     selectValue: string;
@@ -36,6 +37,7 @@ const InputSelectSingle = memo(
         selectValue,
         placeholder,
         className,
+        disabled,
     }: InputSelectSingleProps) => {
         const [open, setOpen] = useState(false);
         const [isBlur, setIsBlur] = useState(false);
@@ -88,11 +90,15 @@ const InputSelectSingle = memo(
         return (
             <div
                 ref={wrapperRef}
+                aria-disabled={disabled}
                 tabIndex={0} // Makes the div focusable
                 onBlur={handleWrapperBlur}
                 className={cn(
-                    'h-12 relative rounded-sm border border-input shadow-sm focus-within:ring-1 focus-within:ring-primary-500 focus-within:border-primary-500 transition-all',
-                    className
+                    'h-12 relative rounded-sm border border-input shadow-sm transition-all',
+                    className,
+                    disabled
+                        ? 'cursor-not-allowed border-gray-50'
+                        : 'focus-within:ring-1 focus-within:ring-primary-500 focus-within:border-primary-500 '
                 )}
             >
                 <Input
@@ -107,6 +113,7 @@ const InputSelectSingle = memo(
                         setOpen(true);
                         setIsBlur(false);
                     }}
+                    disabled={disabled}
                 />
                 <Card
                     className={clsx(

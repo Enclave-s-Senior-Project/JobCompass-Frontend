@@ -16,6 +16,7 @@ interface ImageInputProps {
     isAvatar?: boolean;
     isError?: boolean;
     value?: string;
+    disabled?: boolean;
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -42,7 +43,7 @@ const createEmptyChangeEvent = (
 
 // Main Component
 export const ImageInput = memo(
-    ({ name, initImage, isAvatar = false, isError = false, onChange, value }: ImageInputProps) => {
+    ({ name, initImage, isAvatar = false, isError = false, onChange, value, disabled }: ImageInputProps) => {
         const [image, setImage] = useState<ImageData>({
             size: 0,
             url: initImage ?? value ?? '',
@@ -84,7 +85,7 @@ export const ImageInput = memo(
         );
 
         return (
-            <div className="relative w-full pb-5">
+            <div className={clsx('relative w-full pb-5', disabled ? 'cursor-not-allowed' : 'cursor-pointer')}>
                 <div className={containerClasses} onClick={handleSelectFile}>
                     {image.url ? (
                         <img src={image.url} alt="Profile Picture" className={imageClasses} />
@@ -99,6 +100,7 @@ export const ImageInput = memo(
                     name={name}
                     className="hidden"
                     onChange={handleImageChange}
+                    disabled={disabled}
                     // value={value}
                     multiple={false}
                     accept="image/jpg,image/png,image/jpeg"
