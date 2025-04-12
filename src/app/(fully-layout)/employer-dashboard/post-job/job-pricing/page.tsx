@@ -7,6 +7,7 @@ import { LuArrowRight } from 'react-icons/lu';
 import { TransactionService } from '@/services/transaction.service';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { handleErrorToast } from '@/lib/utils';
 
 export default function JobPricing() {
     const [selectedPlan, setSelectedPlan] = useState<string>('standard');
@@ -19,8 +20,8 @@ export default function JobPricing() {
             const data = { amountPaid, premiumType };
             const paymentUrl = await TransactionService.createOrder(data);
             router.push(paymentUrl);
-        } catch {
-            toast.error('Oops! Something went wrong');
+        } catch (error) {
+            handleErrorToast(error);
         }
     };
     return (

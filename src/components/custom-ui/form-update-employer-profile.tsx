@@ -10,6 +10,8 @@ import { EnterpriseContext } from '@/contexts';
 import { toast } from '@/lib/toast';
 import { settingEmployerFounding } from '@/lib/action';
 import { CompanyProfileFoundingType, FormErrors } from '@/types';
+import { Edit, XCircle } from 'lucide-react';
+import { handleErrorToast } from '@/lib/utils';
 
 export enum OrganizationType {
     PRIVATE = 'PRIVATE',
@@ -20,6 +22,7 @@ export enum OrganizationType {
 
 export function FormUpdateEmployerProfile() {
     const { enterpriseInfo, refetchEnterpriseInfo } = React.useContext(EnterpriseContext);
+    const [editable, setEditable] = useState(false);
     const [canSubmit, setCanSubmit] = useState(false);
     const [errors, setErrors] = useState<FormErrors>({
         email: [],
@@ -131,6 +134,10 @@ export function FormUpdateEmployerProfile() {
         if (nameInput) setFormValue((prev) => ({ ...prev, [nameInput]: value }));
     };
 
+    const handleToggleEditable = () => {
+        setEditable((prev) => !prev);
+    };
+
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setIsPending(true);
@@ -150,10 +157,8 @@ export function FormUpdateEmployerProfile() {
             refetchEnterpriseInfo();
             toast.success('Profile updated successfully!');
             setCanSubmit(false);
-            // }
         } catch (error) {
-            console.error('Failed to save profile:', error);
-            toast.error('Oops! Something went wrong');
+            handleErrorToast(error);
         } finally {
             setIsPending(false);
         }
@@ -161,12 +166,26 @@ export function FormUpdateEmployerProfile() {
 
     return (
         <form className="space-y-8" onSubmit={handleSubmit}>
+            <div className="flex items-center justify-between">
+                <h5 className="text-lg font-medium text-gray-900">Founding Information</h5>
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="md"
+                    className={clsx('text-sm', editable ? 'text-red-500 border-red-100 hover:border-red-500' : '')}
+                    onClick={handleToggleEditable}
+                >
+                    {editable ? <XCircle /> : <Edit />}
+                    {editable ? 'Cancel' : 'Edit'}
+                </Button>
+            </div>
             <div className="space-y-4">
                 <div className="grid grid-cols-3 gap-4 select-none">
                     {/* Organization Type */}
                     <div className="relative col-span-3 lg:col-span-1">
                         <label className="text-sm text-gray-900 cursor-default">Organization Type</label>
                         <Select
+                            disabled={!editable}
                             value={formValue.organizationType}
                             onValueChange={(value) => handleSelectChange('organizationType', value)}
                         >
@@ -198,6 +217,7 @@ export function FormUpdateEmployerProfile() {
                     <div className="relative col-span-3 lg:col-span-1">
                         <label className="text-sm text-gray-900 cursor-default">Industry Type</label>
                         <Input
+                            disabled={!editable}
                             name="industryType"
                             placeholder="Industry type"
                             type="text"
@@ -219,6 +239,7 @@ export function FormUpdateEmployerProfile() {
                     <div className="relative col-span-3 lg:col-span-1">
                         <label className="text-sm text-gray-900 cursor-default">Team Size</label>
                         <Select
+                            disabled={!editable}
                             value={formValue.teamSize}
                             onValueChange={(value) => handleSelectChange('teamSize', value)}
                         >
@@ -253,6 +274,7 @@ export function FormUpdateEmployerProfile() {
                     <div className="relative col-span-2 lg:col-span-1">
                         <label className="text-sm text-gray-900 cursor-default">Year of Establishment</label>
                         <Input
+                            disabled={!editable}
                             name="foundedIn"
                             type="date"
                             value={formValue.foundedIn ? formValue.foundedIn.toISOString().split('T')[0] : ''}
@@ -274,6 +296,7 @@ export function FormUpdateEmployerProfile() {
                     <div className="relative col-span-2 lg:col-span-1">
                         <label className="text-sm text-gray-900 cursor-default">Company Website</label>
                         <Input
+                            disabled={!editable}
                             name="email"
                             placeholder="Company website"
                             type="text"
@@ -297,6 +320,7 @@ export function FormUpdateEmployerProfile() {
                     <div className="col-span-2 md:col-span-1">
                         <label className="text-sm text-gray-900 cursor-default">Introduction (Bio)</label>
                         <RichTextEditor
+                            disabled={!editable}
                             name="bio"
                             value={formValue.bio}
                             onChange={handleChangeRichEditor}
@@ -307,6 +331,7 @@ export function FormUpdateEmployerProfile() {
                     <div className="col-span-2 md:col-span-1">
                         <label className="text-sm text-gray-900 cursor-default">Company Vision</label>
                         <RichTextEditor
+                            disabled={!editable}
                             name="companyVision"
                             value={formValue.companyVision}
                             onChange={handleChangeRichEditor}
@@ -319,6 +344,7 @@ export function FormUpdateEmployerProfile() {
                 <div className="col-span-2 md:col-span-1">
                     <label className="text-sm text-gray-900 cursor-default">Description</label>
                     <RichTextEditor
+                        disabled={!editable}
                         name="description"
                         value={formValue.description}
                         onChange={handleChangeRichEditor}
