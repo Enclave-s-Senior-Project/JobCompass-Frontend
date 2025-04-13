@@ -6,34 +6,48 @@ import { setLoginCookie, storeTokenInfo } from '@/lib/auth';
 import { UserContext } from '@/contexts';
 import { CompassLoadingQuick } from '@/components/custom-ui/loading';
 import { toast } from '@/lib/toast';
+import { useMutation } from '@tanstack/react-query';
+import { AuthService } from '@/services';
+import { DetailedRequest } from '@/types';
+import { handleErrorToast } from '@/lib/utils';
 
 const CallbackPage = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { refreshMe } = useContext(UserContext);
 
-    useEffect(() => {
-        const tokenType = searchParams.get('tokenType');
-        const accessToken = searchParams.get('accessToken');
-        const accessTokenExpires = Number(searchParams.get('accessTokenExpires'));
-        const refreshTokenExpires = Number(searchParams.get('refreshTokenExpires'));
-
-        if (!JSON.parse(sessionStorage.getItem('onLoginOauth2') || 'false')) {
-            router.back();
-        }
-
-        if (tokenType && accessToken && accessTokenExpires) {
-            sessionStorage.removeItem('onLoginOauth2'); // remove after checking
-            storeTokenInfo(accessToken, tokenType, accessTokenExpires);
-            setLoginCookie(refreshTokenExpires);
-
-            refreshMe();
-
-            toast.success('Login successful');
-            router.push('/');
-        } else {
+    const confirmLoginMutation = useMutation({
+        mutationFn: async (data: DetailedRequest.ConfirmOAuth2Login) => AuthService.confirmOAuth2Login(data),
+        onSuccess: async (data) => {
+            if (data) {
+                storeTokenInfo(data?.accessToken as string, data?.tokenType, data?.accessTokenExpires);
+                setLoginCookie(data?.refreshTokenExpires);
+                refreshMe();
+                router.push('/');
+            }
+        },
+        onError: (error) => {
+            handleErrorToast(error);
             router.push('/sign-in');
+        },
+    });
+
+    useEffect(() => {
+        const authToken = searchParams.get('authToken')?.toString();
+        const iv = searchParams.get('iv')?.toString();
+        const provider = searchParams.get('provider')?.toString();
+
+        if (!authToken || !iv || !provider) {
+            toast.error('Invalid callback parameters');
+            router.push('/sign-in');
+            return;
         }
+
+        confirmLoginMutation.mutate({
+            authToken: authToken,
+            iv: iv,
+            provider: provider,
+        });
     }, [router, searchParams]);
 
     return <CompassLoadingQuick />;

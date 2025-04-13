@@ -310,4 +310,10 @@ export namespace DetailedRequest {
         amountPaid: number;
         premiumType: string;
     }
+
+    export interface ConfirmOAuth2Login {
+        authToken: string;
+        iv: string;
+        provider: string;
+    }
 }
