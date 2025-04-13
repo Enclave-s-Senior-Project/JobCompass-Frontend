@@ -72,6 +72,7 @@ export class AuthAxios extends BaseAxios {
                         clearLoginCookie();
                         clearTokenInfo();
                         clearUserAndEnterpriseInfoLocalStorage();
+                        throw new Error('Session expired. Please log in again.');
                     }
                 }
 

@@ -2,6 +2,7 @@ import { AuthAxios, BaseAxios } from '@/lib/axios';
 import { ApiResponse, DetailedRequest, DetailedResponse, User } from '@/types';
 import { AxiosError } from 'axios';
 import NextError from 'next/error';
+import { handleErrorApi } from '.';
 
 const axios = new BaseAxios('auth');
 const authAxios = new AuthAxios('auth');
@@ -151,6 +152,19 @@ export class AuthService {
                 });
             }
             throw err;
+        }
+    }
+
+    public static async confirmOAuth2Login(data: DetailedRequest.ConfirmOAuth2Login) {
+        try {
+            const { provider, ...payload } = data;
+            const dataResponse = await axios.post<ApiResponse<DetailedResponse.SignIn>>(
+                `/${provider}/confirm`,
+                payload
+            );
+            return dataResponse.payload.value;
+        } catch (err) {
+            handleErrorApi(err);
         }
     }
 }

@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { LuArrowRight } from 'react-icons/lu';
 import { TransactionService } from '@/services/transaction.service';
 import { useRouter } from 'next/navigation';
-import toast from 'react-hot-toast';
 import { handleErrorToast } from '@/lib/utils';
 
 export default function JobPricing() {
