@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 import { LuArrowRight } from 'react-icons/lu';
 import { TransactionService } from '@/services/transaction.service';
 import { useRouter } from 'next/navigation';
-import toast from 'react-hot-toast';
 import { handleErrorToast } from '@/lib/utils';
+import { useMutation } from '@tanstack/react-query';
 
 export default function JobPricing() {
     const [selectedPlan, setSelectedPlan] = useState<string>('standard');
@@ -15,15 +15,20 @@ export default function JobPricing() {
     const handlePlanClick = (plan: string) => {
         setSelectedPlan(plan);
     };
-    const Payment = async (amountPaid: number, premiumType: string) => {
-        try {
+
+    const payment = useMutation({
+        mutationFn: async ({ amountPaid, premiumType }: { amountPaid: number; premiumType: string }) => {
             const data = { amountPaid, premiumType };
             const paymentUrl = await TransactionService.createOrder(data);
+            return paymentUrl;
+        },
+        onSuccess: (paymentUrl: string) => {
             router.push(paymentUrl);
-        } catch (error) {
-            handleErrorToast(error);
-        }
-    };
+        },
+        onError: () => {
+            handleErrorToast('Oops! Something went wrong');
+        },
+    });
     return (
         <div className="container mx-auto px-4 py-12 max-w-6xl">
             <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-16">
@@ -158,7 +163,11 @@ export default function JobPricing() {
                         </div>
                     </div>
 
-                    <Button type="submit" className="group w-full md:w-auto" onClick={() => Payment(30, 'STANDARD')}>
+                    <Button
+                        type="submit"
+                        className="group w-full md:w-auto"
+                        onClick={() => payment.mutate({ amountPaid: 30, premiumType: 'STANDARD' })}
+                    >
                         Choose Plan <LuArrowRight className="group-hover:translate-x-2 transition-all duration-100" />
                     </Button>
                 </div>
@@ -214,7 +223,11 @@ export default function JobPricing() {
                         </div>
                     </div>
 
-                    <Button type="submit" className="group w-full md:w-auto" onClick={() => Payment(30, 'PREMIUM')}>
+                    <Button
+                        type="submit"
+                        className="group w-full md:w-auto"
+                        onClick={() => payment.mutate({ amountPaid: 30, premiumType: 'PREMIUM' })}
+                    >
                         Choose Plan <LuArrowRight className="group-hover:translate-x-2 transition-all duration-100" />
                     </Button>
                 </div>

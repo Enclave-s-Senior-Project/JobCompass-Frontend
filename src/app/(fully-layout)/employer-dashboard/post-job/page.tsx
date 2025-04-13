@@ -20,6 +20,7 @@ import MultiSelectCategoriesChildSearchInput from '@/components/custom-ui/select
 import { handleErrorToast } from '@/lib/utils';
 import { queryKey } from '@/lib/react-query/keys';
 import { toast } from '@/lib/toast';
+import { JobTypeEnum } from '@/lib/common-enum';
 
 export default function PostJobForm() {
     const router = useRouter();
@@ -270,9 +271,11 @@ export default function PostJobForm() {
                                     <SelectValue placeholder="Select..." />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="Full Time">Full Time</SelectItem>
-                                    <SelectItem value="Part Time">Part Time</SelectItem>
-                                    <SelectItem value="Contract">Contract</SelectItem>
+                                    {Object.values(JobTypeEnum).map((jobType) => (
+                                        <SelectItem key={jobType} value={jobType}>
+                                            {jobType}
+                                        </SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                             <p className=" text-red-500 text-[12px] font-medium ">

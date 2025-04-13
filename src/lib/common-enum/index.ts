@@ -30,3 +30,8 @@ export enum NotificationType {
     APPLICATION_REJECTED = 'application_rejected',
     // ADD MORE WHEN NEEDED
 }
+
+export enum MessagePayment {
+    SUCCESSFUL_PAYMENT = 'success',
+    UNSUCCESSFUL_PAYMENT = 'Unsuccessful',
+}
