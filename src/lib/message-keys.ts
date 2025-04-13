@@ -40,6 +40,8 @@ const successKeyMessage = {
     POST_JOB_SUCCESSFUL: 'Job submission successful.',
     REGISTER_ENTERPRISE_SUCCESSFUL: 'Enterprise registration successful.',
     UPDATE_REGISTER_ENTERPRISE_SUCCESSFUL: 'Enterprise update successful.',
+    SUCCESSFUL_PAYMENT: 'Successful Payment',
+    UNSUCCESSFUL_PAYMENT: 'Unsuccessful Payment',
 };
 
 export { errorKeyMessage, successKeyMessage };
