@@ -19,9 +19,9 @@ import { Edit, XCircle } from 'lucide-react';
 
 type FormErrors = {
     nationality: (string | null)[];
-    dateOfBirth: (string | null)[];
+    industry: (string | null)[];
     gender: (string | null)[];
-    maritalStatus: (string | null)[];
+    majority: (string | null)[];
     introduction: (string | null)[];
 };
 
@@ -30,9 +30,9 @@ export function FormUpdateCandidateProfile() {
 
     const initialErrors: FormErrors = {
         nationality: [],
-        dateOfBirth: [],
+        industry: [],
         gender: [],
-        maritalStatus: [],
+        majority: [],
         introduction: [],
     };
 
@@ -235,7 +235,7 @@ export function FormUpdateCandidateProfile() {
                         ))}
                     </InputSelectSingle>
                     <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
-                        {errors?.nationality?.length > 0 && errors.nationality[0]}
+                        {errors?.industry?.length > 0 && errors.nationality[0]}
                     </p>
                 </div>
                 {/* majority */}
@@ -262,7 +262,7 @@ export function FormUpdateCandidateProfile() {
                         ))}
                     </InputSelectSingle>
                     <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
-                        {errors?.nationality?.length > 0 && errors.nationality[0]}
+                        {errors?.majority?.length > 0 && errors.nationality[0]}
                     </p>
                 </div>
                 {/* introduction (bio) */}

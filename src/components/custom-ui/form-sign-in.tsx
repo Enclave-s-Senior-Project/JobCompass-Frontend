@@ -111,7 +111,7 @@ export function FormSignIn({ error_code, redirect }: Props) {
             </Button>
             <div className="space-y-4">
                 <p className="text-center text-sm text-gray-500">or</p>
-                <ButtonOptionsSignIn />
+                <ButtonOptionsSignIn redirect={redirect} />
             </div>
         </form>
     );

@@ -101,7 +101,7 @@ const updatePersonalProfile = z.object({
 });
 
 const updateCandidateProfile = z.object({
-    nationality: z.string().min(1, 'Nationality is required'),
+    nationality: z.string(),
     gender: z.enum(['FEMALE', 'MALE'], { message: 'Gender is required' }),
 });
 
