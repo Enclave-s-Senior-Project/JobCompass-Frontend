@@ -4,7 +4,7 @@ import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import type { Column as ColumnType } from './kanban-board';
 import ApplicationCard from './application-card';
-import { MoreHorizontal, Plus } from 'lucide-react';
+import { MoreHorizontal } from 'lucide-react';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -117,26 +117,17 @@ export default function Column({ column, isCreateColumn = false }: ColumnProps) 
                 )}
             </div>
 
-            {isCreateColumn ? (
-                <div className="flex items-center justify-center h-32 border-2 border-dashed border-muted-foreground/20 rounded-lg mx-4 mb-4">
-                    <button className="flex items-center gap-2 text-primary">
-                        <Plus className="h-5 w-5" />
-                        <span>Create Column</span>
-                    </button>
+            <SortableContext
+                id={column.id.toString()}
+                items={column.applicants.map((app: any) => app.id)}
+                strategy={verticalListSortingStrategy}
+            >
+                <div className="space-y-3 p-4 min-h-[100px]">
+                    {column.applicants.map((applicant: any) => (
+                        <ApplicationCard key={applicant.id.toString()} applicant={applicant} />
+                    ))}
                 </div>
-            ) : (
-                <SortableContext
-                    id={column.id.toString()}
-                    items={column.applicants.map((app: any) => app.id)}
-                    strategy={verticalListSortingStrategy}
-                >
-                    <div className="space-y-3 p-4 min-h-[100px]">
-                        {column.applicants.map((applicant: any) => (
-                            <ApplicationCard key={applicant.id.toString()} applicant={applicant} />
-                        ))}
-                    </div>
-                </SortableContext>
-            )}
+            </SortableContext>
         </div>
     );
 }
