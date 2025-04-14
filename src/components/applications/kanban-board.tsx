@@ -35,6 +35,8 @@ export interface Applicant {
     education: Education;
     applied: string;
     avatar: string;
+    gender: string;
+    nationality: string;
 }
 
 export interface ColumnType {
@@ -44,77 +46,6 @@ export interface ColumnType {
     applicants: Applicant[];
 }
 
-// Initial data
-// const initialColumns: ColumnType[] = [
-//     {
-//         id: 'all',
-//         title: 'All Application',
-//         count: 213,
-//         applicants: [
-//             {
-//                 id: '1',
-//                 name: 'Ronald Richards',
-//                 position: 'UI/UX Designer',
-//                 experience: '7 Years Experience',
-//                 education: 'Master Degree',
-//                 applied: 'Jan 23, 2022',
-//                 avatar: '/placeholder.svg?height=40&width=40',
-//             },
-//             {
-//                 id: '2',
-//                 name: 'Theresa Webb',
-//                 position: 'Product Designer',
-//                 experience: '7 Years Experience',
-//                 education: 'High School Degree',
-//                 applied: 'Jan 23, 2022',
-//                 avatar: '/placeholder.svg?height=40&width=40',
-//             },
-//             {
-//                 id: '3',
-//                 name: 'Devon Lane',
-//                 position: 'User Experience Designer',
-//                 experience: '7 Years Experience',
-//                 education: 'Master Degree',
-//                 applied: 'Jan 23, 2022',
-//                 avatar: '/placeholder.svg?height=40&width=40',
-//             },
-//             {
-//                 id: '4',
-//                 name: 'Kathryn Murphy',
-//                 position: 'UI/UX Designer',
-//                 experience: '7 Years Experience',
-//                 education: 'Master Degree',
-//                 applied: 'Jan 23, 2022',
-//                 avatar: '/placeholder.svg?height=40&width=40',
-//             },
-//         ],
-//     },
-//     {
-//         id: 'shortlisted',
-//         title: 'Shortlisted',
-//         count: 2,
-//         applicants: [
-//             {
-//                 id: '5',
-//                 name: 'Darrell Steward',
-//                 position: 'UI/UX Designer',
-//                 experience: '7 Years Experience',
-//                 education: 'Intermediate Degree',
-//                 applied: 'Jan 23, 2022',
-//                 avatar: '/placeholder.svg?height=40&width=40',
-//             },
-//             {
-//                 id: '6',
-//                 name: 'Jenny Wilson',
-//                 position: 'UI Designer',
-//                 experience: '7 Years Experience',
-//                 education: 'Bachelor Degree',
-//                 applied: 'Jan 23, 2022',
-//                 avatar: '/placeholder.svg?height=40&width=40',
-//             },
-//         ],
-//     },
-// ];
 interface KanbanBoardProps {
     jobId: string | string[] | undefined;
 }
