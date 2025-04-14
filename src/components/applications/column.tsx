@@ -117,17 +117,17 @@ export default function Column({ column, isCreateColumn = false }: ColumnProps) 
                 )}
             </div>
 
-            <SortableContext
-                id={column.id.toString()}
-                items={column.applicants.map((app: any) => app.id)}
-                strategy={verticalListSortingStrategy}
-            >
-                <div className="space-y-3 p-4 min-h-[100px]">
-                    {column.applicants.map((applicant: any) => (
-                        <ApplicationCard key={applicant.id.toString()} applicant={applicant} />
-                    ))}
-                </div>
-            </SortableContext>
+                <SortableContext
+                    id={column.id.toString()}
+                    items={column.applicants.map((app: any) => app.id)}
+                    strategy={verticalListSortingStrategy}
+                >
+                    <div className="space-y-3 p-4 min-h-[100px]">
+                        {column.applicants.map((applicant: any) => (
+                            <ApplicationCard key={applicant.id.toString()} applicant={applicant} />
+                        ))}
+                    </div>
+                </SortableContext>
         </div>
     );
 }
