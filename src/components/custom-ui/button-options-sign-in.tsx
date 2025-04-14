@@ -4,14 +4,14 @@ import { Button } from '../ui/button';
 import { FaFacebookF } from 'react-icons/fa6';
 import { FcGoogle } from 'react-icons/fc';
 
-export function ButtonOptionsSignIn() {
+export function ButtonOptionsSignIn({ redirect }: { redirect?: string }) {
     const handleFacebookLogin = () => {
-        sessionStorage.setItem('onLoginOauth2', 'true');
+        if (redirect) localStorage.setItem('redirectAfterLogin', redirect);
         window.open(`${process.env.NEXT_PUBLIC_APP_SERVER_URL}/auth/facebook`, '_self');
     };
 
     const handleGoogleSignIn = () => {
-        sessionStorage.setItem('onLoginOauth2', 'true');
+        if (redirect) localStorage.setItem('redirectAfterLogin', redirect);
         window.open(`${process.env.NEXT_PUBLIC_APP_SERVER_URL}/auth/google`, '_self');
     };
 

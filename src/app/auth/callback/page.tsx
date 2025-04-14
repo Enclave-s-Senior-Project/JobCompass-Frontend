@@ -23,10 +23,17 @@ const CallbackPage = () => {
                 storeTokenInfo(data?.accessToken as string, data?.tokenType, data?.accessTokenExpires);
                 setLoginCookie(data?.refreshTokenExpires);
                 refreshMe();
-                router.push('/');
+                // get redirect URL from local storage and remove it
+                const redirect = localStorage.getItem('redirectAfterLogin');
+                localStorage.removeItem('redirectAfterLogin');
+
+                // redirect to the URL or to the home page
+                if (redirect) router.push(redirect);
+                else router.push('/');
             }
         },
         onError: (error) => {
+            console.log(error)
             handleErrorToast(error);
             router.push('/sign-in');
         },
