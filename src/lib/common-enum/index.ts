@@ -35,3 +35,10 @@ export enum MessagePayment {
     SUCCESSFUL_PAYMENT = 'success',
     UNSUCCESSFUL_PAYMENT = 'Unsuccessful',
 }
+
+export enum EducationJobLevelEnum {
+    HIGH_SCHOOL = 'High School',
+    DIPLOMA_ASSOCIATE = 'Diploma / Associate',
+    BACHELORS = 'Bachelor’s',
+    MASTERS_OR_HIGHER = 'Master’s or Higher',
+}

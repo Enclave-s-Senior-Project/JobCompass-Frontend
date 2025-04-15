@@ -1,8 +1,8 @@
 'use client';
-import { Suspense, useState, useCallback } from 'react';
+import { Suspense, useState, useCallback, useContext } from 'react';
 import { LayoutGrid, List } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import SearchForm from '@/components/custom-ui/search-bar';
+import { SearchForm } from '@/components/custom-ui/search-bar';
 import { DetailedRequest, Meta } from '@/types';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import ListCardJobs from '@/components/custom-ui/list-card-jobs';
@@ -11,40 +11,36 @@ import * as services from '@/services/job.service';
 import { useSearchParams } from 'next/navigation';
 import { queryKey } from '@/lib/react-query/keys';
 import { handleErrorToast } from '@/lib/utils';
+import { UserContext } from '@/contexts';
 
 export default function Page() {
+    const { userInfo } = useContext(UserContext);
+
+    const search = useSearchParams();
+    const page = Number(search.get('page') || 1);
+    const order = (search.get('order')?.toUpperCase() as 'ASC' | 'DESC') || 'ASC';
+    const title = search.get('search')?.toString() || '';
+    const country = search.get('country')?.toString() || '';
+
     const [viewType, setViewType] = useState<'grid' | 'list'>('grid');
     const [itemsPerPage, setItemsPerPage] = useState(6);
     const [option, setOption] = useState('ASC');
     const [totalPages, setTotalPages] = useState(0);
 
     const [activeFilters, setActiveFilters] = useState<DetailedRequest.SearchFilterListJobsCredentials>({
-        keyword: '',
-        location: '',
-        parentCategoryId: null,
-        childrenCategoryId: null,
+        keyword: title || '',
+        location: country || '',
+        parentCategoryId: userInfo?.industry
+            ? { categoryId: userInfo.industry.categoryId, categoryName: userInfo.industry.categoryName, isActive: true }
+            : null,
+        childrenCategoryId: userInfo?.majority
+            ? { categoryId: userInfo.majority.categoryId, categoryName: userInfo.majority.categoryName, isActive: true }
+            : null,
         experience: '',
         salary: '',
         jobType: [],
         education: [],
-        jobLevel: '',
     });
-
-    const [appliedFilters, setAppliedFilters] = useState<DetailedRequest.SearchFilterListJobsCredentials>({
-        keyword: '',
-        location: '',
-        parentCategoryId: null,
-        childrenCategoryId: null,
-        experience: '',
-        salary: '',
-        jobType: [],
-        education: [],
-        jobLevel: '',
-    });
-
-    const search = useSearchParams();
-    const page = Number(search.get('page') || 1);
-    const order = (search.get('order')?.toUpperCase() as 'ASC' | 'DESC') || option;
 
     const transformFiltersToDto = (filters: DetailedRequest.SearchFilterListJobsCredentials) => {
         const salaryRange = filters.salary?.split('-').map(Number) || [];
@@ -56,10 +52,9 @@ export default function Page() {
             majorityCategoryId: filters.childrenCategoryId?.categoryId || undefined,
             minWage: salaryRange[0] || undefined,
             maxWage: salaryRange[1] || undefined,
-            experience: filters.experience ? parseInt(filters.experience, 10) : undefined,
+            experience: filters.experience || undefined,
             type: filters.jobType.length > 0 ? filters.jobType : undefined,
             education: filters.education.length > 0 ? filters.education : undefined,
-            jobLevel: filters.jobLevel || undefined,
         };
     };
 
@@ -69,10 +64,22 @@ export default function Page() {
         isPending,
         isFetching,
     } = useQuery({
-        queryKey: [queryKey.listJobs, { order, page, take: itemsPerPage, options: option }],
+        queryKey: [queryKey.listJobs, { order, page, take: itemsPerPage, options: option }, activeFilters],
         queryFn: async ({ queryKey }) => {
             const { order, page, take, options } = queryKey[1] as any;
+            const appliedFilters = queryKey[2] as DetailedRequest.SearchFilterListJobsCredentials;
             try {
+                if (
+                    !appliedFilters.childrenCategoryId &&
+                    !appliedFilters.parentCategoryId &&
+                    !appliedFilters.keyword &&
+                    !appliedFilters.location &&
+                    !appliedFilters.experience &&
+                    !appliedFilters.salary &&
+                    appliedFilters.jobType.length === 0 &&
+                    appliedFilters.education.length === 0
+                )
+                    return null;
                 const payload = await services.JobService.getAllJobs({
                     order,
                     page,
@@ -84,23 +91,14 @@ export default function Page() {
                 return payload;
             } catch (error: any) {
                 handleErrorToast(error);
+                return null;
             }
         },
         staleTime: 1000 * 60, // 1 minute
-        refetchInterval: 1000 * 60, // 1 minute
         retry: 2,
         enabled: true,
         placeholderData: keepPreviousData,
     });
-
-    const handleSearch = useCallback(
-        (filters: DetailedRequest.SearchFilterListJobsCredentials) => {
-            setActiveFilters(filters);
-            setAppliedFilters(filters);
-            refetch();
-        },
-        [refetch]
-    );
 
     const removeFilter = useCallback(
         (key: keyof DetailedRequest.SearchFilterListJobsCredentials) => {
@@ -109,7 +107,7 @@ export default function Page() {
                     ...prev,
                     [key]: Array.isArray(prev[key]) ? [] : '',
                 };
-                setAppliedFilters(newFilters);
+                setActiveFilters(newFilters);
                 refetch();
                 return newFilters;
             });
@@ -130,15 +128,14 @@ export default function Page() {
             jobLevel: '',
         };
         setActiveFilters(clearedFilters);
-        setAppliedFilters(clearedFilters);
         refetch();
     }, [refetch]);
     return (
         <main className="min-h-dvh bg-white">
-            <SearchForm filters={activeFilters} setFilters={setActiveFilters} onSearch={handleSearch} />
+            <SearchForm filters={activeFilters} setFilters={setActiveFilters} />
             <div className="flex flex-col md:flex-row justify-between items-center max-w-screen-xl mx-auto mb-6 mt-6 gap-6">
                 <div className="flex-1 flex flex-wrap items-center justify-between gap-2">
-                    <div>
+                    <div className="flex items-center flex-wrap gap-1">
                         {Object.entries(activeFilters).map(([key, value]) => {
                             // Xử lý keyword
                             if (key === 'keyword' && value) {
@@ -222,6 +219,38 @@ export default function Page() {
                                         }
                                     >
                                         {value.categoryName}
+                                        <span className="ml-1 text-xs bg-gray-100 px-1.5 py-0.5 rounded-full">×</span>
+                                    </Button>
+                                );
+                            }
+                            if (key === 'experience' && typeof value === 'string' && value) {
+                                return (
+                                    <Button
+                                        key={key}
+                                        variant="outline"
+                                        size="md"
+                                        className="rounded-[30px]"
+                                        onClick={() =>
+                                            removeFilter(key as keyof DetailedRequest.SearchFilterListJobsCredentials)
+                                        }
+                                    >
+                                        {value} years
+                                        <span className="ml-1 text-xs bg-gray-100 px-1.5 py-0.5 rounded-full">×</span>
+                                    </Button>
+                                );
+                            }
+                            if (key === 'salary' && typeof value === 'string' && value) {
+                                return (
+                                    <Button
+                                        key={key}
+                                        variant="outline"
+                                        size="md"
+                                        className="rounded-[30px]"
+                                        onClick={() =>
+                                            removeFilter(key as keyof DetailedRequest.SearchFilterListJobsCredentials)
+                                        }
+                                    >
+                                        {value} $
                                         <span className="ml-1 text-xs bg-gray-100 px-1.5 py-0.5 rounded-full">×</span>
                                     </Button>
                                 );

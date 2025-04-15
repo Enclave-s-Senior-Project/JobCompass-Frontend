@@ -60,7 +60,6 @@ function PageContentOfSingleJob() {
                 const payload = await JobService.detailJob(id, { userId: userInfo?.profileId ?? '' });
                 return payload;
             } catch (error: any) {
-                console.log(error);
                 handleErrorToast(error);
             }
         },
@@ -204,6 +203,10 @@ function PageContentOfSingleJob() {
                         <div className="space-y-4">
                             <p className="text-xl font-semibold text-primary-700">Benefits</p>
                             <RichTextContent content={resultQuery?.enterpriseBenefits || 'No benefit.'} />
+                        </div>
+                        <div className="space-y-4">
+                            <p className="text-xl font-semibold text-primary-700">Requirements</p>
+                            <RichTextContent content={resultQuery?.requirements || 'No requirement.'} />
                         </div>
                         {/* Share profile for breakpoint from md */}
                         <div className="hidden md:block">

@@ -6,14 +6,18 @@ import { Separator } from '@/components/ui/separator';
 import { HiMiniMagnifyingGlass } from 'react-icons/hi2';
 import { languagesData } from '@/lib/data/languages.data';
 import { InputSelectSingle, InputSelectSingleItem } from './input-select-single';
+import { useRouter } from 'next/navigation';
 
 export function Search() {
     const [select, setSelect] = useState<{ inputValue: string; selectValue: string }>({
-        inputValue: '🇻🇳 Vietnam',
+        inputValue: 'Vietnam',
         selectValue: 'Vietnam',
     });
+    const [inputValue, setInputValue] = useState('');
 
     const [countries, setCountries] = useState<any[]>(Object.entries(languagesData));
+
+    const router = useRouter();
 
     const inputId = useId();
 
@@ -27,8 +31,16 @@ export function Search() {
         setCountries(filteredCountries);
     }, [select.inputValue]);
 
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        router.push('/find-jobs?country=' + select.selectValue + '&search=' + inputValue);
+    };
+
     return (
-        <div className="h-12 w-full lg:max-w-[668px] lg:w-[668px] flex items-center border border-input rounded-sm focus-within:border-primary-200">
+        <form
+            onSubmit={handleSubmit}
+            className="h-12 w-full lg:max-w-[668px] lg:w-[668px] flex items-center border border-input rounded-sm focus-within:border-primary-200"
+        >
             <InputSelectSingle
                 className="max-w-40 border-none ring-0 focus-within:border-none focus-within:ring-0"
                 placeholder="Country"
@@ -42,11 +54,7 @@ export function Search() {
                 }}
             >
                 {countries.map((language) => (
-                    <InputSelectSingleItem
-                        key={language[0]}
-                        value={language[0]}
-                        label={`${language[1].flag} ${language[0]}`}
-                    />
+                    <InputSelectSingleItem key={language[0]} value={language[0]} label={language[0]} />
                 ))}
             </InputSelectSingle>
 
@@ -56,9 +64,12 @@ export function Search() {
             </label>
             <Input
                 id={inputId}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
                 className="flex-1 h-full border-none shadow-none focus-visible:ring-0 text-base font-normal"
                 placeholder="Job title, keyword, company"
             />
-        </div>
+            <button type="submit" className="hidden"></button>
+        </form>
     );
 }

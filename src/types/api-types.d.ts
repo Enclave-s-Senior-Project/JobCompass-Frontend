@@ -168,7 +168,6 @@ export namespace DetailedRequest {
         salary: string;
         jobType: string[];
         education: string[];
-        jobLevel: string;
     }
     export interface ParamListJobsCredentials extends Pagination {}
     export interface FavoriteJobs extends Pagination {}

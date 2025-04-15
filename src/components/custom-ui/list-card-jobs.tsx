@@ -5,19 +5,55 @@ import { JobCardTwoType } from './card-job-two-type';
 import { FileX } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
 import { PrimaryPagination } from '../ui/pagination';
+import { JobsList } from './job-list';
+import { JobQuickView } from './global/job-quick-view';
+import { useContext, useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { queryKey } from '@/lib/react-query/keys';
+import { JobService } from '@/services';
+import { handleErrorToast } from '@/lib/utils';
+import { UserContext } from '@/contexts';
 
 export default function ListCardJobs(props: {
     viewType: 'list' | 'grid';
     perPage: number;
     option: string;
     data?: any[];
+    isOwn?: boolean;
     isPending: boolean;
     meta?: Meta;
     totalPages: number;
     refetch: () => void;
 }) {
+    const { userInfo } = useContext(UserContext);
     const ITEM_PER_PAGE = props.perPage;
     const { viewType, data, isPending, meta, totalPages } = props;
+
+    const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
+
+    useEffect(() => {
+        console.log(selectedJobId);
+    }, [selectedJobId]);
+
+    const { data: jobDetails, refetch: refetchDetailJob } = useQuery({
+        queryKey: [queryKey.detailJob, selectedJobId],
+        queryFn: async () => {
+            try {
+                if (selectedJobId)
+                    return await JobService.detailJob(selectedJobId, { userId: userInfo?.profileId || '' });
+            } catch (error: any) {
+                handleErrorToast(error);
+            }
+        },
+        enabled: !!selectedJobId,
+        staleTime: 1000 * 60 * 1,
+    });
+
+    useEffect(() => {
+        if (props.data && props.data?.length > 0) {
+            setSelectedJobId(props.data[0].jobId);
+        }
+    }, [props.data]);
 
     const refetch = async () => {
         await props.refetch();
@@ -62,16 +98,27 @@ export default function ListCardJobs(props: {
                         </p>
                     </div>
                 ) : (
-                    <div
-                        className={
-                            viewType === 'grid'
-                                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-6 place-items-center'
-                                : 'flex flex-col place-items-center gap-y-1'
-                        }
-                    >
-                        {data.map((job, index) => (
-                            <JobCardTwoType job={job} viewType={viewType} key={index} refetch={refetch} />
-                        ))}
+                    <div className={viewType === 'list' ? 'flex flex-col place-items-center gap-y-1' : ''}>
+                        {viewType === 'list' ? (
+                            data.map((job, index) => (
+                                <JobCardTwoType job={job} viewType={viewType} key={index} refetch={refetch} />
+                            ))
+                        ) : (
+                            <div className="grid grid-cols-5 gap-2">
+                                <div className="col-span-2">
+                                    <JobsList
+                                        jobs={data}
+                                        refetchJob={refetch}
+                                        refetchDetailJob={refetchDetailJob}
+                                        onSelectItem={setSelectedJobId}
+                                        temp={false}
+                                    />
+                                </div>
+                                <div className="sticky top-0 left-0 col-span-3 h-[calc(100vh-50px)]">
+                                    {jobDetails && <JobQuickView job={jobDetails} />}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
                 {/* Pagination */}

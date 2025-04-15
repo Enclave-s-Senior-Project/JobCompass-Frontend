@@ -25,9 +25,10 @@ interface JobItemProps {
     refetchJob: () => void;
     refetchDetailJob: () => void;
     temp?: boolean;
+    isOwn?: boolean;
 }
 
-const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true }: JobItemProps) => {
+const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true, isOwn = false }: JobItemProps) => {
     const [openDialogEdit, setOpenDialogEdit] = useState(false);
     const router = useRouter();
     async function handleButtonBoostJob() {
@@ -172,27 +173,29 @@ const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true
                                 <UsersRound className="size-4" /> {job?.applicationCount}
                             </div>
                         </div>
-                        <Separator className="w-full border-b" />
                     </div>
-                    <div className="flex items-center justify-between">
-                        {job?.isBoost ? (
-                            <div className="flex items-center gap-2 text-base text-warning-500 font-semibold uppercase">
-                                <Zap className="size-6" />
-                                Boosted
-                            </div>
-                        ) : (
-                            <div className="flex items-center gap-2 text-base text-gray-500">
-                                <ZapOff className="size-6" /> Not boosted
-                            </div>
-                        )}
-                        <Button
-                            onClick={() => {
-                                router.push(`/employer-dashboard/my-jobs/${job.jobId}/applications`);
-                            }}
-                        >
-                            View Applications
-                        </Button>
-                    </div>
+                    <Separator className="w-full border-b" />
+                    {isOwn && (
+                        <div className="flex items-center justify-between">
+                            {job?.isBoost ? (
+                                <div className="flex items-center gap-2 text-base text-warning-500 font-semibold uppercase">
+                                    <Zap className="size-6" />
+                                    Boosted
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-2 text-base text-gray-500">
+                                    <ZapOff className="size-6" /> Not boosted
+                                </div>
+                            )}
+                            <Button
+                                onClick={() => {
+                                    router.push(`/employer-dashboard/my-jobs/${job.jobId}/applications`);
+                                }}
+                            >
+                                View Applications
+                            </Button>
+                        </div>
+                    )}
                 </div>
             </Card>
         </>

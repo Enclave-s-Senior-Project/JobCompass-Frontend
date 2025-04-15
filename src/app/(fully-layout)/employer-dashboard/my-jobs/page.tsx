@@ -190,6 +190,8 @@ export default function JobsPage() {
                             isLoading={isFetching}
                             onSelectItem={setSelectedJobId}
                             refetchDetailJob={refetchDetailJob}
+                            isOwn={true}
+                            temp={true}
                         />
                     </div>
                     {/* Job quick view details */}

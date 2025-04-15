@@ -3,7 +3,7 @@ import { PiBriefcaseDuotone } from 'react-icons/pi';
 import { BiBuildings } from 'react-icons/bi';
 import { ButtonHome } from '@/components/custom-ui/button-home';
 
-const numberFormat = (number: number) => new Intl.NumberFormat('en-IN').format(number);
+const numberFormat = (number: number) => new Intl.NumberFormat().format(number);
 
 export default function Layout({ children }: { children: React.ReactNode }) {
     return (
