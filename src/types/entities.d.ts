@@ -1,3 +1,4 @@
+import { Categories } from '@/types';
 import { JobStatusEnum, NotificationType } from '@/lib/common-enum';
 import { Address, OrganizationType, SocialType } from './common-types';
 
@@ -49,14 +50,14 @@ export interface Enterprise {
     email: string;
     phone: string;
     description: string;
-    enterpriseBenefits: string;
+    benefit: string;
     companyVision: string;
     logoUrl: string;
     backgroundImageUrl: string;
     foundedIn: Date;
     organizationType: OrganizationType;
     teamSize: string;
-    industryType: string;
+    categories: Categories[];
     bio: string;
     isPremium: boolean;
     expiredPremium: string;

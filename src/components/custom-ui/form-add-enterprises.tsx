@@ -10,9 +10,12 @@ import clsx from 'clsx';
 import { ImageInput } from './image-input';
 import RichTextEditor from './rich-text-editor';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import MultiSelectCategoriesSearchInput from './select-categories';
+import { Categories, Category } from '@/types';
 
 export function FormAddEnterprises({ setOpen, refetch }: { setOpen: (value: boolean) => void; refetch: () => void }) {
     const [checkLogo, setCheckLogo] = useState(false);
+    const [categories, setCategories] = useState<Categories[]>([]);
     const [state, onSubmit, isPending] = useActionState(addEnterprises, {
         logo: null,
         logoUrl: null,
@@ -23,16 +26,15 @@ export function FormAddEnterprises({ setOpen, refetch }: { setOpen: (value: bool
         size: '',
         foundedIn: '',
         organizationType: '',
-        industryType: '',
         bio: '',
         enterpriseBenefits: '',
         description: '',
+        categories: [] as Category[],
         errors: {},
         success: false,
     });
     const [enterpriseBenefits, setEnterpriseBenefits] = useState(state.enterpriseBenefits);
     const [description, setDescription] = useState(state.description);
-
     useEffect(() => {
         if (state.errors?.logo) {
             setCheckLogo(true);
@@ -59,6 +61,9 @@ export function FormAddEnterprises({ setOpen, refetch }: { setOpen: (value: bool
             action={(formData) => {
                 formData.set('description', description);
                 formData.set('enterpriseBenefits', enterpriseBenefits);
+                categories.forEach((categories) => {
+                    formData.append('categories[]', categories.categoryId);
+                });
                 return onSubmit(formData);
             }}
         >
@@ -219,22 +224,6 @@ export function FormAddEnterprises({ setOpen, refetch }: { setOpen: (value: bool
             </div>
             <div className="flex flex-row gap-3 relative col-span-1">
                 <div className="w-1/2">
-                    <label className="text-sm text-gray-900 cursor-default">Industry type</label>
-                    <Input
-                        defaultValue={state.industryType}
-                        name="industryType"
-                        className={clsx(
-                            'h-12 rounded-sm',
-                            state.errors?.industryType
-                                ? 'border-2 border-danger ring-danger'
-                                : 'focus-visible:border-primary focus-visible:ring-primary'
-                        )}
-                    />
-                    <p className="text-red-500 text-[12px] font-medium">
-                        {state.errors?.industryType && state.errors.industryType[0]}
-                    </p>
-                </div>
-                <div className="w-1/2">
                     <label className="text-sm text-gray-900 cursor-default">Bio </label>
                     <Input
                         defaultValue={state.bio}
@@ -247,6 +236,16 @@ export function FormAddEnterprises({ setOpen, refetch }: { setOpen: (value: bool
                         )}
                     />
                     <p className="text-red-500 text-[12px] font-medium">{state.errors?.bio && state.errors.bio[0]}</p>
+                </div>
+                <div className="w-1/2">
+                    <label className="text-sm text-gray-900 cursor-default">Category type</label>
+                    <MultiSelectCategoriesSearchInput
+                        onChange={(newTagIds: Categories[]) => setCategories(newTagIds)}
+                        error={state.errors?.category}
+                    />
+                    <p className="text-red-500 text-[12px] font-medium">
+                        {state.errors?.category && state.errors.category[0]}
+                    </p>
                 </div>
             </div>
             <div className="relative col-span-1">

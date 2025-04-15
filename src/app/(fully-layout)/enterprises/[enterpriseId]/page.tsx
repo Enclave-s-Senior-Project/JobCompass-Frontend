@@ -54,7 +54,9 @@ export default function DetailEnterprise() {
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <div>
                                         <div className="text-gray-500 mb-1">Company type</div>
-                                        <div>{resultQuery?.value?.industryType}</div>
+                                        <div>
+                                            {resultQuery?.value?.categories?.map((c) => c.categoryName).join(', ')}
+                                        </div>
                                     </div>
                                     <div>
                                         <div className="text-gray-500 mb-1">Company industry</div>

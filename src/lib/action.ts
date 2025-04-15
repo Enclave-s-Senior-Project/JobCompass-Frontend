@@ -488,7 +488,7 @@ export const addEnterprises = async (currentState: any, formData: FormData) => {
     currentState.size = formData.get('size')?.toString() ?? '';
     currentState.foundedIn = formData.get('foundedIn')?.toString() ?? '';
     currentState.organizationType = formData.get('organizationType')?.toString() ?? '';
-    currentState.industryType = formData.get('industryType')?.toString() ?? '';
+    currentState.category = formData.getAll('categories[]');
     currentState.bio = formData.get('bio')?.toString() ?? '';
     currentState.enterpriseBenefits = formData.get('enterpriseBenefits')?.toString() ?? '';
     currentState.description = formData.get('description')?.toString() ?? '';
@@ -513,14 +513,14 @@ export const addEnterprises = async (currentState: any, formData: FormData) => {
             email: currentState.email,
             phone: currentState.phone,
             description: currentState.description,
-            enterpriseBenefits: currentState.enterpriseBenefits,
+            benefit: currentState.enterpriseBenefits,
             companyVision: currentState.vision,
             logoUrl: logoFile?.fileUrl || currentState.logoUrl,
             backgroundImageUrl: currentState.backgroundImageUrl,
             foundedIn: currentState.foundedIn,
             organizationType: currentState.organizationType,
             teamSize: currentState.size,
-            industryType: currentState.industryType,
+            categories: currentState.category,
             bio: currentState.bio,
             status: 'PENDING',
         });
@@ -532,7 +532,7 @@ export const addEnterprises = async (currentState: any, formData: FormData) => {
     return { ...currentState, errors: {}, success: false, data: null };
 };
 
-export const updateRegisterEnterprice = async (currentState: any, formData: FormData) => {
+export const updateRegisterEnterprise = async (currentState: any, formData: FormData) => {
     const errors: Record<string, any> = {};
     const uploadPromises = [];
     const logoFile = formData.get('logo') as File;
@@ -559,6 +559,7 @@ export const updateRegisterEnterprice = async (currentState: any, formData: Form
     currentState.bio = formData.get('bio')?.toString() ?? '';
     currentState.enterpriseBenefits = formData.get('enterpriseBenefits')?.toString() ?? '';
     currentState.description = formData.get('description')?.toString() ?? '';
+    currentState.category = formData.getAll('categories[]');
 
     const validation = addEnterpriseSchema.safeParse(currentState);
     if (!validation.success) {
@@ -581,14 +582,14 @@ export const updateRegisterEnterprice = async (currentState: any, formData: Form
                 email: currentState.email,
                 phone: currentState.phone,
                 description: currentState.description,
-                enterpriseBenefits: currentState.enterpriseBenefits,
+                benefit: currentState.enterpriseBenefits,
                 companyVision: currentState.vision,
                 logoUrl: logoUrl,
                 backgroundImageUrl: currentState.backgroundImageUrl,
                 foundedIn: currentState.foundedIn,
                 organizationType: currentState.organizationType,
                 teamSize: currentState.size,
-                industryType: currentState.industryType,
+                categories: currentState.category,
                 bio: currentState.bio,
                 status: 'PENDING',
             },

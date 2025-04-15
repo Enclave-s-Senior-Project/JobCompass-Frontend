@@ -41,7 +41,7 @@ export function FormUpdateEmployerProfile() {
         foundedIn: enterpriseInfo?.foundedIn ? new Date(enterpriseInfo.foundedIn) : new Date('2020-01-15'),
         organizationType: enterpriseInfo?.organizationType || OrganizationType.PRIVATE,
         teamSize: enterpriseInfo?.teamSize || '10-50 employees',
-        industryType: enterpriseInfo?.industryType || 'Information Technology',
+        industryType: enterpriseInfo?.categories || [],
         bio: enterpriseInfo?.bio || '',
     });
     const [isPending, setIsPending] = useState(false);
@@ -55,7 +55,7 @@ export function FormUpdateEmployerProfile() {
                 foundedIn: enterpriseInfo?.foundedIn ? new Date(enterpriseInfo.foundedIn) : new Date('2020-01-15'),
                 organizationType: enterpriseInfo?.organizationType || OrganizationType.PRIVATE,
                 teamSize: enterpriseInfo?.teamSize || '10-50 employees',
-                industryType: enterpriseInfo?.industryType || 'Information Technology',
+                industryType: enterpriseInfo?.categories || [],
                 bio: enterpriseInfo?.bio || '',
             });
         }
@@ -74,7 +74,7 @@ export function FormUpdateEmployerProfile() {
                         : '',
                     organizationType: enterpriseInfo?.organizationType || '',
                     teamSize: enterpriseInfo?.teamSize || '',
-                    industryType: enterpriseInfo?.industryType || '',
+                    industryType: enterpriseInfo?.categories || [],
                     bio: enterpriseInfo?.bio || '',
                 }) !==
                     JSON.stringify({
@@ -147,9 +147,9 @@ export function FormUpdateEmployerProfile() {
             const formData = new FormData();
             Object.entries(formValue).forEach(([key, value]) => {
                 if (value instanceof Date) {
-                    formData.append(key, value.toISOString().split('T')[0]); // Convert Date to 'YYYY-MM-DD' format
+                    formData.append(key, value.toISOString().split('T')[0]);
                 } else {
-                    formData.append(key, value as string); // Ensure value is a string
+                    formData.append(key, value as string);
                 }
             });
 
@@ -221,7 +221,7 @@ export function FormUpdateEmployerProfile() {
                             name="industryType"
                             placeholder="Industry type"
                             type="text"
-                            value={formValue.industryType}
+                            value={formValue?.industryType?.[0].categoryName}
                             onChange={handleChangeInputValue}
                             className={clsx(
                                 'h-12 rounded-sm',

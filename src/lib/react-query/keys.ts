@@ -27,4 +27,5 @@ export const queryKey = {
     getApplyJobs: 'get-apply-jobs',
     enterpriseAddresses: 'enterprise-addresses',
     detailEnterprise: 'detail-enterprise',
+    getCategories: 'get-categories',
 };

@@ -20,7 +20,8 @@ import MultiSelectCategoriesChildSearchInput from '@/components/custom-ui/select
 import { handleErrorToast } from '@/lib/utils';
 import { queryKey } from '@/lib/react-query/keys';
 import { toast } from '@/lib/toast';
-import { JobTypeEnum } from '@/lib/common-enum';
+import { EducationJobLevelEnum, JobTypeEnum } from '@/lib/common-enum';
+import { DollarSign, FileText, Gift, ListChecks } from 'lucide-react';
 
 export default function PostJobForm() {
     const router = useRouter();
@@ -91,7 +92,9 @@ export default function PostJobForm() {
     };
     return (
         <div className="container mx-auto">
-            <h1 className="text-2xl font-bold mb-6">Post a job</h1>
+            <div className="border-b">
+                <h1 className="text-2xl font-bold mb-3 ">Post a job</h1>
+            </div>
             <form
                 action={(formData) => {
                     formData.set('description', description);
@@ -106,10 +109,14 @@ export default function PostJobForm() {
                     });
                     return onSubmit(formData);
                 }}
-                className="space-y-4 bg-white"
+                className="space-y-4 bg-white pt-3"
             >
                 <div className="flex flex-col gap-y-2">
-                    <h1>Job Title</h1>
+                    <div className="text-base font-medium">
+                        <h1>
+                            Job Title <span className="text-red-500">*</span>
+                        </h1>
+                    </div>
                     <Input
                         className={clsx(
                             'h-12 rounded-sm',
@@ -126,7 +133,7 @@ export default function PostJobForm() {
                 </div>
 
                 <div className="flex flex-col gap-y-2">
-                    <h1>Tag</h1>
+                    <h1 className="text-base font-medium">Tag</h1>
                     <div className="flex flex-grow gap-x-2">
                         <MultiSelectSearchInput
                             onChange={(newTagIds: string[]) => setSelectedTags(newTagIds)}
@@ -142,7 +149,9 @@ export default function PostJobForm() {
                     </p>
                 </div>
                 <div className="flex flex-col gap-y-2">
-                    <h1>Address</h1>
+                    <h1 className="text-base font-medium">
+                        Address <span className="text-red-500">*</span>
+                    </h1>
                     <Select name="address">
                         <SelectTrigger
                             className={clsx(
@@ -174,51 +183,73 @@ export default function PostJobForm() {
                     </p>
                 </div>
 
-                <div>
-                    <h2 className="text-lg font-bold mt-8 mb-4">Salary</h2>
+                <div className="space-y-4">
+                    <h2 className="text-lg font-semibold flex items-center">
+                        <DollarSign className="mr-2 h-5 w-5 text-gray-500" />
+                        Salary
+                    </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="flex flex-col gap-y-2">
-                            <h1>Min Salary</h1>
-                            <Input
-                                className={clsx(
-                                    'h-12 rounded-sm',
-                                    state.errors?.minSalary
-                                        ? 'border-2 border-danger ring-danger'
-                                        : 'focus-visible:border-primary focus-visible:ring-primary'
-                                )}
-                                type="number"
-                                defaultValue={state.minSalary}
-                                name="minSalary"
-                            />
-                            <p className=" text-red-500 text-[12px] font-medium ">
+                            <h1 className="text-base font-medium">Min Salary</h1>
+
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <DollarSign className="h-5 w-5 text-gray-400" />
+                                </div>
+
+                                <Input
+                                    className={clsx(
+                                        'h-12 rounded-sm pl-10',
+                                        state.errors?.minSalary
+                                            ? 'border-2 border-danger ring-danger'
+                                            : 'focus-visible:border-primary focus-visible:ring-primary'
+                                    )}
+                                    type="number"
+                                    defaultValue={state.minSalary}
+                                    name="minSalary"
+                                />
+                            </div>
+
+                            <p className="text-red-500 text-[12px] font-medium">
                                 {state.errors?.minSalary && state.errors.minSalary[0]}
                             </p>
                         </div>
                         <div className="flex flex-col gap-y-2">
-                            <h1>Max Salary</h1>
-                            <Input
-                                className={clsx(
-                                    'h-12 rounded-sm',
-                                    state.errors?.maxSalary
-                                        ? 'border-2 border-danger ring-danger'
-                                        : 'focus-visible:border-primary focus-visible:ring-primary'
-                                )}
-                                type="number"
-                                defaultValue={state.maxSalary}
-                                name="maxSalary"
-                            />
-                            <p className=" text-red-500 text-[12px] font-medium ">
+                            <h1 className="text-base font-medium">Max Salary</h1>
+
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <DollarSign className="h-5 w-5 text-gray-400" />
+                                </div>
+
+                                <Input
+                                    className={clsx(
+                                        'h-12 rounded-sm pl-10',
+                                        state.errors?.maxSalary
+                                            ? 'border-2 border-danger ring-danger'
+                                            : 'focus-visible:border-primary focus-visible:ring-primary'
+                                    )}
+                                    type="number"
+                                    defaultValue={state.maxSalary}
+                                    name="maxSalary"
+                                />
+                            </div>
+
+                            <p className="text-red-500 text-[12px] font-medium">
                                 {state.errors?.maxSalary && state.errors.maxSalary[0]}
                             </p>
                         </div>
                     </div>
                 </div>
 
-                <div>
-                    <h2 className="text-lg font-bold mt-8 mb-4">Advance Information</h2>
+                <div className="space-y-4">
+                    <h2 className="text-lg font-semibold flex items-center">
+                        <FileText className="mr-2 h-5 w-5 text-gray-500" />
+                        Advanced Information
+                    </h2>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="flex flex-col gap-y-2">
-                            <h1>Education</h1>
+                            <h1 className="text-base font-medium">Education</h1>
                             <Select name="education">
                                 <SelectTrigger
                                     className={clsx(
@@ -231,9 +262,11 @@ export default function PostJobForm() {
                                     <SelectValue placeholder="Select..." className="text-[#767F8C]" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="bachelor">Bachelors Degree</SelectItem>
-                                    <SelectItem value="master">Masters Degree</SelectItem>
-                                    <SelectItem value="phd">Ph.D.</SelectItem>
+                                    {Object.values(EducationJobLevelEnum).map((educationType) => (
+                                        <SelectItem key={educationType} value={educationType}>
+                                            {educationType}
+                                        </SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                             <p className="text-red-500 text-[12px] font-medium">
@@ -241,7 +274,7 @@ export default function PostJobForm() {
                             </p>
                         </div>
                         <div className="flex flex-col gap-y-2">
-                            <h1>Experience (Year)</h1>
+                            <h1 className="text-base font-medium">Experience (Year)</h1>
                             <Input
                                 className={clsx(
                                     'h-12 rounded-sm',
@@ -258,7 +291,7 @@ export default function PostJobForm() {
                             </p>
                         </div>
                         <div className="flex flex-col gap-y-2">
-                            <h1>Job Type</h1>
+                            <h1 className="text-base font-medium">Job Type</h1>
                             <Select name="jobType">
                                 <SelectTrigger
                                     className={clsx(
@@ -283,7 +316,7 @@ export default function PostJobForm() {
                             </p>
                         </div>
                         <div className="flex flex-col gap-y-2">
-                            <h1>Expiration Date</h1>
+                            <h1 className="text-base font-medium">Expiration Date</h1>
                             <div className="relative">
                                 <Input
                                     type="date"
@@ -302,7 +335,7 @@ export default function PostJobForm() {
                             </p>
                         </div>
                         <div className="flex flex-col gap-y-2">
-                            <h1>Job Category</h1>
+                            <h1 className="text-base font-medium">Job Category</h1>
                             <Select name="category" onValueChange={handleCategoryChange}>
                                 <SelectTrigger
                                     className={clsx(
@@ -327,7 +360,7 @@ export default function PostJobForm() {
                             </p>
                         </div>
                         <div className="flex flex-col gap-y-2">
-                            <h1>Job Specialization</h1>
+                            <h1 className="text-base font-medium">Job Specialization</h1>
                             <MultiSelectCategoriesChildSearchInput
                                 categoryId={selectedCategory}
                                 onChange={(newTagIds: string[]) => setJobSpecializations(newTagIds)}
@@ -340,11 +373,14 @@ export default function PostJobForm() {
                     </div>
                 </div>
 
-                <div>
-                    <h2 className="text-lg font-bold mt-8 mb-4">Description & Responsibility</h2>
+                <div className="space-y-4">
+                    <h2 className="text-lg font-semibold flex items-center">
+                        <FileText className="mr-2 h-5 w-5 text-gray-500" />
+                        Description & Responsibility
+                    </h2>
                     <div className="space-y-6">
                         <div className="flex flex-col gap-y-2">
-                            <h1>Description</h1>
+                            <h1 className="text-base font-medium">Description</h1>
                             <div className="focus-visible:border-primary focus-visible:ring-primary">
                                 <RichTextEditor
                                     onChange={handleDescription}
@@ -358,7 +394,7 @@ export default function PostJobForm() {
                         </div>
 
                         <div className="flex flex-col gap-y-2">
-                            <h1>Responsibilities</h1>
+                            <h1 className="text-base font-medium">Responsibilities</h1>
                             <div className="focus-visible:border-primary focus-visible:ring-primary">
                                 <RichTextEditor
                                     onChange={handleResponsibility}
@@ -371,7 +407,10 @@ export default function PostJobForm() {
                             </p>
                         </div>
                         <div className="flex flex-col gap-y-2">
-                            <h1>Benefit</h1>
+                            <h1 className="text-lg font-semibold flex items-center">
+                                <Gift className="mr-2 h-5 w-5 text-gray-500" />
+                                Benefits
+                            </h1>
                             <div className="focus-visible:border-primary focus-visible:ring-primary">
                                 <RichTextEditor
                                     onChange={handleBenefit}
@@ -384,7 +423,10 @@ export default function PostJobForm() {
                             </p>
                         </div>
                         <div className="flex flex-col gap-y-2">
-                            <h1>Requirements</h1>
+                            <h1 className="text-lg font-semibold flex items-center">
+                                <ListChecks className="mr-2 h-5 w-5 text-gray-500" />
+                                Requirements
+                            </h1>
                             <div className="focus-visible:border-primary focus-visible:ring-primary">
                                 <RichTextEditor
                                     onChange={handleRequirements}
