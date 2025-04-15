@@ -33,7 +33,7 @@ const CallbackPage = () => {
             }
         },
         onError: (error) => {
-            console.log(error)
+            console.log(error);
             handleErrorToast(error);
             router.push('/sign-in');
         },

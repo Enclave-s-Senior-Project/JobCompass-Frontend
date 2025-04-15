@@ -1,5 +1,5 @@
-importScripts("https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js");
-importScripts("https://www.gstatic.com/firebasejs/9.6.1/firebase-messaging.js");
+// importScripts("https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js");
+// importScripts("https://www.gstatic.com/firebasejs/9.6.1/firebase-messaging.js");
 
 firebase.initializeApp({
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,

@@ -60,6 +60,7 @@ export function FormPersonalProfile() {
             setErrors(errors as FormErrors);
             if (success) {
                 refreshMe();
+                setEditable(false);
                 toast.success('User update is successful!');
             }
             return res;

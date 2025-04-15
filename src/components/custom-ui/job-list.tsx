@@ -8,6 +8,7 @@ interface JobsListProps {
     refetchJob: () => void;
     refetchDetailJob: () => void;
     temp?: boolean;
+    isOwn?: boolean;
 }
 
 export function JobsList({
@@ -17,6 +18,7 @@ export function JobsList({
     refetchJob,
     refetchDetailJob,
     temp = true,
+    isOwn,
 }: JobsListProps) {
     return (
         <div className="overflow-hidden space-y-4">
@@ -35,6 +37,7 @@ export function JobsList({
                         job={job}
                         onSelect={onSelectItem}
                         temp={temp}
+                        isOwn={isOwn}
                     />
                 ))
             )}
