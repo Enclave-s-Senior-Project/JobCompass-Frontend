@@ -7,7 +7,6 @@ import { Download } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toFormattedDate } from '@/lib/utils';
 
-
 interface ApplicationCardProps {
     applicant: Applicant;
 }
@@ -49,7 +48,15 @@ export default function ApplicationCard({ applicant }: ApplicationCardProps) {
             <ul className="space-y-1 text-sm mb-3">
                 <li className="flex items-center gap-2">
                     <span className="text-muted-foreground">•</span>
-                    <span>  Gender: {applicant.gender === 'MALE' ? 'Male' : applicant.gender === 'FEMALE' ? 'Female' : applicant.gender}</span>
+                    <span>
+                        {' '}
+                        Gender:{' '}
+                        {applicant.gender === 'MALE'
+                            ? 'Male'
+                            : applicant.gender === 'FEMALE'
+                              ? 'Female'
+                              : applicant.gender}
+                    </span>
                 </li>
                 <li className="flex items-center gap-2">
                     <span className="text-muted-foreground">•</span>

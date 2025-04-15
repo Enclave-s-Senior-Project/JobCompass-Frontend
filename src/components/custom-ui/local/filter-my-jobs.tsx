@@ -167,7 +167,7 @@ export function FilterMyJobs({ onOpenChange, open, filters, onApplyFilters }: Pr
                             <SelectContent>
                                 <SelectItem value="all">All locations</SelectItem>
                                 {addressData?.map((address) => (
-                                    <SelectItem key={address.addressId} value={address.addressId}>
+                                    <SelectItem key={address.addressId} value={address.addressId || ''}>
                                         {address.street}, {address.city}, {address.country}
                                     </SelectItem>
                                 ))}

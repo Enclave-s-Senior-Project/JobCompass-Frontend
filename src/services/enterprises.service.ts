@@ -246,4 +246,15 @@ export class EnterpriseService {
             handleErrorApi(error);
         }
     }
+    public static async updateAddressEmployer(data: DetailedRequest.UpdateAddressEmployer) {
+        try {
+            const dataResponse = await authAxios.patch<ApiResponse<DetailedResponse.GetDetailEnterprise>>(
+                '/address',
+                data
+            );
+            return dataResponse.payload.value;
+        } catch (error) {
+            handleErrorApi(error);
+        }
+    }
 }

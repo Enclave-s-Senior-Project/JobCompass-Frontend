@@ -4,12 +4,12 @@ export interface Country {
 }
 
 export interface Address {
-    addressId: string;
-    isActive: boolean;
+    addressId?: string;
+    isActive?: boolean;
     country: string;
     city: string;
     street: string;
-    zipCode: number;
+    zipCode: string;
 }
 
 export interface UserType {
