@@ -181,7 +181,7 @@ export namespace DetailedRequest {
         foundedIn: Date;
         organizationType: string;
         teamSize: string;
-        industryType: string;
+        categories: string[];
         bio: string;
         email: string;
         companyVision: string;

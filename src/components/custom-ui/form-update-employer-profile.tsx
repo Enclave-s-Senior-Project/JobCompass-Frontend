@@ -9,9 +9,10 @@ import { Button } from '../ui/button';
 import { EnterpriseContext } from '@/contexts';
 import { toast } from '@/lib/toast';
 import { settingEmployerFounding } from '@/lib/action';
-import { CompanyProfileFoundingType, FormErrors } from '@/types';
+import { Categories, CompanyProfileFoundingType, FormErrors } from '@/types';
 import { Edit, XCircle } from 'lucide-react';
 import { handleErrorToast } from '@/lib/utils';
+import MultiSelectCategoriesSearchInput from './select-categories';
 
 export enum OrganizationType {
     PRIVATE = 'PRIVATE',
@@ -24,6 +25,7 @@ export function FormUpdateEmployerProfile() {
     const { enterpriseInfo, refetchEnterpriseInfo } = React.useContext(EnterpriseContext);
     const [editable, setEditable] = useState(false);
     const [canSubmit, setCanSubmit] = useState(false);
+    const [categories, setCategories] = useState<Categories[]>([]);
     const [errors, setErrors] = useState<FormErrors>({
         email: [],
         description: [],
@@ -41,13 +43,20 @@ export function FormUpdateEmployerProfile() {
         foundedIn: enterpriseInfo?.foundedIn ? new Date(enterpriseInfo.foundedIn) : new Date('2020-01-15'),
         organizationType: enterpriseInfo?.organizationType || OrganizationType.PRIVATE,
         teamSize: enterpriseInfo?.teamSize || '10-50 employees',
-        industryType: enterpriseInfo?.categories || [],
+        industryType: categories || [],
         bio: enterpriseInfo?.bio || '',
     });
     const [isPending, setIsPending] = useState(false);
+
+    useEffect(() => {
+        setFormValue((prev) => ({ ...prev, industryType: categories }));
+    }, [categories]);
+
     useEffect(() => {
         async function fetchData() {
             await refetchEnterpriseInfo();
+            const newCategories = enterpriseInfo?.categories || [];
+            setCategories(newCategories);
             setFormValue({
                 email: enterpriseInfo?.email || '',
                 description: enterpriseInfo?.description || '',
@@ -55,13 +64,14 @@ export function FormUpdateEmployerProfile() {
                 foundedIn: enterpriseInfo?.foundedIn ? new Date(enterpriseInfo.foundedIn) : new Date('2020-01-15'),
                 organizationType: enterpriseInfo?.organizationType || OrganizationType.PRIVATE,
                 teamSize: enterpriseInfo?.teamSize || '10-50 employees',
-                industryType: enterpriseInfo?.categories || [],
+                industryType: newCategories,
                 bio: enterpriseInfo?.bio || '',
             });
         }
         fetchData();
     }, [refetchEnterpriseInfo, enterpriseInfo]);
 
+    // Check if form has changes
     useEffect(() => {
         const handler = setTimeout(() => {
             setCanSubmit(
@@ -75,6 +85,7 @@ export function FormUpdateEmployerProfile() {
                     organizationType: enterpriseInfo?.organizationType || '',
                     teamSize: enterpriseInfo?.teamSize || '',
                     industryType: enterpriseInfo?.categories || [],
+                    industryType: enterpriseInfo?.categories || [],
                     bio: enterpriseInfo?.bio || '',
                 }) !==
                     JSON.stringify({
@@ -84,14 +95,14 @@ export function FormUpdateEmployerProfile() {
                         foundedIn: formValue.foundedIn.toISOString().split('T')[0],
                         organizationType: formValue.organizationType,
                         teamSize: formValue.teamSize,
-                        industryType: formValue.industryType,
+                        industryType: categories,
                         bio: formValue.bio,
                     })
             );
         }, 300);
 
         return () => clearTimeout(handler);
-    }, [formValue, enterpriseInfo]);
+    }, [formValue, enterpriseInfo, categories]);
 
     const handleChangeInputValue = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value, type } = e.target;
@@ -140,19 +151,34 @@ export function FormUpdateEmployerProfile() {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
+
+        // Validate industryType
+        if (!categories.length) {
+            setErrors((prev) => ({
+                ...prev,
+                industryType: ['At least one industry type is required'],
+            }));
+            setIsPending(false);
+            return;
+        }
+
         setIsPending(true);
 
         try {
-            // Replace with actual API call
             const formData = new FormData();
             Object.entries(formValue).forEach(([key, value]) => {
-                if (value instanceof Date) {
+                if (key === 'industryType') {
+                    (value as Categories[]).forEach((category, index) => {
+                        console.log(`Debug - appending industryType[${index}]:`, category.categoryId);
+                        formData.append('industryType', category.categoryId);
+                    });
+                } else if (value instanceof Date) {
                     formData.append(key, value.toISOString().split('T')[0]);
                 } else {
                     formData.append(key, value as string);
+                    formData.append(key, value as string);
                 }
             });
-
             await settingEmployerFounding(formData);
             refetchEnterpriseInfo();
             toast.success('Profile updated successfully!');
@@ -216,19 +242,12 @@ export function FormUpdateEmployerProfile() {
                     {/* Industry Type */}
                     <div className="relative col-span-3 lg:col-span-1">
                         <label className="text-sm text-gray-900 cursor-default">Industry Type</label>
-                        <Input
+                        <MultiSelectCategoriesSearchInput
                             disabled={!editable}
-                            name="industryType"
-                            placeholder="Industry type"
-                            type="text"
-                            value={formValue?.industryType?.[0].categoryName}
-                            onChange={handleChangeInputValue}
-                            className={clsx(
-                                'h-12 rounded-sm',
-                                errors?.industryType?.length > 0
-                                    ? 'border-2 border-danger ring-danger'
-                                    : 'focus-visible:border-primary focus-visible:ring-primary'
-                            )}
+                            onChange={(newTagIds: Categories[]) => {
+                                setCategories(newTagIds);
+                            }}
+                            defaultValue={formValue?.industryType || []}
                         />
                         {errors?.industryType?.[0] && (
                             <p className="text-red-500 text-xs font-medium mt-1">{errors.industryType[0]}</p>
