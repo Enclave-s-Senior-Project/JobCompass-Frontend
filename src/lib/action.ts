@@ -611,7 +611,7 @@ export const settingEmployerFounding = async (formData: FormData) => {
     try {
         await EnterpriseService.updateEnterpriseCompanyFounding({
             organizationType: formData.get('organizationType')?.toString() || '',
-            industryType: formData.get('industryType')?.toString() || '',
+            categories: formData.getAll('industryType') as string[],
             teamSize: formData.get('teamSize')?.toString() || '',
             foundedIn: formData.get('foundedIn') ? new Date(formData.get('foundedIn') as string) : new Date(),
             email: formData.get('email')?.toString() || '',

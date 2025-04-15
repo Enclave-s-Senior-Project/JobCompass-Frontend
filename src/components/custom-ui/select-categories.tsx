@@ -10,6 +10,7 @@ interface MultiSelectSearchInputProps {
     onChange: (selectedItems: Categories[]) => void;
     error?: string;
     defaultValue?: string[] | Categories[];
+    disabled?: boolean;
 }
 
 export interface Categories {
@@ -32,6 +33,7 @@ const MultiSelectCategoriesSearchInput: React.FC<MultiSelectSearchInputProps> = 
     onChange,
     error,
     defaultValue = [],
+    disabled = false,
 }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedItems, setSelectedItems] = useState<Categories[]>([]);
@@ -54,33 +56,35 @@ const MultiSelectCategoriesSearchInput: React.FC<MultiSelectSearchInputProps> = 
             };
             return await CategoryService.getPrimaryCategories(data);
         },
-        enabled: showDropdown || (!!defaultValue && defaultValue.length > 0),
+        enabled: (showDropdown || (!!defaultValue && defaultValue.length > 0)) && !disabled,
         staleTime: 1000 * 60,
         refetchOnWindowFocus: false,
     });
 
     useEffect(() => {
-        console.log('2', defaultValue, defaultValue.length, selectedItems.length, options?.data);
-        if (defaultValue && defaultValue.length > 0 && selectedItems.length === 0 && options?.data) {
-            console.log('1', defaultValue);
+        if (defaultValue && defaultValue.length > 0 && selectedItems.length === 0) {
             let initialItems: Categories[] = [];
             if (typeof defaultValue[0] === 'string') {
-                initialItems = (defaultValue as string[])
-                    .map((id) => {
-                        const category = options.data.find((opt: Categories) => opt.categoryId === id);
-                        return category ? { categoryId: id, categoryName: category.categoryName } : null;
-                    })
-                    .filter((item): item is Categories => item !== null);
+                if (options?.data) {
+                    initialItems = (defaultValue as string[])
+                        .map((id) => {
+                            const category = options.data.find((opt: Categories) => opt.categoryId === id);
+                            return category ? { categoryId: id, categoryName: category.categoryName } : null;
+                        })
+                        .filter((item): item is Categories => item !== null);
+                }
             } else {
                 initialItems = (defaultValue as Categories[]).filter(
                     (category) => category.categoryId && category.categoryName
                 );
             }
 
-            setSelectedItems(initialItems);
-            onChange(initialItems); // Gửi Categories[]
+            if (initialItems.length > 0) {
+                setSelectedItems(initialItems);
+                onChange(initialItems);
+            }
         }
-    }, [defaultValue, options, onChange]);
+    }, [defaultValue, options, onChange, selectedItems.length]);
 
     useEffect(() => {
         if (showDropdown && dropdownRef.current && dropdownCardRef.current) {
@@ -108,19 +112,21 @@ const MultiSelectCategoriesSearchInput: React.FC<MultiSelectSearchInputProps> = 
     }, [showDropdown]);
 
     const handleSelect = (item: Categories) => {
-        if (!selectedItems.find((i) => i.categoryId === item.categoryId)) {
+        if (!disabled && !selectedItems.find((i) => i.categoryId === item.categoryId)) {
             const updatedItems = [...selectedItems, item];
             setSelectedItems(updatedItems);
-            onChange(updatedItems); // Gửi Categories[]
+            onChange(updatedItems);
         }
         setShowDropdown(false);
         setSearchTerm('');
     };
 
     const handleRemove = (categoryId: string) => {
-        const updatedItems = selectedItems.filter((i) => i.categoryId !== categoryId);
-        setSelectedItems(updatedItems);
-        onChange(updatedItems); // Gửi Categories[]
+        if (!disabled) {
+            const updatedItems = selectedItems.filter((i) => i.categoryId !== categoryId);
+            setSelectedItems(updatedItems);
+            onChange(updatedItems);
+        }
     };
 
     const handleClickOutside = (e: MouseEvent) => {
@@ -135,6 +141,7 @@ const MultiSelectCategoriesSearchInput: React.FC<MultiSelectSearchInputProps> = 
     }, []);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (disabled) return;
         if (e.key === 'Escape') setShowDropdown(false);
         if (e.key === 'Backspace' && searchTerm === '' && selectedItems.length > 0) {
             const lastItem = selectedItems[selectedItems.length - 1];
@@ -148,8 +155,10 @@ const MultiSelectCategoriesSearchInput: React.FC<MultiSelectSearchInputProps> = 
                 className={clsx(
                     'flex items-center gap-1 border-2 rounded-md p-2 bg-white h-12 overflow-hidden',
                     error
-                        ? 'border-2 border-danger ring-danger'
-                        : 'focus-within:border-primary focus-within:ring-primary'
+                        ? 'border-1 border-danger ring-danger'
+                        : disabled
+                          ? 'border-gray-50'
+                          : 'focus-within:border-primary focus-within:ring-primary'
                 )}
             >
                 <div className="flex items-center gap-1 overflow-hidden flex-nowrap max-w-full">
@@ -159,26 +168,32 @@ const MultiSelectCategoriesSearchInput: React.FC<MultiSelectSearchInputProps> = 
                             className="flex items-center bg-gray-100 px-2 py-1 rounded-md text-sm"
                         >
                             <span className="mr-1 truncate max-w-[100px]">{item.categoryName}</span>
-                            <button
-                                type="button"
-                                className="text-black-500 ml-1"
-                                onClick={() => handleRemove(item.categoryId)}
-                            >
-                                ×
-                            </button>
+                            {!disabled && (
+                                <button
+                                    type="button"
+                                    className="text-black-500 ml-1"
+                                    onClick={() => handleRemove(item.categoryId)}
+                                >
+                                    ×
+                                </button>
+                            )}
                         </div>
                     ))}
                 </div>
                 <input
-                    className="flex-1 border-none outline-none min-w-0 truncate"
+                    className={clsx(
+                        'flex-1 border-none outline-none min-w-0 truncate',
+                        disabled && 'cursor-not-allowed'
+                    )}
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    onFocus={() => setShowDropdown(true)}
+                    onChange={(e) => !disabled && setSearchTerm(e.target.value)}
+                    onFocus={() => !disabled && setShowDropdown(true)}
                     onKeyDown={handleKeyDown}
+                    disabled={disabled}
                 />
             </div>
 
-            {showDropdown && (
+            {showDropdown && !disabled && (
                 <Card
                     className={clsx(
                         'absolute z-10 w-full overflow-auto shadow-lg rounded-sm',
