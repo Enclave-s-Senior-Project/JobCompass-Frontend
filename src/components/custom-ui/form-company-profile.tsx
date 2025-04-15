@@ -6,11 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import clsx from 'clsx';
 import { ImageInput } from './image-input';
-import { settingEmployerProfile } from '@/lib/action';
+import { settingAddressEmployer, settingEmployerProfile } from '@/lib/action';
 import { EnterpriseContext } from '@/contexts';
 import { toast } from '@/lib/toast';
 import { Edit, XCircle } from 'lucide-react';
 import { handleErrorToast } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 type CompanyProfileType = {
     logoFile: File | null;
@@ -20,6 +21,10 @@ type CompanyProfileType = {
     name: string;
     phone: string;
     description: string;
+    country: string;
+    city: string;
+    street: string;
+    zipCode: string;
 };
 
 type FormErrors = {
@@ -28,9 +33,20 @@ type FormErrors = {
     name: (string | null)[];
     phone: (string | null)[];
     description: (string | null)[];
+    country: (string | null)[];
+    city: (string | null)[];
+    street: (string | null)[];
+    zipCode: (string | null)[];
 };
 
 export function FormCompanyProfile() {
+    const selectItemsCountries = [
+        { label: 'United States', value: 'United States' },
+        { label: 'Canada', value: 'Canada' },
+        { label: 'Viet Nam', value: 'Vietnam' },
+        { label: 'France', value: 'France' },
+        { label: 'Germany', value: 'Germany' },
+    ];
     const { enterpriseInfo, refetchEnterpriseInfo } = useContext(EnterpriseContext);
     const [editable, setEditable] = useState(false);
     const [canSubmit, setCanSubmit] = useState(false);
@@ -40,6 +56,10 @@ export function FormCompanyProfile() {
         name: [],
         phone: [],
         description: [],
+        country: [],
+        city: [],
+        street: [],
+        zipCode: [],
     });
     const [formValue, setFormValue] = useState<CompanyProfileType>({
         logoFile: null,
@@ -49,6 +69,10 @@ export function FormCompanyProfile() {
         name: enterpriseInfo?.name ?? '',
         phone: enterpriseInfo?.phone ?? '',
         description: enterpriseInfo?.description ?? '',
+        country: enterpriseInfo?.addresses?.[0]?.country ?? '',
+        city: enterpriseInfo?.addresses?.[0]?.city ?? '',
+        street: enterpriseInfo?.addresses?.[0]?.street ?? '',
+        zipCode: enterpriseInfo?.addresses?.[0]?.zipCode?.toString() ?? '',
     });
     const [isPending, setIsPending] = useState(false);
 
@@ -63,6 +87,10 @@ export function FormCompanyProfile() {
                 name: enterpriseInfo?.name ?? '',
                 phone: enterpriseInfo?.phone ?? '',
                 description: enterpriseInfo?.description ?? '',
+                country: enterpriseInfo?.addresses?.[0]?.country ?? '',
+                city: enterpriseInfo?.addresses?.[0]?.city ?? '',
+                street: enterpriseInfo?.addresses?.[0]?.street ?? '',
+                zipCode: enterpriseInfo?.addresses?.[0]?.zipCode?.toString() ?? '',
             });
         }
         fetchData();
@@ -132,6 +160,19 @@ export function FormCompanyProfile() {
         e.preventDefault();
         setIsPending(true);
 
+        const apiCalls = [];
+
+        if (formValue.city || formValue.country || formValue.street || formValue.zipCode) {
+            apiCalls.push(
+                settingAddressEmployer({
+                    city: formValue.city,
+                    country: formValue.country,
+                    street: formValue.street,
+                    zipCode: formValue.zipCode.toString(),
+                })
+            );
+        }
+
         const formData = new FormData();
         formData.append('name', formValue.name);
         formData.append('description', formValue.description);
@@ -142,23 +183,53 @@ export function FormCompanyProfile() {
         } else {
             formData.append('logoUrl', formValue.logoUrl);
         }
-
         if (formValue.backgroundFile instanceof File) {
             formData.append('backgroundFile', formValue.backgroundFile);
         } else {
             formData.append('backgroundImageUrl', formValue.backgroundImageUrl);
         }
 
+        apiCalls.push(settingEmployerProfile(formData));
+
         try {
-            await settingEmployerProfile(formData);
+            const [addressResponse, profileResponse] = await Promise.all(apiCalls);
+
+            if ((addressResponse && !addressResponse.success) || (profileResponse && !profileResponse.success)) {
+                const errorMsg =
+                    (addressResponse &&
+                        addressResponse.errors &&
+                        Object.values(addressResponse.errors).flat().join('. ')) ||
+                    (profileResponse &&
+                        profileResponse.errors &&
+                        Object.values(profileResponse.errors).flat().join('. ')) ||
+                    'Unknown error';
+
+                toast.error(errorMsg);
+                setCanSubmit(false);
+                return;
+            }
             refetchEnterpriseInfo();
             toast.success('Profile updated successfully');
             setCanSubmit(false);
         } catch (error) {
             handleErrorToast(error);
+            console.error('Error updating profile:', error);
         } finally {
             setIsPending(false);
         }
+    };
+    const handleCountryChange = (value: string) => {
+        setFormValue((prev) => ({ ...prev, country: value }));
+
+        setErrors((prevErrors) => {
+            const newErrors = { ...prevErrors };
+            if (!value) {
+                newErrors.country = ['Country is required'];
+            } else {
+                newErrors.country = [];
+            }
+            return newErrors;
+        });
     };
 
     return (
@@ -198,8 +269,8 @@ export function FormCompanyProfile() {
                         />
                     </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4 select-none">
-                    <div className="relative col-span-2 lg:col-span-1">
+                <div className="grid grid-cols-4 gap-4 select-none">
+                    <div className="relative col-span-2 lg:col-span-2">
                         <label className="text-sm text-gray-900 cursor-default">Company Name</label>
                         <Input
                             disabled={!editable}
@@ -219,7 +290,7 @@ export function FormCompanyProfile() {
                             {errors?.name?.length > 0 && errors.name[0]}
                         </p>
                     </div>
-                    <div className="relative col-span-2 lg:col-span-1">
+                    <div className="relative col-span-2 lg:col-span-2">
                         <label className="text-sm text-gray-900 cursor-default">Phone</label>
                         <Input
                             disabled={!editable}
@@ -239,7 +310,106 @@ export function FormCompanyProfile() {
                             {errors?.phone?.length > 0 && errors.phone[0]}
                         </p>
                     </div>
-                    <div className="col-span-2">
+                    <div className="col-span-4">
+                        <label className="text-sm text-gray-900 cursor-default">Address</label>
+                        <div className="grid grid-cols-4 gap-4 mt-2">
+                            <div>
+                                {/* <Input
+                                    disabled={!editable}
+                                    name="country"
+                                    placeholder="Country"
+                                    type="text"
+                                    value={formValue.country}
+                                    onChange={handleChangeInputValue}
+                                    className={clsx(
+                                        'h-12 rounded-sm',
+                                        errors?.country?.length > 0
+                                            ? 'border-2 border-danger ring-danger'
+                                            : 'focus-visible:border-primary focus-visible:ring-primary'
+                                    )}
+                                /> */}
+                                <Select
+                                    name="country"
+                                    value={formValue.country}
+                                    onValueChange={(value) => handleCountryChange(value)}
+                                    disabled={!editable}
+                                >
+                                    <SelectTrigger className="h-12 rounded-sm border border-primary-100 focus:border-primary focus:ring-1 focus:ring-primary">
+                                        <SelectValue placeholder="Select a country" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {selectItemsCountries.map((country) => (
+                                            <SelectItem key={country.value} value={country.value}>
+                                                {country.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <p className="text-red-500 text-xs min-h-5">
+                                    {errors?.country?.length > 0 && errors.country[0]}
+                                </p>
+                            </div>
+                            <div>
+                                <Input
+                                    disabled={!editable}
+                                    name="city"
+                                    placeholder="City"
+                                    type="text"
+                                    value={formValue.city}
+                                    onChange={handleChangeInputValue}
+                                    className={clsx(
+                                        'h-12 rounded-sm',
+                                        errors?.city?.length > 0
+                                            ? 'border-2 border-danger ring-danger'
+                                            : 'focus-visible:border-primary focus-visible:ring-primary'
+                                    )}
+                                />
+
+                                <p className="text-red-500 text-xs min-h-5">
+                                    {errors?.city?.length > 0 && errors.city[0]}
+                                </p>
+                            </div>
+                            <div>
+                                <Input
+                                    disabled={!editable}
+                                    name="street"
+                                    placeholder="Street"
+                                    type="text"
+                                    value={formValue.street}
+                                    onChange={handleChangeInputValue}
+                                    className={clsx(
+                                        'h-12 rounded-sm',
+                                        errors?.street?.length > 0
+                                            ? 'border-2 border-danger ring-danger'
+                                            : 'focus-visible:border-primary focus-visible:ring-primary'
+                                    )}
+                                />
+                                <p className="text-red-500 text-xs min-h-5">
+                                    {errors?.street?.length > 0 && errors.street[0]}
+                                </p>
+                            </div>
+                            <div>
+                                <Input
+                                    disabled={!editable}
+                                    name="zipCode"
+                                    placeholder="Zip Code"
+                                    type="text"
+                                    value={formValue.zipCode}
+                                    onChange={handleChangeInputValue}
+                                    className={clsx(
+                                        'h-12 rounded-sm',
+                                        errors?.zipCode?.length > 0
+                                            ? 'border-2 border-danger ring-danger'
+                                            : 'focus-visible:border-primary focus-visible:ring-primary'
+                                    )}
+                                />
+                                <p className="text-red-500 text-xs min-h-5">
+                                    {errors?.zipCode?.length > 0 && errors.zipCode[0]}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-span-4">
                         <label className="text-sm text-gray-900 cursor-default">About Us</label>
                         <RichTextEditor
                             disabled={!editable}

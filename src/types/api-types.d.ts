@@ -316,4 +316,10 @@ export namespace DetailedRequest {
         iv: string;
         provider: string;
     }
+    export interface UpdateAddressEmployer {
+        city: string;
+        street: string;
+        zipCode: string;
+        country: string;
+    }
 }

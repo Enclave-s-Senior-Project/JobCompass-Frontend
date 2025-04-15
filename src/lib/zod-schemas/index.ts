@@ -283,6 +283,19 @@ const uploadCVSchema = z.object({
 const updateCVSchema = z.object({
     cvName: z.string().min(8, 'Resume name is at least 8 characters').max(20, 'Resume name is at most 20 characters'),
 });
+const validCountries = ['United States', 'Canada', 'Vietnam', 'France', 'Germany'];
+
+const addressSchema = z.object({
+    country: z
+        .string()
+        .min(1, 'Country is required')
+        .refine((val) => validCountries.includes(val), {
+            message: 'Invalid country',
+        }),
+    city: z.string().min(1, 'City is required'),
+    street: z.string().min(1, 'Street is required'),
+    zipCode: z.string().min(1, 'Zip code is required'),
+});
 
 export {
     companyProfileFoundingSchema,
@@ -300,4 +313,5 @@ export {
     addEnterpriseSchema,
     uploadCVSchema,
     updateCVSchema,
+    addressSchema,
 };

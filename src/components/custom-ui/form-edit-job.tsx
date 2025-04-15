@@ -172,7 +172,7 @@ export function EditJob(props: {
                             </SelectItem>
                         ) : (
                             resultQuery?.temp?.map((temp) => (
-                                <SelectItem key={temp.addressId} value={temp.addressId}>
+                                <SelectItem key={temp.addressId} value={temp.addressId || ''}>
                                     {temp.country} - {temp.city}
                                 </SelectItem>
                             ))

@@ -1,4 +1,4 @@
-import { CandidateProfileType, DetailedRequest, PersonalProfileType, SocialLink } from '@/types';
+import { Address, CandidateProfileType, DetailedRequest, PersonalProfileType, SocialLink } from '@/types';
 import {
     applyJobCoverLetterSchema,
     forgetPasswordSchema,
@@ -13,6 +13,7 @@ import {
     addEnterpriseSchema,
     uploadCVSchema,
     updateCVSchema,
+    addressSchema,
 } from './zod-schemas';
 import { handleErrorToast } from './utils';
 import { ApplyJobService } from '@/services/apply-job.service';
@@ -26,7 +27,6 @@ import { JobService } from '@/services/job.service';
 import { EnterpriseService } from '@/services/enterprises.service';
 import { setLoginCookie, storeTokenInfo } from './auth';
 import { CVService } from '@/services/cv.service';
-
 export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, formData: FormData) => {
     const username = formData.get('username')?.toString() ?? '';
     const password = formData.get('password')?.toString() ?? '';
@@ -757,4 +757,31 @@ export const updateJob = async (currentState: any, formData: FormData) => {
     }
 
     return { ...currentState, errors: {}, success: false, data: null };
+};
+
+export const settingAddressEmployer = async (formData: Address) => {
+    const validation = addressSchema.safeParse(formData);
+    if (!validation.success) {
+        return {
+            errors: validation.error.flatten().fieldErrors,
+            success: false,
+            data: null, // Return null for data when validation fails
+        };
+    }
+
+    try {
+        const data = await EnterpriseService.updateAddressEmployer(formData);
+        return {
+            errors: null,
+            success: true,
+            data,
+        };
+    } catch (error: any) {
+        handleErrorToast(error);
+        return {
+            errors: ['An error occurred while updating the address.'],
+            success: false,
+            data: null,
+        };
+    }
 };
