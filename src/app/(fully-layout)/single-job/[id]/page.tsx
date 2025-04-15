@@ -306,7 +306,9 @@ function PageContentOfSingleJob() {
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <p className="text-[16px] text-muted-foreground">Industry:</p>
-                                        <p className="text-[16px]">{resultQuery?.enterprise?.industryType}</p>
+                                        <p className="text-[16px]">
+                                            {resultQuery?.enterprise?.categories?.map((c) => c.categoryName).join(',')}
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex gap-2 pt-4">

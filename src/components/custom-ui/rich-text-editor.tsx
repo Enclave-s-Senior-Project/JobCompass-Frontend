@@ -45,9 +45,9 @@ export default function RichTextEditor({
                 levels: [1, 2, 3],
             }),
             Link.configure({
-                openOnClick: true, // Mở link trong tab mới khi click
-                autolink: true, // Tự động chuyển đổi URL thành link
-                linkOnPaste: true, // Tự động tạo link khi dán URL
+                openOnClick: true,
+                autolink: true,
+                linkOnPaste: true,
                 HTMLAttributes: {
                     class: 'text-blue-500 underline',
                 },
@@ -64,7 +64,7 @@ export default function RichTextEditor({
                     'focus-visible:ring-primary min-h-[150px] max-h-[300px] h-[300px] overflow-auto rounded-md border py-2 px-3 ring-offset-background focus-within:outline-none focus-within:ring-2 shadow-sm',
                     placement === 'inside-top' ? 'pt-10' : placement === 'inside-bottom' ? 'pb-10' : '',
                     hasError ? 'border-2 border-danger focus:border-danger focus:ring-0' : 'border-input',
-                    disabled ? 'border-gray-50 text-gray-400' : 'border-input',
+                    disabled ? 'border-gray-50 text-gray-400' : '',
                     className
                 ),
             },

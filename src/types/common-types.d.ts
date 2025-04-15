@@ -1,3 +1,5 @@
+import { Categories } from './entities';
+
 export interface Country {
     cities: string[];
     flag: string;
@@ -58,7 +60,7 @@ export type CompanyProfileFoundingType = {
     foundedIn: Date;
     organizationType: OrganizationType;
     teamSize: string;
-    industryType: string;
+    industryType: Categories[];
     bio: string;
     description: string;
 };

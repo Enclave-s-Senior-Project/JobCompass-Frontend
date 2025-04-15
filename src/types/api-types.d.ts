@@ -221,14 +221,14 @@ export namespace DetailedRequest {
         email: string;
         phone: string;
         description: string;
-        enterpriseBenefits: string;
+        benefit: string;
         companyVision: string;
         logoUrl: string;
         backgroundImageUrl: string;
         foundedIn: string;
         organizationType: string;
         teamSize: string;
-        industryType: string;
+        categories: string;
         bio: string;
         status: string;
     }

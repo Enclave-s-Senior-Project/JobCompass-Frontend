@@ -12,7 +12,7 @@ interface MultiSelectSearchInputProps {
     categoryId: string;
     onChange: (selectedItems: string[]) => void;
     error?: string;
-    defaultValue?: Categories[]; // Thêm defaultValue với kiểu Category[]
+    defaultValue?: Categories[];
 }
 
 enum OrderType {
@@ -24,7 +24,7 @@ const MultiSelectCategoriesChildSearchInput: React.FC<MultiSelectSearchInputProp
     onChange,
     error,
     categoryId,
-    defaultValue = [], // Giá trị mặc định là mảng rỗng
+    defaultValue = [],
 }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedItems, setSelectedItems] = useState<{ categoriesId: string; name: string }[]>([]);
@@ -46,12 +46,11 @@ const MultiSelectCategoriesChildSearchInput: React.FC<MultiSelectSearchInputProp
             };
             return await CategoryService.getCategoriesChildren(id, data);
         },
-        enabled: showDropdown && !!categoryId, // Chỉ chạy khi có categoryId
+        enabled: showDropdown && !!categoryId,
         staleTime: 1000 * 60,
         refetchOnWindowFocus: false,
     });
 
-    // Đồng bộ defaultValue với selectedItems khi component mount hoặc defaultValue thay đổi
     useEffect(() => {
         if (defaultValue.length > 0 && selectedItems.length === 0) {
             const initialItems = defaultValue.map((category) => ({
@@ -59,7 +58,7 @@ const MultiSelectCategoriesChildSearchInput: React.FC<MultiSelectSearchInputProp
                 name: category.categoryName,
             }));
             setSelectedItems(initialItems);
-            onChange(initialItems.map((i) => i.categoriesId)); // Gọi onChange để đồng bộ với component cha
+            onChange(initialItems.map((i) => i.categoriesId));
         }
     }, [defaultValue, onChange]);
 

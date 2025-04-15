@@ -11,7 +11,7 @@ export class CategoryService {
             const temp = await axios.get<ApiResponse<DetailedResponse.GetCategoriesPrimary>>('/primary', {
                 params: pagination,
             });
-            return temp.payload.value;
+            return temp?.payload?.value;
         } catch (err) {
             if (err instanceof AxiosError) {
                 throw new NextError({

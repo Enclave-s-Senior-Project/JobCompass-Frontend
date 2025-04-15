@@ -2,7 +2,7 @@
 import { useActionState, useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import { ChevronRight } from 'lucide-react';
-import { updateRegisterEnterprice } from '@/lib/action';
+import { updateRegisterEnterprise } from '@/lib/action';
 import { toast } from '@/lib/toast';
 import { successKeyMessage } from '@/lib/message-keys';
 import { Input } from '../ui/input';
@@ -10,8 +10,9 @@ import clsx from 'clsx';
 import { ImageInput } from './image-input';
 import RichTextEditor from './rich-text-editor';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup } from '../ui/select';
-import { Enterprise } from '@/types';
+import { Categories, Enterprise } from '@/types';
 import { EnterpriseService } from '@/services/enterprises.service';
+import MultiSelectCategoriesSearchInput from './select-categories';
 
 export function FormUpdateRegisterEnterprises(props: {
     setOpen: (value: boolean) => void;
@@ -20,7 +21,8 @@ export function FormUpdateRegisterEnterprises(props: {
     const { setOpen, enterprises } = props;
     const [enterprise, setEnterprise] = useState<Enterprise | null>(enterprises);
     const [checkLogo, setCheckLogo] = useState(false);
-    const [state, onSubmit, isPending] = useActionState(updateRegisterEnterprice, {
+    const [categories, setCategories] = useState<Categories[]>([]);
+    const [state, onSubmit, isPending] = useActionState(updateRegisterEnterprise, {
         id: enterprise?.enterpriseId,
         logo: enterprise?.logoUrl || '',
         logoUrl: enterprise?.logoUrl || '',
@@ -31,9 +33,9 @@ export function FormUpdateRegisterEnterprises(props: {
         size: enterprise?.teamSize,
         foundedIn: enterprise?.foundedIn,
         organizationType: enterprise?.organizationType,
-        industryType: enterprise?.industryType,
+        categories: enterprise?.categories,
         bio: enterprise?.bio,
-        enterpriseBenefits: enterprise?.enterpriseBenefits,
+        enterpriseBenefits: enterprise?.benefit,
         description: enterprise?.description,
         errors: {},
         success: false,
@@ -43,9 +45,16 @@ export function FormUpdateRegisterEnterprises(props: {
     const fetchEnterpriseData = async () => {
         const updatedEnterprise = await EnterpriseService.checkEnterprise();
         if (updatedEnterprise?.value) {
+            const fetchedCategories = updatedEnterprise.value.categories || [];
+            console.log('123', fetchedCategories);
+            setCategories(fetchedCategories);
             setEnterprise(updatedEnterprise.value);
         }
     };
+
+    useEffect(() => {
+        fetchEnterpriseData();
+    }, []);
 
     useEffect(() => {
         if (state.errors?.logo) {
@@ -73,6 +82,9 @@ export function FormUpdateRegisterEnterprises(props: {
             action={(formData) => {
                 formData.set('description', description);
                 formData.set('enterpriseBenefits', enterpriseBenefits);
+                categories.forEach((categories) => {
+                    formData.append('categories[]', categories.categoryId);
+                });
                 return onSubmit(formData);
             }}
         >
@@ -218,22 +230,6 @@ export function FormUpdateRegisterEnterprises(props: {
             </div>
             <div className="flex flex-row gap-3 relative col-span-1">
                 <div className="w-1/2">
-                    <label className="text-sm text-gray-900 cursor-default">Industry type</label>
-                    <Input
-                        defaultValue={state.industryType}
-                        name="industryType"
-                        className={clsx(
-                            'h-12 rounded-sm',
-                            state.errors?.industryType
-                                ? 'border-2 border-danger ring-danger'
-                                : 'focus-visible:border-primary focus-visible:ring-primary'
-                        )}
-                    />
-                    <p className="text-red-500 text-[12px] font-medium">
-                        {state.errors?.industryType && state.errors.industryType[0]}
-                    </p>
-                </div>
-                <div className="w-1/2">
                     <label className="text-sm text-gray-900 cursor-default">Bio </label>
                     <Input
                         defaultValue={state.bio}
@@ -247,12 +243,22 @@ export function FormUpdateRegisterEnterprises(props: {
                     />
                     <p className="text-red-500 text-[12px] font-medium">{state.errors?.bio && state.errors.bio[0]}</p>
                 </div>
+                <div className="w-1/2">
+                    <label className="text-sm text-gray-900 cursor-default">Category type</label>
+                    <MultiSelectCategoriesSearchInput
+                        onChange={(newTagIds: Categories[]) => setCategories(newTagIds)}
+                        error={state.errors?.category}
+                        defaultValue={categories || []}
+                    />
+                    <p className="text-red-500 text-[12px] font-medium">
+                        {state.errors?.category && state.errors.category[0]}
+                    </p>
+                </div>
             </div>
             <div className="relative col-span-1">
                 <label className="text-sm text-gray-900 cursor-default">Benefits</label>
                 <RichTextEditor
                     onChange={handleEnterpriseBenefits}
-                    placement="inside-bottom"
                     initialContent={enterpriseBenefits}
                     hasError={!!state.errors?.enterpriseBenefits}
                 />
@@ -264,7 +270,6 @@ export function FormUpdateRegisterEnterprises(props: {
                 <label className="text-sm text-gray-900 cursor-default">Description</label>
                 <RichTextEditor
                     onChange={handleDescription}
-                    placement="inside-bottom"
                     initialContent={description}
                     hasError={!!state.errors?.description}
                 />

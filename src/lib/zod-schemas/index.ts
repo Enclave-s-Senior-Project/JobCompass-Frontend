@@ -161,6 +161,11 @@ const postJobSchema = z
         benefit: z.string().min(20, 'Benefit is required and must be at least 20 characters'),
         specializations: z.array(z.string()).min(1, 'At least one specializations is required'),
         requirements: z.string().min(20, 'Requirements is required and must be at least 20 characters'),
+        address: z
+            .string({
+                required_error: 'Address is required',
+            })
+            .min(1, 'Address is required'),
     })
     .refine((data) => Number(data.minSalary) <= Number(data.maxSalary), {
         message: 'Minimum salary must be less than or equal to maximum salary',
@@ -200,11 +205,7 @@ const addEnterpriseSchema = z.object({
     vision: z.string().min(1, 'vision is required '),
     organizationType: z.string().min(1, 'Organization type is required'),
     size: z.string().min(1, 'Size is required'),
-    industryType: z
-        .string()
-        .min(1, 'Industry is require')
-        .max(255, 'Industry type must be at most 255 characters')
-        .optional(),
+    category: z.array(z.string()).min(1, 'At least one tag is required'),
     bio: z.string().min(1, 'Bio is required').max(255, 'Bio must be at most 255 characters'),
 
     enterpriseBenefits: z.string().min(20, 'Benefit is required and must be at least 20 characters'),

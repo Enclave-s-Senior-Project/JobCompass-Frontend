@@ -44,7 +44,7 @@ const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChang
         refetchOnWindowFocus: false,
     });
 
-    // Đồng bộ defaultValue với selectedItems khi component mount hoặc defaultValue thay đổi
+   
     useEffect(() => {
         if (defaultValue.length > 0 && selectedItems.length === 0) {
             const initialItems = defaultValue.map((tag) => ({
@@ -52,7 +52,7 @@ const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChang
                 name: tag.name,
             }));
             setSelectedItems(initialItems);
-            onChange(initialItems.map((i) => i.tagId)); // Gọi onChange để đồng bộ với component cha
+            onChange(initialItems.map((i) => i.tagId)); 
         }
     }, [defaultValue, onChange]);
 

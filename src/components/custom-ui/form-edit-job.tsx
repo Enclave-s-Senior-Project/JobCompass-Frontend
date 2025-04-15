@@ -12,16 +12,15 @@ import { useActionState, useContext, useEffect, useState } from 'react';
 import { updateJob } from '@/lib/action';
 import { Categories, Category, Job, Tag } from '@/types';
 import { useQuery } from '@tanstack/react-query';
-import { queryKey } from '@/lib/react-query/keys';
+import { queryKey } from '@/lib/react-query/keys';  
 import { CategoryService } from '@/services/categories.service';
 import { AddressService } from '@/services/address.service';
 import { handleErrorToast } from '@/lib/utils';
 import { successKeyMessage } from '@/lib/message-keys';
-import toast from 'react-hot-toast';
 import MultiSelectCategoriesChildSearchInput from './select-categories-child';
 import { JobService } from '@/services/job.service';
 import { UserContext } from '@/contexts';
-import { JobTypeEnum } from '@/lib/common-enum';
+import { toast } from '@/lib/toast';
 
 export function EditJob(props: {
     id: string;
@@ -271,11 +270,9 @@ export function EditJob(props: {
                                 <SelectValue placeholder="Select..." />
                             </SelectTrigger>
                             <SelectContent>
-                                {Object.values(JobTypeEnum).map((jobType) => (
-                                    <SelectItem key={jobType} value={jobType}>
-                                        {jobType}
-                                    </SelectItem>
-                                ))}
+                                <SelectItem value="Full Time">Full Time</SelectItem>
+                                <SelectItem value="Part Time">Part Time</SelectItem>
+                                <SelectItem value="Contract">Contract</SelectItem>
                             </SelectContent>
                         </Select>
                         <p className="text-red-500 text-[12px] font-medium">{state.errors?.jobType?.[0]}</p>
