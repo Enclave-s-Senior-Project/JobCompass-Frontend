@@ -94,7 +94,7 @@ export default function Page() {
                 return null;
             }
         },
-        staleTime: 1000 * 60, // 1 minute
+        // staleTime: 1000 * 60, // 1 minute
         retry: 2,
         enabled: true,
         placeholderData: keepPreviousData,

@@ -8,6 +8,12 @@ interface baseEntity {
     isActive: boolean;
 }
 
+interface BoostedJob {
+    id: string;
+    boostedAt: string;
+    pointsUsed: number;
+}
+
 export interface Job {
     createdAt: string;
     updatedAt: string;
@@ -39,6 +45,7 @@ export interface Job {
     requirements: string;
     categories: Categories[];
     specializations: Categories[];
+    boostedJob: BoostedJob | null;
 }
 
 export interface Enterprise {

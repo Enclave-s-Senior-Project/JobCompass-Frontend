@@ -64,7 +64,6 @@ export default function FilterSidebarCandidate({ onOpenChange, open, filters, on
                 return [];
             }
         },
-        staleTime: 5 * 60 * 1000, // 5 minutes
     });
 
     // Reset filters to default
@@ -162,7 +161,7 @@ export default function FilterSidebarCandidate({ onOpenChange, open, filters, on
                                             readOnly
                                             className="mr-2"
                                         />
-                                        All categories
+                                        My categories
                                     </div>
                                 </SelectItem>
                                 {primaryCategoryData?.map((category: any) => (

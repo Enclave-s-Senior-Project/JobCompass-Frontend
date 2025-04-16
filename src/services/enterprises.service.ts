@@ -215,7 +215,7 @@ export class EnterpriseService {
                 query += `&gender=${data.gender}`;
             }
             if (data.maritalStatus) {
-                query += `&isMaried=${data.maritalStatus}`;
+                query += `&isMarried=${data.maritalStatus}`;
             }
             if (Array.isArray(data.categories) && data.categories.length > 0) {
                 const industryIds = data.categories.map((cat) => `industryId=${cat}`).join('&');

@@ -12,6 +12,7 @@ import { toast } from '@/lib/toast';
 import { Edit, XCircle } from 'lucide-react';
 import { handleErrorToast } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { languagesData } from '@/lib/data/languages.data';
 
 type CompanyProfileType = {
     logoFile: File | null;
@@ -39,14 +40,9 @@ type FormErrors = {
     zipCode: (string | null)[];
 };
 
+const localCountries = Object.entries(languagesData).map(([key]) => key);
+
 export function FormCompanyProfile() {
-    const selectItemsCountries = [
-        { label: 'United States', value: 'United States' },
-        { label: 'Canada', value: 'Canada' },
-        { label: 'Viet Nam', value: 'Vietnam' },
-        { label: 'France', value: 'France' },
-        { label: 'Germany', value: 'Germany' },
-    ];
     const { enterpriseInfo, refetchEnterpriseInfo } = useContext(EnterpriseContext);
     const [editable, setEditable] = useState(false);
     const [canSubmit, setCanSubmit] = useState(false);
@@ -78,7 +74,7 @@ export function FormCompanyProfile() {
 
     useEffect(() => {
         async function fetchData() {
-            await refetchEnterpriseInfo();
+            refetchEnterpriseInfo();
             setFormValue({
                 logoFile: null,
                 backgroundFile: null,
@@ -94,7 +90,7 @@ export function FormCompanyProfile() {
             });
         }
         fetchData();
-    }, [refetchEnterpriseInfo, enterpriseInfo]);
+    }, [enterpriseInfo]);
 
     useEffect(() => {
         const handler = setTimeout(() => {
@@ -211,15 +207,16 @@ export function FormCompanyProfile() {
             refetchEnterpriseInfo();
             toast.success('Profile updated successfully');
             setCanSubmit(false);
+            setEditable(false);
         } catch (error) {
             handleErrorToast(error);
-            console.error('Error updating profile:', error);
         } finally {
             setIsPending(false);
         }
     };
+
     const handleCountryChange = (value: string) => {
-        setFormValue((prev) => ({ ...prev, country: value }));
+        setFormValue((prev) => ({ ...prev, country: value, city: '', street: '', zipCode: '' }));
 
         setErrors((prevErrors) => {
             const newErrors = { ...prevErrors };
@@ -227,6 +224,20 @@ export function FormCompanyProfile() {
                 newErrors.country = ['Country is required'];
             } else {
                 newErrors.country = [];
+            }
+            return newErrors;
+        });
+    };
+
+    const handleChangeCity = (value: string) => {
+        setFormValue((prev) => ({ ...prev, city: value, street: '', zipCode: '' }));
+
+        setErrors((prevErrors) => {
+            const newErrors = { ...prevErrors };
+            if (!value) {
+                newErrors.city = ['City is required'];
+            } else {
+                newErrors.city = [];
             }
             return newErrors;
         });
@@ -314,33 +325,19 @@ export function FormCompanyProfile() {
                         <label className="text-sm text-gray-900 cursor-default">Address</label>
                         <div className="grid grid-cols-4 gap-4 mt-2">
                             <div>
-                                {/* <Input
-                                    disabled={!editable}
-                                    name="country"
-                                    placeholder="Country"
-                                    type="text"
-                                    value={formValue.country}
-                                    onChange={handleChangeInputValue}
-                                    className={clsx(
-                                        'h-12 rounded-sm',
-                                        errors?.country?.length > 0
-                                            ? 'border-2 border-danger ring-danger'
-                                            : 'focus-visible:border-primary focus-visible:ring-primary'
-                                    )}
-                                /> */}
                                 <Select
                                     name="country"
-                                    value={formValue.country}
-                                    onValueChange={(value) => handleCountryChange(value)}
                                     disabled={!editable}
+                                    value={formValue.country}
+                                    onValueChange={handleCountryChange}
                                 >
-                                    <SelectTrigger className="h-12 rounded-sm border border-primary-100 focus:border-primary focus:ring-1 focus:ring-primary">
+                                    <SelectTrigger className="h-12 rounded-sm text-base border border-primary-100 focus:border-primary focus:ring-1 focus:ring-primary">
                                         <SelectValue placeholder="Select a country" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {selectItemsCountries.map((country) => (
-                                            <SelectItem key={country.value} value={country.value}>
-                                                {country.label}
+                                        {localCountries.map((country) => (
+                                            <SelectItem key={country} value={country}>
+                                                {country}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
@@ -350,21 +347,26 @@ export function FormCompanyProfile() {
                                 </p>
                             </div>
                             <div>
-                                <Input
-                                    disabled={!editable}
+                                <Select
                                     name="city"
-                                    placeholder="City"
-                                    type="text"
                                     value={formValue.city}
-                                    onChange={handleChangeInputValue}
-                                    className={clsx(
-                                        'h-12 rounded-sm',
-                                        errors?.city?.length > 0
-                                            ? 'border-2 border-danger ring-danger'
-                                            : 'focus-visible:border-primary focus-visible:ring-primary'
-                                    )}
-                                />
-
+                                    onValueChange={handleChangeCity}
+                                    disabled={!editable}
+                                >
+                                    <SelectTrigger className="h-12 rounded-sm border text-base border-primary-100 focus:border-primary focus:ring-1 focus:ring-primary">
+                                        <SelectValue placeholder="Select a city" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {languagesData[formValue.country] &&
+                                            Object.entries(languagesData[formValue.country].cities).map(
+                                                ([index, city]) => (
+                                                    <SelectItem key={index} value={city}>
+                                                        {city}
+                                                    </SelectItem>
+                                                )
+                                            )}
+                                    </SelectContent>
+                                </Select>
                                 <p className="text-red-500 text-xs min-h-5">
                                     {errors?.city?.length > 0 && errors.city[0]}
                                 </p>
