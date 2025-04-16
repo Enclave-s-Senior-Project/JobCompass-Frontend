@@ -290,7 +290,7 @@ export const settingEmployerProfile = async (formData: FormData) => {
     if (backgroundFile && backgroundFile.size > 0) {
         uploadPromises.push(
             UploadService.uploadFile(backgroundFile).then((res) => {
-                backgroundImageUrl = res.fileUrl || ''; // Update backgroundImageUrl after successful upload
+                backgroundImageUrl = res.fileUrl || '';
             })
         );
     }
@@ -492,12 +492,14 @@ export const addEnterprises = async (currentState: any, formData: FormData) => {
     currentState.bio = formData.get('bio')?.toString() ?? '';
     currentState.enterpriseBenefits = formData.get('enterpriseBenefits')?.toString() ?? '';
     currentState.description = formData.get('description')?.toString() ?? '';
+    currentState.country = formData.get('country')?.toString() ?? '';
+    currentState.city = formData.get('city')?.toString() ?? '';
+    currentState.street = formData.get('street')?.toString() ?? '';
+    currentState.zipCode = formData.get('zipCode')?.toString() ?? '';
     const validation = addEnterpriseSchema.safeParse(currentState);
     if (!validation.success) {
         Object.assign(errors, validation.error.flatten().fieldErrors);
     }
-
-    // Nếu có lỗi, trả về tất cả lỗi cùng lúc
     if (Object.keys(errors).length > 0) {
         return {
             ...currentState,
@@ -508,7 +510,7 @@ export const addEnterprises = async (currentState: any, formData: FormData) => {
     }
     try {
         const [logoFile] = await Promise.all(uploadPromises);
-        await EnterpriseService.postEnterprise({
+        const enterprise = await EnterpriseService.postEnterprise({
             name: currentState.name,
             email: currentState.email,
             phone: currentState.phone,
@@ -523,6 +525,16 @@ export const addEnterprises = async (currentState: any, formData: FormData) => {
             categories: currentState.category,
             bio: currentState.bio,
             status: 'PENDING',
+        });
+        if (!enterprise) {
+            return { ...currentState, success: true, errors: {} };
+        }
+        await EnterpriseService.updateAddressEmployer({
+            enterpriseId: enterprise?.enterpriseId,
+            city: currentState.city,
+            street: currentState.street,
+            zipCode: currentState.zipCode,
+            country: currentState.country,
         });
 
         return { ...currentState, success: true, errors: {} };
@@ -560,6 +572,10 @@ export const updateRegisterEnterprise = async (currentState: any, formData: Form
     currentState.enterpriseBenefits = formData.get('enterpriseBenefits')?.toString() ?? '';
     currentState.description = formData.get('description')?.toString() ?? '';
     currentState.category = formData.getAll('categories[]');
+    currentState.country = formData.get('country')?.toString() ?? '';
+    currentState.city = formData.get('city')?.toString() ?? '';
+    currentState.street = formData.get('street')?.toString() ?? '';
+    currentState.zipCode = formData.get('zipCode')?.toString() ?? '';
 
     const validation = addEnterpriseSchema.safeParse(currentState);
     if (!validation.success) {
@@ -766,7 +782,7 @@ export const settingAddressEmployer = async (formData: Address) => {
         return {
             errors: validation.error.flatten().fieldErrors,
             success: false,
-            data: null, // Return null for data when validation fails
+            data: null,
         };
     }
 

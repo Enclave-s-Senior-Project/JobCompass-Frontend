@@ -12,7 +12,9 @@ import RichTextEditor from './rich-text-editor';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import MultiSelectCategoriesSearchInput from './select-categories';
 import { Categories, Category } from '@/types';
+import { languagesData } from '@/lib/data/languages.data';
 
+const localCountries = Object.entries(languagesData).map(([key]) => key);
 export function FormAddEnterprises({ setOpen, refetch }: { setOpen: (value: boolean) => void; refetch: () => void }) {
     const [checkLogo, setCheckLogo] = useState(false);
     const [categories, setCategories] = useState<Categories[]>([]);
@@ -29,12 +31,21 @@ export function FormAddEnterprises({ setOpen, refetch }: { setOpen: (value: bool
         bio: '',
         enterpriseBenefits: '',
         description: '',
+        country: '',
+        city: '',
+        street: '',
+        zipCode: '',
         categories: [] as Category[],
         errors: {},
         success: false,
     });
     const [enterpriseBenefits, setEnterpriseBenefits] = useState(state.enterpriseBenefits);
     const [description, setDescription] = useState(state.description);
+    const [country, setCountry] = useState(state.country);
+    const [city, setCity] = useState(state.city);
+    const [street, setStreet] = useState(state.street);
+    const [zipCode, setZipCode] = useState(state.zipCode);
+
     useEffect(() => {
         if (state.errors?.logo) {
             setCheckLogo(true);
@@ -55,12 +66,29 @@ export function FormAddEnterprises({ setOpen, refetch }: { setOpen: (value: bool
         setDescription(content);
     };
 
+    const handleCountryChange = (value: string) => {
+        setCountry(value);
+        setCity('');
+        setStreet('');
+        setZipCode('');
+    };
+
+    const handleCityChange = (values: string) => {
+        setCity(values);
+        setStreet('');
+        setZipCode('');
+    };
+
     return (
         <form
             className="space-y-6"
             action={(formData) => {
                 formData.set('description', description);
                 formData.set('enterpriseBenefits', enterpriseBenefits);
+                formData.set('country', country);
+                formData.set('city', city);
+                formData.set('street', street);
+                formData.set('zipCode', zipCode);
                 categories.forEach((categories) => {
                     formData.append('categories[]', categories.categoryId);
                 });
@@ -176,6 +204,78 @@ export function FormAddEnterprises({ setOpen, refetch }: { setOpen: (value: bool
                                 {state.errors?.size && state.errors.size[0]}
                             </p>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div className="col-span-4">
+                <label className="text-sm text-gray-900 cursor-default">Address</label>
+                <div className="grid grid-cols-4 gap-4 mt-2">
+                    <div>
+                        <Select name="country" value={country} onValueChange={handleCountryChange}>
+                            <SelectTrigger className="h-12 rounded-sm text-base border border-primary-100 focus:border-primary focus:ring-1 focus:ring-primary">
+                                <SelectValue placeholder="Select a country" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {localCountries.map((country) => (
+                                    <SelectItem key={country} value={country}>
+                                        {country}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <p className="text-red-500 text-xs min-h-5">
+                            {state.errors?.country && state.errors.country[0]}
+                        </p>
+                    </div>
+                    <div>
+                        <Select name="city" value={city} onValueChange={handleCityChange}>
+                            <SelectTrigger className="h-12 rounded-sm border text-base border-primary-100 focus:border-primary focus:ring-1 focus:ring-primary">
+                                <SelectValue placeholder="Select a city" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {languagesData[country] &&
+                                    Object.entries(languagesData[country].cities).map(([index, city]) => (
+                                        <SelectItem key={index} value={city}>
+                                            {city}
+                                        </SelectItem>
+                                    ))}
+                            </SelectContent>
+                        </Select>
+                        <p className="text-red-500 text-xs min-h-5">{state.errors?.city && state.errors.city[0]}</p>
+                    </div>
+                    <div>
+                        <Input
+                            name="street"
+                            placeholder="Street"
+                            type="text"
+                            value={street}
+                            onChange={(e) => setStreet(e.target.value)}
+                            className={clsx(
+                                'h-12 rounded-sm',
+                                state.errors?.street
+                                    ? 'border-2 border-danger ring-danger'
+                                    : 'focus-visible:border-primary focus-visible:ring-primary'
+                            )}
+                        />
+                        <p className="text-red-500 text-xs min-h-5">{state.errors?.street && state.errors.street[0]}</p>
+                    </div>
+                    <div>
+                        <Input
+                            name="zipCode"
+                            placeholder="Zip Code"
+                            type="text"
+                            value={zipCode}
+                            onChange={(e) => setZipCode(e.target.value)}
+                            className={clsx(
+                                'h-12 rounded-sm',
+                                state.errors?.zipCode
+                                    ? 'border-2 border-danger ring-danger'
+                                    : 'focus-visible:border-primary focus-visible:ring-primary'
+                            )}
+                        />
+                        <p className="text-red-500 text-xs min-h-5">
+                            {state.errors?.zipCode && state.errors.zipCode[0]}
+                        </p>
                     </div>
                 </div>
             </div>

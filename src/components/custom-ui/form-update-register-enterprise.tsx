@@ -13,7 +13,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGr
 import { Categories, Enterprise } from '@/types';
 import { EnterpriseService } from '@/services/enterprises.service';
 import MultiSelectCategoriesSearchInput from './select-categories';
+import { languagesData } from '@/lib/data/languages.data';
 
+const localCountries = Object.entries(languagesData).map(([key]) => key);
 export function FormUpdateRegisterEnterprises(props: {
     setOpen: (value: boolean) => void;
     enterprises: Enterprise | null;
@@ -40,15 +42,22 @@ export function FormUpdateRegisterEnterprises(props: {
         errors: {},
         success: false,
     });
+    const [country, setCountry] = useState(state.country);
+    const [city, setCity] = useState(state.city);
+    const [street, setStreet] = useState(state.street);
+    const [zipCode, setZipCode] = useState(state.zipCode);
     const [enterpriseBenefits, setEnterpriseBenefits] = useState(state.enterpriseBenefits);
     const [description, setDescription] = useState(state.description);
     const fetchEnterpriseData = async () => {
         const updatedEnterprise = await EnterpriseService.checkEnterprise();
         if (updatedEnterprise?.value) {
             const fetchedCategories = updatedEnterprise.value.categories || [];
-            console.log('123', fetchedCategories);
             setCategories(fetchedCategories);
             setEnterprise(updatedEnterprise.value);
+            setCountry(updatedEnterprise?.value?.addresses?.[0].country);
+            setCity(updatedEnterprise?.value?.addresses?.[0].city);
+            setStreet(updatedEnterprise?.value?.addresses?.[0].street);
+            setZipCode(updatedEnterprise?.value?.addresses?.[0].zipCode);
         }
     };
 
@@ -82,6 +91,10 @@ export function FormUpdateRegisterEnterprises(props: {
             action={(formData) => {
                 formData.set('description', description);
                 formData.set('enterpriseBenefits', enterpriseBenefits);
+                formData.set('country', country);
+                formData.set('city', city);
+                formData.set('street', street);
+                formData.set('zipCode', zipCode);
                 categories.forEach((categories) => {
                     formData.append('categories[]', categories.categoryId);
                 });
@@ -166,20 +179,104 @@ export function FormUpdateRegisterEnterprises(props: {
                         </div>
                         <div className="w-1/2">
                             <label className="text-sm text-gray-900 cursor-default">Team size</label>
-                            <Input
-                                defaultValue={state.size}
-                                name="size"
-                                className={clsx(
-                                    'h-12 rounded-sm',
-                                    state.errors?.size
-                                        ? 'border-2 border-danger ring-danger '
-                                        : 'focus-visible:border-primary focus-visible:ring-primary'
-                                )}
-                            />
+                            <Select name="size" defaultValue={state.size}>
+                                <SelectTrigger
+                                    className={clsx(
+                                        'h-12 text-base rounded-sm',
+                                        state.errors?.size
+                                            ? 'border-2 border-danger focus:border-danger focus:ring-0'
+                                            : 'focus:border-primary focus:ring-primary'
+                                    )}
+                                >
+                                    <SelectValue placeholder="Select..." className="text-[#767F8C]" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="1-10">1-10</SelectItem>
+                                        <SelectItem value="11-50">11-50</SelectItem>
+                                        <SelectItem value="51-200">51-200</SelectItem>
+                                        <SelectItem value="200+">200+</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
                             <p className="text-red-500 text-[12px] font-medium">
                                 {state.errors?.size && state.errors.size[0]}
                             </p>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div className="col-span-4">
+                <label className="text-sm text-gray-900 cursor-default">Address</label>
+                <div className="grid grid-cols-4 gap-4 mt-2">
+                    <div>
+                        <Select name="country" value={country} disabled>
+                            <SelectTrigger className="h-12 rounded-sm text-base border focus:border-primary focus:ring-1 focus:ring-primary">
+                                <SelectValue placeholder="Select a country" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {localCountries.map((country) => (
+                                    <SelectItem key={country} value={country}>
+                                        {country}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <p className="text-red-500 text-xs min-h-5">
+                            {state.errors?.country && state.errors.country[0]}
+                        </p>
+                    </div>
+                    <div>
+                        <Select name="city" value={city} disabled>
+                            <SelectTrigger className="h-12 rounded-sm border text-base  focus:border-primary focus:ring-1 focus:ring-primary">
+                                <SelectValue placeholder="Select a city" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {languagesData[country] &&
+                                    Object.entries(languagesData[country].cities).map(([index, city]) => (
+                                        <SelectItem key={index} value={city}>
+                                            {city}
+                                        </SelectItem>
+                                    ))}
+                            </SelectContent>
+                        </Select>
+                        <p className="text-red-500 text-xs min-h-5">{state.errors?.city && state.errors.city[0]}</p>
+                    </div>
+                    <div>
+                        <Input
+                            name="street"
+                            placeholder="Street"
+                            type="text"
+                            disabled
+                            value={street}
+                            onChange={(e) => setStreet(e.target.value)}
+                            className={clsx(
+                                'h-12 rounded-sm',
+                                state.errors?.street
+                                    ? 'border-2 border-danger ring-danger'
+                                    : 'focus-visible:border-primary focus-visible:ring-primary'
+                            )}
+                        />
+                        <p className="text-red-500 text-xs min-h-5">{state.errors?.street && state.errors.street[0]}</p>
+                    </div>
+                    <div>
+                        <Input
+                            name="zipCode"
+                            placeholder="Zip Code"
+                            type="text"
+                            disabled
+                            value={zipCode}
+                            onChange={(e) => setZipCode(e.target.value)}
+                            className={clsx(
+                                'h-12 rounded-sm',
+                                state.errors?.zipCode
+                                    ? 'border-2 border-danger ring-danger'
+                                    : 'focus-visible:border-primary focus-visible:ring-primary'
+                            )}
+                        />
+                        <p className="text-red-500 text-xs min-h-5">
+                            {state.errors?.zipCode && state.errors.zipCode[0]}
+                        </p>
                     </div>
                 </div>
             </div>

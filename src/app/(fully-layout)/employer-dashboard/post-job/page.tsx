@@ -21,7 +21,7 @@ import { handleErrorToast } from '@/lib/utils';
 import { queryKey } from '@/lib/react-query/keys';
 import { toast } from '@/lib/toast';
 import { EducationJobLevelEnum, JobTypeEnum } from '@/lib/common-enum';
-import { DollarSign, FileText, Gift, ListChecks } from 'lucide-react';
+import { DollarSign, FileText, Gift, ListChecks, MapPinHouse } from 'lucide-react';
 
 export default function PostJobForm() {
     const router = useRouter();
@@ -67,7 +67,7 @@ export default function PostJobForm() {
     useEffect(() => {
         if (state.success) {
             toast.success(successKeyMessage.POST_JOB_SUCCESSFUL);
-            router.push('/');
+            router.push('/employer-dashboard/my-jobs');
         }
     }, [state.success, state.errors]);
 
@@ -111,46 +111,48 @@ export default function PostJobForm() {
                 }}
                 className="space-y-4 bg-white pt-3"
             >
-                <div className="flex flex-col gap-y-2">
-                    <div className="text-base font-medium">
-                        <h1>
-                            Job Title <span className="text-red-500">*</span>
-                        </h1>
-                    </div>
-                    <Input
-                        className={clsx(
-                            'h-12 rounded-sm',
-                            state.errors?.title
-                                ? 'border-2 border-danger ring-danger'
-                                : ' focus-visible:border-primary focus-visible:ring-primary'
-                        )}
-                        defaultValue={state.title}
-                        name="title"
-                    />
-                    <p className=" text-red-500 text-[12px] font-medium ">
-                        {state.errors?.title && state.errors.title[0]}
-                    </p>
-                </div>
-
-                <div className="flex flex-col gap-y-2">
-                    <h1 className="text-base font-medium">Tag</h1>
-                    <div className="flex flex-grow gap-x-2">
-                        <MultiSelectSearchInput
-                            onChange={(newTagIds: string[]) => setSelectedTags(newTagIds)}
-                            error={state.errors?.tags}
-                        />
-
-                        <div className="flex-grow basis-1/3 max-w-[30%]">
-                            <DialogAddTag refetch={refetch} />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-y-2">
+                        <div className="text-base font-medium">
+                            <h1>Job Title</h1>
                         </div>
+                        <Input
+                            className={clsx(
+                                'h-12 rounded-sm w-full',
+                                state.errors?.title
+                                    ? 'border-2 border-danger ring-danger'
+                                    : 'focus-visible:border-primary focus-visible:ring-primary'
+                            )}
+                            defaultValue={state.title}
+                            name="title"
+                        />
+                        <p className="text-red-500 text-[12px] font-medium">
+                            {state.errors?.title && state.errors.title[0]}
+                        </p>
                     </div>
-                    <p className=" text-red-500 text-[12px] font-medium ">
-                        {state.errors?.tags && state.errors.tags[0]}
-                    </p>
+
+                    <div className="flex flex-col gap-y-2">
+                        <h1 className="text-base font-medium">Tag</h1>
+                        <div className="flex flex-col sm:flex-row gap-2">
+                            <div className="flex-1">
+                                <MultiSelectSearchInput
+                                    onChange={(newTagIds: string[]) => setSelectedTags(newTagIds)}
+                                    error={state.errors?.tags}
+                                />
+                            </div>
+                            <div className="w-full sm:w-auto">
+                                <DialogAddTag refetch={refetch} />
+                            </div>
+                        </div>
+                        <p className="text-red-500 text-[12px] font-medium">
+                            {state.errors?.tags && state.errors.tags[0]}
+                        </p>
+                    </div>
                 </div>
                 <div className="flex flex-col gap-y-2">
-                    <h1 className="text-base font-medium">
-                        Address <span className="text-red-500">*</span>
+                    <h1 className="text-base font-medium flex items-center gap-2">
+                        <MapPinHouse className="h-5 w-5 text-gray-400" />
+                        Address
                     </h1>
                     <Select name="address">
                         <SelectTrigger
@@ -362,6 +364,7 @@ export default function PostJobForm() {
                         <div className="flex flex-col gap-y-2">
                             <h1 className="text-base font-medium">Job Specialization</h1>
                             <MultiSelectCategoriesChildSearchInput
+                                key={selectedCategory}
                                 categoryId={selectedCategory}
                                 onChange={(newTagIds: string[]) => setJobSpecializations(newTagIds)}
                                 error={state.errors?.specializations}
@@ -374,13 +377,13 @@ export default function PostJobForm() {
                 </div>
 
                 <div className="space-y-4">
-                    <h2 className="text-lg font-semibold flex items-center">
-                        <FileText className="mr-2 h-5 w-5 text-gray-500" />
-                        Description & Responsibility
-                    </h2>
+                    <h2 className="text-lg font-semibold flex items-center">Description & Responsibility</h2>
                     <div className="space-y-6">
                         <div className="flex flex-col gap-y-2">
-                            <h1 className="text-base font-medium">Description</h1>
+                            <h1 className="text-base font-medium flex items-center">
+                                <FileText className="mr-2 h-5 w-5 text-gray-500" />
+                                Description
+                            </h1>
                             <div className="focus-visible:border-primary focus-visible:ring-primary">
                                 <RichTextEditor
                                     onChange={handleDescription}
@@ -394,7 +397,10 @@ export default function PostJobForm() {
                         </div>
 
                         <div className="flex flex-col gap-y-2">
-                            <h1 className="text-base font-medium">Responsibilities</h1>
+                            <h1 className="text-base font-medium flex items-center">
+                                <FileText className="mr-2 h-5 w-5 text-gray-500" />
+                                Responsibilities
+                            </h1>
                             <div className="focus-visible:border-primary focus-visible:ring-primary">
                                 <RichTextEditor
                                     onChange={handleResponsibility}

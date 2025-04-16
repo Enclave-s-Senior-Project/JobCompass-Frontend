@@ -207,7 +207,6 @@ const addEnterpriseSchema = z.object({
     size: z.string().min(1, 'Size is required'),
     category: z.array(z.string()).min(1, 'At least one tag is required'),
     bio: z.string().min(1, 'Bio is required').max(255, 'Bio must be at most 255 characters'),
-
     enterpriseBenefits: z.string().min(20, 'Benefit is required and must be at least 20 characters'),
     foundedIn: z
         .string({
@@ -224,6 +223,15 @@ const addEnterpriseSchema = z.object({
                 message: 'Founded in date cannot be in the future',
             }
         ),
+    country: z
+        .string()
+        .min(1, 'Country is required')
+        .refine((val) => validCountries.includes(val), {
+            message: 'Invalid country',
+        }),
+    city: z.string().min(1, 'City is required'),
+    street: z.string().min(1, 'Street is required'),
+    zipCode: z.string().min(1, 'Zip code is required'),
 });
 
 const companyProfileSchema = z.object({
