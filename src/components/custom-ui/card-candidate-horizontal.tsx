@@ -20,7 +20,7 @@ import defaultAvatar from '@/assets/images/avatar/default-avatar.jpg';
 
 export default function CardCandidateHorizontal(props: {
     perPage: number;
-    option: string;
+    order: 'ASC' | 'DESC';
     maritalStatus: string | undefined;
     categories: string[] | undefined;
     gender: string | undefined;
@@ -28,20 +28,17 @@ export default function CardCandidateHorizontal(props: {
 }) {
     const router = useRouter();
     const ITEM_PER_PAGE = props.perPage;
-    const { option, maritalStatus, categories, gender, onRefetch } = props;
+    const { order, maritalStatus, categories, gender, onRefetch } = props;
     const [totalPages, setTotalPages] = useState(0);
     const search = useSearchParams();
     const page = Number(search.get('page') || 1);
-    const order = (search.get('order')?.toUpperCase() as 'ASC' | 'DESC') || 'ASC';
+
     const {
         refetch,
         data: resultQuery,
         isPending,
     } = useQuery({
-        queryKey: [
-            queryKey.favoriteJobs,
-            { order, page, take: ITEM_PER_PAGE, option, categories, gender, maritalStatus },
-        ],
+        queryKey: [queryKey.favoriteJobs, { order, page, take: ITEM_PER_PAGE, categories, gender, maritalStatus }],
         queryFn: async ({ queryKey }) => {
             try {
                 const payload = await EnterpriseService.getCandidates(queryKey[1] as DetailedRequest.GetCandidates);
@@ -52,7 +49,6 @@ export default function CardCandidateHorizontal(props: {
             }
         },
         staleTime: 1000 * 60,
-        refetchInterval: 1000 * 60,
         retry: 2,
         enabled: true,
     });

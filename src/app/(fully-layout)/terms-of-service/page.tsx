@@ -106,7 +106,7 @@ export default function TermsPage() {
                     <p className="text-gray-700 mt-4">
                         Your continued use of our website will be regarded as acceptance of our practices around privacy
                         and personal information. If you have any questions about how we handle user data and personal
-                        information, feel free to contact us at
+                        information, feel free to contact us at&nbsp;
                         <a
                             className="text-primary-500 font-semibold hover:underline"
                             href={`mailto:${process.env.NEXT_PUBLIC_EMAIL_CONTACT}`}

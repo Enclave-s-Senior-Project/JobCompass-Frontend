@@ -65,7 +65,7 @@ export function JobQuickView({ job }: Props) {
                         <div>
                             <div className="flex items-center gap-2 mb-1">
                                 <h3 className="font-bold text-xl text-gray-800">{job?.name}</h3>
-                                {job?.isBoost && (
+                                {job?.boostedJob && (
                                     <Badge className="bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white border-0">
                                         <Star className="h-3 w-3 mr-1 fill-white" /> Boosted
                                     </Badge>

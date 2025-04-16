@@ -177,7 +177,7 @@ const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true
                     <Separator className="w-full border-b" />
                     {isOwn && (
                         <div className="flex items-center justify-between">
-                            {job?.isBoost ? (
+                            {job?.boostedJob ? (
                                 <div className="flex items-center gap-2 text-base text-warning-500 font-semibold uppercase">
                                     <Zap className="size-6" />
                                     Boosted

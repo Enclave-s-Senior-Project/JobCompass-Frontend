@@ -3,7 +3,8 @@ import { queryKey } from '@/lib/react-query/keys';
 import { EnterpriseService } from '@/services/enterprises.service';
 import { Enterprise } from '@/types';
 import { useQuery } from '@tanstack/react-query';
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { UserContext } from './user-context';
 
 export const EnterpriseContext = createContext<{
     enterpriseInfo: Enterprise | null;
@@ -16,9 +17,9 @@ export const EnterpriseContext = createContext<{
 });
 
 export function EnterpriseProvider({ children }: { children: React.ReactNode }) {
+    const { userInfo } = useContext(UserContext);
     const [localEnterprise, setLocalEnterprise] = useState<Enterprise | null>(null);
     const [isHydrated, setIsHydrated] = useState(false);
-    const [isEnterpriseActive, setIsEnterpriseActive] = useState(false);
 
     useEffect(() => {
         const storedEnterprise = localStorage.getItem('enterprise') || '';
@@ -38,13 +39,12 @@ export function EnterpriseProvider({ children }: { children: React.ReactNode }) 
         },
         staleTime: 1000 * 60 * 5,
         retry: 2,
-        enabled: isHydrated && isEnterpriseActive,
+        enabled: isHydrated && !!userInfo,
     });
 
     const deactivateEnterprise = () => {
         localStorage.removeItem('enterprise');
         setLocalEnterprise(null);
-        setIsEnterpriseActive(false);
     };
 
     if (!isHydrated) return null; // or a loading spinner

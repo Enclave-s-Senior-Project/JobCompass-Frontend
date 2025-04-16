@@ -6,23 +6,26 @@ import FilterSidebarCandidate, {
 } from '@/components/custom-ui/local/filter-candidate';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { DetailedRequest } from '@/types';
 import { SlidersHorizontal } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ListCandidates() {
     const [showFilter, setShowFilter] = useState(false);
-    const [option, setOption] = useState('ASC');
+    const [option, setOption] = useState<'ASC' | 'DESC'>('ASC');
     const [itemsPerPage, setItemsPerPage] = useState(6);
-    const [filters, setFilters] = useState<FilterValuesSidebar>({ ...defaultFiltersSidebar });
-    const [refetchFn, setRefetchFn] = useState<(() => void) | null>(null);
+    const [filters, setFilters] = useState<FilterValuesSidebar & DetailedRequest.Pagination>({
+        ...defaultFiltersSidebar,
+    });
 
     // Handle applying filters
     const handleApplyFilters = (newFilters: FilterValuesSidebar) => {
         setFilters(newFilters);
-        if (refetchFn) {
-            refetchFn();
-        }
     };
+
+    useEffect(() => {
+        setFilters((prev) => ({ ...prev, order: option }));
+    }, [option]);
 
     return (
         <main className="min-h-dvh bg-white">
@@ -39,7 +42,7 @@ export default function ListCandidates() {
                     </Button>
                 </div>
                 <div className="flex flex-wrap items-center gap-4">
-                    <Select onValueChange={(value) => setOption(value)}>
+                    <Select onValueChange={(value: 'ASC' | 'DESC') => setOption(value)}>
                         <SelectTrigger className="text-sm border-[1px] rounded-md px-2 py-1.5 h-[48px] w-[180px] bg-[#FFFFFF] focus:ring-0 focus:ring-offset-0">
                             <SelectValue placeholder={option === 'ASC' ? 'Latest' : 'Oldest'} />
                         </SelectTrigger>
@@ -76,11 +79,10 @@ export default function ListCandidates() {
                 <div className="w-full">
                     <CardCandidateHorizontal
                         perPage={itemsPerPage || 6}
-                        option={option}
+                        order={option}
                         maritalStatus={filters.maritalStatus === 'all' ? undefined : filters.maritalStatus}
                         gender={filters.gender === 'all' ? undefined : filters.gender}
                         categories={filters.categories.length ? filters.categories : undefined}
-                        onRefetch={(refetch) => setRefetchFn(() => refetch)}
                     />
                 </div>
             </div>
