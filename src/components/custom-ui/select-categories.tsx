@@ -152,16 +152,20 @@ const MultiSelectCategoriesSearchInput: React.FC<MultiSelectSearchInputProps> = 
         }
     };
 
+    useEffect(() => {
+        console.log('Current selectedItems:', selectedItems);
+    }, [selectedItems]);
+
     return (
         <div className="relative w-full" ref={dropdownRef}>
             <div
                 className={clsx(
-                    'flex items-center gap-1 border-2 rounded-md p-2 bg-white h-12 overflow-hidden',
+                    'flex items-center gap-1 border shadow-sm rounded-md p-2 bg-white h-12 overflow-hidden',
                     error
                         ? 'border-1 border-danger ring-danger'
                         : disabled
                           ? 'border-gray-50'
-                          : 'focus-within:border-primary focus-within:ring-primary'
+                          : 'focus-within:border-primary focus-within:ring-1 focus-within:ring-primary'
                 )}
             >
                 <div className="flex items-center gap-1 overflow-hidden flex-nowrap max-w-full">

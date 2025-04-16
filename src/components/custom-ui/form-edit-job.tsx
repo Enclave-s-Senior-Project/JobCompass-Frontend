@@ -21,7 +21,7 @@ import MultiSelectCategoriesChildSearchInput from './select-categories-child';
 import { JobService } from '@/services/job.service';
 import { UserContext } from '@/contexts';
 import { toast } from '@/lib/toast';
-import { JobTypeEnum } from '@/lib/common-enum';
+import { EducationJobLevelEnum, JobTypeEnum } from '@/lib/common-enum';
 
 export function EditJob(props: {
     id: string;
@@ -30,7 +30,7 @@ export function EditJob(props: {
     refetchDetailJob: () => void;
     onCloseDialog: () => void;
 }) {
-    const { id, onSuccess, refetchJob, refetchDetailJob, onCloseDialog } = props;
+    const { id, refetchJob, refetchDetailJob, onCloseDialog } = props;
     const [job, setJob] = useState<Job | null>(null);
     const { userInfo } = useContext(UserContext);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -72,9 +72,7 @@ export function EditJob(props: {
                 handleErrorToast(error);
             }
         },
-        staleTime: 1000 * 60,
         refetchInterval: 1000 * 60,
-        retry: 2,
         enabled: true,
     });
 
@@ -82,26 +80,32 @@ export function EditJob(props: {
         if (resultQuery?.job) {
             const fetchedJob = resultQuery.job;
             setJob(fetchedJob);
+            setSelectedCategory(fetchedJob?.categories?.[0].categoryId);
             setDescription(fetchedJob.description || '');
             setResponsibility(fetchedJob.responsibility || '');
             setBenefit(fetchedJob.enterpriseBenefits || '');
             setSelectedTags(fetchedJob.tags?.map((tag: Tag) => tag.tagId) || []);
             setRequirements(fetchedJob.requirements);
+            setJobSpecializations(fetchedJob.specializations?.map((spec: Categories) => spec.categoryId) || []);
         }
     }, [resultQuery]);
 
     useEffect(() => {
         if (state.success) {
-            toast.success(successKeyMessage.POST_JOB_SUCCESSFUL);
+            refetch();
             onCloseDialog();
             refetchJob();
             refetchDetailJob();
+            toast.success(successKeyMessage.POST_JOB_SUCCESSFUL);
         }
-    }, [state.success, onSuccess]);
+    }, [state.success]);
     const handleDescription = (content: string) => setDescription(content);
     const handleResponsibility = (content: string) => setResponsibility(content);
     const handleBenefit = (content: string) => setBenefit(content);
-    const handleCategoryChange = (value: string) => setSelectedCategory(value);
+    const handleCategoryChange = (value: string) => {
+        setSelectedCategory(value);
+        setJobSpecializations([]);
+    };
     const handleRequirements = (content: string) => setRequirements(content);
 
     if (isLoading || !job) {
@@ -122,36 +126,43 @@ export function EditJob(props: {
             }}
             className="space-y-4 bg-white"
         >
-            <div className="flex flex-col gap-y-2">
-                <h1>Job Title</h1>
-                <Input
-                    className={clsx(
-                        'h-12 rounded-sm',
-                        state.errors?.title
-                            ? 'border-2 border-danger ring-danger'
-                            : 'focus-visible:border-primary focus-visible:ring-primary'
-                    )}
-                    defaultValue={job.name}
-                    name="title"
-                />
-                <p className="text-red-500 text-[12px] font-medium">{state.errors?.title?.[0]}</p>
-            </div>
-
-            <div className="flex flex-col gap-y-2">
-                <h1>Tag</h1>
-                <div className="flex flex-grow gap-x-2">
-                    <MultiSelectSearchInput
-                        onChange={(newTagIds: string[]) => setSelectedTags(newTagIds)}
-                        error={state.errors?.tags}
-                        defaultValue={job.tags as Tag[]}
-                    />
-                    <div className="flex-grow basis-1/3 max-w-[30%]">
-                        <DialogAddTag refetch={refetch} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-y-2">
+                    <div className="text-base font-medium">
+                        <h1>Job Title</h1>
                     </div>
+                    <Input
+                        className={clsx(
+                            'h-12 rounded-sm w-full',
+                            state.errors?.title
+                                ? 'border-2 border-danger ring-danger'
+                                : 'focus-visible:border-primary focus-visible:ring-primary'
+                        )}
+                        defaultValue={job.name}
+                        name="title"
+                    />
+                    <p className="text-red-500 text-[12px] font-medium">
+                        {state.errors?.title && state.errors.title[0]}
+                    </p>
                 </div>
-                <p className="text-red-500 text-[12px] font-medium">{state.errors?.tags?.[0]}</p>
-            </div>
 
+                <div className="flex flex-col gap-y-2">
+                    <h1 className="text-base font-medium">Tag</h1>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                        <div className="flex-1">
+                            <MultiSelectSearchInput
+                                onChange={(newTagIds: string[]) => setSelectedTags(newTagIds)}
+                                error={state.errors?.tags?.[0]}
+                                defaultValue={job.tags as Tag[]}
+                            />
+                        </div>
+                        <div className="w-full sm:w-auto">
+                            <DialogAddTag refetch={refetch} />
+                        </div>
+                    </div>
+                    <p className="text-red-500 text-[12px] font-medium">{state.errors?.tags && state.errors.tags[0]}</p>
+                </div>
+            </div>
             <div className="flex flex-col gap-y-2">
                 <h1>Address</h1>
                 <Select name="address" defaultValue={job.addresses?.[0]?.addressId}>
@@ -235,9 +246,11 @@ export function EditJob(props: {
                                 <SelectValue placeholder="Select..." className="text-[#767F8C]" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="bachelor">Bachelors Degree</SelectItem>
-                                <SelectItem value="master">Masters Degree</SelectItem>
-                                <SelectItem value="phd">Ph.D.</SelectItem>
+                                {Object.values(EducationJobLevelEnum).map((educationType) => (
+                                    <SelectItem key={educationType} value={educationType}>
+                                        {educationType}
+                                    </SelectItem>
+                                ))}
                             </SelectContent>
                         </Select>
                         <p className="text-red-500 text-[12px] font-medium">{state.errors?.education?.[0]}</p>
@@ -252,7 +265,7 @@ export function EditJob(props: {
                                     : 'focus-visible:border-primary focus-visible:ring-primary'
                             )}
                             type="number"
-                            defaultValue={job.experience} // Giả sử job có trường experience
+                            defaultValue={job.experience}
                             name="experience"
                         />
                         <p className="text-red-500 text-[12px] font-medium">{state.errors?.experience?.[0]}</p>
@@ -330,7 +343,7 @@ export function EditJob(props: {
                             categoryId={selectedCategory}
                             onChange={(newTagIds: string[]) => setJobSpecializations(newTagIds)}
                             error={state.errors?.specializations}
-                            defaultValue={job?.specializations as Categories[]}
+                            defaultValue={resultQuery?.job?.specializations || []}
                         />
                         <p className="text-red-500 text-[12px] font-medium">{state.errors?.specializations?.[0]}</p>
                     </div>

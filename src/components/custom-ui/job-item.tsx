@@ -47,11 +47,11 @@ const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true
         <>
             {/* Dialog Edit Job */}
             <Dialog open={openDialogEdit} onOpenChange={setOpenDialogEdit}>
-                <DialogContent className="w-[1024px] max-w-none h-[90vh] max-h-[900px] rounded-lg overflow-hidden">
+                <DialogContent className="w-[1024px] max-w-none h-[90vh] max-h-[900px] rounded-lg overflow-hidden overflow-y-auto scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-gray-300 scrollbar-track-gray-100/30 pr-2">
                     <DialogHeader>
                         <DialogTitle>Edit job</DialogTitle>
                     </DialogHeader>
-                    <div className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-gray-300 scrollbar-track-gray-100/30 pr-2">
+                    <div className="h-full w-full ">
                         <div className="space-y-6 pt-2">
                             <EditJob
                                 refetchJob={refetchJob}

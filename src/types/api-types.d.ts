@@ -84,7 +84,7 @@ export namespace DetailedResponse {
         addresses: Address[];
     };
     export type GetDetailJob = Job;
-    export type GetDataRegisterEnterprise = Enterprise;
+    export type GetDataRegisterEnterprise = Enterprise & { addresses: Address[] };
     export type GetDataEnterprises = {
         data: Enterprise[];
         meta: Meta;
@@ -317,6 +317,7 @@ export namespace DetailedRequest {
         provider: string;
     }
     export interface UpdateAddressEmployer {
+        enterpriseId?: string;
         city: string;
         street: string;
         zipCode: string;

@@ -1,5 +1,5 @@
 import { AuthAxios, BaseAxios } from '@/lib/axios';
-import { ApiResponse, DetailedRequest, DetailedResponse } from '@/types';
+import { ApiResponse, DetailedRequest, DetailedResponse, Enterprise } from '@/types';
 import { AxiosError } from 'axios';
 import NextError from 'next/error';
 import { handleErrorApi } from '.';
@@ -10,16 +10,10 @@ const axios = new BaseAxios('enterprise');
 export class EnterpriseService {
     public static async postEnterprise(data: DetailedRequest.PostEnterprisesCredentials) {
         try {
-            const dataResponse = await authAxios.post<ApiResponse<null>>('/', data);
+            const dataResponse = await authAxios.post<ApiResponse<Enterprise>>('/', data);
             return dataResponse.payload.value;
         } catch (err) {
-            if (err instanceof AxiosError) {
-                throw new NextError({
-                    statusCode: Number(err.status || err.response?.status),
-                    title: err.response?.data.message,
-                });
-            }
-            throw err;
+            handleErrorApi(err);
         }
     }
 
@@ -29,13 +23,7 @@ export class EnterpriseService {
                 await authAxios.get<ApiResponse<DetailedResponse.GetDataRegisterEnterprise>>('/me/check');
             return dataResponse.payload;
         } catch (err) {
-            if (err instanceof AxiosError) {
-                throw new NextError({
-                    statusCode: Number(err.status || err.response?.status),
-                    title: err.response?.data.message,
-                });
-            }
-            throw err;
+            handleErrorApi(err);
         }
     }
 
@@ -44,13 +32,7 @@ export class EnterpriseService {
             const dataResponse = await authAxios.patch<ApiResponse<null>>(`/update-enterprise/${id}`, data);
             return dataResponse.payload.value;
         } catch (err) {
-            if (err instanceof AxiosError) {
-                throw new NextError({
-                    statusCode: Number(err.status || err.response?.status),
-                    title: err.response?.data.message,
-                });
-            }
-            throw err;
+            handleErrorApi(err);
         }
     }
     public static async updateEnterpriseCompany(data: DetailedRequest.UpdateEnterprisesCompany) {
@@ -58,13 +40,7 @@ export class EnterpriseService {
             const dataResponse = await authAxios.patch<ApiResponse<null>>(`/company`, data);
             return dataResponse.payload.value;
         } catch (err) {
-            if (err instanceof AxiosError) {
-                throw new NextError({
-                    statusCode: Number(err.status || err.response?.status),
-                    title: err.response?.data.message,
-                });
-            }
-            throw err;
+            handleErrorApi(err);
         }
     }
     public static async getEnterprise() {
@@ -72,13 +48,7 @@ export class EnterpriseService {
             const dataResponse = await authAxios.get<ApiResponse<DetailedResponse.GetDataRegisterEnterprise>>('/me');
             return dataResponse.payload.value;
         } catch (err) {
-            if (err instanceof AxiosError) {
-                throw new NextError({
-                    statusCode: Number(err.status || err.response?.status),
-                    title: err.response?.data.message,
-                });
-            }
-            throw err;
+            handleErrorApi(err);
         }
     }
 
