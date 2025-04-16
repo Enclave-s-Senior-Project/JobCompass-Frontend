@@ -42,6 +42,7 @@ const MultiSelectCategoriesSearchInput: React.FC<MultiSelectSearchInputProps> = 
     const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const dropdownCardRef = useRef<HTMLDivElement>(null);
+    const isInitialized = useRef(false);
 
     const { data: options, isLoading } = useQuery({
         queryKey: [queryKey.categoriesPrimary, debouncedSearchTerm],
@@ -62,7 +63,7 @@ const MultiSelectCategoriesSearchInput: React.FC<MultiSelectSearchInputProps> = 
     });
 
     useEffect(() => {
-        if (defaultValue && defaultValue.length > 0 && selectedItems.length === 0) {
+        if (defaultValue && defaultValue.length > 0 && !isInitialized.current) {
             let initialItems: Categories[] = [];
             if (typeof defaultValue[0] === 'string') {
                 if (options?.data) {
@@ -82,9 +83,10 @@ const MultiSelectCategoriesSearchInput: React.FC<MultiSelectSearchInputProps> = 
             if (initialItems.length > 0) {
                 setSelectedItems(initialItems);
                 onChange(initialItems);
+                isInitialized.current = true;
             }
         }
-    }, [defaultValue, options, onChange, selectedItems.length]);
+    }, [defaultValue, options, onChange]);
 
     useEffect(() => {
         if (showDropdown && dropdownRef.current && dropdownCardRef.current) {
@@ -124,6 +126,7 @@ const MultiSelectCategoriesSearchInput: React.FC<MultiSelectSearchInputProps> = 
     const handleRemove = (categoryId: string) => {
         if (!disabled) {
             const updatedItems = selectedItems.filter((i) => i.categoryId !== categoryId);
+            console.log('Removing item:', categoryId, 'Updated items:', updatedItems);
             setSelectedItems(updatedItems);
             onChange(updatedItems);
         }
@@ -232,5 +235,4 @@ const MultiSelectCategoriesSearchInput: React.FC<MultiSelectSearchInputProps> = 
         </div>
     );
 };
-
 export default MultiSelectCategoriesSearchInput;

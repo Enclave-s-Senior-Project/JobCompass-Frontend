@@ -71,7 +71,6 @@ export function FormUpdateEmployerProfile() {
         fetchData();
     }, [refetchEnterpriseInfo, enterpriseInfo]);
 
-    // Check if form has changes
     useEffect(() => {
         const handler = setTimeout(() => {
             setCanSubmit(
@@ -84,7 +83,6 @@ export function FormUpdateEmployerProfile() {
                         : '',
                     organizationType: enterpriseInfo?.organizationType || '',
                     teamSize: enterpriseInfo?.teamSize || '',
-                    industryType: enterpriseInfo?.categories || [],
                     industryType: enterpriseInfo?.categories || [],
                     bio: enterpriseInfo?.bio || '',
                 }) !==
