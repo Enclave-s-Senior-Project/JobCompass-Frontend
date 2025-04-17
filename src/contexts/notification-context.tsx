@@ -140,18 +140,19 @@ const NotificationProvider = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         if (!queries[0].data?.data) return;
-        
+
         // Compare the id of notifications and add only new ones to the list
         const newNotifications = queries[0].data.data.filter(
-            newNotification => !notifications.some(
-                existingNotification => existingNotification.notificationId === newNotification.notificationId
-            )
+            (newNotification) =>
+                !notifications.some(
+                    (existingNotification) => existingNotification.notificationId === newNotification.notificationId
+                )
         );
-        
+
         // Combine existing and new notifications, then sort by createdAt in descending order
-        setNotifications(prev => 
-            [...prev, ...newNotifications].sort((a, b) => 
-                new Date(b.createdAt || Date.now()).getTime() - new Date(a.createdAt  || Date.now()).getTime()
+        setNotifications((prev) =>
+            [...prev, ...newNotifications].sort(
+                (a, b) => new Date(b.createdAt || Date.now()).getTime() - new Date(a.createdAt || Date.now()).getTime()
             )
         );
     }, [queries[0].data]);
