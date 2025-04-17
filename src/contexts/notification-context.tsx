@@ -32,7 +32,7 @@ const NotificationContext = createContext<ContextValue>({
     page: 1,
 });
 
-const LIMIT_EACH_PAGE = 1;
+const LIMIT_EACH_PAGE = 5;
 
 const NotificationProvider = ({ children }: { children: React.ReactNode }) => {
     const { userInfo } = useContext(UserContext);
@@ -74,7 +74,7 @@ const NotificationProvider = ({ children }: { children: React.ReactNode }) => {
                     }
                 },
                 enabled: userInfo !== null && userInfo !== undefined,
-                refetchInterval: 1000 * 60 * 5, // 5 minutes
+                refetchInterval: 1000 * 60 * 1, // 5 minutes
                 retry: 1,
             },
         ],
@@ -139,7 +139,21 @@ const NotificationProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     useEffect(() => {
-        setNotifications([...notifications, ...(queries[0].data?.data || [])]);
+        if (!queries[0].data?.data) return;
+        
+        // Compare the id of notifications and add only new ones to the list
+        const newNotifications = queries[0].data.data.filter(
+            newNotification => !notifications.some(
+                existingNotification => existingNotification.notificationId === newNotification.notificationId
+            )
+        );
+        
+        // Combine existing and new notifications, then sort by createdAt in descending order
+        setNotifications(prev => 
+            [...prev, ...newNotifications].sort((a, b) => 
+                new Date(b.createdAt || Date.now()).getTime() - new Date(a.createdAt  || Date.now()).getTime()
+            )
+        );
     }, [queries[0].data]);
 
     const loadMore = () => {

@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { Badge } from 'lucide-react';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { PiBellRinging } from 'react-icons/pi';
 import { NotificationItem } from './notification-item';
 import { NotificationContext } from '@/contexts';
@@ -24,9 +24,19 @@ const NotificationAlert = () => {
         page,
         markOneReadMutation,
     } = useContext(NotificationContext);
+
+    const [open,setOpen] = useState(false);
+
+    const handleOpenChange = (open: boolean) => {
+        if (open) {
+            notificationQuery.refetch();
+        }
+        setOpen(open);
+    }
+
     return (
         <div>
-            <DropdownMenu>
+            <DropdownMenu open={open} onOpenChange={handleOpenChange}>
                 <DropdownMenuTrigger
                     aria-label="Notifications"
                     className="outline-0 focus-within:outline-0 focus-visible:outline-0"
@@ -45,7 +55,7 @@ const NotificationAlert = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                     align="end"
-                    className="max-w-80 min-w-64 sm:max-w-96 shadow drop-shadow rounded-md overflow-hidden bg-white p-2 z-50"
+                    className="max-w-80 min-w-64 sm:max-w-[450px] shadow drop-shadow rounded-md overflow-hidden bg-white p-2 z-50"
                 >
                     <DropdownMenuGroup className="flex items-center justify-between">
                         <h4 className="text-lg font-semibold text-gray-900">Notifications</h4>
