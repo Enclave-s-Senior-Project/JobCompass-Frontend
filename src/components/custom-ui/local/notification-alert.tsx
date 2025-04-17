@@ -25,14 +25,14 @@ const NotificationAlert = () => {
         markOneReadMutation,
     } = useContext(NotificationContext);
 
-    const [open,setOpen] = useState(false);
+    const [open, setOpen] = useState(false);
 
     const handleOpenChange = (open: boolean) => {
         if (open) {
             notificationQuery.refetch();
         }
         setOpen(open);
-    }
+    };
 
     return (
         <div>
