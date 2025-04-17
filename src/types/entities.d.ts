@@ -2,7 +2,7 @@ import { Categories } from '@/types';
 import { JobStatusEnum, NotificationType } from '@/lib/common-enum';
 import { Address, OrganizationType, SocialType } from './common-types';
 
-interface baseEntity {
+interface BaseEntity {
     createdAt: string;
     updatedAt: string;
     isActive: boolean;
@@ -142,7 +142,7 @@ export interface CandidatesApplied {
 
 export interface Resume extends CV {}
 
-export interface AppliedJob extends baseEntity {
+export interface AppliedJob extends BaseEntity {
     appliedJobId: string;
     coverLetter: string;
     status: string;
@@ -186,4 +186,18 @@ export interface Notification {
     isRead: boolean;
     createdAt?: string;
     updatedAt?: string;
+}
+
+export interface ShorthandApplication {
+    createdAt: Date;
+    updatedAt: Date;
+    appliedJobId: string;
+    coverLetter: string;
+    status: string;
+    profile: Pick<
+        User,
+        'profileId' | 'fullName' | 'profileUrl' | 'gender' | 'education' | 'nationality' | 'experience'
+    >;
+    job: Pick<Job, 'type'>;
+    cv: Pick<Resume, 'cvId' | 'cvUrl' | 'cvName'>;
 }

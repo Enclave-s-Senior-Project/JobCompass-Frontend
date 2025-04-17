@@ -37,7 +37,7 @@ const commonNavigatePages: NavigatePageType[] = [
     {
         href: '/pricing-plans',
         label: 'Pricing Plans',
-        role: 'all',
+        role: 'enterprise',
     },
     {
         href: '/customer-supports',

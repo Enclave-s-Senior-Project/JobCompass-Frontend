@@ -6,14 +6,14 @@ import { useParams } from 'next/navigation';
 export default function Home() {
     const { id } = useParams();
     return (
-        <main className="container mx-auto p-4">
+        <main className="container mx-auto w-full">
             <div className="flex items-center text-sm text-muted-foreground mb-4">
                 <Link href="/" className="hover:text-primary">
                     Home
                 </Link>
                 <span className="mx-2">/</span>
-                <Link href="/find-jobs" className="hover:text-primary">
-                    Jobs
+                <Link href="/employer-dashboard/my-jobs" className="hover:text-primary">
+                    My Jobs
                 </Link>
                 <span className="mx-2">/</span>
                 <span className="text-foreground">Applications</span>

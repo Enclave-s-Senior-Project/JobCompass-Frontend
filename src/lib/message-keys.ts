@@ -31,6 +31,12 @@ const errorKeyMessage = {
     CV_IN_USE: 'CV in use.',
     JOB_ADDED_WISHLIST: 'This job was added.',
     INVALID_ID: 'Invalid id',
+    NOT_ALLOWED_UPDATE_APPLICATION_STATUS: 'Not allowed to update application status.',
+};
+
+const warningKeyMessage = {
+    NOT_ALLOWED_UPDATE_APPLICATION_APPROVED_OR_DENIED:
+        'Not allowed to update applications that are already approved or denied.',
 };
 
 const successKeyMessage = {
@@ -44,4 +50,4 @@ const successKeyMessage = {
     UNSUCCESSFUL_PAYMENT: 'Unsuccessful Payment',
 };
 
-export { errorKeyMessage, successKeyMessage };
+export { errorKeyMessage, successKeyMessage, warningKeyMessage };

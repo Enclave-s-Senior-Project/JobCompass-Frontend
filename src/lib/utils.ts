@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import crypto from 'crypto';
-import { errorKeyMessage } from './message-keys';
+import { errorKeyMessage, warningKeyMessage } from './message-keys';
 import { Address, AppliedJob } from '@/types';
 import { ApplyJobStatus } from './common-enum';
 import { toast } from '@/lib/toast';
@@ -42,6 +42,14 @@ export const getClientSideCookie = (name: string): string | undefined => {
 
 export const handleErrorToast = (err: any) => {
     const defaultErrorMessage = 'Oops! Please try again';
+    if (err?.props?.statusCode < 200) {
+        console.log(err?.props?.title);
+        const warnMessage =
+            warningKeyMessage[err?.props?.title as keyof typeof warningKeyMessage] || defaultErrorMessage;
+        toast.warning(warnMessage);
+        return;
+    }
+
     if (err.props?.title && errorKeyMessage) {
         const errorMessage = errorKeyMessage[err.props.title as keyof typeof errorKeyMessage] || defaultErrorMessage;
         toast.error(errorMessage);
