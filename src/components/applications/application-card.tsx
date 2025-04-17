@@ -2,18 +2,18 @@
 
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import type { Applicant } from './kanban-board';
 import { Download } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { toFormattedDate } from '@/lib/utils';
+import { downloadFileViaURL, toFormattedDate } from '@/lib/utils';
+import { ShorthandApplication } from '@/types';
 
 interface ApplicationCardProps {
-    applicant: Applicant;
+    applicant: ShorthandApplication;
 }
 
 export default function ApplicationCard({ applicant }: ApplicationCardProps) {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-        id: applicant.id,
+        id: applicant.appliedJobId,
         data: {
             type: 'applicant',
             applicant,
@@ -32,16 +32,22 @@ export default function ApplicationCard({ applicant }: ApplicationCardProps) {
             style={style}
             {...attributes}
             {...listeners}
-            className="bg-card border rounded-lg p-4 cursor-grab active:cursor-grabbing touch-manipulation"
+            className="bg-card border rounded-sm p-4 cursor-grab active:cursor-grabbing touch-manipulation"
         >
             <div className="flex items-center gap-3 mb-3">
                 <Avatar className="h-10 w-10">
-                    <AvatarImage src={applicant.avatar} alt={applicant.name} />
-                    <AvatarFallback>{applicant.name.charAt(0)}</AvatarFallback>
+                    <AvatarImage
+                        src={applicant?.profile?.profileUrl}
+                        alt={applicant?.profile?.fullName}
+                        className="object-cover object-center"
+                        height={50}
+                        width={50}
+                    />
+                    <AvatarFallback>{applicant?.profile?.fullName.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div>
-                    <h4 className="font-medium">{applicant.name}</h4>
-                    <p className="text-sm text-muted-foreground">{applicant.position}</p>
+                    <h4 className="font-medium">{applicant?.profile?.fullName}</h4>
+                    <p className="text-sm text-muted-foreground">{applicant?.job?.type}</p>
                 </div>
             </div>
 
@@ -49,26 +55,28 @@ export default function ApplicationCard({ applicant }: ApplicationCardProps) {
                 <li className="flex items-center gap-2">
                     <span className="text-muted-foreground">•</span>
                     <span>
-                        {' '}
-                        Gender:{' '}
-                        {applicant.gender === 'MALE'
+                        Gender:&nbsp;
+                        {applicant?.profile?.gender === 'MALE'
                             ? 'Male'
-                            : applicant.gender === 'FEMALE'
+                            : applicant?.profile?.gender === 'FEMALE'
                               ? 'Female'
-                              : applicant.gender}
+                              : applicant?.profile?.gender}
                     </span>
                 </li>
                 <li className="flex items-center gap-2">
                     <span className="text-muted-foreground">•</span>
-                    <span>Nationality: {applicant.nationality} </span>
+                    <span>Nationality: {applicant?.profile?.nationality} </span>
                 </li>
                 <li className="flex items-center gap-2">
                     <span className="text-muted-foreground">•</span>
-                    <span>Applied: {toFormattedDate(applicant.applied)}</span>
+                    <span>Applied: {toFormattedDate(applicant?.createdAt)}</span>
                 </li>
             </ul>
 
-            <button className="flex items-center gap-2 text-sm text-primary" onClick={(e) => e.stopPropagation()}>
+            <button
+                className="flex items-center gap-2 text-sm text-primary"
+                onClick={() => downloadFileViaURL(applicant.cv.cvUrl)}
+            >
                 <Download className="h-4 w-4" />
                 <span>Download CV</span>
             </button>

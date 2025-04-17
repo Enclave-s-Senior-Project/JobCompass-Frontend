@@ -2,6 +2,7 @@ import { AuthAxios } from '@/lib/axios';
 import { ApiResponse, DetailedRequest, DetailedResponse, ResponseWithMeta } from '@/types';
 import { AxiosError } from 'axios';
 import NextError from 'next/error';
+import { handleErrorApi } from '.';
 
 const authAxios = new AuthAxios('apply-job');
 export class ApplyJobService {
@@ -75,6 +76,16 @@ export class ApplyJobService {
                 });
             }
             throw err;
+        }
+    }
+    public static async updateApplicationStatus(payload: DetailedRequest.UpdateApplicationStatus) {
+        try {
+            const dataResponse = await authAxios.patch<ApiResponse<null>>('/status', {
+                applications: payload,
+            });
+            return dataResponse.payload?.value || null;
+        } catch (err) {
+            handleErrorApi(err);
         }
     }
 }

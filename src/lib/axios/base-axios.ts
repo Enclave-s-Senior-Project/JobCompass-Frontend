@@ -28,7 +28,7 @@ export class BaseAxios {
     }
 
     protected handleErrorRequest(response: ApiResponse<any>) {
-        if (response.payload?.code >= 400) {
+        if (response.payload?.code >= 400 || response.payload?.code < 200) {
             throw new Error({
                 statusCode: response.payload.code,
                 title: response.payload.message_code,

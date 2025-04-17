@@ -322,4 +322,6 @@ export namespace DetailedRequest {
         zipCode: string;
         country: string;
     }
+
+    export interface UpdateApplicationStatus extends Array<Pick<AppliedJob, 'appliedJobId' | 'status'>> {}
 }

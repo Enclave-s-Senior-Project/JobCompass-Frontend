@@ -25,7 +25,13 @@ export const publicPages = [
 export const authPages = ['/sign-in', '/sign-up', '/forget-password', '/email-verify'];
 
 // Pages that require authentication
-export const privatePages = ['/candidate-dashboard/*', '/employer-dashboard/*', '/profile', '/settings'];
+export const privatePages = [
+    '/candidate-dashboard/*',
+    '/employer-dashboard/*',
+    '/profile',
+    '/settings',
+    '/pricing-plans',
+];
 
 export function middleware(req: NextRequest) {
     const pathname = req.nextUrl.pathname;

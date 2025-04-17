@@ -1,15 +1,19 @@
 'use client';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { CheckIcon } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { LuArrowRight } from 'react-icons/lu';
 import { TransactionService } from '@/services/transaction.service';
 import { useRouter } from 'next/navigation';
-import { handleErrorToast } from '@/lib/utils';
+import { cn, handleErrorToast } from '@/lib/utils';
 import { useMutation } from '@tanstack/react-query';
+import { UserContext } from '@/contexts';
+import { hasPermission } from '@/lib/auth';
+import { NotPermission } from '@/components/custom-ui/global/not-permission';
 
 export default function JobPricing() {
+    const { userInfo } = useContext(UserContext);
     const [selectedPlan, setSelectedPlan] = useState<string>('standard');
     const router = useRouter();
     const handlePlanClick = (plan: string) => {
@@ -29,7 +33,7 @@ export default function JobPricing() {
             handleErrorToast('Oops! Something went wrong');
         },
     });
-    return (
+    return hasPermission(userInfo, 'pricingPlans', 'access') ? (
         <div className="container mx-auto px-4 py-12 max-w-6xl">
             <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-16">
                 <div className="max-w-xl">
@@ -53,11 +57,12 @@ export default function JobPricing() {
             <div className="grid md:grid-cols-3 gap-6">
                 {/* TRIAL PLAN */}
                 <div
-                    className={`${
+                    className={cn(
                         selectedPlan === 'trial'
-                            ? 'border-2 border-blue-600 shadow-lg'
-                            : 'border border-gray-200 hover:border-blue-300'
-                    } rounded-lg p-6 flex flex-col h-full relative transition-all duration-300 cursor-pointer`}
+                            ? 'border-blue-600 shadow-lg ring-1'
+                            : 'border-gray-200 hover:border-blue-300',
+                        'border rounded-lg p-6 flex flex-col h-full relative transition-all duration-300 cursor-pointer'
+                    )}
                     onClick={() => handlePlanClick('trial')}
                 >
                     <div className="mb-6">
@@ -109,11 +114,12 @@ export default function JobPricing() {
 
                 {/* STANDARD PLAN */}
                 <div
-                    className={`${
+                    className={cn(
                         selectedPlan === 'standard'
-                            ? 'border-2 border-blue-600 shadow-lg'
-                            : 'border border-gray-200 hover:border-blue-300'
-                    } rounded-lg p-6 flex flex-col h-full relative transition-all duration-300 cursor-pointer`}
+                            ? 'border-blue-600 shadow-lg ring-1'
+                            : 'border-gray-200 hover:border-blue-300',
+                        'border rounded-lg p-6 flex flex-col h-full relative transition-all duration-300 cursor-pointer'
+                    )}
                     onClick={() => handlePlanClick('standard')}
                 >
                     {selectedPlan === 'standard' && (
@@ -174,11 +180,12 @@ export default function JobPricing() {
 
                 {/* PREMIUM PLAN */}
                 <div
-                    className={`${
+                    className={cn(
                         selectedPlan === 'premium'
-                            ? 'border-2 border-blue-600 shadow-lg'
-                            : 'border border-gray-200 hover:border-blue-300'
-                    } rounded-lg p-6 flex flex-col h-full relative transition-all duration-300 cursor-pointer`}
+                            ? 'border-blue-600 shadow-lg ring-1'
+                            : 'border-gray-200 hover:border-blue-300',
+                        'border rounded-lg p-6 flex flex-col h-full relative transition-all duration-300 cursor-pointer'
+                    )}
                     onClick={() => handlePlanClick('premium')}
                 >
                     <div className="mb-6">
@@ -233,5 +240,7 @@ export default function JobPricing() {
                 </div>
             </div>
         </div>
+    ) : (
+        <NotPermission />
     );
 }
