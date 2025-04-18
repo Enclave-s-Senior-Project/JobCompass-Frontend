@@ -21,7 +21,7 @@ export const publicPages = [
     '/terms-of-service',
 ];
 
-// Pages that should redirect to home if user is already logged in
+// Pages that should redirect to home if user is al</ChatBox>ready logged in
 export const authPages = ['/sign-in', '/sign-up', '/forget-password', '/email-verify'];
 
 // Pages that require authentication

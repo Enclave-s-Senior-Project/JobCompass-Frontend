@@ -2,6 +2,7 @@
 
 import { FooterSection } from '@/components/custom-ui/footer-section';
 import { HeaderSection } from '@/components/custom-ui/header-section';
+import { ChatbotPopup } from '@/components/custom-ui/local/chatbox-popup';
 import { UserContext } from '@/contexts';
 import { User } from '@/types';
 import Link from 'next/link';
@@ -59,6 +60,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <HeaderSection />
             <main className="flex-1">{children}</main>
             <FooterSection />
+            {userInfo && (
+                <div className="fixed bottom-5 right-0 z-50 p-4">
+                    <ChatbotPopup />
+                </div>
+            )}
         </div>
     );
 }
