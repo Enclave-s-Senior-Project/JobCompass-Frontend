@@ -37,6 +37,10 @@ type Permissions = {
         dataType: null;
         action: 'access';
     };
+    adminDashboard: {
+        dataType: null;
+        action: 'access';
+    };
 };
 
 const ROLES = {
@@ -52,6 +56,9 @@ const ROLES = {
             enterprise: true,
         },
         pricingPlans: {
+            access: true,
+        },
+        adminDashboard: {
             access: true,
         },
     },

@@ -31,6 +31,8 @@ export const privatePages = [
     '/profile',
     '/settings',
     '/pricing-plans',
+    '/admin-dashboard',
+    '/admin-dashboard/*',
 ];
 
 export function middleware(req: NextRequest) {
