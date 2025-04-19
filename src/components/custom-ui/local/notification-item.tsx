@@ -40,19 +40,19 @@ const NotificationItem = memo(({ notification, onMarkAsRead }: NotificationItemP
     const NotificationContent = () => (
         <div
             className={cn(
-                'flex items-start gap-3 p-3 rounded-md transition-colors',
+                'flex items-start gap-3 rounded-md p-3 transition-colors',
                 notification.isRead ? 'bg-white' : 'bg-blue-50',
                 notification.link && 'cursor-pointer hover:bg-gray-50'
             )}
             onClick={handleClick}
         >
-            <div className="flex-shrink-0 mt-0.5">{getIcon()}</div>
-            <div className="flex-1 min-w-0">
-                <div className="flex justify-between items-start">
-                    <h4 className="font-medium text-sm text-gray-900">{notification.title}</h4>
-                    <span className="text-xs text-gray-500 ml-2 whitespace-nowrap">{getTimeAgo()}</span>
+            <div className="mt-0.5 flex-shrink-0">{getIcon()}</div>
+            <div className="min-w-0 flex-1">
+                <div className="flex items-start justify-between">
+                    <h4 className="text-sm font-medium text-gray-900">{notification.title}</h4>
+                    <span className="ml-2 whitespace-nowrap text-xs text-gray-500">{getTimeAgo()}</span>
                 </div>
-                <p className="text-sm text-gray-600 text-wrap mt-0.5">{notification.message}</p>
+                <p className="mt-0.5 text-wrap text-sm text-gray-600">{notification.message}</p>
             </div>
             {!notification.isRead && (
                 <div className="flex-shrink-0">

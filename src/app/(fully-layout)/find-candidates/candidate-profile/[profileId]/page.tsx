@@ -70,8 +70,8 @@ export default function FindCandidatesPage() {
 
     return (
         <div className="container mx-auto">
-            <div className="z-0 max-w-screen-2xl h-56 border overflow-hidden rounded-b-lg">
-                <Image src={defaultBackgroundImage} alt="Background image" className="w-full h-full object-cover" />
+            <div className="z-0 h-56 max-w-screen-2xl overflow-hidden rounded-b-lg border">
+                <Image src={defaultBackgroundImage} alt="Background image" className="h-full w-full object-cover" />
             </div>
             <div className="z-10 mx-auto max-w-screen-xl -translate-y-20 space-y-12">
                 {/* user card */}
@@ -80,11 +80,11 @@ export default function FindCandidatesPage() {
                     isPending={userProfileQuery[0].data === undefined || userProfileQuery[0].isPending}
                 />
 
-                <div className="px-2 sm:px-0 grid grid-cols-12 gap-4 md:gap-8 lg:gap-14">
-                    <div className="col-span-12 md:col-span-7 space-y-9">
+                <div className="grid grid-cols-12 gap-4 px-2 sm:px-0 md:gap-8 lg:gap-14">
+                    <div className="col-span-12 space-y-9 md:col-span-7">
                         <div className="space-y-4">
                             <RichTextContent
-                                className="text-gray-700 break-normal"
+                                className="break-normal text-gray-700"
                                 content={
                                     userProfileQuery?.[0].data?.introduction
                                         ? userProfileQuery?.[0].data?.introduction
@@ -95,7 +95,7 @@ export default function FindCandidatesPage() {
                         <div className="space-y-4">
                             <p className="text-xl font-semibold text-primary-700">Education</p>
                             <RichTextContent
-                                className="text-gray-700 break-normal"
+                                className="break-normal text-gray-700"
                                 content={
                                     userProfileQuery?.[0].data?.education
                                         ? userProfileQuery?.[0].data?.education
@@ -106,7 +106,7 @@ export default function FindCandidatesPage() {
                         <div className="space-y-4">
                             <p className="text-xl font-semibold text-primary-700">Experience</p>
                             <RichTextContent
-                                className="text-gray-700 break-normal"
+                                className="break-normal text-gray-700"
                                 content={
                                     userProfileQuery?.[0].data?.experience
                                         ? userProfileQuery?.[0].data?.experience
@@ -119,7 +119,7 @@ export default function FindCandidatesPage() {
                             <ShareProfile />
                         </div>
                     </div>
-                    <div className="col-span-12 md:col-span-5 space-y-6">
+                    <div className="col-span-12 space-y-6 md:col-span-5">
                         <UserRelatedInformation
                             info={{
                                 dateOfBirth: userProfileQuery?.[0]?.data?.dateOfBirth,

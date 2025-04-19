@@ -19,7 +19,7 @@ type Props = {
 export function EnterpriseCard({ enterpriseInfo, isPending = false }: Props) {
     const { userInfo: ownUserInfo } = useContext(UserContext);
     return (
-        <div className="p-10 flex items-center flex-wrap justify-between gap-5 bg-white border rounded-xl">
+        <div className="flex flex-wrap items-center justify-between gap-5 rounded-xl border bg-white p-10">
             <div className="flex items-center gap-3 md:gap-6">
                 {isPending ? (
                     <Skeleton className="size-20 rounded-full" />
@@ -33,19 +33,19 @@ export function EnterpriseCard({ enterpriseInfo, isPending = false }: Props) {
                         />
                     </Avatar>
                 )}
-                <div className="space-y-1 ">
+                <div className="space-y-1">
                     {isPending ? (
                         <>
-                            <Skeleton className="w-32 md:w-44 h-6" />
-                            <Skeleton className="w-36 md:w-56 h-6" />
+                            <Skeleton className="h-6 w-32 md:w-44" />
+                            <Skeleton className="h-6 w-36 md:w-56" />
                         </>
                     ) : (
                         <>
-                            <p className="flex items-center gap-2 text-xl md:text-2xl font-medium">
+                            <p className="flex items-center gap-2 text-xl font-medium md:text-2xl">
                                 {enterpriseInfo?.name}
                             </p>
-                            <div className="flex flex-row items-start gap-2 text-gray-300 text-sm">
-                                <MapPin className="mb-3 size-5 " />
+                            <div className="flex flex-row items-start gap-2 text-sm text-gray-300">
+                                <MapPin className="mb-3 size-5" />
                                 <p>
                                     {enterpriseInfo?.addresses?.[0]?.city} - {enterpriseInfo?.addresses?.[0]?.country}
                                 </p>
@@ -62,7 +62,7 @@ export function EnterpriseCard({ enterpriseInfo, isPending = false }: Props) {
                     disabled={isPending}
                     variant="outline-secondary"
                     size="lg"
-                    className="rounded-sm [&_svg]:size-6 border-2 border-primary"
+                    className="rounded-sm border-2 border-primary [&_svg]:size-6"
                 >
                     <Mail className="hidden md:block" /> Send Mail
                 </Button>
@@ -71,7 +71,7 @@ export function EnterpriseCard({ enterpriseInfo, isPending = false }: Props) {
                         disabled={isPending}
                         variant="primary"
                         size="lg"
-                        className="border-2 rounded-sm [&_svg]:size-6"
+                        className="rounded-sm border-2 [&_svg]:size-6"
                     >
                         <CircleArrowRight className="hidden md:block" /> Hire Candidates
                     </Button>

@@ -16,9 +16,9 @@ export function ButtonOptionsSignIn({ redirect }: { redirect?: string }) {
     };
 
     return (
-        <div className="flex items-center flex-wrap justify-between gap-x-5 gap-y-2">
+        <div className="flex flex-wrap items-center justify-between gap-x-5 gap-y-2">
             <Button
-                className="flex-1 h-11 rounded-sm"
+                className="h-11 flex-1 rounded-sm"
                 variant="outline"
                 size="md"
                 type="button"
@@ -27,7 +27,7 @@ export function ButtonOptionsSignIn({ redirect }: { redirect?: string }) {
                 <FaFacebookF className="text-primary" /> Sign in with Facebook
             </Button>
             <Button
-                className="flex-1 h-11 rounded-sm"
+                className="h-11 flex-1 rounded-sm"
                 variant="outline"
                 size="md"
                 type="button"

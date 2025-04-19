@@ -12,7 +12,7 @@ const subPages = [
 export default function SettingProfileLayout({ children }: { children: React.ReactNode }) {
     return (
         <div className="space-y-8">
-            <h5 className="text-lg text-gray-900 font-medium">Settings</h5>
+            <h5 className="text-lg font-medium text-gray-900">Settings</h5>
             <NavigationSettingProfileBar subPages={subPages} matchExactPage={true} />
             {children}
         </div>

@@ -86,7 +86,7 @@ export function FormUploadResume({ initValue, onClose, refetchResume, isEditing 
 
     return (
         <form className="space-y-5" onSubmit={handleSubmit} onReset={resetForm}>
-            <div className="space-y-1 relative">
+            <div className="relative space-y-1">
                 <label className="text-sm">CV/Resume Name</label>
                 <Input
                     value={formValue.cvName}
@@ -104,11 +104,11 @@ export function FormUploadResume({ initValue, onClose, refetchResume, isEditing 
                     )}
                     placeholder="template_cv"
                 />
-                <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                <p className="absolute bottom-0 top-full mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-red-500">
                     {errors?.cvName && errors.cvName[0]}
                 </p>
             </div>
-            <div className="space-y-1 relative">
+            <div className="relative space-y-1">
                 <label className="text-sm">Upload your CV/Resume</label>
                 <Input
                     disabled={isEditing}
@@ -126,7 +126,7 @@ export function FormUploadResume({ initValue, onClose, refetchResume, isEditing 
                             : 'focus-visible:border-primary focus-visible:ring-primary'
                     )}
                 />
-                <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                <p className="absolute bottom-0 top-full mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-red-500">
                     {errors?.cvFile && errors.cvFile[0]}
                 </p>
             </div>

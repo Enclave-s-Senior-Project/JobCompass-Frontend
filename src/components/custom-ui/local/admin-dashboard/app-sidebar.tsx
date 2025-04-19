@@ -99,12 +99,12 @@ export function AppSidebar({ user, logout }: { user: User; logout: () => void })
         <Sidebar variant="sidebar" collapsible="icon">
             <SidebarHeader className="overflow-hidden">
                 <DropdownMenu>
-                    <div className="w-full flex items-center gap-2 flex-nowrap">
+                    <div className="flex w-full flex-nowrap items-center gap-2">
                         <Avatar>
                             <AvatarImage src={user.profileUrl} alt={user.fullName} />
                             <AvatarFallback>{user.fullName}</AvatarFallback>
                         </Avatar>
-                        <span className="text-gray-900 text-nowrap">{user.fullName}</span>
+                        <span className="text-nowrap text-gray-900">{user.fullName}</span>
                         <DropdownMenuTrigger asChild>
                             <button className="ms-auto">
                                 <EllipsisVertical />

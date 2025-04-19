@@ -251,7 +251,7 @@ export function FormCompanyProfile() {
                     type="button"
                     variant="outline"
                     size="md"
-                    className={clsx('text-sm', editable ? 'text-red-500 border-red-100 hover:border-red-500' : '')}
+                    className={clsx('text-sm', editable ? 'border-red-100 text-red-500 hover:border-red-500' : '')}
                     onClick={handleToggleEditable}
                 >
                     {editable ? <XCircle /> : <Edit />}
@@ -259,9 +259,9 @@ export function FormCompanyProfile() {
                 </Button>
             </div>
             <div className="space-y-4">
-                <div className="flex items-center gap-4 select-none">
+                <div className="flex select-none items-center gap-4">
                     <div className="w-24 md:w-40 lg:w-60">
-                        <label className="text-sm text-gray-900 cursor-default">Profile Picture</label>
+                        <label className="cursor-default text-sm text-gray-900">Profile Picture</label>
                         <ImageInput
                             disabled={!editable}
                             name="logoFile"
@@ -271,7 +271,7 @@ export function FormCompanyProfile() {
                         />
                     </div>
                     <div className="flex-1">
-                        <label className="text-sm text-gray-900 cursor-default">Background Picture</label>
+                        <label className="cursor-default text-sm text-gray-900">Background Picture</label>
                         <ImageInput
                             disabled={!editable}
                             name="backgroundFile"
@@ -280,9 +280,9 @@ export function FormCompanyProfile() {
                         />
                     </div>
                 </div>
-                <div className="grid grid-cols-4 gap-4 select-none">
+                <div className="grid select-none grid-cols-4 gap-4">
                     <div className="relative col-span-2 lg:col-span-2">
-                        <label className="text-sm text-gray-900 cursor-default">Company Name</label>
+                        <label className="cursor-default text-sm text-gray-900">Company Name</label>
                         <Input
                             disabled={!editable}
                             name="name"
@@ -297,12 +297,12 @@ export function FormCompanyProfile() {
                                     : 'focus-visible:border-primary focus-visible:ring-primary'
                             )}
                         />
-                        <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                        <p className="absolute bottom-0 top-full mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-red-500">
                             {errors?.name?.length > 0 && errors.name[0]}
                         </p>
                     </div>
                     <div className="relative col-span-2 lg:col-span-2">
-                        <label className="text-sm text-gray-900 cursor-default">Phone</label>
+                        <label className="cursor-default text-sm text-gray-900">Phone</label>
                         <Input
                             disabled={!editable}
                             name="phone"
@@ -317,13 +317,13 @@ export function FormCompanyProfile() {
                                     : 'focus-visible:border-primary focus-visible:ring-primary'
                             )}
                         />
-                        <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                        <p className="absolute bottom-0 top-full mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-red-500">
                             {errors?.phone?.length > 0 && errors.phone[0]}
                         </p>
                     </div>
                     <div className="col-span-4">
-                        <label className="text-sm text-gray-900 cursor-default">Address</label>
-                        <div className="grid grid-cols-4 gap-4 mt-2">
+                        <label className="cursor-default text-sm text-gray-900">Address</label>
+                        <div className="mt-2 grid grid-cols-4 gap-4">
                             <div>
                                 <Select
                                     name="country"
@@ -331,7 +331,7 @@ export function FormCompanyProfile() {
                                     value={formValue.country}
                                     onValueChange={handleCountryChange}
                                 >
-                                    <SelectTrigger className="h-12 rounded-sm text-base border border-primary-100 focus:border-primary focus:ring-1 focus:ring-primary">
+                                    <SelectTrigger className="h-12 rounded-sm border border-primary-100 text-base focus:border-primary focus:ring-1 focus:ring-primary">
                                         <SelectValue placeholder="Select a country" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -342,7 +342,7 @@ export function FormCompanyProfile() {
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                <p className="text-red-500 text-xs min-h-5">
+                                <p className="min-h-5 text-xs text-red-500">
                                     {errors?.country?.length > 0 && errors.country[0]}
                                 </p>
                             </div>
@@ -353,7 +353,7 @@ export function FormCompanyProfile() {
                                     onValueChange={handleChangeCity}
                                     disabled={!editable}
                                 >
-                                    <SelectTrigger className="h-12 rounded-sm border text-base border-primary-100 focus:border-primary focus:ring-1 focus:ring-primary">
+                                    <SelectTrigger className="h-12 rounded-sm border border-primary-100 text-base focus:border-primary focus:ring-1 focus:ring-primary">
                                         <SelectValue placeholder="Select a city" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -367,7 +367,7 @@ export function FormCompanyProfile() {
                                             )}
                                     </SelectContent>
                                 </Select>
-                                <p className="text-red-500 text-xs min-h-5">
+                                <p className="min-h-5 text-xs text-red-500">
                                     {errors?.city?.length > 0 && errors.city[0]}
                                 </p>
                             </div>
@@ -386,7 +386,7 @@ export function FormCompanyProfile() {
                                             : 'focus-visible:border-primary focus-visible:ring-primary'
                                     )}
                                 />
-                                <p className="text-red-500 text-xs min-h-5">
+                                <p className="min-h-5 text-xs text-red-500">
                                     {errors?.street?.length > 0 && errors.street[0]}
                                 </p>
                             </div>
@@ -405,21 +405,21 @@ export function FormCompanyProfile() {
                                             : 'focus-visible:border-primary focus-visible:ring-primary'
                                     )}
                                 />
-                                <p className="text-red-500 text-xs min-h-5">
+                                <p className="min-h-5 text-xs text-red-500">
                                     {errors?.zipCode?.length > 0 && errors.zipCode[0]}
                                 </p>
                             </div>
                         </div>
                     </div>
                     <div className="col-span-4">
-                        <label className="text-sm text-gray-900 cursor-default">About Us</label>
+                        <label className="cursor-default text-sm text-gray-900">About Us</label>
                         <RichTextEditor
                             disabled={!editable}
                             name="description"
                             value={formValue.description}
                             onChange={handleChangeRichEditor}
                             placement="inside-bottom"
-                            className="px-3 rounded-sm shadow-sm"
+                            className="rounded-sm px-3 shadow-sm"
                         />
                     </div>
                 </div>

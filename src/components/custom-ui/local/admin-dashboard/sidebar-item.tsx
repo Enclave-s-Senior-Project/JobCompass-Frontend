@@ -17,7 +17,7 @@ export function SidebarItem({ item }: { item: PrimarySidebarItem }) {
             <Collapsible>
                 <SidebarMenuItem className="mx-2">
                     <CollapsibleTrigger asChild onClick={() => setOpen(true)}>
-                        <SidebarMenuButton className="[&_svg]:size-6 flex items-center gap-2 py-6">
+                        <SidebarMenuButton className="flex items-center gap-2 py-6 [&_svg]:size-6">
                             {item.icon}
                             <span>{item.title}</span>
                             <ChevronsUpDown className="ms-auto size-4" />
@@ -30,7 +30,7 @@ export function SidebarItem({ item }: { item: PrimarySidebarItem }) {
                                     <SidebarMenuButton asChild>
                                         <Link
                                             href={subItem.href}
-                                            className="py-6 [&_svg]:size-6 flex items-center gap-2"
+                                            className="flex items-center gap-2 py-6 [&_svg]:size-6"
                                         >
                                             <span className="text-gray-900">{subItem.title}</span>
                                         </Link>
@@ -47,7 +47,7 @@ export function SidebarItem({ item }: { item: PrimarySidebarItem }) {
     return (
         <SidebarMenuItem className="mx-2">
             <SidebarMenuButton asChild>
-                <Link href={item.href || '/'} className="py-6 [&_svg]:size-6 flex items-center gap-2">
+                <Link href={item.href || '/'} className="flex items-center gap-2 py-6 [&_svg]:size-6">
                     {item.icon}
                     <span>{item.title}</span>
                 </Link>

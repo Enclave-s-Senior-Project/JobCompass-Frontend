@@ -64,11 +64,11 @@ export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void; j
             }}
         >
             <div className="space-y-2">
-                <label className="text-[#18191C] text-[14px]">Choose Resume</label>
+                <label className="text-[14px] text-[#18191C]">Choose Resume</label>
                 <Select name="selectedCv">
                     <SelectTrigger
                         className={clsx(
-                            'h-12 text-base rounded-sm',
+                            'h-12 rounded-sm text-base',
                             state.errors?.selectedCv
                                 ? 'border-2 border-danger focus:border-danger focus:ring-0'
                                 : 'focus:border-primary focus:ring-primary'
@@ -84,7 +84,7 @@ export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void; j
                         ))}
                     </SelectContent>
                 </Select>
-                <p className=" text-red-500 text-[12px] font-medium ">
+                <p className="text-[12px] font-medium text-red-500">
                     {state.errors?.selectedCv && state.errors.selectedCv[0]}
                 </p>
             </div>
@@ -95,7 +95,7 @@ export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void; j
                     initialContent={coverLetter}
                     hasError={!!state.errors?.coverLetter}
                 />
-                <p className=" text-red-500 text-[12px] font-medium ">
+                <p className="text-[12px] font-medium text-red-500">
                     {state.errors?.coverLetter && state.errors.coverLetter[0]}
                 </p>
             </div>
@@ -103,7 +103,7 @@ export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void; j
             <div className="flex justify-between gap-3">
                 <Button
                     variant="outline"
-                    className="w-[102px] h-[48px] text-[#0A65CC] bg-[#E7F0FA]"
+                    className="h-[48px] w-[102px] bg-[#E7F0FA] text-[#0A65CC]"
                     onClick={() => setOpen(false)}
                 >
                     Cancel
@@ -112,7 +112,7 @@ export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void; j
                     type="submit"
                     isPending={isPending}
                     // onClick={() => setOpen(false)}
-                    className="w-[168px] h-[48px] bg-[#0A65CC] text-[#FFFFFF]"
+                    className="h-[48px] w-[168px] bg-[#0A65CC] text-[#FFFFFF]"
                 >
                     Apply Now
                     <ChevronRight className="ml-2 h-4 w-4" />

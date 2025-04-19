@@ -12,7 +12,7 @@ const ChatbotPopup = memo(() => {
                     <MessageCircleMore />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="p-0 border-0 max-w-96 w-full shadow-none" align="end" side="left">
+            <PopoverContent className="w-full max-w-96 border-0 p-0 shadow-none" align="end" side="left">
                 <ChatBox />
             </PopoverContent>
         </Popover>

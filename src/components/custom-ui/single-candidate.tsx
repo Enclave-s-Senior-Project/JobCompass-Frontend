@@ -116,7 +116,7 @@ export default function SingleCandidate(props: { id: string }) {
     };
     return (
         <div className="container mx-auto">
-            <div className="flex items-center flex-wrap justify-between p-2">
+            <div className="flex flex-wrap items-center justify-between p-2">
                 <div className="flex items-center gap-3 md:gap-6">
                     <Avatar className="size-14 md:size-20">
                         <AvatarImage
@@ -127,10 +127,10 @@ export default function SingleCandidate(props: { id: string }) {
                         />
                     </Avatar>
                     <div className="space-y-1 md:space-y-1">
-                        <p className="flex items-center gap-2 text-xl md:text-2xl font-medium">
+                        <p className="flex items-center gap-2 text-xl font-medium md:text-2xl">
                             {profileData?.fullName}
                             {profileData?.isPremium && (
-                                <Star className="size-6 p-1 text-purple-500 bg-purple-50 border-purple-200 border rounded-full" />
+                                <Star className="size-6 rounded-full border border-purple-200 bg-purple-50 p-1 text-purple-500" />
                             )}
                         </p>
                         <p className="text-base text-gray-600">{profileData?.majority?.categoryName}</p>
@@ -148,18 +148,18 @@ export default function SingleCandidate(props: { id: string }) {
                     <Button
                         variant="outline-secondary"
                         size="lg"
-                        className="rounded-sm [&_svg]:size-6 border-2 border-primary"
+                        className="rounded-sm border-2 border-primary [&_svg]:size-6"
                     >
                         <Mail className="hidden md:block" /> Send Mail
                     </Button>
                 </div>
             </div>
             {/* content */}
-            <div className="px-2 sm:px-0 grid grid-cols-12 gap-4 md:gap-8 lg:gap-14 pt-2">
-                <div className="col-span-12 md:col-span-7 space-y-9">
+            <div className="grid grid-cols-12 gap-4 px-2 pt-2 sm:px-0 md:gap-8 lg:gap-14">
+                <div className="col-span-12 space-y-9 md:col-span-7">
                     <div className="space-y-4">
                         <RichTextContent
-                            className="text-gray-700 break-normal"
+                            className="break-normal text-gray-700"
                             content={profileData?.introduction ? profileData?.introduction : 'No introduction'}
                         />
                     </div>
@@ -167,7 +167,7 @@ export default function SingleCandidate(props: { id: string }) {
                     <div className="space-y-4">
                         <p className="text-xl font-semibold text-primary-700">Cover Letter</p>
                         <RichTextContent
-                            className="text-gray-700 break-normal"
+                            className="break-normal text-gray-700"
                             content={profileData?.coverLetter ? profileData?.coverLetter : 'No cover letter '}
                         />
                     </div>
@@ -176,7 +176,7 @@ export default function SingleCandidate(props: { id: string }) {
                         <ShareProfile />
                     </div>
                 </div>
-                <div className="col-span-12 md:col-span-5 space-y-6">
+                <div className="col-span-12 space-y-6 md:col-span-5">
                     <UserRelatedInformation
                         info={{
                             dateOfBirth: profileData?.dateOfBirth,

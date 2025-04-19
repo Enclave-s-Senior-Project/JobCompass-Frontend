@@ -154,8 +154,8 @@ const SearchForm = memo(({ filters, setFilters }: SearchFormProps) => {
 
     return (
         <div className="w-full bg-[#F1F2F4]">
-            <form onSubmit={handleSubmit} className="w-full max-w-[1320px] p-4 flex flex-col mx-auto pb-[32px]">
-                <div className="flex flex-col md:flex-row justify-between items-center mb-4">
+            <form onSubmit={handleSubmit} className="mx-auto flex w-full max-w-[1320px] flex-col p-4 pb-[32px]">
+                <div className="mb-4 flex flex-col items-center justify-between md:flex-row">
                     <h1 className="text-[18px]/[28px]">Find Job</h1>
                     <div className="flex items-center gap-2 text-sm text-gray-500">
                         <Link href="/">Home</Link>
@@ -164,9 +164,9 @@ const SearchForm = memo(({ filters, setFilters }: SearchFormProps) => {
                     </div>
                 </div>
 
-                <div className="p-3 flex flex-wrap justify-between w-full bg-[#FFFFFF] md:h-[80px] items-center rounded-sm">
-                    <div className="flex-1 flex items-center justify-end sm:justify-between flex-wrap">
-                        <div className="flex-1 flex items-center gap-2">
+                <div className="flex w-full flex-wrap items-center justify-between rounded-sm bg-[#FFFFFF] p-3 md:h-[80px]">
+                    <div className="flex flex-1 flex-wrap items-center justify-end sm:justify-between">
+                        <div className="flex flex-1 items-center gap-2">
                             <div className="relative flex-1">
                                 <div className="absolute left-3 top-1/2 -translate-y-1/2">
                                     <Search className="h-4 w-4 text-primary" />
@@ -174,7 +174,7 @@ const SearchForm = memo(({ filters, setFilters }: SearchFormProps) => {
                                 <input
                                     type="text"
                                     placeholder="Job title, Keyword..."
-                                    className="w-full h-[56px] pl-10 pr-4 border-r border-[#F1F2F4] focus:outline-none rounded-l-lg text-[16px] leading-[24px]"
+                                    className="h-[56px] w-full rounded-l-lg border-r border-[#F1F2F4] pl-10 pr-4 text-[16px] leading-[24px] focus:outline-none"
                                     value={localFilters.keyword}
                                     onChange={(e) => setLocalFilters((prev) => ({ ...prev, keyword: e.target.value }))}
                                 />
@@ -188,7 +188,7 @@ const SearchForm = memo(({ filters, setFilters }: SearchFormProps) => {
                                 <input
                                     type="text"
                                     placeholder="Location"
-                                    className="w-full h-[56px] pl-10 pr-4 border-r border-[#F1F2F4] focus:outline-none text-[16px] leading-[24px]"
+                                    className="h-[56px] w-full border-r border-[#F1F2F4] pl-10 pr-4 text-[16px] leading-[24px] focus:outline-none"
                                     value={localFilters.location}
                                     onChange={(e) => setLocalFilters((prev) => ({ ...prev, location: e.target.value }))}
                                 />
@@ -203,7 +203,7 @@ const SearchForm = memo(({ filters, setFilters }: SearchFormProps) => {
                                         <button
                                             type="button"
                                             className={clsx(
-                                                'w-full h-[56px] pl-10 pr-4 text-left border-r border-[#F1F2F4] focus:outline-none text-[16px] leading-[24px]',
+                                                'h-[56px] w-full border-r border-[#F1F2F4] pl-10 pr-4 text-left text-[16px] leading-[24px] focus:outline-none',
                                                 localFilters.childrenCategoryId || localFilters.parentCategoryId
                                                     ? 'text-gray-900'
                                                     : 'text-gray-400'
@@ -221,37 +221,37 @@ const SearchForm = memo(({ filters, setFilters }: SearchFormProps) => {
                                 <DropdownMenuContent>
                                     <div
                                         className={clsx(
-                                            'p-1 z-10 w-[300px] bg-white shadow-lg rounded-sm border border-input transition-all origin-top'
+                                            'z-10 w-[300px] origin-top rounded-sm border border-input bg-white p-1 shadow-lg transition-all'
                                         )}
                                     >
                                         {primaryCategoryData?.data?.map((category) => (
                                             <div
                                                 key={category.categoryId}
-                                                className="relative z-10 group px-4 py-1.5 hover:bg-zinc-100 cursor-pointer rounded-sm transition-all"
+                                                className="group relative z-10 cursor-pointer rounded-sm px-4 py-1.5 transition-all hover:bg-zinc-100"
                                                 onMouseEnter={() => setActiveParentCategory(category)}
                                                 onClick={() => handleParentCategorySelect(category)}
                                             >
-                                                <span className="font-normal text-gray-900 line-clamp-1">
+                                                <span className="line-clamp-1 font-normal text-gray-900">
                                                     {category.categoryName}
                                                 </span>
 
                                                 {activeParentCategory?.categoryId === category.categoryId &&
                                                     childrenCategoryData?.data && (
-                                                        <Card className="absolute left-[295px] top-0 w-[250px] bg-white shadow-lg rounded-sm border border-input z-40">
-                                                            <h3 className="px-4 text-gray-900 font-medium mb-3">
+                                                        <Card className="absolute left-[295px] top-0 z-40 w-[250px] rounded-sm border border-input bg-white shadow-lg">
+                                                            <h3 className="mb-3 px-4 font-medium text-gray-900">
                                                                 {category.categoryName}
                                                             </h3>
                                                             <div className="max-h-[200px] overflow-y-auto scrollbar">
                                                                 {childrenCategoryData.data.map((child: Categories) => (
                                                                     <div
                                                                         key={child.categoryId}
-                                                                        className="cursor-pointer px-4 py-1.5 hover:bg-zinc-100 rounded-sm transition-all"
+                                                                        className="cursor-pointer rounded-sm px-4 py-1.5 transition-all hover:bg-zinc-100"
                                                                         onClick={(e) => {
                                                                             e.stopPropagation();
                                                                             handleChildrenCategorySelect(child);
                                                                         }}
                                                                     >
-                                                                        <span className="text-gray-900 text-sm line-clamp-1">
+                                                                        <span className="line-clamp-1 text-sm text-gray-900">
                                                                             {child.categoryName}
                                                                         </span>
                                                                     </div>
@@ -291,10 +291,10 @@ const SearchForm = memo(({ filters, setFilters }: SearchFormProps) => {
                                 <div className="flex-1 space-y-4 overflow-y-auto scrollbar">
                                     {/* Experience */}
                                     <div>
-                                        <h3 className="font-medium text-gray-900 mb-2">Experience</h3>
+                                        <h3 className="mb-2 font-medium text-gray-900">Experience</h3>
                                         <div className="space-y-3">
                                             {EXPERIENCE_OPTIONS.map((option) => (
-                                                <div key={option.id} className="flex items-center cursor-pointer">
+                                                <div key={option.id} className="flex cursor-pointer items-center">
                                                     <div className="relative flex items-center">
                                                         <input
                                                             id={`experience-${option.id}`}
@@ -306,10 +306,10 @@ const SearchForm = memo(({ filters, setFilters }: SearchFormProps) => {
                                                             className="h-4 w-4 rounded-full border-gray-300 text-primary focus:ring-primary"
                                                         />
                                                         <div
-                                                            className={`absolute w-4 h-4 rounded-full border flex items-center justify-center ${localFilters.experience === option.id ? 'border-primary' : 'border-gray-300'}`}
+                                                            className={`absolute flex h-4 w-4 items-center justify-center rounded-full border ${localFilters.experience === option.id ? 'border-primary' : 'border-gray-300'}`}
                                                         >
                                                             {localFilters.experience === option.id && (
-                                                                <div className="w-2 h-2 rounded-full bg-primary"></div>
+                                                                <div className="h-2 w-2 rounded-full bg-primary"></div>
                                                             )}
                                                         </div>
                                                     </div>
@@ -326,7 +326,7 @@ const SearchForm = memo(({ filters, setFilters }: SearchFormProps) => {
 
                                     {/* Salary */}
                                     <div>
-                                        <h3 className="font-medium text-gray-900 mb-2">Salary</h3>
+                                        <h3 className="mb-2 font-medium text-gray-900">Salary</h3>
                                         <div className="space-y-3">
                                             {SALARY_OPTIONS.map((option) => (
                                                 <div key={option.id} className="flex items-center">
@@ -341,16 +341,16 @@ const SearchForm = memo(({ filters, setFilters }: SearchFormProps) => {
                                                             className="h-4 w-4 rounded-full border-gray-300 text-primary focus:ring-primary"
                                                         />
                                                         <div
-                                                            className={`absolute w-4 h-4 rounded-full border flex items-center justify-center ${localFilters.salary === option.id ? 'border-primary' : 'border-gray-300'}`}
+                                                            className={`absolute flex h-4 w-4 items-center justify-center rounded-full border ${localFilters.salary === option.id ? 'border-primary' : 'border-gray-300'}`}
                                                         >
                                                             {localFilters.salary === option.id && (
-                                                                <div className="w-2 h-2 rounded-full bg-primary"></div>
+                                                                <div className="h-2 w-2 rounded-full bg-primary"></div>
                                                             )}
                                                         </div>
                                                     </div>
                                                     <label
                                                         htmlFor={`salary-${option.id}`}
-                                                        className="ml-6 text-sm text-gray-700 cursor-pointer"
+                                                        className="ml-6 cursor-pointer text-sm text-gray-700"
                                                     >
                                                         {option.label}
                                                     </label>
@@ -361,7 +361,7 @@ const SearchForm = memo(({ filters, setFilters }: SearchFormProps) => {
 
                                     {/* Job Type */}
                                     <div>
-                                        <h3 className="font-medium text-gray-900 mb-2">Job Type</h3>
+                                        <h3 className="mb-2 font-medium text-gray-900">Job Type</h3>
                                         <div className="space-y-3">
                                             {JOB_TYPE_OPTIONS.map((option) => (
                                                 <div key={option[0]} className="flex items-center">
@@ -376,7 +376,7 @@ const SearchForm = memo(({ filters, setFilters }: SearchFormProps) => {
                                                     </div>
                                                     <label
                                                         htmlFor={`job-type-${option[0]}`}
-                                                        className="ml-6 text-sm text-gray-700 cursor-pointer"
+                                                        className="ml-6 cursor-pointer text-sm text-gray-700"
                                                     >
                                                         {option[1]}
                                                     </label>
@@ -387,7 +387,7 @@ const SearchForm = memo(({ filters, setFilters }: SearchFormProps) => {
 
                                     {/* Education */}
                                     <div>
-                                        <h3 className="font-medium text-gray-900 mb-2">Education</h3>
+                                        <h3 className="mb-2 font-medium text-gray-900">Education</h3>
                                         <div className="space-y-3">
                                             {EDUCATION_OPTIONS.map((option) => (
                                                 <div key={option[0]} className="flex items-center">
@@ -402,7 +402,7 @@ const SearchForm = memo(({ filters, setFilters }: SearchFormProps) => {
                                                     </div>
                                                     <label
                                                         htmlFor={`education-${option[0]}`}
-                                                        className="ml-6 text-sm text-gray-700 cursor-pointer"
+                                                        className="ml-6 cursor-pointer text-sm text-gray-700"
                                                     >
                                                         {option[1]}
                                                     </label>

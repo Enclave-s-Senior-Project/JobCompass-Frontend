@@ -14,13 +14,13 @@ type Props = {
 
 export function DownloadResume({ resumes = [], isPending = false }: Props) {
     return (
-        <div className="p-6 rounded-md border-2 border-primary-50 space-y-4">
+        <div className="space-y-4 rounded-md border-2 border-primary-50 p-6">
             <p className="text-base font-medium">Download Resume</p>
             {isPending ? (
                 <div className="flex items-center gap-2">
-                    <Skeleton className="w-1/4 h-14 rounded-sm" />
-                    <Skeleton className="w-1/4 h-14 rounded-sm" />
-                    <Skeleton className="w-2/4 h-14 rounded-sm" />
+                    <Skeleton className="h-14 w-1/4 rounded-sm" />
+                    <Skeleton className="h-14 w-1/4 rounded-sm" />
+                    <Skeleton className="h-14 w-2/4 rounded-sm" />
                 </div>
             ) : resumes.length > 0 ? (
                 resumes.map((resume) => (
@@ -40,12 +40,12 @@ export function DownloadResume({ resumes = [], isPending = false }: Props) {
                                 downloadFileViaURL(resume?.cvUrl);
                             }}
                         >
-                            <Download /> <span className="sm:hidden block lg:block">Download</span>
+                            <Download /> <span className="block sm:hidden lg:block">Download</span>
                         </Button>
                     </div>
                 ))
             ) : (
-                <span className="text-sm text-gray-500 italic">No public resume</span>
+                <span className="text-sm italic text-gray-500">No public resume</span>
             )}
         </div>
     );

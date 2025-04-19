@@ -156,7 +156,7 @@ const MultiSelectCategoriesSearchInput: React.FC<MultiSelectSearchInputProps> = 
         <div className="relative w-full" ref={dropdownRef}>
             <div
                 className={clsx(
-                    'flex items-center gap-1 border shadow-sm rounded-md p-2 bg-white h-12 overflow-hidden',
+                    'flex h-12 items-center gap-1 overflow-hidden rounded-md border bg-white p-2 shadow-sm',
                     error
                         ? 'border-1 border-danger ring-danger'
                         : disabled
@@ -164,13 +164,13 @@ const MultiSelectCategoriesSearchInput: React.FC<MultiSelectSearchInputProps> = 
                           : 'focus-within:border-primary focus-within:ring-1 focus-within:ring-primary'
                 )}
             >
-                <div className="flex items-center gap-1 overflow-hidden flex-nowrap max-w-full">
+                <div className="flex max-w-full flex-nowrap items-center gap-1 overflow-hidden">
                     {selectedItems.map((item) => (
                         <div
                             key={item.categoryId}
-                            className="flex items-center bg-gray-100 px-2 py-1 rounded-md text-sm"
+                            className="flex items-center rounded-md bg-gray-100 px-2 py-1 text-sm"
                         >
-                            <span className="mr-1 truncate max-w-[100px]">{item.categoryName}</span>
+                            <span className="mr-1 max-w-[100px] truncate">{item.categoryName}</span>
                             {!disabled && (
                                 <button
                                     type="button"
@@ -185,7 +185,7 @@ const MultiSelectCategoriesSearchInput: React.FC<MultiSelectSearchInputProps> = 
                 </div>
                 <input
                     className={clsx(
-                        'flex-1 border-none outline-none min-w-0 truncate',
+                        'min-w-0 flex-1 truncate border-none outline-none',
                         disabled && 'cursor-not-allowed'
                     )}
                     value={searchTerm}
@@ -199,7 +199,7 @@ const MultiSelectCategoriesSearchInput: React.FC<MultiSelectSearchInputProps> = 
             {showDropdown && !disabled && (
                 <Card
                     className={clsx(
-                        'absolute z-10 w-full overflow-auto shadow-lg rounded-sm',
+                        'absolute z-10 w-full overflow-auto rounded-sm shadow-lg',
                         dropdownPosition === 'top' ? 'bottom-full mb-1' : 'top-full mt-1'
                     )}
                     id="search-dropdown"
@@ -208,26 +208,26 @@ const MultiSelectCategoriesSearchInput: React.FC<MultiSelectSearchInputProps> = 
                 >
                     <CardContent className="p-1">
                         {isLoading ? (
-                            <div className="p-2 flex justify-center">
+                            <div className="flex justify-center p-2">
                                 <Loader2 className="animate-spin" />
                             </div>
                         ) : options?.data && options.data.length > 0 ? (
                             options.data.map((option: Categories) => (
                                 <div
                                     key={option.categoryId}
-                                    className="p-2 flex items-center justify-between cursor-pointer hover:bg-gray-50 hover:animate-in rounded-sm transition-all"
+                                    className="flex cursor-pointer items-center justify-between rounded-sm p-2 transition-all hover:bg-gray-50 hover:animate-in"
                                     onClick={() => handleSelect(option)}
                                     role="option"
                                     aria-selected={selectedItems.some((i) => i.categoryId === option.categoryId)}
                                 >
                                     <span>{option.categoryName}</span>
                                     {selectedItems.some((i) => i.categoryId === option.categoryId) && (
-                                        <Check className="w-4 h-4 text-primary" />
+                                        <Check className="h-4 w-4 text-primary" />
                                     )}
                                 </div>
                             ))
                         ) : (
-                            <p className="p-2 text-gray-500 text-sm">No categories found</p>
+                            <p className="p-2 text-sm text-gray-500">No categories found</p>
                         )}
                     </CardContent>
                 </Card>

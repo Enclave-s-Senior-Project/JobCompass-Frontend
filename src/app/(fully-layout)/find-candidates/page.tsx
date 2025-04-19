@@ -29,12 +29,12 @@ export default function ListCandidates() {
 
     return (
         <main className="min-h-dvh bg-white">
-            <div className="flex flex-col md:flex-row justify-between items-center max-w-screen-xl mx-auto mb-6 mt-6 gap-5">
+            <div className="mx-auto mb-6 mt-6 flex max-w-screen-xl flex-col items-center justify-between gap-5 md:flex-row">
                 <div className="flex md:flex-col">
                     <Button
                         type="submit"
                         variant="primary"
-                        className="text-white w-full md:w-[130px] rounded-sm text-[16px]"
+                        className="w-full rounded-sm text-[16px] text-white md:w-[130px]"
                         onClick={() => setShowFilter((prev) => !prev)}
                     >
                         <SlidersHorizontal />
@@ -43,7 +43,7 @@ export default function ListCandidates() {
                 </div>
                 <div className="flex flex-wrap items-center gap-4">
                     <Select onValueChange={(value: 'ASC' | 'DESC') => setOption(value)}>
-                        <SelectTrigger className="text-sm border-[1px] rounded-md px-2 py-1.5 h-[48px] w-[180px] bg-[#FFFFFF] focus:ring-0 focus:ring-offset-0">
+                        <SelectTrigger className="h-[48px] w-[180px] rounded-md border-[1px] bg-[#FFFFFF] px-2 py-1.5 text-sm focus:ring-0 focus:ring-offset-0">
                             <SelectValue placeholder={option === 'ASC' ? 'Latest' : 'Oldest'} />
                         </SelectTrigger>
                         <SelectContent>
@@ -54,7 +54,7 @@ export default function ListCandidates() {
                         </SelectContent>
                     </Select>
                     <Select onValueChange={(value) => setItemsPerPage(Number(value))}>
-                        <SelectTrigger className="text-sm border rounded-md px-2 py-1.5 h-[48px] w-[180px] bg-[#FFFFFF] focus:ring-0 focus:ring-offset-0">
+                        <SelectTrigger className="h-[48px] w-[180px] rounded-md border bg-[#FFFFFF] px-2 py-1.5 text-sm focus:ring-0 focus:ring-offset-0">
                             <SelectValue placeholder={`${itemsPerPage} per page`} />
                         </SelectTrigger>
                         <SelectContent>
@@ -75,7 +75,7 @@ export default function ListCandidates() {
                 />
             </div>
 
-            <div className="flex flex-col md:flex-row justify-between items-start max-w-screen-xl mx-auto mb-6 mt-6 gap-5">
+            <div className="mx-auto mb-6 mt-6 flex max-w-screen-xl flex-col items-start justify-between gap-5 md:flex-row">
                 <div className="w-full">
                     <CardCandidateHorizontal
                         perPage={itemsPerPage || 6}

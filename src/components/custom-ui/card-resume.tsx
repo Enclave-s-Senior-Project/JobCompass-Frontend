@@ -34,7 +34,7 @@ export function CardResume({ resume }: { resume: Resume }) {
     return (
         <>
             <div
-                className="p-5 w-full flex items-center gap-3 justify-center bg-gray-50 rounded-md"
+                className="flex w-full items-center justify-center gap-3 rounded-md bg-gray-50 p-5"
                 onClick={() => {
                     setShowPDFPreviewDialog(true);
                 }}
@@ -51,14 +51,14 @@ export function CardResume({ resume }: { resume: Resume }) {
                 </div>
                 <DropdownMenu open={showDropdownDialog} onOpenChange={setShowDropdownDialog}>
                     <DropdownMenuTrigger className="ml-auto">
-                        <div className="p-2 flex items-center justify-center">
+                        <div className="flex items-center justify-center p-2">
                             <Ellipsis />
                         </div>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start" className="px-0 py-3">
                         <DropdownMenuItem disabled={isLoading} className="p-0" onClick={handleDownloadFile}>
-                            <div className="py-2 px-4 flex items-center w-full text-primary hover:text-primary-600 hover:bg-primary-50">
-                                <Download className="size-5 mr-2" /> Download
+                            <div className="flex w-full items-center px-4 py-2 text-primary hover:bg-primary-50 hover:text-primary-600">
+                                <Download className="mr-2 size-5" /> Download
                             </div>
                         </DropdownMenuItem>
                         <DropdownMenuItem
@@ -70,20 +70,20 @@ export function CardResume({ resume }: { resume: Resume }) {
                                 setShowDropdownDialog(false);
                             }}
                         >
-                            <div className="py-2 px-4 flex items-center w-full text-primary hover:text-primary-600 hover:bg-primary-50">
-                                <PencilLine className="size-5 mr-2" /> Edit Resume
+                            <div className="flex w-full items-center px-4 py-2 text-primary hover:bg-primary-50 hover:text-primary-600">
+                                <PencilLine className="mr-2 size-5" /> Edit Resume
                             </div>
                         </DropdownMenuItem>
                         <DropdownMenuItem disabled={isLoading} className="p-0" onClick={handleDeleteResume}>
-                            <div className="py-2 px-4 flex items-center w-full text-danger hover:text-danger-600 hover:bg-danger-50">
-                                <Trash2 className="size-5 mr-2" /> Delete
+                            <div className="flex w-full items-center px-4 py-2 text-danger hover:bg-danger-50 hover:text-danger-600">
+                                <Trash2 className="mr-2 size-5" /> Delete
                             </div>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
             <Dialog open={showPDFPreviewDialog} onOpenChange={setShowPDFPreviewDialog}>
-                <DialogContent className="p-2 h-dvh max-w-2xl w-full flex flex-col">
+                <DialogContent className="flex h-dvh w-full max-w-2xl flex-col p-2">
                     <DialogHeader>
                         <DialogTitle>CV/Resume Preview</DialogTitle>
                     </DialogHeader>

@@ -33,7 +33,7 @@ export const AppliedJobList = memo(({ items = [], isPending = false }: Props) =>
                     ? Array.from({ length: 5 }).map((_, index) => (
                           <TableRow key={index} className="border-p-primary">
                               <TableCell colSpan={4}>
-                                  <Skeleton className="w-full h-20" />
+                                  <Skeleton className="h-20 w-full" />
                               </TableCell>
                           </TableRow>
                       ))
@@ -61,7 +61,7 @@ export const AppliedJobList = memo(({ items = [], isPending = false }: Props) =>
                                               />
                                           </Link>
                                           <div className="space-y-2">
-                                              <div className="text-gray-900 font-medium text-base hover:underline">
+                                              <div className="text-base font-medium text-gray-900 hover:underline">
                                                   <Link href={`/single-job/${appliedJob?.job.jobId}`}>
                                                       {appliedJob?.job?.name}&nbsp;
                                                       {appliedJob?.job?.type && (
@@ -69,7 +69,7 @@ export const AppliedJobList = memo(({ items = [], isPending = false }: Props) =>
                                                       )}
                                                   </Link>
                                               </div>
-                                              <div className="flex items-center text-sm text-gray-600 gap-4">
+                                              <div className="flex items-center gap-4 text-sm text-gray-600">
                                                   <span className="flex items-center gap-1 text-sm">
                                                       <MapPin className="h-5 w-5" />{' '}
                                                       <span className="line-clamp-1">{jobAddresses}</span>
@@ -84,7 +84,7 @@ export const AppliedJobList = memo(({ items = [], isPending = false }: Props) =>
                                           </div>
                                       </div>
                                   </TableCell>
-                                  <TableCell className="py-5 text-gray-600 text-sm">
+                                  <TableCell className="py-5 text-sm text-gray-600">
                                       {appliedJob?.job?.deadline
                                           ? toFormattedDate(appliedJob?.createdAt, true)
                                           : 'Not specified'}

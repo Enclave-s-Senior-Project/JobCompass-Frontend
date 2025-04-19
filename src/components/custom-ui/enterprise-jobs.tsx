@@ -43,10 +43,10 @@ export function EnterpriseJobs({ enterpriseId, limit = 10 }: Props) {
 
     return (
         <div className="my-8">
-            <div className="space-y-4 min-h-96">
+            <div className="min-h-96 space-y-4">
                 {isLoading
                     ? Array.from({ length: 5 }).map((_, index) => (
-                          <Skeleton key={index} className="w-full h-28 rounded-md" />
+                          <Skeleton key={index} className="h-28 w-full rounded-md" />
                       ))
                     : dataQuery?.data.map((job) => <CardJobHorizontal key={job.jobId} job={job} />)}
             </div>

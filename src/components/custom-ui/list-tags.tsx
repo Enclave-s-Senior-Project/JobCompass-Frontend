@@ -30,7 +30,7 @@ export function ListTag({ tag }: { tag: Tag[] }) {
 
     return (
         <TooltipProvider>
-            <div className="flex flex-wrap items-center gap-2 mb-1">
+            <div className="mb-1 flex flex-wrap items-center gap-2">
                 {tag.map((feature) => {
                     const color = tagColors[feature.tagId];
 
@@ -38,8 +38,7 @@ export function ListTag({ tag }: { tag: Tag[] }) {
                         <Tooltip key={feature.tagId}>
                             <TooltipTrigger asChild>
                                 <span
-                                    className={`text-xs px-2 py-1 rounded-full ${color.bg} ${color.text} border border-gray-300 border-opacity-50 
-                                    max-w-[80px] md:max-w-[100px] lg:max-w-[120px] truncate whitespace-nowrap overflow-hidden`}
+                                    className={`rounded-full px-2 py-1 text-xs ${color.bg} ${color.text} max-w-[80px] overflow-hidden truncate whitespace-nowrap border border-gray-300 border-opacity-50 md:max-w-[100px] lg:max-w-[120px]`}
                                 >
                                     {feature.name}
                                 </span>

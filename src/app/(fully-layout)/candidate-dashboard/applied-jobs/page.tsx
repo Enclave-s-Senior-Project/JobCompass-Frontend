@@ -41,11 +41,11 @@ export default function AppliedJobPage() {
     });
 
     return (
-        <div className="min-h-[500px] flex flex-col justify-between space-y-2">
+        <div className="flex min-h-[500px] flex-col justify-between space-y-2">
             <div className="space-y-5">
                 <div className="flex items-center">
-                    <h5 className="text-lg text-gray-900 font-medium">Applied Jobs</h5>&nbsp;
-                    <span className="text-base text-gray-400 font-normal">({data?.meta.itemCount || 0})</span>
+                    <h5 className="text-lg font-medium text-gray-900">Applied Jobs</h5>&nbsp;
+                    <span className="text-base font-normal text-gray-400">({data?.meta.itemCount || 0})</span>
                 </div>
                 <div>
                     <AppliedJobList items={data?.data || []} isPending={isPending} />

@@ -79,7 +79,7 @@ export default function TextEditorMenuBar({ editor }: { editor: Editor | null })
                     >
                         {icon}
                     </Button>
-                    {isSeparate && <Separator orientation="vertical" className="h-5 " />}
+                    {isSeparate && <Separator orientation="vertical" className="h-5" />}
                 </Fragment>
             ))}
         </div>

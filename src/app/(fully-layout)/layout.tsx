@@ -44,15 +44,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     const needUpdate = userInfo && checkNeedUpdated(userInfo);
 
     return (
-        <div className="flex flex-col min-h-dvh">
+        <div className="flex min-h-dvh flex-col">
             {needUpdate && (
-                <div className="py-2 w-full bg-warning-100 flex items-center justify-center hover:underline">
+                <div className="flex w-full items-center justify-center bg-warning-100 py-2 hover:underline">
                     <Link href="/candidate-dashboard/settings/personal-profile" className="text-sm">
                         To enjoy all features and get the best experience, please update your missing information. It
                         only takes a minute!
                     </Link>
                     &nbsp;
-                    <Link href="/candidate-dashboard/settings/personal-profile" className="text-primary-500 text-sm">
+                    <Link href="/candidate-dashboard/settings/personal-profile" className="text-sm text-primary-500">
                         Update now
                     </Link>
                 </div>

@@ -31,7 +31,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
             <SidebarProvider open={openSidebar} onOpenChange={setOpenSidebar}>
                 <AppSidebar user={userInfo} logout={logoutHandle} />
                 <main className="flex-1">
-                    <div className="px-2 py-3 flex items-center gap-4 border-b shadow-sm drop-shadow-sm">
+                    <div className="flex items-center gap-4 border-b px-2 py-3 shadow-sm drop-shadow-sm">
                         <SidebarTrigger />
                         <div>
                             {pathname.split('/').map((sub, index) => {
@@ -45,9 +45,9 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
                                             href={ownedHref}
                                             key={sub}
                                             className={cn(
-                                                'text-sm hover:text-primary-500 hover:font-medium hover:underline transition-colors',
+                                                'text-sm transition-colors hover:font-medium hover:text-primary-500 hover:underline',
                                                 pathname === ownedHref
-                                                    ? 'text-primary-500 font-medium pointer-events-none'
+                                                    ? 'pointer-events-none font-medium text-primary-500'
                                                     : 'text-gray-500'
                                             )}
                                         >

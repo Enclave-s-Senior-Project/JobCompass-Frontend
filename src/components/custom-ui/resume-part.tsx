@@ -66,11 +66,11 @@ export function ResumePart() {
 
     return (
         <ResumePartContext.Provider value={{ refetch, isLoading, deleteMutation }}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 <Dialog open={showDialog} onOpenChange={setShowDialog}>
                     <DialogTrigger asChild>
                         <div className="col-span-1 cursor-pointer">
-                            <div className="py-5 pl-5 pr-2 w-full flex items-center gap-3 justify-center bg-white border-2 border-input border-dashed rounded-md hover:bg-gray-50 hover:border-transparent transition-all">
+                            <div className="flex w-full items-center justify-center gap-3 rounded-md border-2 border-dashed border-input bg-white py-5 pl-5 pr-2 transition-all hover:border-transparent hover:bg-gray-50">
                                 <CirclePlus className="size-8 text-primary-500" />
                                 <div className="flex-1 space-y-1">
                                     <p className="text-sm text-gray-900">Add CV/Resume</p>

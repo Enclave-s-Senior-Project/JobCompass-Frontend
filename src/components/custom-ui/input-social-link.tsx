@@ -22,11 +22,11 @@ type Props = {
 };
 
 const socials: Array<{ key: SocialType; value: string; icon: React.ReactElement }> = [
-    { key: 'FACEBOOK', value: 'Facebook', icon: <FaFacebookF className="text-primary size-5" /> },
-    { key: 'TWITTER', value: 'X - Twitter', icon: <FaXTwitter className="text-primary size-5" /> },
-    { key: 'INSTAGRAM', value: 'Instagram', icon: <FaInstagram className="text-primary size-5" /> },
-    { key: 'YOUTUBE', value: 'Youtube', icon: <FaYoutube className="text-primary size-5" /> },
-    { key: 'LINKEDIN', value: 'LinkedIn', icon: <FaLinkedin className="text-primary size-5" /> },
+    { key: 'FACEBOOK', value: 'Facebook', icon: <FaFacebookF className="size-5 text-primary" /> },
+    { key: 'TWITTER', value: 'X - Twitter', icon: <FaXTwitter className="size-5 text-primary" /> },
+    { key: 'INSTAGRAM', value: 'Instagram', icon: <FaInstagram className="size-5 text-primary" /> },
+    { key: 'YOUTUBE', value: 'Youtube', icon: <FaYoutube className="size-5 text-primary" /> },
+    { key: 'LINKEDIN', value: 'LinkedIn', icon: <FaLinkedin className="size-5 text-primary" /> },
 ];
 
 export function InputSocialLink({
@@ -44,16 +44,16 @@ export function InputSocialLink({
         <div className="flex items-center gap-3">
             <div
                 className={cn(
-                    'flex-1 flex items-center border-input border rounded-sm',
+                    'flex flex-1 items-center rounded-sm border border-input',
                     error
-                        ? 'border-danger ring-danger ring-1'
-                        : 'focus-within:border-primary focus-within:ring-primary focus-within:border focus-within:ring-1'
+                        ? 'border-danger ring-1 ring-danger'
+                        : 'focus-within:border focus-within:border-primary focus-within:ring-1 focus-within:ring-primary'
                 )}
             >
                 <Select name={name} defaultValue={defaultSocial} value={valueSelect} onValueChange={onChangeSelect}>
                     <SelectTrigger
                         className={clsx(
-                            'h-12 max-w-52 text-base border-0 ring-0 focus:ring-0 focus-within:ring-0 focus-visible:ring-0'
+                            'h-12 max-w-52 border-0 text-base ring-0 focus-within:ring-0 focus:ring-0 focus-visible:ring-0'
                         )}
                     >
                         <SelectValue
@@ -84,7 +84,7 @@ export function InputSocialLink({
                     defaultValue={defaultValue}
                     value={valueInput}
                     onChange={onChangeInput}
-                    className="h-12 border-0 ring-0 focus:ring-0 focus-within:ring-0 focus-visible:ring-0"
+                    className="h-12 border-0 ring-0 focus-within:ring-0 focus:ring-0 focus-visible:ring-0"
                 />
             </div>
             <Button

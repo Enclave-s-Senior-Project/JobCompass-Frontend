@@ -50,7 +50,7 @@ export function FormAccountSetting() {
             {check ? (
                 <DialogAddEnterprises refetch={refetch} />
             ) : temp?.status === IsActive.ACTIVE ? (
-                <p className="font-semibold text-white py-2 px-4 bg-primary inline-block rounded-sm">
+                <p className="inline-block rounded-sm bg-primary px-4 py-2 font-semibold text-white">
                     You are an enterprise.
                 </p>
             ) : (
@@ -61,7 +61,7 @@ export function FormAccountSetting() {
                     </div>
                     <div className="flex space-x-4">
                         <button
-                            className="border border-red-500 text-red-500 rounded-lg px-4 py-2 transition duration-300 ease-in-out hover:bg-red-500 hover:text-white focus:ring-0 focus:outline-none"
+                            className="rounded-lg border border-red-500 px-4 py-2 text-red-500 transition duration-300 ease-in-out hover:bg-red-500 hover:text-white focus:outline-none focus:ring-0"
                             onClick={handleCancleEnterprise}
                         >
                             Cancel Register

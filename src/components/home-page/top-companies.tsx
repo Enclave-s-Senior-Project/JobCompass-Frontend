@@ -29,10 +29,10 @@ export function TopCompanies() {
 
     return (
         <HomePart title="Top Companies">
-            <section className="relative container max-w-screen-xl mx-auto px-4">
+            <section className="container relative mx-auto max-w-screen-xl px-4">
                 <Button
                     onClick={prevSlide}
-                    className="absolute left-0 top-1/2 -translate-y-1/2 z-10 rounded-full"
+                    className="absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-full"
                     variant="outline"
                     size="icon-lg"
                 >
@@ -40,18 +40,18 @@ export function TopCompanies() {
                 </Button>
                 <Button
                     onClick={nextSlide}
-                    className="absolute right-0 top-1/2 -translate-y-1/2 z-10 rounded-full"
+                    className="absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-full"
                     variant="outline"
                     size="icon-lg"
                 >
                     <ChevronRight className="h-6 w-6" />
                 </Button>
 
-                <div className="relative overflow-hidden min-h-[440px]">
+                <div className="relative min-h-[440px] overflow-hidden">
                     <AnimatePresence initial={false} custom={index}>
                         <motion.div
                             key={index}
-                            className="absolute w-full grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 overflow-visible"
+                            className="absolute grid w-full grid-cols-1 gap-4 overflow-visible sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
                             initial={{ x: '100%' }}
                             animate={{ x: 0 }}
                             exit={{ x: '-100%' }}
@@ -60,7 +60,7 @@ export function TopCompanies() {
                             {companies.slice(index, index + itemsPerPage).map((company, i) => (
                                 <motion.div
                                     key={i}
-                                    className="flex flex-col items-center rounded-lg border-2 border-gray-50 p-8 gap-8 text-center transition-all duration-300 hover:border-blue-500"
+                                    className="flex flex-col items-center gap-8 rounded-lg border-2 border-gray-50 p-8 text-center transition-all duration-300 hover:border-blue-500"
                                     whileTap={{ scale: 0.95 }}
                                 >
                                     <div className="flex items-center gap-4">
@@ -73,7 +73,7 @@ export function TopCompanies() {
                                         />
                                         <div>
                                             <h3 className="mb-2 font-semibold">{company.name}</h3>
-                                            <p className="text-sm text-gray-600 flex items-center gap-1">
+                                            <p className="flex items-center gap-1 text-sm text-gray-600">
                                                 <MapPin className="size-4" /> {company.location}
                                             </p>
                                         </div>

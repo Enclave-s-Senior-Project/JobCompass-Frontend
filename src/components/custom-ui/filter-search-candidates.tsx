@@ -62,7 +62,7 @@ export default function FilterSidebar({ filters, onFilterChange }: FilterSidebar
         <div className="space-y-6">
             <div className="border-b pb-4">
                 <div
-                    className="flex justify-between items-center cursor-pointer mb-4"
+                    className="mb-4 flex cursor-pointer items-center justify-between"
                     onClick={() => toggleSection('gender')}
                 >
                     <span>Gender</span>
@@ -78,7 +78,7 @@ export default function FilterSidebar({ filters, onFilterChange }: FilterSidebar
                                 value="MALE"
                                 checked={filters.gender === 'MALE'}
                                 onChange={() => handleRadioChange('gender', 'MALE')}
-                                className="h-4 w-4 border-[1.5px] border-[#DADDE5] text-blue-600 focus:ring-[#DADDE5] bg-white checked:bg-blue-600 checked:border-blue-600"
+                                className="h-4 w-4 border-[1.5px] border-[#DADDE5] bg-white text-blue-600 checked:border-blue-600 checked:bg-blue-600 focus:ring-[#DADDE5]"
                             />
 
                             <label htmlFor="Male" className="ml-2 text-sm">
@@ -93,7 +93,7 @@ export default function FilterSidebar({ filters, onFilterChange }: FilterSidebar
                                 value="FEMALE"
                                 checked={filters.gender === 'FEMALE'}
                                 onChange={() => handleRadioChange('gender', 'FEMALE')}
-                                className="h-4 w-4 border-[1.5px] border-[#DADDE5] text-blue-600 focus:ring-[#DADDE5] bg-white checked:bg-blue-600 checked:border-blue-600"
+                                className="h-4 w-4 border-[1.5px] border-[#DADDE5] bg-white text-blue-600 checked:border-blue-600 checked:bg-blue-600 focus:ring-[#DADDE5]"
                             />
 
                             <label htmlFor="Female" className="ml-2 text-sm">
@@ -106,7 +106,7 @@ export default function FilterSidebar({ filters, onFilterChange }: FilterSidebar
 
             <div className="border-b pb-4">
                 <div
-                    className="flex justify-between items-center cursor-pointer mb-4"
+                    className="mb-4 flex cursor-pointer items-center justify-between"
                     onClick={() => toggleSection('maritalStatus')}
                 >
                     <span className="font-medium">Marital Status</span>
@@ -126,7 +126,7 @@ export default function FilterSidebar({ filters, onFilterChange }: FilterSidebar
                                 value="ALONE"
                                 checked={filters.maritalStatus === 'ALONE'}
                                 onChange={() => handleRadioChange('maritalStatus', 'ALONE')}
-                                className="h-4 w-4 border-[1.5px] border-[#DADDE5] text-blue-600 focus:ring-[#DADDE5] bg-white checked:bg-blue-600 checked:border-blue-600"
+                                className="h-4 w-4 border-[1.5px] border-[#DADDE5] bg-white text-blue-600 checked:border-blue-600 checked:bg-blue-600 focus:ring-[#DADDE5]"
                             />
                             <label htmlFor="ALONE" className="ml-2 text-sm">
                                 Alone
@@ -140,7 +140,7 @@ export default function FilterSidebar({ filters, onFilterChange }: FilterSidebar
                                 value="MARRIED"
                                 checked={filters.maritalStatus === 'MARRIED'}
                                 onChange={() => handleRadioChange('maritalStatus', 'MARRIED')}
-                                className="h-4 w-4 border-[1.5px] border-[#DADDE5] text-blue-600 focus:ring-[#DADDE5] bg-white checked:bg-blue-600 checked:border-blue-600"
+                                className="h-4 w-4 border-[1.5px] border-[#DADDE5] bg-white text-blue-600 checked:border-blue-600 checked:bg-blue-600 focus:ring-[#DADDE5]"
                             />
                             <label htmlFor="MARRIED" className="ml-2 text-sm">
                                 Married
@@ -152,7 +152,7 @@ export default function FilterSidebar({ filters, onFilterChange }: FilterSidebar
 
             <div className="border-b pb-4">
                 <div
-                    className="flex justify-between items-center cursor-pointer mb-4"
+                    className="mb-4 flex cursor-pointer items-center justify-between"
                     onClick={() => toggleSection('categories')}
                 >
                     <span>Nationality</span>
@@ -178,7 +178,7 @@ export default function FilterSidebar({ filters, onFilterChange }: FilterSidebar
                                         onChange={(e) =>
                                             handleCheckboxChange('categories', category.categoryId, e.target.checked)
                                         }
-                                        className="h-4 w-4 border-[1.5px] border-[#DADDE5] text-blue-600 focus:ring-[#DADDE5] bg-white checked:bg-blue-600 checked:border-blue-600"
+                                        className="h-4 w-4 border-[1.5px] border-[#DADDE5] bg-white text-blue-600 checked:border-blue-600 checked:bg-blue-600 focus:ring-[#DADDE5]"
                                     />
                                     <label htmlFor={`categories_${category.id}`} className="ml-2 text-sm">
                                         {category?.categoryName}
@@ -190,7 +190,7 @@ export default function FilterSidebar({ filters, onFilterChange }: FilterSidebar
                             <button
                                 type="button"
                                 onClick={() => setShowAllNationalities(!showAllNationalities)}
-                                className="text-blue-600 text-sm mt-2 focus:outline-none"
+                                className="mt-2 text-sm text-blue-600 focus:outline-none"
                             >
                                 {showAllNationalities ? 'Show Less' : 'Show More...'}
                             </button>

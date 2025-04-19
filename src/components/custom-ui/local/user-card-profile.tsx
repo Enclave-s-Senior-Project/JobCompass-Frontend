@@ -19,7 +19,7 @@ type Props = {
 export function UserCardProfile({ userInfo, isPending = false }: Props) {
     const { userInfo: ownUserInfo } = useContext(UserContext);
     return (
-        <div className="p-10 flex items-center flex-wrap justify-between gap-5 bg-white border rounded-xl">
+        <div className="flex flex-wrap items-center justify-between gap-5 rounded-xl border bg-white p-10">
             <div className="flex items-center gap-3 md:gap-6">
                 {isPending ? (
                     <Skeleton className="size-20 rounded-full" />
@@ -36,15 +36,15 @@ export function UserCardProfile({ userInfo, isPending = false }: Props) {
                 <div className="space-y-1 md:space-y-2">
                     {isPending ? (
                         <>
-                            <Skeleton className="w-32 md:w-44 h-6" />
-                            <Skeleton className="w-36 md:w-56 h-6" />
+                            <Skeleton className="h-6 w-32 md:w-44" />
+                            <Skeleton className="h-6 w-36 md:w-56" />
                         </>
                     ) : (
                         <>
-                            <p className="flex items-center gap-2 text-xl md:text-2xl font-medium">
+                            <p className="flex items-center gap-2 text-xl font-medium md:text-2xl">
                                 {userInfo.fullName}
                                 {userInfo.isPremium && (
-                                    <Star className="size-6 p-1 text-purple-500 bg-purple-50 border-purple-200 border rounded-full" />
+                                    <Star className="size-6 rounded-full border border-purple-200 bg-purple-50 p-1 text-purple-500" />
                                 )}
                             </p>
                             <p className="text-base text-gray-600">{userInfo.majority?.categoryName}</p>
@@ -60,7 +60,7 @@ export function UserCardProfile({ userInfo, isPending = false }: Props) {
                     disabled={isPending}
                     variant="outline-secondary"
                     size="lg"
-                    className="rounded-sm [&_svg]:size-6 border-2 border-primary"
+                    className="rounded-sm border-2 border-primary [&_svg]:size-6"
                 >
                     <Mail className="hidden md:block" /> Send Mail
                 </Button>
@@ -69,7 +69,7 @@ export function UserCardProfile({ userInfo, isPending = false }: Props) {
                         disabled={isPending}
                         variant="primary"
                         size="lg"
-                        className="border-2 rounded-sm [&_svg]:size-6"
+                        className="rounded-sm border-2 [&_svg]:size-6"
                     >
                         <CircleArrowRight className="hidden md:block" /> Hire Candidates
                     </Button>

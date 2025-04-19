@@ -33,7 +33,7 @@ export function SwitchSignIn() {
     const { userInfo, logoutHandle } = useContext(UserContext);
 
     return userInfo ? (
-        <div className="flex items-center justify-between lg:justify-normal gap-2 lg:gap-6">
+        <div className="flex items-center justify-between gap-2 lg:justify-normal lg:gap-6">
             <div>
                 <NotificationAlert />
             </div>
@@ -57,7 +57,7 @@ export function SwitchSignIn() {
                     <DropdownMenuLabel>Your Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     {commonNavigatePages.map((link) => (
-                        <DropdownMenuItem key={link.href} className="pr-3 py-2 [&_svg]:size-5" asChild>
+                        <DropdownMenuItem key={link.href} className="py-2 pr-3 [&_svg]:size-5" asChild>
                             <Link href={link.href}>
                                 {link.icon}&nbsp;{link.label}
                             </Link>
@@ -70,7 +70,7 @@ export function SwitchSignIn() {
                             <DropdownMenuLabel>Enterprise</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             {enterpriseNavigatePages.map((link) => (
-                                <DropdownMenuItem key={link.href} className="pr-3 py-2 [&_svg]:size-5" asChild>
+                                <DropdownMenuItem key={link.href} className="py-2 pr-3 [&_svg]:size-5" asChild>
                                     <Link href={link.href}>
                                         {link.icon}&nbsp;{link.label}
                                     </Link>
@@ -79,7 +79,7 @@ export function SwitchSignIn() {
                         </>
                     )}
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className="pr-3 py-2 [&_svg]:size-5" onClick={logoutHandle}>
+                    <DropdownMenuItem className="py-2 pr-3 [&_svg]:size-5" onClick={logoutHandle}>
                         <LogOut />
                         Sign Out
                     </DropdownMenuItem>
@@ -87,7 +87,7 @@ export function SwitchSignIn() {
             </DropdownMenu>
         </div>
     ) : (
-        <div className="w-full flex items-center justify-end gap-2 lg:gap-3">
+        <div className="flex w-full items-center justify-end gap-2 lg:gap-3">
             <Link href={routes.signIn}>
                 <Button variant="outline" size="lg">
                     Sign in

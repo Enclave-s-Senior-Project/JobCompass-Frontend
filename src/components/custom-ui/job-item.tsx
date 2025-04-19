@@ -47,11 +47,11 @@ const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true
         <>
             {/* Dialog Edit Job */}
             <Dialog open={openDialogEdit} onOpenChange={setOpenDialogEdit}>
-                <DialogContent className="w-[1024px] max-w-none h-[90vh] max-h-[900px] rounded-lg overflow-hidden overflow-y-auto scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-gray-300 scrollbar-track-gray-100/30 pr-2">
+                <DialogContent className="scrollbar-thumb-rounded-full h-[90vh] max-h-[900px] w-[1024px] max-w-none overflow-hidden overflow-y-auto rounded-lg pr-2 scrollbar-thin scrollbar-track-gray-100/30 scrollbar-thumb-gray-300">
                     <DialogHeader>
                         <DialogTitle>Edit job</DialogTitle>
                     </DialogHeader>
-                    <div className="h-full w-full ">
+                    <div className="h-full w-full">
                         <div className="space-y-6 pt-2">
                             <EditJob
                                 refetchJob={refetchJob}
@@ -66,7 +66,7 @@ const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true
             </Dialog>
             <Card
                 key={job.jobId}
-                className="p-2 md:p-4 rounded-md shadow-sm hover:drop-shadow-md hover:shadow-lg cursor-pointer transition-all"
+                className="cursor-pointer rounded-md p-2 shadow-sm transition-all hover:shadow-lg hover:drop-shadow-md md:p-4"
                 onClick={() => typeof onSelect === 'function' && onSelect(job.jobId)}
             >
                 <div className="space-y-4">
@@ -82,13 +82,13 @@ const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true
                             />
                             <div>
                                 <h3 className="text-lg font-semibold">{job?.name}</h3>
-                                <p className="text-sm text-gray-500 flex items-center flex-wrap">
+                                <p className="flex flex-wrap items-center text-sm text-gray-500">
                                     <span className="text-nowrap">{job?.categories?.[0]?.categoryName}</span>
                                     &nbsp;•&nbsp;
                                     {job?.type}&nbsp;•&nbsp;
                                     <i
                                         className={clsx(
-                                            'not-italic text-white py-0.5 px-2 rounded-lg',
+                                            'rounded-lg px-2 py-0.5 not-italic text-white',
                                             job?.status === JobStatusEnum.OPEN
                                                 ? 'bg-green-400'
                                                 : job?.status === JobStatusEnum.CLOSED
@@ -110,20 +110,20 @@ const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="w-56">
                                     <DropdownMenuItem className="p-0" onClick={handleButtonBoostJob}>
-                                        <div className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary-50 w-full text-left transition-all">
-                                            <Award className="size-5 mr-2" />
+                                        <div className="flex w-full items-center px-4 py-2 text-left text-sm font-medium text-gray-600 transition-all hover:bg-primary-50 hover:text-primary">
+                                            <Award className="mr-2 size-5" />
                                             Promote Job
                                         </div>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem className="p-0" onClick={() => setOpenDialogEdit(true)}>
-                                        <div className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary-50 w-full text-left transition-all">
-                                            <Info className="size-5 mr-2" />
+                                        <div className="flex w-full items-center px-4 py-2 text-left text-sm font-medium text-gray-600 transition-all hover:bg-primary-50 hover:text-primary">
+                                            <Info className="mr-2 size-5" />
                                             Update Job
                                         </div>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem className="p-0">
-                                        <div className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-danger hover:bg-danger-50 w-full text-left transition-all">
-                                            <XCircle className="size-5 mr-2" />
+                                        <div className="flex w-full items-center px-4 py-2 text-left text-sm font-medium text-gray-600 transition-all hover:bg-danger-50 hover:text-danger">
+                                            <XCircle className="mr-2 size-5" />
                                             Close Job
                                         </div>
                                     </DropdownMenuItem>
@@ -155,11 +155,11 @@ const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true
                                 : `${differenceInDays(new Date(job?.deadline), Date.now())} days left`}
                             )
                         </div>
-                        <div className="flex items-start gap-2 flex-wrap">
+                        <div className="flex flex-wrap items-start gap-2">
                             {job.tags?.map((tag) => <TagBadge key={tag.tagId} tag={tag} />)}
                         </div>
                     </div>
-                    <div className="flex flex-col items-end mt-4 text-end gap-4">
+                    <div className="mt-4 flex flex-col items-end gap-4 text-end">
                         <div>
                             <p className="text-sm text-gray-500">Salary range</p>
                             <p>
@@ -178,7 +178,7 @@ const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true
                     {isOwn && (
                         <div className="flex items-center justify-between">
                             {job?.boostedJob ? (
-                                <div className="flex items-center gap-2 text-base text-warning-500 font-semibold uppercase">
+                                <div className="flex items-center gap-2 text-base font-semibold uppercase text-warning-500">
                                     <Zap className="size-6" />
                                     Boosted
                                 </div>
@@ -205,7 +205,7 @@ const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true
 const TagBadge = ({ tag }: { tag: Tag }) => {
     const color = getRandomFeatureColor();
     return (
-        <span key={tag.tagId} className={clsx('px-2 py-0.5 rounded-lg', color.text, color.bg)}>
+        <span key={tag.tagId} className={clsx('rounded-lg px-2 py-0.5', color.text, color.bg)}>
             {tag.name}
         </span>
     );

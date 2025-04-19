@@ -113,9 +113,9 @@ function PageContentOfSingleJob() {
     }
 
     return (
-        <div className="min-h-screen ">
-            <div className="w-full h-[76px] bg-[#F1F2F4] flex items-center">
-                <div className="flex max-w-7xl mx-auto w-full items-center justify-between px-4 2xl:px-0">
+        <div className="min-h-screen">
+            <div className="flex h-[76px] w-full items-center bg-[#F1F2F4]">
+                <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 2xl:px-0">
                     <h1 className="text-[18px] leading-[28px]">Find Job</h1>
                     <div className="flex items-center gap-2 text-sm text-gray-500">
                         <Link href="/">Home</Link>
@@ -125,16 +125,16 @@ function PageContentOfSingleJob() {
                 </div>
             </div>
 
-            <main className="max-w-7xl mx-auto space-y-8 pt-5">
+            <main className="mx-auto max-w-7xl space-y-8 pt-5">
                 {/* Header Section */}
-                <div className="bg-white rounded-lg  ">
-                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div className="rounded-lg bg-white">
+                    <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
                         <div className="flex items-center gap-4">
-                            <div className="relative w-[96px] h-[96px] rounded-full overflow-hidden bg-gradient-to-br from-pink-500 to-orange-400">
+                            <div className="relative h-[96px] w-[96px] overflow-hidden rounded-full bg-gradient-to-br from-pink-500 to-orange-400">
                                 <img
                                     src={resultQuery?.enterprise?.logoUrl}
                                     alt="Company logo"
-                                    className="w-full h-full object-cover"
+                                    className="h-full w-full object-cover"
                                 />
                             </div>
                             <div>
@@ -142,19 +142,19 @@ function PageContentOfSingleJob() {
                                     <h1 className="text-xl">{resultQuery?.name}</h1>
                                     <ListTag tag={resultQuery?.tags ?? []} />
                                 </div>
-                                <div className="flex flex-wrap gap-5 text-sm text-muted-foreground mt-2">
+                                <div className="mt-2 flex flex-wrap gap-5 text-sm text-muted-foreground">
                                     <span className="flex flex-row gap-1 text-[#474C54]">
-                                        <Phone className="w-5 h-5 text-[#0066FF] " />
+                                        <Phone className="h-5 w-5 text-[#0066FF]" />
                                         {resultQuery?.enterprise?.phone}
                                     </span>
                                     <span className="flex flex-row gap-1 text-[#474C54]">
-                                        <Mail className="w-5 h-5 text-[#0066FF]" />
+                                        <Mail className="h-5 w-5 text-[#0066FF]" />
                                         {resultQuery?.enterprise?.email}
                                     </span>
                                 </div>
                             </div>
                         </div>
-                        <div className="flex gap-3 w-full md:w-auto">
+                        <div className="flex w-full gap-3 md:w-auto">
                             <Button
                                 variant="outline"
                                 size="icon-lg"
@@ -179,7 +179,7 @@ function PageContentOfSingleJob() {
                                 nameJob={resultQuery?.name || 'Unknown Job'}
                                 jobId={resultQuery?.jobId || id}
                                 trigger={
-                                    <Button className="flex-1 md:flex-none w-[248px] h-[56px] text-[16px]">
+                                    <Button className="h-[56px] w-[248px] flex-1 text-[16px] md:flex-none">
                                         Apply Now
                                         <ChevronRight className="ml-2 h-6 w-6" />
                                     </Button>
@@ -190,8 +190,8 @@ function PageContentOfSingleJob() {
                 </div>
 
                 {/* Main Content Grid */}
-                <div className="px-2 sm:px-0 grid grid-cols-12 gap-4 md:gap-8 lg:gap-14">
-                    <div className="col-span-12 md:col-span-7 space-y-9">
+                <div className="grid grid-cols-12 gap-4 px-2 sm:px-0 md:gap-8 lg:gap-14">
+                    <div className="col-span-12 space-y-9 md:col-span-7">
                         <div className="space-y-4">
                             <p className="text-xl font-semibold text-primary-700">Job Description</p>
                             <RichTextContent content={resultQuery?.description || 'No description.'} />
@@ -213,37 +213,37 @@ function PageContentOfSingleJob() {
                             <ShareProfile />
                         </div>
                     </div>
-                    <div className="col-span-12 md:col-span-5 space-y-6">
-                        <div className="p-6 flex flex-col gap-y-6 rounded-md border-2 border-primary-50">
-                            <h1 className="text-2xl mb-4">Job Overview</h1>
-                            <div className="w-full grid grid-cols-3 gap-y-6">
+                    <div className="col-span-12 space-y-6 md:col-span-5">
+                        <div className="flex flex-col gap-y-6 rounded-md border-2 border-primary-50 p-6">
+                            <h1 className="mb-4 text-2xl">Job Overview</h1>
+                            <div className="grid w-full grid-cols-3 gap-y-6">
                                 <div className="flex flex-col items-start">
                                     <NotepadText className="mb-3 size-6 text-primary" />
-                                    <p className="mb-1 uppercase text-gray-500 text-[12px]">JOB POSTED</p>
+                                    <p className="mb-1 text-[12px] uppercase text-gray-500">JOB POSTED</p>
                                     <p className="text-sm font-medium">
                                         {moment(resultQuery?.createdAt).format('YYYY-MM-DD')}
                                     </p>
                                 </div>
                                 <div className="flex flex-col items-start">
                                     <Clock8 className="mb-3 size-6 text-primary" />
-                                    <p className="mb-1 uppercase text-gray-500 text-[12px]">JOB EXPIRE IN</p>
+                                    <p className="mb-1 text-[12px] uppercase text-gray-500">JOB EXPIRE IN</p>
                                     <p className="text-sm font-medium">{resultQuery?.deadline}</p>
                                 </div>
                                 <div className="flex flex-col items-start">
                                     <BriefcaseBusiness className="mb-3 size-6 text-primary" />
-                                    <p className="mb-1 uppercase text-gray-500 text-[12px]">EDUCATION</p>
+                                    <p className="mb-1 text-[12px] uppercase text-gray-500">EDUCATION</p>
                                     <p className="text-sm font-medium">{resultQuery?.education}</p>
                                 </div>
                                 <div className="flex flex-col items-start">
                                     <Wallet className="mb-3 size-6 text-primary" />
-                                    <p className="mb-1 uppercase text-gray-500 text-[12px]">SALARY</p>
+                                    <p className="mb-1 text-[12px] uppercase text-gray-500">SALARY</p>
                                     <p className="text-sm">
                                         ${resultQuery?.lowestWage} - {resultQuery?.highestWage}
                                     </p>
                                 </div>
                                 <div className="flex flex-col items-start">
                                     <MapPin className="mb-3 size-6 text-primary" />
-                                    <p className="mb-1 uppercase text-gray-500 text-[12px]">LOCATION</p>
+                                    <p className="mb-1 text-[12px] uppercase text-gray-500">LOCATION</p>
                                     <p className="text-sm font-medium">
                                         {resultQuery?.addresses?.[0]?.country ?? 'Unknown Country'} -
                                         {resultQuery?.addresses?.[0]?.city ?? 'Unknown City'}
@@ -251,14 +251,14 @@ function PageContentOfSingleJob() {
                                 </div>
                                 <div className="flex flex-col items-start">
                                     <BriefcaseBusiness className="mb-3 size-6 text-primary" />
-                                    <p className="mb-1 uppercase text-gray-700 text-[12px]">JOB TYPE</p>
+                                    <p className="mb-1 text-[12px] uppercase text-gray-700">JOB TYPE</p>
                                     <p className="text-sm font-medium">{resultQuery?.type}</p>
                                 </div>
                             </div>
                         </div>
 
                         {/* Contact information */}
-                        <Card className="max-w-2xl mx-auto border-primary-50 border-2 shadow-none">
+                        <Card className="mx-auto max-w-2xl border-2 border-primary-50 shadow-none">
                             <CardHeader className="space-y-2">
                                 <div className="flex items-center gap-4">
                                     <img
@@ -266,7 +266,7 @@ function PageContentOfSingleJob() {
                                         alt="Instagram logo"
                                         width={56}
                                         height={56}
-                                        className="rounded-full w-14 h-14 object-cover"
+                                        className="h-14 w-14 rounded-full object-cover"
                                     />
 
                                     <div>
@@ -280,7 +280,7 @@ function PageContentOfSingleJob() {
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 <div className="space-y-4">
-                                    <div className="flex justify-between items-center">
+                                    <div className="flex items-center justify-between">
                                         <p className="text-[16px] text-muted-foreground">Founded in:</p>
                                         <p className="text-[16px]">
                                             {resultQuery?.enterprise.foundedIn
@@ -288,23 +288,23 @@ function PageContentOfSingleJob() {
                                                 : 'Unknown'}
                                         </p>
                                     </div>
-                                    <div className="flex justify-between items-center">
+                                    <div className="flex items-center justify-between">
                                         <p className="text-[16px] text-muted-foreground">Organization type:</p>
                                         <p className="text-[16px]">{resultQuery?.enterprise?.organizationType}</p>
                                     </div>
-                                    <div className="flex justify-between items-center">
+                                    <div className="flex items-center justify-between">
                                         <p className="text-[16px] text-muted-foreground">Company size:</p>
                                         <p className="text-[16px]">{resultQuery?.enterprise?.teamSize}</p>
                                     </div>
-                                    <div className="flex justify-between items-center">
+                                    <div className="flex items-center justify-between">
                                         <p className="text-[16px] text-muted-foreground">Phone:</p>
                                         <p className="text-[16px]">{resultQuery?.enterprise?.phone}</p>
                                     </div>
-                                    <div className="flex justify-between items-center">
+                                    <div className="flex items-center justify-between">
                                         <p className="text-[16px] text-muted-foreground">Email:</p>
                                         <p className="text-[16px]">{resultQuery?.enterprise?.email}</p>
                                     </div>
-                                    <div className="flex justify-between items-center">
+                                    <div className="flex items-center justify-between">
                                         <p className="text-[16px] text-muted-foreground">Industry:</p>
                                         <p className="text-[16px]">
                                             {resultQuery?.enterprise?.categories?.map((c) => c.categoryName).join(',')}
@@ -344,7 +344,7 @@ function PageContentOfSingleJob() {
 
                 {/* Related Jobs Section */}
                 <div>
-                    <div className="flex items-center justify-between mb-6">
+                    <div className="mb-6 flex items-center justify-between">
                         <span className="text-[30px]">Related Jobs</span>
                         <nav className="flex items-center gap-2">
                             <Button className="h-[38px] w-[38px]" variant="outline">
@@ -356,11 +356,11 @@ function PageContentOfSingleJob() {
                         </nav>
                     </div>
                     <div>
-                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-8">
-                            <div className="col-span-full flex flex-col items-center justify-center py-12 text-center bg-gray-50 rounded-lg border border-dashed border-gray-200">
-                                <FileX className="h-16 w-16 text-muted-foreground mb-4" />
-                                <h3 className="text-lg font-semibold text-foreground mb-2">No related jobs found</h3>
-                                <p className="text-muted-foreground max-w-[500px]">
+                        <div className="grid gap-4 pb-8 sm:grid-cols-2 lg:grid-cols-3">
+                            <div className="col-span-full flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-200 bg-gray-50 py-12 text-center">
+                                <FileX className="mb-4 h-16 w-16 text-muted-foreground" />
+                                <h3 className="mb-2 text-lg font-semibold text-foreground">No related jobs found</h3>
+                                <p className="max-w-[500px] text-muted-foreground">
                                     We couldn&apos;t find any related job listings at the moment. Please check back
                                     later or explore other job categories.
                                 </p>

@@ -25,7 +25,7 @@ export function HeaderSection() {
     return (
         <header className="border-b">
             {/*for mobile*/}
-            <div className="px-3 py-2 lg:hidden flex items-center justify-between gap-2">
+            <div className="flex items-center justify-between gap-2 px-3 py-2 lg:hidden">
                 <div className="mr-auto">
                     <ButtonHome />
                 </div>
@@ -41,11 +41,11 @@ export function HeaderSection() {
             {/*navigate bar*/}
             <div
                 className={clsx(
-                    'px-3 bg-gray-50 overflow-hidden transition-all lg:h-fit',
+                    'overflow-hidden bg-gray-50 px-3 transition-all lg:h-fit',
                     showMenuMobile ? 'h-72' : 'h-0'
                 )}
             >
-                <div className="mx-auto container max-w-screen-xl flex flex-col lg:flex-row items-center justify-between">
+                <div className="container mx-auto flex max-w-screen-xl flex-col items-center justify-between lg:flex-row">
                     <Nav />
                     <div className="flex items-center gap-x-6">
                         <div>
@@ -61,14 +61,14 @@ export function HeaderSection() {
 
             {/*for desktop: header search, login,...*/}
             <div className="bg-white px-3 lg:py-5">
-                <div className="mx-auto py-5` container max-w-screen-xl flex items-center">
+                <div className="py-5` container mx-auto flex max-w-screen-xl items-center">
                     <div className="hidden lg:block">
                         <ButtonHome />
                     </div>
                     <div
                         className={clsx(
-                            'w-full ml-0 lg:ml-8  lg:mr-auto lg:h-12 transition-all lg:visible lg:opacity-100',
-                            showSearchMobile ? 'h-12 visible opacity-100' : 'h-0 invisible opacity-0'
+                            'ml-0 w-full transition-all lg:visible lg:ml-8 lg:mr-auto lg:h-12 lg:opacity-100',
+                            showSearchMobile ? 'visible h-12 opacity-100' : 'invisible h-0 opacity-0'
                         )}
                     >
                         <Search />

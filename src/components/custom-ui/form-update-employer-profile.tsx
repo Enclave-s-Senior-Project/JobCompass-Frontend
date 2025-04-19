@@ -196,7 +196,7 @@ export function FormUpdateEmployerProfile() {
                     type="button"
                     variant="outline"
                     size="md"
-                    className={clsx('text-sm', editable ? 'text-red-500 border-red-100 hover:border-red-500' : '')}
+                    className={clsx('text-sm', editable ? 'border-red-100 text-red-500 hover:border-red-500' : '')}
                     onClick={handleToggleEditable}
                 >
                     {editable ? <XCircle /> : <Edit />}
@@ -204,10 +204,10 @@ export function FormUpdateEmployerProfile() {
                 </Button>
             </div>
             <div className="space-y-4">
-                <div className="grid grid-cols-3 gap-4 select-none">
+                <div className="grid select-none grid-cols-3 gap-4">
                     {/* Organization Type */}
                     <div className="relative col-span-3 lg:col-span-1">
-                        <label className="text-sm text-gray-900 cursor-default">Organization Type</label>
+                        <label className="cursor-default text-sm text-gray-900">Organization Type</label>
                         <Select
                             disabled={!editable}
                             value={formValue.organizationType}
@@ -215,7 +215,7 @@ export function FormUpdateEmployerProfile() {
                         >
                             <SelectTrigger
                                 className={clsx(
-                                    'h-12 text-base rounded-sm',
+                                    'h-12 rounded-sm text-base',
                                     errors?.organizationType?.length > 0
                                         ? 'border-2 border-danger focus:border-danger focus:ring-0'
                                         : 'focus:border-primary focus:ring-primary'
@@ -233,13 +233,13 @@ export function FormUpdateEmployerProfile() {
                             </SelectContent>
                         </Select>
                         {errors?.organizationType?.[0] && (
-                            <p className="text-red-500 text-xs font-medium mt-1">{errors.organizationType[0]}</p>
+                            <p className="mt-1 text-xs font-medium text-red-500">{errors.organizationType[0]}</p>
                         )}
                     </div>
 
                     {/* Industry Type */}
                     <div className="relative col-span-3 lg:col-span-1">
-                        <label className="text-sm text-gray-900 cursor-default">Industry Type</label>
+                        <label className="cursor-default text-sm text-gray-900">Industry Type</label>
                         <MultiSelectCategoriesSearchInput
                             disabled={!editable}
                             onChange={(newTagIds: Categories[]) => {
@@ -248,13 +248,13 @@ export function FormUpdateEmployerProfile() {
                             defaultValue={formValue?.industryType || []}
                         />
                         {errors?.industryType?.[0] && (
-                            <p className="text-red-500 text-xs font-medium mt-1">{errors.industryType[0]}</p>
+                            <p className="mt-1 text-xs font-medium text-red-500">{errors.industryType[0]}</p>
                         )}
                     </div>
 
                     {/* Team Size */}
                     <div className="relative col-span-3 lg:col-span-1">
-                        <label className="text-sm text-gray-900 cursor-default">Team Size</label>
+                        <label className="cursor-default text-sm text-gray-900">Team Size</label>
                         <Select
                             disabled={!editable}
                             value={formValue.teamSize}
@@ -262,7 +262,7 @@ export function FormUpdateEmployerProfile() {
                         >
                             <SelectTrigger
                                 className={clsx(
-                                    'h-12 text-base rounded-sm',
+                                    'h-12 rounded-sm text-base',
                                     errors?.teamSize?.length > 0
                                         ? 'border-2 border-danger focus:border-danger focus:ring-0'
                                         : 'focus:border-primary focus:ring-primary'
@@ -280,16 +280,16 @@ export function FormUpdateEmployerProfile() {
                             </SelectContent>
                         </Select>
                         {errors?.teamSize?.[0] && (
-                            <p className="text-red-500 text-xs font-medium mt-1">{errors.teamSize[0]}</p>
+                            <p className="mt-1 text-xs font-medium text-red-500">{errors.teamSize[0]}</p>
                         )}
                     </div>
                 </div>
 
                 {/* Additional Fields */}
-                <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="mt-4 grid grid-cols-2 gap-4">
                     {/* Year of Establishment */}
                     <div className="relative col-span-2 lg:col-span-1">
-                        <label className="text-sm text-gray-900 cursor-default">Year of Establishment</label>
+                        <label className="cursor-default text-sm text-gray-900">Year of Establishment</label>
                         <Input
                             disabled={!editable}
                             name="foundedIn"
@@ -305,13 +305,13 @@ export function FormUpdateEmployerProfile() {
                         />
 
                         {errors?.foundedIn?.[0] && (
-                            <p className="text-red-500 text-xs font-medium mt-1">{errors.foundedIn[0].toString()}</p>
+                            <p className="mt-1 text-xs font-medium text-red-500">{errors.foundedIn[0].toString()}</p>
                         )}
                     </div>
 
                     {/* Company Website */}
                     <div className="relative col-span-2 lg:col-span-1">
-                        <label className="text-sm text-gray-900 cursor-default">Company Website</label>
+                        <label className="cursor-default text-sm text-gray-900">Company Website</label>
                         <Input
                             disabled={!editable}
                             name="email"
@@ -327,7 +327,7 @@ export function FormUpdateEmployerProfile() {
                             )}
                         />
                         {errors?.email?.[0] && (
-                            <p className="text-red-500 text-xs font-medium mt-1">{errors.email[0]}</p>
+                            <p className="mt-1 text-xs font-medium text-red-500">{errors.email[0]}</p>
                         )}
                     </div>
                 </div>
@@ -335,38 +335,38 @@ export function FormUpdateEmployerProfile() {
                 {/* Text Editors */}
                 <div className="grid grid-cols-2 gap-4">
                     <div className="col-span-2 md:col-span-1">
-                        <label className="text-sm text-gray-900 cursor-default">Introduction (Bio)</label>
+                        <label className="cursor-default text-sm text-gray-900">Introduction (Bio)</label>
                         <RichTextEditor
                             disabled={!editable}
                             name="bio"
                             value={formValue.bio}
                             onChange={handleChangeRichEditor}
                             placement="inside-bottom"
-                            className="px-3 rounded-sm shadow-sm"
+                            className="rounded-sm px-3 shadow-sm"
                         />
                     </div>
                     <div className="col-span-2 md:col-span-1">
-                        <label className="text-sm text-gray-900 cursor-default">Company Vision</label>
+                        <label className="cursor-default text-sm text-gray-900">Company Vision</label>
                         <RichTextEditor
                             disabled={!editable}
                             name="companyVision"
                             value={formValue.companyVision}
                             onChange={handleChangeRichEditor}
                             placement="inside-bottom"
-                            className="px-3 rounded-sm shadow-sm"
+                            className="rounded-sm px-3 shadow-sm"
                         />
                     </div>
                     {/* Description */}
                 </div>
                 <div className="col-span-2 md:col-span-1">
-                    <label className="text-sm text-gray-900 cursor-default">Description</label>
+                    <label className="cursor-default text-sm text-gray-900">Description</label>
                     <RichTextEditor
                         disabled={!editable}
                         name="description"
                         value={formValue.description}
                         onChange={handleChangeRichEditor}
                         placement="inside-bottom"
-                        className="px-3 rounded-sm shadow-sm"
+                        className="rounded-sm px-3 shadow-sm"
                     />
                 </div>
             </div>

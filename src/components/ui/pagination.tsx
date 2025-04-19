@@ -45,8 +45,8 @@ const PaginationLink = ({ className, isActive, isNavigate, size = 'icon-lg', ...
                 variant: isActive ? 'primary' : isNavigate ? 'secondary' : 'ghost',
                 size,
             }),
-            'rounded-full min-h-12 min-w-12 shadow-none',
-            props.disabled ? 'opacity-60 pointer-events-none' : '',
+            'min-h-12 min-w-12 rounded-full shadow-none',
+            props.disabled ? 'pointer-events-none opacity-60' : '',
             className
         )}
         {...props}
@@ -63,7 +63,7 @@ const PaginationPrevious = ({ className, ...props }: React.ComponentProps<typeof
                 variant: 'secondary',
                 size: 'icon-lg',
             }),
-            'p-3 rounded-full shadow-none',
+            'rounded-full p-3 shadow-none',
             className
         )}
         {...props}
@@ -82,7 +82,7 @@ const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof Pag
                 variant: 'secondary',
                 size: 'icon-lg',
             }),
-            'p-3 rounded-full shadow-none',
+            'rounded-full p-3 shadow-none',
             className
         )}
         {...props}

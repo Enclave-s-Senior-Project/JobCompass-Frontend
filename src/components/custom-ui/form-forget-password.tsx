@@ -41,12 +41,12 @@ export function FormForgetPassword() {
                             : 'focus-visible:border-primary focus-visible:ring-primary'
                     )}
                 />
-                <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                <p className="absolute bottom-0 top-full mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-red-500">
                     {state.errors?.email && state.errors.email[0]}
                 </p>
             </div>
             <Button type="submit" size="xl" className="group rounded-sm text-base font-semibold" isPending={isPending}>
-                Reset Password <LuArrowRight className="group-hover:translate-x-2 transition-all" />
+                Reset Password <LuArrowRight className="transition-all group-hover:translate-x-2" />
             </Button>
             <div className="space-y-4">
                 <p className="text-center text-sm text-gray-500">or</p>

@@ -82,7 +82,7 @@ export default function RichTextEditor({
         >
             <div
                 className={clsx(
-                    'z-10 absolute left-0',
+                    'absolute left-0 z-10',
                     placement.includes('top') ? 'top-0' : placement.includes('bottom') ? 'bottom-0' : '',
                     disabled ? 'pointer-events-none' : 'pointer-events-auto'
                 )}

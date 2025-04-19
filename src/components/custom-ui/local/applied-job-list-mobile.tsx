@@ -17,14 +17,14 @@ type Props = {
 
 const AppliedJobListMobile = memo(({ items = [], isPending }: Props) => {
     return (
-        <div className="md:hidden space-y-4">
+        <div className="space-y-4 md:hidden">
             {isPending
-                ? Array.from({ length: 3 }).map((_, index) => <Skeleton key={index} className="w-full h-20" />)
+                ? Array.from({ length: 3 }).map((_, index) => <Skeleton key={index} className="h-20 w-full" />)
                 : items.map((appliedJob) => {
                       const jobAddresses = getJobAddress(appliedJob?.job.addresses || []);
                       const status = getAppliedJobStatus(appliedJob);
                       return (
-                          <Card key={appliedJob.appliedJobId} className="bg-white rounded-sm p-2 mb-3 shadow-sm">
+                          <Card key={appliedJob.appliedJobId} className="mb-3 rounded-sm bg-white p-2 shadow-sm">
                               <div className="flex items-start gap-2">
                                   <Image
                                       loading="lazy"
@@ -40,12 +40,12 @@ const AppliedJobListMobile = memo(({ items = [], isPending }: Props) => {
                                       alt={appliedJob?.job?.name}
                                   />
                                   <div className="flex-1">
-                                      <div className="text-base font-semibold flex items-center">
+                                      <div className="flex items-center text-base font-semibold">
                                           {appliedJob?.job?.name}&nbsp;
                                           <BadgeJobType type={appliedJob?.job?.type as JobTypeEnum} />
                                       </div>
 
-                                      <div className="flex flex-col gap-2 mt-3">
+                                      <div className="mt-3 flex flex-col gap-2">
                                           <div className="flex items-center text-sm text-gray-600">
                                               <MapPin />
                                               {jobAddresses}
@@ -62,7 +62,7 @@ const AppliedJobListMobile = memo(({ items = [], isPending }: Props) => {
                                           </div>
                                       </div>
 
-                                      <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+                                      <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
                                           {status ? (
                                               <span className="flex items-center gap-1 text-sm text-green-500">
                                                   <Check className="size-4" /> Active

@@ -133,9 +133,9 @@ export default function Page() {
     return (
         <main className="min-h-dvh bg-white">
             <SearchForm filters={activeFilters} setFilters={setActiveFilters} />
-            <div className="flex flex-col md:flex-row justify-between items-center max-w-screen-xl mx-auto mb-6 mt-6 gap-6">
-                <div className="flex-1 flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex items-center flex-wrap gap-1">
+            <div className="mx-auto mb-6 mt-6 flex max-w-screen-xl flex-col items-center justify-between gap-6 md:flex-row">
+                <div className="flex flex-1 flex-wrap items-center justify-between gap-2">
+                    <div className="flex flex-wrap items-center gap-1">
                         {Object.entries(activeFilters).map(([key, value]) => {
                             // Xử lý keyword
                             if (key === 'keyword' && value) {
@@ -150,7 +150,7 @@ export default function Page() {
                                         }
                                     >
                                         {value}
-                                        <span className="ml-1 text-xs bg-gray-100 px-1.5 py-0.5 rounded-full">×</span>
+                                        <span className="ml-1 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs">×</span>
                                     </Button>
                                 );
                             }
@@ -166,7 +166,7 @@ export default function Page() {
                                         }
                                     >
                                         {value}
-                                        <span className="ml-1 text-xs bg-gray-100 px-1.5 py-0.5 rounded-full">×</span>
+                                        <span className="ml-1 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs">×</span>
                                     </Button>
                                 );
                             }
@@ -185,7 +185,7 @@ export default function Page() {
                                         }
                                     >
                                         {val}
-                                        <span className="ml-1 text-xs bg-gray-100 px-1.5 py-0.5 rounded-full">×</span>
+                                        <span className="ml-1 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs">×</span>
                                     </Button>
                                 ));
                             }
@@ -202,7 +202,7 @@ export default function Page() {
                                         }
                                     >
                                         {value.categoryName}
-                                        <span className="ml-1 text-xs bg-gray-100 px-1.5 py-0.5 rounded-full">×</span>
+                                        <span className="ml-1 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs">×</span>
                                     </Button>
                                 );
                             }
@@ -219,7 +219,7 @@ export default function Page() {
                                         }
                                     >
                                         {value.categoryName}
-                                        <span className="ml-1 text-xs bg-gray-100 px-1.5 py-0.5 rounded-full">×</span>
+                                        <span className="ml-1 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs">×</span>
                                     </Button>
                                 );
                             }
@@ -235,7 +235,7 @@ export default function Page() {
                                         }
                                     >
                                         {value} years
-                                        <span className="ml-1 text-xs bg-gray-100 px-1.5 py-0.5 rounded-full">×</span>
+                                        <span className="ml-1 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs">×</span>
                                     </Button>
                                 );
                             }
@@ -251,7 +251,7 @@ export default function Page() {
                                         }
                                     >
                                         {value} $
-                                        <span className="ml-1 text-xs bg-gray-100 px-1.5 py-0.5 rounded-full">×</span>
+                                        <span className="ml-1 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs">×</span>
                                     </Button>
                                 );
                             }
@@ -264,17 +264,17 @@ export default function Page() {
                             <Button
                                 variant="outline"
                                 size="md"
-                                className="rounded-[30px] border-danger-100 hover:border-danger-500 text-danger-500"
+                                className="rounded-[30px] border-danger-100 text-danger-500 hover:border-danger-500"
                                 onClick={clearAllFilters}
                             >
-                                Clear All <span className="ml-1 text-xs bg-gray-200 px-1.5 py-0.5 rounded-full">×</span>
+                                Clear All <span className="ml-1 rounded-full bg-gray-200 px-1.5 py-0.5 text-xs">×</span>
                             </Button>
                         )}
                     </div>
                 </div>
                 <div className="flex flex-wrap items-center gap-4">
                     <Select onValueChange={setOption}>
-                        <SelectTrigger className="text-sm border rounded-md px-2 py-1.5 h-[48px] w-[180px] bg-white focus:ring-0 focus:ring-offset-0">
+                        <SelectTrigger className="h-[48px] w-[180px] rounded-md border bg-white px-2 py-1.5 text-sm focus:ring-0 focus:ring-offset-0">
                             <SelectValue placeholder={option === 'ASC' ? 'Latest' : 'Oldest'} />
                         </SelectTrigger>
                         <SelectContent>
@@ -285,7 +285,7 @@ export default function Page() {
                         </SelectContent>
                     </Select>
                     <Select onValueChange={(value) => setItemsPerPage(Number(value))}>
-                        <SelectTrigger className="text-sm border rounded-md px-2 py-1.5 h-[48px] w-[180px] bg-white focus:ring-0 focus:ring-offset-0">
+                        <SelectTrigger className="h-[48px] w-[180px] rounded-md border bg-white px-2 py-1.5 text-sm focus:ring-0 focus:ring-offset-0">
                             <SelectValue placeholder={`${itemsPerPage} per page`} />
                         </SelectTrigger>
                         <SelectContent>
@@ -298,11 +298,11 @@ export default function Page() {
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-                    <div className="flex justify-center items-center border rounded-md h-[48px] w-[88px] gap-2">
+                    <div className="flex h-[48px] w-[88px] items-center justify-center gap-2 rounded-md border">
                         <Button
                             variant="ghost"
                             size="icon-md"
-                            className={`w-[36px] h-[36px] flex items-center justify-center ${viewType === 'grid' ? 'bg-gray-100' : ''}`}
+                            className={`flex h-[36px] w-[36px] items-center justify-center ${viewType === 'grid' ? 'bg-gray-100' : ''}`}
                             onClick={() => setViewType('grid')}
                         >
                             <LayoutGrid className="h-3 w-3" />
@@ -310,7 +310,7 @@ export default function Page() {
                         <Button
                             variant="ghost"
                             size="icon-md"
-                            className={`w-[36px] h-[36px] flex items-center justify-center ${viewType === 'list' ? 'bg-gray-100' : ''}`}
+                            className={`flex h-[36px] w-[36px] items-center justify-center ${viewType === 'list' ? 'bg-gray-100' : ''}`}
                             onClick={() => setViewType('list')}
                         >
                             <List className="h-3 w-3" />
@@ -318,7 +318,7 @@ export default function Page() {
                     </div>
                 </div>
             </div>
-            <div className="mx-auto container max-w-screen-xl pb-4">
+            <div className="container mx-auto max-w-screen-xl pb-4">
                 <Suspense fallback={<span>Loading...</span>}>
                     <ListCardJobs
                         viewType={viewType}

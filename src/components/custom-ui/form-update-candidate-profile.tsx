@@ -146,7 +146,7 @@ export function FormUpdateCandidateProfile() {
                     type="button"
                     variant="outline"
                     size="md"
-                    className={clsx('text-sm', editable ? 'text-red-500 border-red-100 hover:border-red-500' : '')}
+                    className={clsx('text-sm', editable ? 'border-red-100 text-red-500 hover:border-red-500' : '')}
                     onClick={handleToggleEditable}
                 >
                     {editable ? <XCircle /> : <Edit />}
@@ -156,11 +156,11 @@ export function FormUpdateCandidateProfile() {
             <div className="grid grid-cols-2 gap-4">
                 {/* nationality */}
                 <div className="relative col-span-1">
-                    <label className="text-sm text-gray-900 cursor-default">Nationality</label>
+                    <label className="cursor-default text-sm text-gray-900">Nationality</label>
                     <Select name="nationality" value={nationality} onValueChange={setNationality} disabled={!editable}>
                         <SelectTrigger
                             className={clsx(
-                                'h-12 text-base rounded-sm',
+                                'h-12 rounded-sm text-base',
                                 errors?.nationality?.length > 0
                                     ? 'border-2 border-danger focus:border-danger focus:ring-0'
                                     : 'focus:border-primary focus:ring-primary',
@@ -181,17 +181,17 @@ export function FormUpdateCandidateProfile() {
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-                    <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                    <p className="absolute bottom-0 top-full mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-red-500">
                         {errors?.nationality?.length > 0 && errors.nationality[0]}
                     </p>
                 </div>
                 {/* gender */}
                 <div className="relative col-span-1">
-                    <label className="text-sm text-gray-900 cursor-default">Gender</label>
+                    <label className="cursor-default text-sm text-gray-900">Gender</label>
                     <Select name="gender" value={gender} onValueChange={setGender} disabled={!editable}>
                         <SelectTrigger
                             className={clsx(
-                                'h-12 text-base rounded-sm',
+                                'h-12 rounded-sm text-base',
                                 errors?.gender?.length > 0
                                     ? 'border-2 border-danger focus:border-danger focus:ring-0'
                                     : 'focus:border-primary focus:ring-primary',
@@ -207,13 +207,13 @@ export function FormUpdateCandidateProfile() {
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-                    <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                    <p className="absolute bottom-0 top-full mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-red-500">
                         {errors?.gender?.length > 0 && errors.gender[0]}
                     </p>
                 </div>
                 {/* industry */}
                 <div className="relative col-span-1">
-                    <label className="text-sm text-gray-900 cursor-default">Industry</label>
+                    <label className="cursor-default text-sm text-gray-900">Industry</label>
                     <InputSelectSingle
                         disabled={!editable}
                         placeholder="Select..."
@@ -234,13 +234,13 @@ export function FormUpdateCandidateProfile() {
                             />
                         ))}
                     </InputSelectSingle>
-                    <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                    <p className="absolute bottom-0 top-full mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-red-500">
                         {errors?.industry?.length > 0 && errors.nationality[0]}
                     </p>
                 </div>
                 {/* majority */}
                 <div className="relative col-span-1">
-                    <label className="text-sm text-gray-900 cursor-default">Majority</label>
+                    <label className="cursor-default text-sm text-gray-900">Majority</label>
                     <InputSelectSingle
                         disabled={!editable}
                         placeholder="Select..."
@@ -261,13 +261,13 @@ export function FormUpdateCandidateProfile() {
                             />
                         ))}
                     </InputSelectSingle>
-                    <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                    <p className="absolute bottom-0 top-full mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-red-500">
                         {errors?.majority?.length > 0 && errors.nationality[0]}
                     </p>
                 </div>
                 {/* introduction (bio) */}
                 <div className="relative col-span-2">
-                    <label className="text-sm text-gray-900 cursor-default">Introduction (Bio)</label>
+                    <label className="cursor-default text-sm text-gray-900">Introduction (Bio)</label>
                     <RichTextEditor
                         disabled={!editable}
                         placement="inside-bottom"

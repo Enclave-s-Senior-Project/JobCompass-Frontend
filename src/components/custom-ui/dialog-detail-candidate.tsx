@@ -11,20 +11,13 @@ export function DialogDetailCandidate(props: { id: string }) {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <Button onClick={() => setOpen(true)} className="flex-1 md:flex-none w-[248px] h-[56px] text-[16px]">
+            <Button onClick={() => setOpen(true)} className="h-[56px] w-[248px] flex-1 text-[16px] md:flex-none">
                 View Detail
                 <ChevronRight className="ml-2 h-6 w-6" />
             </Button>
-            <DialogContent className="w-[1024px] max-w-none h-[90vh] max-h-[900px] rounded-lg overflow-hidden">
+            <DialogContent className="h-[90vh] max-h-[900px] w-[1024px] max-w-none overflow-hidden rounded-lg">
                 {/* Div wrapper để scrollbar bo tròn */}
-                <div
-                    className="h-full overflow-y-auto 
-    scrollbar-thin 
-    scrollbar-thumb-rounded-full 
-    scrollbar-thumb-gray-300 
-    scrollbar-track-gray-100/30
-    pr-2"
-                >
+                <div className="scrollbar-thumb-rounded-full h-full overflow-y-auto pr-2 scrollbar-thin scrollbar-track-gray-100/30 scrollbar-thumb-gray-300">
                     <div className="space-y-6 pt-2">
                         <SingleCandidate id={temp} />
                     </div>

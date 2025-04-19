@@ -122,18 +122,15 @@ export default function JobsPage() {
 
     return (
         <div className="container mx-auto space-y-4">
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-semibold">
                     My Jobs&nbsp;
-                    <span className="text-gray-500 text-lg">({data?.meta?.itemCount || 0})</span>
+                    <span className="text-lg text-gray-500">({data?.meta?.itemCount || 0})</span>
                 </h1>
             </div>
             {/* Search bar */}
-            <div className="flex items-center flex-wrap gap-2">
-                <div
-                    className="h-12 flex-1 flex items-center border border-primary-100 rounded-sm 
-                            focus-within:border-primary focus-within:ring-1 focus-within:ring-primary"
-                >
+            <div className="flex flex-wrap items-center gap-2">
+                <div className="flex h-12 flex-1 items-center rounded-sm border border-primary-100 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary">
                     <label htmlFor={inputId} className="p-2">
                         <HiMiniMagnifyingGlass className="size-6 text-primary" />
                     </label>
@@ -142,7 +139,7 @@ export default function JobsPage() {
                         id={inputId}
                         value={search}
                         onChange={handleSearch}
-                        className="flex-1 h-12 border-none shadow-none focus-visible:ring-0 text-sm font-normal"
+                        className="h-12 flex-1 border-none text-sm font-normal shadow-none focus-visible:ring-0"
                         placeholder="Job title, tags..."
                     />
                 </div>
@@ -150,7 +147,7 @@ export default function JobsPage() {
                 <Select value={sortBy} onValueChange={handleOrderChange}>
                     <SelectTrigger
                         className={clsx(
-                            'max-w-40 h-12 rounded-sm border border-primary-100 focus:border-primary focus:ring-1 focus:ring-primary'
+                            'h-12 max-w-40 rounded-sm border border-primary-100 focus:border-primary focus:ring-1 focus:ring-primary'
                         )}
                     >
                         <SelectValue className="text-sm" placeholder="Latest" />
@@ -168,7 +165,7 @@ export default function JobsPage() {
                     variant="outline-secondary"
                     size="md"
                     onClick={() => setShowFilter((prev) => !prev)}
-                    className="shadow-none min-h-12 text-sm max-h-10 text-gray-900"
+                    className="max-h-10 min-h-12 text-sm text-gray-900 shadow-none"
                 >
                     <ListFilterPlus />
                     Filter <ChevronDown className={clsx('transition-all', showFilter ? 'rotate-90' : '-rotate-90')} />
@@ -196,15 +193,15 @@ export default function JobsPage() {
                     </div>
                     {/* Job quick view details */}
                     {isPendingQuerySpecifiedJob ? (
-                        <div className="flex flex-col lg:col-span-3 h-full gap-2">
-                            <Skeleton className="w-full h-1/4" />
-                            <Skeleton className="w-full h-2/4" />
-                            <Skeleton className="w-full h-1/4" />
+                        <div className="flex h-full flex-col gap-2 lg:col-span-3">
+                            <Skeleton className="h-1/4 w-full" />
+                            <Skeleton className="h-2/4 w-full" />
+                            <Skeleton className="h-1/4 w-full" />
                         </div>
                     ) : (
                         <div
                             className={cn(
-                                'hidden lg:block col-span-3 h-[calc(100vh-50px)]', // Adjust height based on your layout
+                                'col-span-3 hidden h-[calc(100vh-50px)] lg:block', // Adjust height based on your layout
                                 selectedJobId ? 'sticky top-4' : 'relative' // Sticky when a job is selected
                             )}
                         >
@@ -213,7 +210,7 @@ export default function JobsPage() {
                     )}
                 </div>
             ) : (
-                <p className="text-center text-gray-700 text-sm">There are no available jobs.</p>
+                <p className="text-center text-sm text-gray-700">There are no available jobs.</p>
             )}
 
             {/* For filter jobs */}

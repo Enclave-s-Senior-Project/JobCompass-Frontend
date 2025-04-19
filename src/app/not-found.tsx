@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 
 export default function Layout() {
     return (
-        <div className="flex flex-col min-h-dvh">
+        <div className="flex min-h-dvh flex-col">
             <HeaderSection />
             <NotFound />
             <FooterSection />
@@ -20,11 +20,11 @@ export default function Layout() {
 
 export function NotFound() {
     return (
-        <div className="min-h-[60vh] flex items-center justify-center p-4">
-            <div className="max-w-5xl w-[80%] flex flex-col md:flex-row items-center justify-center gap-4">
+        <div className="flex min-h-[60vh] items-center justify-center p-4">
+            <div className="flex w-[80%] max-w-5xl flex-col items-center justify-center gap-4 md:flex-row">
                 <div className="max-w-md">
-                    <h1 className="text-3xl md:text-4xl font-bold mb-4">Opps! Page not found</h1>
-                    <p className="text-muted-foreground mb-8">
+                    <h1 className="mb-4 text-3xl font-bold md:text-4xl">Opps! Page not found</h1>
+                    <p className="mb-8 text-muted-foreground">
                         Something went wrong. It&apos;s look like the link is broken or the page is removed.
                     </p>
                     <div className="flex gap-4">
@@ -45,7 +45,7 @@ export function NotFound() {
                         width={500}
                         height={500}
                         priority
-                        className="w-full h-auto"
+                        className="h-auto w-full"
                     />
                 </div>
             </div>

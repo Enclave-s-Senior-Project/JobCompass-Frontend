@@ -100,7 +100,7 @@ const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChang
         <div className="relative w-full" ref={dropdownRef}>
             <div
                 className={clsx(
-                    'flex items-center flex-wrap gap-2 border shadow-sm rounded-md p-2 bg-white h-12 transition-all w-full', 
+                    'flex h-12 w-full flex-wrap items-center gap-2 rounded-md border bg-white p-2 shadow-sm transition-all',
                     error
                         ? 'border-2 border-danger ring-danger'
                         : 'focus-within:border-primary focus-within:ring-1 focus-within:ring-primary'
@@ -109,16 +109,16 @@ const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChang
                 {selectedItems.map((item) => (
                     <div
                         key={item.tagId}
-                        className="flex items-center bg-gray-100 px-2 py-1 rounded-md text-sm max-w-[120px] truncate"
+                        className="flex max-w-[120px] items-center truncate rounded-md bg-gray-100 px-2 py-1 text-sm"
                         title={item.name}
                     >
                         <span className="mr-2 truncate">{item.name}</span>
                         <button
                             type="button"
-                            className="text-gray-500 hover:text-gray-700 w-4 h-4 flex items-center justify-center"
+                            className="flex h-4 w-4 items-center justify-center text-gray-500 hover:text-gray-700"
                             onClick={() => handleRemove(item.tagId)}
                         >
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
@@ -130,7 +130,7 @@ const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChang
                     </div>
                 ))}
                 <input
-                    className="flex-1 border-none outline-none min-w-[100px] sm:min-w-[120px] bg-transparent text-sm"
+                    className="min-w-[100px] flex-1 border-none bg-transparent text-sm outline-none sm:min-w-[120px]"
                     placeholder={selectedItems.length === 0 ? 'Select tags...' : ''}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -141,30 +141,30 @@ const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChang
 
             {showDropdown && (
                 <Card
-                    className="absolute z-10 w-full mt-1 max-h-60 overflow-auto shadow-lg rounded-md bg-white"
+                    className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white shadow-lg"
                     id="search-dropdown"
                     role="listbox"
                 >
                     <CardContent className="p-1">
                         {isLoading ? (
-                            <p className="p-2 text-gray-500 text-sm">Loading...</p>
+                            <p className="p-2 text-sm text-gray-500">Loading...</p>
                         ) : options.length > 0 ? (
                             options.map((option) => (
                                 <div
                                     key={option.tagId}
-                                    className="p-2 flex items-center justify-between cursor-pointer hover:bg-gray-100 rounded-sm transition-all"
+                                    className="flex cursor-pointer items-center justify-between rounded-sm p-2 transition-all hover:bg-gray-100"
                                     onClick={() => handleSelect(option)}
                                     role="option"
                                     aria-selected={selectedItems.some((i) => i.tagId === option.tagId)}
                                 >
                                     <span className="truncate">{option.name}</span>
                                     {selectedItems.some((i) => i.tagId === option.tagId) && (
-                                        <Check className="w-4 h-4 text-primary" />
+                                        <Check className="h-4 w-4 text-primary" />
                                     )}
                                 </div>
                             ))
                         ) : (
-                            <p className="p-2 text-gray-500 text-sm">No tags found</p>
+                            <p className="p-2 text-sm text-gray-500">No tags found</p>
                         )}
                     </CardContent>
                 </Card>

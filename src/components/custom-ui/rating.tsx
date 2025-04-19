@@ -48,7 +48,7 @@ export const Rating = ({ stars = 5, value = 3, setValue, size = 'md', className,
                         <GoStarFill
                             className={clsx(
                                 'transition-all',
-                                interactive ? 'hover:scale-125 cursor-pointer' : 'cursor-default',
+                                interactive ? 'cursor-pointer hover:scale-125' : 'cursor-default',
                                 index + 1 <= current ? `text-warning-500` : 'text-gray-400',
                                 size === 'xs'
                                     ? 'size-5'

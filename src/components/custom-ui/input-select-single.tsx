@@ -94,11 +94,11 @@ const InputSelectSingle = memo(
                 tabIndex={0} // Makes the div focusable
                 onBlur={handleWrapperBlur}
                 className={cn(
-                    'h-12 relative rounded-sm border border-input shadow-sm transition-all',
+                    'relative h-12 rounded-sm border border-input shadow-sm transition-all',
                     className,
                     disabled
                         ? 'cursor-not-allowed border-gray-50'
-                        : 'focus-within:ring-1 focus-within:ring-primary-500 focus-within:border-primary-500 '
+                        : 'focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-primary-500'
                 )}
             >
                 <Input
@@ -108,7 +108,7 @@ const InputSelectSingle = memo(
                         onChangeInputValue(e.target.value);
                         setIsBlur(false);
                     }}
-                    className="h-12 w-full rounded-sm shadow-none ring-0 border-0 transition-none focus-visible:border-0 focus-visible:ring-0"
+                    className="h-12 w-full rounded-sm border-0 shadow-none ring-0 transition-none focus-visible:border-0 focus-visible:ring-0"
                     onFocus={() => {
                         setOpen(true);
                         setIsBlur(false);
@@ -117,11 +117,11 @@ const InputSelectSingle = memo(
                 />
                 <Card
                     className={clsx(
-                        'p-0 max-h-96 overflow-y-auto absolute -left-0.5 -right-0.5 z-40 mt-1 rounded-md transition-all',
+                        'absolute -left-0.5 -right-0.5 z-40 mt-1 max-h-96 overflow-y-auto rounded-md p-0 transition-all',
                         open ? 'visible opacity-100' : 'invisible opacity-0'
                     )}
                 >
-                    <CardContent className="py-1 px-1">
+                    <CardContent className="px-1 py-1">
                         {categories.length === 0 ? (
                             <div className="py-6 text-center text-sm text-gray-500">No items found.</div>
                         ) : (
@@ -129,7 +129,7 @@ const InputSelectSingle = memo(
                                 <div
                                     key={category.value}
                                     className={cn(
-                                        'flex items-center px-2 py-1.5 text-sm cursor-pointer hover:bg-zinc-100 rounded-sm',
+                                        'flex cursor-pointer items-center rounded-sm px-2 py-1.5 text-sm hover:bg-zinc-100',
                                         category.className
                                     )}
                                     onClick={() => handleSelectItem(category)}

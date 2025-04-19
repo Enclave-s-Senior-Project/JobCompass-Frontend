@@ -43,22 +43,22 @@ export default function CardEnterprisesHorizontal() {
     });
 
     return (
-        <motion.div className="space-y-6 w-full pt-10 py-5">
+        <motion.div className="w-full space-y-6 py-5 pt-10">
             {isPending ? (
                 [...Array(ITEM_PER_PAGE)].map((_, i) => (
                     <div key={i} className="flex items-center space-x-2">
                         <Skeleton className="h-20 w-20 rounded-md" />
-                        <div className="space-y-2 h-20 flex-1 flex flex-col">
+                        <div className="flex h-20 flex-1 flex-col space-y-2">
                             <Skeleton className="h-5 w-full" />
-                            <Skeleton className="flex-1 w-full" />
+                            <Skeleton className="w-full flex-1" />
                         </div>
                     </div>
                 ))
             ) : !resultQuery?.data?.length ? (
-                <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4">
-                    <FileX className="h-16 w-16 text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-semibold text-foreground mb-2">No enterprises found</h3>
-                    <p className="text-muted-foreground max-w-[500px]">
+                <div className="flex min-h-[50vh] flex-col items-center justify-center px-4 text-center">
+                    <FileX className="mb-4 h-16 w-16 text-muted-foreground" />
+                    <h3 className="mb-2 text-lg font-semibold text-foreground">No enterprises found</h3>
+                    <p className="max-w-[500px] text-muted-foreground">
                         Currently, there are no enterprises listed. Please check back later or try searching with
                         different criteria.
                     </p>
@@ -67,7 +67,7 @@ export default function CardEnterprisesHorizontal() {
                 resultQuery.data.map((enterprise) => (
                     <motion.div
                         key={enterprise.enterpriseId}
-                        className="w-full flex gap-8 flex-wrap items-center justify-between p-5 border-2 rounded-xl border-gray-100 hover:border-primary hover:shadow-lg transition-colors"
+                        className="flex w-full flex-wrap items-center justify-between gap-8 rounded-xl border-2 border-gray-100 p-5 transition-colors hover:border-primary hover:shadow-lg"
                         variants={motionVariant.itemVariants}
                         initial="hidden"
                         whileInView="visible"
@@ -75,18 +75,18 @@ export default function CardEnterprisesHorizontal() {
                         whileHover={{ y: -2 }}
                     >
                         <div className="flex items-center gap-5">
-                            <div className="w-16 h-16 bg-slate-100 rounded-lg flex items-center justify-center">
+                            <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-slate-100">
                                 <img
                                     loading="lazy"
                                     src={enterprise?.logoUrl || ''}
                                     alt={enterprise?.name || 'Company Logo'}
-                                    className="w-[68px] h-[68px] object-cover rounded-md"
+                                    className="h-[68px] w-[68px] rounded-md object-cover"
                                 />
                             </div>
                             <div className="space-y-3">
-                                <h3 className="font-semibold text-xl flex items-center gap-2">
+                                <h3 className="flex items-center gap-2 text-xl font-semibold">
                                     {enterprise.name}&nbsp;
-                                    <Badge className="cursor-default bg-primary-100 text-primary hover:text-white border-none rounded-xl px-4 shadow-none">
+                                    <Badge className="cursor-default rounded-xl border-none bg-primary-100 px-4 text-primary shadow-none hover:text-white">
                                         {enterprise.organizationType}
                                     </Badge>
                                 </h3>
@@ -113,7 +113,7 @@ export default function CardEnterprisesHorizontal() {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex-1 flex items-center justify-end gap-3">
+                        <div className="flex flex-1 items-center justify-end gap-3">
                             {/* <Button className="group" variant="third" size="lg">
                                 Apply Now <LuArrowRight className="group-hover:translate-x-2 transition-all" />
                             </Button> */}
@@ -125,7 +125,7 @@ export default function CardEnterprisesHorizontal() {
                                     router.push(`/enterprises/${enterprise?.enterpriseId}`);
                                 }}
                             >
-                                View Detail <LuArrowRight className="group-hover:translate-x-2 transition-all" />
+                                View Detail <LuArrowRight className="transition-all group-hover:translate-x-2" />
                             </Button>
                         </div>
                     </motion.div>

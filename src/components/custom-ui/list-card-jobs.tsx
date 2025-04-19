@@ -64,11 +64,11 @@ export default function ListCardJobs(props: {
             <div className={viewType === 'grid' ? 'container mx-auto max-w-screen-xl' : ''}>
                 {isPending ? (
                     viewType === 'grid' ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-6 place-items-center">
+                        <div className="grid grid-cols-1 place-items-center gap-x-5 gap-y-6 md:grid-cols-2 lg:grid-cols-3">
                             {[...Array(ITEM_PER_PAGE)].map((_, i) => (
                                 <Skeleton
                                     key={i}
-                                    className="w-[414px] h-[204px] sm:w-[350px] sm:h-[180px] md:w-[400px] md:h-[200px] lg:w-[414px] lg:h-[204px] rounded-md"
+                                    className="h-[204px] w-[414px] rounded-md sm:h-[180px] sm:w-[350px] md:h-[200px] md:w-[400px] lg:h-[204px] lg:w-[414px]"
                                 />
                             ))}
                         </div>
@@ -77,10 +77,10 @@ export default function ListCardJobs(props: {
                             {[...Array(ITEM_PER_PAGE)].map((_, i) => (
                                 <div
                                     key={i}
-                                    className="flex items-center space-x-2 w-full max-w-2xl p-4 border rounded-md"
+                                    className="flex w-full max-w-2xl items-center space-x-2 rounded-md border p-4"
                                 >
                                     <Skeleton className="h-14 w-14 rounded-sm" />
-                                    <div className="space-y-2 flex-1 flex flex-col">
+                                    <div className="flex flex-1 flex-col space-y-2">
                                         <Skeleton className="h-6 w-2/3" />
                                         <Skeleton className="h-4 w-full" />
                                     </div>
@@ -89,10 +89,10 @@ export default function ListCardJobs(props: {
                         </div>
                     )
                 ) : !data?.length ? (
-                    <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4">
-                        <FileX className="h-16 w-16 text-muted-foreground mb-4" />
-                        <h3 className="text-lg font-semibold text-foreground mb-2">No jobs found</h3>
-                        <p className="text-muted-foreground max-w-[500px]">
+                    <div className="flex min-h-[50vh] flex-col items-center justify-center px-4 text-center">
+                        <FileX className="mb-4 h-16 w-16 text-muted-foreground" />
+                        <h3 className="mb-2 text-lg font-semibold text-foreground">No jobs found</h3>
+                        <p className="max-w-[500px] text-muted-foreground">
                             Currently, there are no jobs posted. Please check back later or try searching with different
                             criteria.
                         </p>
@@ -114,7 +114,7 @@ export default function ListCardJobs(props: {
                                         temp={false}
                                     />
                                 </div>
-                                <div className="sticky top-0 left-0 col-span-3 h-[calc(100vh-50px)]">
+                                <div className="sticky left-0 top-0 col-span-3 h-[calc(100vh-50px)]">
                                     {jobDetails && <JobQuickView job={jobDetails} />}
                                 </div>
                             </div>

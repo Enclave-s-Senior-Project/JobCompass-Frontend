@@ -40,10 +40,10 @@ export function FormEmailVerify() {
         }
     }, [state.success, state.errors, router, state.email]);
     return (
-        <form className="h-full flex flex-col items-center justify-center px-4 text-center" action={onSubmit}>
+        <form className="flex h-full flex-col items-center justify-center px-4 text-center" action={onSubmit}>
             <div className="flex flex-col items-center justify-center">
-                <div className="max-w-[536px] space-y-9 text-center px-5 md:px-0">
-                    <h1 className="text-[32px] leading-[40px] font-inter font-medium">Email Verification</h1>
+                <div className="max-w-[536px] space-y-9 px-5 text-center md:px-0">
+                    <h1 className="font-inter text-[32px] font-medium leading-[40px]">Email Verification</h1>
 
                     <p className="font-inter text-base leading-6 text-muted-foreground">
                         We&apos;ve sent a verification to <span className="font-medium text-foreground">{email}</span>{' '}
@@ -65,7 +65,7 @@ export function FormEmailVerify() {
                         className="group w-full rounded-sm text-base font-semibold"
                         isPending={isPending}
                     >
-                        Verify My Account <LuArrowRight className="group-hover:translate-x-2 transition-all" />
+                        Verify My Account <LuArrowRight className="transition-all group-hover:translate-x-2" />
                     </Button>
 
                     <p className="text-sm">

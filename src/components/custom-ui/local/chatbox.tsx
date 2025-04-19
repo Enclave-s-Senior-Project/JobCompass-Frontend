@@ -93,18 +93,18 @@ const ChatBox = memo(() => {
     };
 
     return (
-        <Card className="max-w-96 w-full h-[500px] flex flex-col rounded-md shadow-xl drop-shadow-xl">
-            <CardHeader className="px-4 py-3 border-b">
+        <Card className="flex h-[500px] w-full max-w-96 flex-col rounded-md shadow-xl drop-shadow-xl">
+            <CardHeader className="border-b px-4 py-3">
                 <CardTitle className="text-lg font-medium">Chat with AI Assistant</CardTitle>
             </CardHeader>
-            <CardContent className="flex-1 p-0 overflow-hidden">
+            <CardContent className="flex-1 overflow-hidden p-0">
                 <ScrollArea className="h-[380px] p-4">
                     <div className="flex flex-col gap-x-3 gap-y-4">
                         {messages.map((message) => (
                             <div
                                 key={message.id}
                                 className={cn(
-                                    'flex items-start gap-2 max-w-[80%]',
+                                    'flex max-w-[80%] items-start gap-2',
                                     message.sender === 'user' ? 'ml-auto' : ''
                                 )}
                             >
@@ -120,16 +120,16 @@ const ChatBox = memo(() => {
                                 )}
                                 <div
                                     className={cn(
-                                        'relative min-w-14 max-w-full text-wrap break-words rounded-b-xl px-3 py-2 text-sm cursor-pointer transition-all',
+                                        'relative min-w-14 max-w-full cursor-pointer text-wrap break-words rounded-b-xl px-3 py-2 text-sm transition-all',
                                         message.sender === 'user'
-                                            ? 'rounded-t-none rounded-tl-2xl bg-primary hover:bg-primary-600 text-primary-foreground'
-                                            : 'text-start rounded-t-none rounded-tr-2xl bg-gray-50 hover:bg-gray-100 '
+                                            ? 'rounded-t-none rounded-tl-2xl bg-primary text-primary-foreground hover:bg-primary-600'
+                                            : 'rounded-t-none rounded-tr-2xl bg-gray-50 text-start hover:bg-gray-100'
                                     )}
                                 >
                                     {message.content}
                                     <span
                                         className={cn(
-                                            'absolute -bottom-4 text-[10px] text-gray-500 italic',
+                                            'absolute -bottom-4 text-[10px] italic text-gray-500',
                                             message.sender === 'user' ? 'right-2' : 'left-2'
                                         )}
                                     >
@@ -148,14 +148,14 @@ const ChatBox = memo(() => {
                     </div>
                 </ScrollArea>
             </CardContent>
-            <CardFooter className="p-3 border-t">
+            <CardFooter className="border-t p-3">
                 <div className="flex w-full items-center gap-2">
                     <Input
                         placeholder="Type a message..."
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        className="h-12 rounded-md focus-visible:ring-1 focus-visible:border focus-visible:border-primary-500 focus-visible:ring-primary-500 shadow-none transition-all"
+                        className="h-12 rounded-md shadow-none transition-all focus-visible:border focus-visible:border-primary-500 focus-visible:ring-1 focus-visible:ring-primary-500"
                     />
                     <Button
                         size="icon-lg"

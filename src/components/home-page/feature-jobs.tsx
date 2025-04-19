@@ -40,7 +40,7 @@ export function FeatureJobs() {
         <HomePart
             title="Featured jobs"
             linkNode={
-                <Link href="#" className="text-primary flex items-center gap-2">
+                <Link href="#" className="flex items-center gap-2 text-primary">
                     View all <ArrowRight className="h-4 w-4" />
                 </Link>
             }
@@ -55,10 +55,10 @@ export function FeatureJobs() {
                 {jobs.map((job, index) => (
                     <div
                         key={index}
-                        className="flex gap-8 flex-wrap items-center justify-between p-8 rounded-xl border-2 border-gray-100 hover:border-primary transition-colors"
+                        className="flex flex-wrap items-center justify-between gap-8 rounded-xl border-2 border-gray-100 p-8 transition-colors hover:border-primary"
                     >
                         <div className="flex items-center gap-5">
-                            <div className="w-16 h-w-16 bg-slate-100 rounded-lg flex items-center justify-center">
+                            <div className="h-w-16 flex w-16 items-center justify-center rounded-lg bg-slate-100">
                                 <svg
                                     width="68"
                                     height="68"
@@ -74,9 +74,9 @@ export function FeatureJobs() {
                                 </svg>
                             </div>
                             <div className="space-y-3">
-                                <h3 className="font-semibold text-xl flex items-center gap-2">
+                                <h3 className="flex items-center gap-2 text-xl font-semibold">
                                     {job.title}&nbsp;
-                                    <Badge className="bg-primary-100 text-primary border-none rounded-xl px-4 shadow-none">
+                                    <Badge className="rounded-xl border-none bg-primary-100 px-4 text-primary shadow-none">
                                         {job.type}
                                     </Badge>
                                 </h3>
@@ -93,10 +93,10 @@ export function FeatureJobs() {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex-1 flex items-center justify-end gap-3">
+                        <div className="flex flex-1 items-center justify-end gap-3">
                             <ButtonMark />
                             <Button className="group" variant="secondary" size="xl">
-                                Apply Now <LuArrowRight className="group-hover:translate-x-2 transition-all" />
+                                Apply Now <LuArrowRight className="transition-all group-hover:translate-x-2" />
                             </Button>
                         </div>
                     </div>

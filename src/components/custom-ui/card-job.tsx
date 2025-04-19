@@ -43,43 +43,38 @@ export default function CardJob(props: { job: Job }) {
     return (
         <Link href={`/single-job/${job.jobId}`}>
             <motion.div
-                className="bg-white rounded-md p-6 border-2 hover:border-[#0A65CC] transition-shadow flex flex-col justify-center 
-                w-[414px] h-[204px] 
-                sm:w-[350px] sm:h-[180px] 
-                md:w-[400px] md:h-[200px] 
-                lg:w-[414px] lg:h-[204px] 
-                xl:w-[414px] xl:h-[204px]"
+                className="flex h-[204px] w-[414px] flex-col justify-center rounded-md border-2 bg-white p-6 transition-shadow hover:border-[#0A65CC] sm:h-[180px] sm:w-[350px] md:h-[200px] md:w-[400px] lg:h-[204px] lg:w-[414px] xl:h-[204px] xl:w-[414px]"
                 variants={motionVariant.containerVariants}
                 initial="hidden"
                 animate="visible"
                 whileHover="hover"
             >
-                <div className="flex items-start justify-between mb-4 ">
+                <div className="mb-4 flex items-start justify-between">
                     <div className="flex items-start gap-4">
-                        <div className=" relative rounded-lg overflow-hidden border-none flex-shrink-0 bg-gray-50">
+                        <div className="relative flex-shrink-0 overflow-hidden rounded-lg border-none bg-gray-50">
                             <img
                                 src={job.enterprise?.logoUrl || ''}
                                 width={48}
                                 height={48}
-                                className="w-14 h-14 object-cover rounded-sm"
+                                className="h-14 w-14 rounded-sm object-cover"
                                 alt={job.enterprise?.name}
                             />
                         </div>
 
                         <div className="gap-4">
-                            <div className="flex items-center gap-2 mb-1 min-h-[20px]">
+                            <div className="mb-1 flex min-h-[20px] items-center gap-2">
                                 <ListTag tag={job?.tags ?? []} />
                             </div>
                             <div className="flex items-center text-sm text-gray-500">
-                                <MapPin className="h-4 w-4 mr-1 flex-shrink-0 text-[#939AAD]" />
-                                <span className=" text-[#939AAD]">{addresses}</span>
+                                <MapPin className="mr-1 h-4 w-4 flex-shrink-0 text-[#939AAD]" />
+                                <span className="text-[#939AAD]">{addresses}</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="space-y-[8px] ">
-                    <h2 className=" text-blue-600 text-[20px]/[32px] font-medium">{job.name}</h2>
+                <div className="space-y-[8px]">
+                    <h2 className="text-[20px]/[32px] font-medium text-blue-600">{job.name}</h2>
                     {infoItems.length > 0 && (
                         <div className="flex items-center gap-2 text-sm text-[#636A80]">
                             {infoItems.map((item, index) => (

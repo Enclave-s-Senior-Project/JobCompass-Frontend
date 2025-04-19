@@ -93,7 +93,7 @@ export default function PostJobForm() {
     return (
         <div className="container mx-auto">
             <div className="border-b">
-                <h1 className="text-2xl font-bold mb-3 ">Post a job</h1>
+                <h1 className="mb-3 text-2xl font-bold">Post a job</h1>
             </div>
             <form
                 action={(formData) => {
@@ -111,14 +111,14 @@ export default function PostJobForm() {
                 }}
                 className="space-y-4 bg-white pt-3"
             >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div className="flex flex-col gap-y-2">
                         <div className="text-base font-medium">
                             <h1>Job Title</h1>
                         </div>
                         <Input
                             className={clsx(
-                                'h-12 rounded-sm w-full',
+                                'h-12 w-full rounded-sm',
                                 state.errors?.title
                                     ? 'border-2 border-danger ring-danger'
                                     : 'focus-visible:border-primary focus-visible:ring-primary'
@@ -126,14 +126,14 @@ export default function PostJobForm() {
                             defaultValue={state.title}
                             name="title"
                         />
-                        <p className="text-red-500 text-[12px] font-medium">
+                        <p className="text-[12px] font-medium text-red-500">
                             {state.errors?.title && state.errors.title[0]}
                         </p>
                     </div>
 
                     <div className="flex flex-col gap-y-2">
                         <h1 className="text-base font-medium">Tag</h1>
-                        <div className="flex flex-col sm:flex-row gap-2">
+                        <div className="flex flex-col gap-2 sm:flex-row">
                             <div className="flex-1">
                                 <MultiSelectSearchInput
                                     onChange={(newTagIds: string[]) => setSelectedTags(newTagIds)}
@@ -144,20 +144,20 @@ export default function PostJobForm() {
                                 <DialogAddTag refetch={refetch} />
                             </div>
                         </div>
-                        <p className="text-red-500 text-[12px] font-medium">
+                        <p className="text-[12px] font-medium text-red-500">
                             {state.errors?.tags && state.errors.tags[0]}
                         </p>
                     </div>
                 </div>
                 <div className="flex flex-col gap-y-2">
-                    <h1 className="text-base font-medium flex items-center gap-2">
+                    <h1 className="flex items-center gap-2 text-base font-medium">
                         <MapPinHouse className="h-5 w-5 text-gray-400" />
                         Address
                     </h1>
                     <Select name="address">
                         <SelectTrigger
                             className={clsx(
-                                'h-12 text-base rounded-sm',
+                                'h-12 rounded-sm text-base',
                                 state.errors?.address
                                     ? 'border-2 border-danger focus:border-danger focus:ring-0'
                                     : 'focus:border-primary focus:ring-primary'
@@ -180,22 +180,22 @@ export default function PostJobForm() {
                         </SelectContent>
                     </Select>
 
-                    <p className=" text-red-500 text-[12px] font-medium ">
+                    <p className="text-[12px] font-medium text-red-500">
                         {state.errors?.address && state.errors.address[0]}
                     </p>
                 </div>
 
                 <div className="space-y-4">
-                    <h2 className="text-lg font-semibold flex items-center">
+                    <h2 className="flex items-center text-lg font-semibold">
                         <DollarSign className="mr-2 h-5 w-5 text-gray-500" />
                         Salary
                     </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div className="flex flex-col gap-y-2">
                             <h1 className="text-base font-medium">Min Salary</h1>
 
                             <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                     <DollarSign className="h-5 w-5 text-gray-400" />
                                 </div>
 
@@ -212,7 +212,7 @@ export default function PostJobForm() {
                                 />
                             </div>
 
-                            <p className="text-red-500 text-[12px] font-medium">
+                            <p className="text-[12px] font-medium text-red-500">
                                 {state.errors?.minSalary && state.errors.minSalary[0]}
                             </p>
                         </div>
@@ -220,7 +220,7 @@ export default function PostJobForm() {
                             <h1 className="text-base font-medium">Max Salary</h1>
 
                             <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                     <DollarSign className="h-5 w-5 text-gray-400" />
                                 </div>
 
@@ -237,7 +237,7 @@ export default function PostJobForm() {
                                 />
                             </div>
 
-                            <p className="text-red-500 text-[12px] font-medium">
+                            <p className="text-[12px] font-medium text-red-500">
                                 {state.errors?.maxSalary && state.errors.maxSalary[0]}
                             </p>
                         </div>
@@ -245,17 +245,17 @@ export default function PostJobForm() {
                 </div>
 
                 <div className="space-y-4">
-                    <h2 className="text-lg font-semibold flex items-center">
+                    <h2 className="flex items-center text-lg font-semibold">
                         <FileText className="mr-2 h-5 w-5 text-gray-500" />
                         Advanced Information
                     </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                         <div className="flex flex-col gap-y-2">
                             <h1 className="text-base font-medium">Education</h1>
                             <Select name="education">
                                 <SelectTrigger
                                     className={clsx(
-                                        'h-12 text-base rounded-sm',
+                                        'h-12 rounded-sm text-base',
                                         state.errors?.education
                                             ? 'border-2 border-danger focus:border-danger focus:ring-0'
                                             : 'focus:border-primary focus:ring-primary'
@@ -271,7 +271,7 @@ export default function PostJobForm() {
                                     ))}
                                 </SelectContent>
                             </Select>
-                            <p className="text-red-500 text-[12px] font-medium">
+                            <p className="text-[12px] font-medium text-red-500">
                                 {state.errors?.education && state.errors.education[0]}
                             </p>
                         </div>
@@ -288,7 +288,7 @@ export default function PostJobForm() {
                                 defaultValue={state.experience}
                                 name="experience"
                             />
-                            <p className=" text-red-500 text-[12px] font-medium ">
+                            <p className="text-[12px] font-medium text-red-500">
                                 {state.errors?.experience && state.errors.experience[0]}
                             </p>
                         </div>
@@ -297,7 +297,7 @@ export default function PostJobForm() {
                             <Select name="jobType">
                                 <SelectTrigger
                                     className={clsx(
-                                        'h-12 text-base rounded-sm',
+                                        'h-12 rounded-sm text-base',
                                         state.errors?.jobType
                                             ? 'border-2 border-danger focus:border-danger focus:ring-0'
                                             : 'focus:border-primary focus:ring-primary'
@@ -313,7 +313,7 @@ export default function PostJobForm() {
                                     ))}
                                 </SelectContent>
                             </Select>
-                            <p className=" text-red-500 text-[12px] font-medium ">
+                            <p className="text-[12px] font-medium text-red-500">
                                 {state.errors?.jobType && state.errors.jobType[0]}
                             </p>
                         </div>
@@ -332,7 +332,7 @@ export default function PostJobForm() {
                                     defaultValue={state.expirationDate}
                                 />
                             </div>
-                            <p className=" text-red-500 text-[12px] font-medium ">
+                            <p className="text-[12px] font-medium text-red-500">
                                 {state.errors?.expirationDate && state.errors.expirationDate[0]}
                             </p>
                         </div>
@@ -341,7 +341,7 @@ export default function PostJobForm() {
                             <Select name="category" onValueChange={handleCategoryChange}>
                                 <SelectTrigger
                                     className={clsx(
-                                        'h-12 text-base rounded-sm',
+                                        'h-12 rounded-sm text-base',
                                         state.errors?.category
                                             ? 'border-2 border-danger focus:border-danger focus:ring-0'
                                             : 'focus:border-primary focus:ring-primary'
@@ -357,7 +357,7 @@ export default function PostJobForm() {
                                     ))}
                                 </SelectContent>
                             </Select>
-                            <p className=" text-red-500 text-[12px] font-medium ">
+                            <p className="text-[12px] font-medium text-red-500">
                                 {state.errors?.category && state.errors.category[0]}
                             </p>
                         </div>
@@ -369,7 +369,7 @@ export default function PostJobForm() {
                                 onChange={(newTagIds: string[]) => setJobSpecializations(newTagIds)}
                                 error={state.errors?.specializations}
                             />
-                            <p className=" text-red-500 text-[12px] font-medium ">
+                            <p className="text-[12px] font-medium text-red-500">
                                 {state.errors?.specializations && state.errors.specializations[0]}
                             </p>
                         </div>
@@ -377,10 +377,10 @@ export default function PostJobForm() {
                 </div>
 
                 <div className="space-y-4">
-                    <h2 className="text-lg font-semibold flex items-center">Description & Responsibility</h2>
+                    <h2 className="flex items-center text-lg font-semibold">Description & Responsibility</h2>
                     <div className="space-y-6">
                         <div className="flex flex-col gap-y-2">
-                            <h1 className="text-base font-medium flex items-center">
+                            <h1 className="flex items-center text-base font-medium">
                                 <FileText className="mr-2 h-5 w-5 text-gray-500" />
                                 Description
                             </h1>
@@ -390,14 +390,14 @@ export default function PostJobForm() {
                                     initialContent={description}
                                     hasError={!!state.errors?.description}
                                 />
-                                <p className=" text-red-500 text-[12px] font-medium ">
+                                <p className="text-[12px] font-medium text-red-500">
                                     {state.errors?.description && state.errors.description[0]}
                                 </p>
                             </div>
                         </div>
 
                         <div className="flex flex-col gap-y-2">
-                            <h1 className="text-base font-medium flex items-center">
+                            <h1 className="flex items-center text-base font-medium">
                                 <FileText className="mr-2 h-5 w-5 text-gray-500" />
                                 Responsibilities
                             </h1>
@@ -408,12 +408,12 @@ export default function PostJobForm() {
                                     hasError={!!state.errors?.responsibilities}
                                 />
                             </div>
-                            <p className=" text-red-500 text-[12px] font-medium ">
+                            <p className="text-[12px] font-medium text-red-500">
                                 {state.errors?.responsibilities && state.errors.responsibilities[0]}
                             </p>
                         </div>
                         <div className="flex flex-col gap-y-2">
-                            <h1 className="text-lg font-semibold flex items-center">
+                            <h1 className="flex items-center text-lg font-semibold">
                                 <Gift className="mr-2 h-5 w-5 text-gray-500" />
                                 Benefits
                             </h1>
@@ -424,12 +424,12 @@ export default function PostJobForm() {
                                     hasError={!!state.errors?.benefit}
                                 />
                             </div>
-                            <p className=" text-red-500 text-[12px] font-medium ">
+                            <p className="text-[12px] font-medium text-red-500">
                                 {state.errors?.benefit && state.errors.benefit[0]}
                             </p>
                         </div>
                         <div className="flex flex-col gap-y-2">
-                            <h1 className="text-lg font-semibold flex items-center">
+                            <h1 className="flex items-center text-lg font-semibold">
                                 <ListChecks className="mr-2 h-5 w-5 text-gray-500" />
                                 Requirements
                             </h1>
@@ -440,7 +440,7 @@ export default function PostJobForm() {
                                     hasError={!!state.errors?.requirements}
                                 />
                             </div>
-                            <p className=" text-red-500 text-[12px] font-medium ">
+                            <p className="text-[12px] font-medium text-red-500">
                                 {state.errors?.requirements && state.errors.requirements[0]}
                             </p>
                         </div>
@@ -448,7 +448,7 @@ export default function PostJobForm() {
                 </div>
 
                 <Button type="submit" className="group w-full md:w-auto">
-                    Post Job <LuArrowRight className="group-hover:translate-x-2 transition-all duration-100" />
+                    Post Job <LuArrowRight className="transition-all duration-100 group-hover:translate-x-2" />
                 </Button>
             </form>
         </div>

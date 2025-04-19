@@ -191,7 +191,7 @@ export default function FilterSidebarCandidate({ onOpenChange, open, filters, on
                         </Select>
                     </div>
                 </div>
-                <SheetFooter className="mt-6 flex-col sm:flex-row gap-2">
+                <SheetFooter className="mt-6 flex-col gap-2 sm:flex-row">
                     <Button variant="outline" onClick={resetFilters} className="w-full sm:w-auto">
                         Reset Filters
                     </Button>

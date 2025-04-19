@@ -13,7 +13,7 @@ export function DialogAddTag({ refetch }: { refetch: () => void }) {
             <Button
                 type="button"
                 onClick={() => setOpen(true)}
-                className="w-full sm:w-auto h-12 text-[16px] px-4"
+                className="h-12 w-full px-4 text-[16px] sm:w-auto"
                 variant="outline"
             >
                 Add Tag

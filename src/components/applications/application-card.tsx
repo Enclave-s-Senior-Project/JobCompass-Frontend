@@ -32,9 +32,9 @@ export default function ApplicationCard({ applicant }: ApplicationCardProps) {
             style={style}
             {...attributes}
             {...listeners}
-            className="bg-card border rounded-sm p-4 cursor-grab active:cursor-grabbing touch-manipulation"
+            className="cursor-grab touch-manipulation rounded-sm border bg-card p-4 active:cursor-grabbing"
         >
-            <div className="flex items-center gap-3 mb-3">
+            <div className="mb-3 flex items-center gap-3">
                 <Avatar className="h-10 w-10">
                     <AvatarImage
                         src={applicant?.profile?.profileUrl}
@@ -51,7 +51,7 @@ export default function ApplicationCard({ applicant }: ApplicationCardProps) {
                 </div>
             </div>
 
-            <ul className="space-y-1 text-sm mb-3">
+            <ul className="mb-3 space-y-1 text-sm">
                 <li className="flex items-center gap-2">
                     <span className="text-muted-foreground">•</span>
                     <span>

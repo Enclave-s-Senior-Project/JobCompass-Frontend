@@ -10,29 +10,29 @@ type Props = {
 
 export default function UserRelatedInformation({ info }: Props) {
     return (
-        <div className="p-6 flex flex-wrap gap-y-6 rounded-md border-2 border-primary-50">
-            <div className="basis-1/2 w-1/2">
+        <div className="flex flex-wrap gap-y-6 rounded-md border-2 border-primary-50 p-6">
+            <div className="w-1/2 basis-1/2">
                 <PiCake className="mb-3 size-6 text-primary" />
-                <p className="mb-1 uppercase text-gray-500 text-[12px]">date of birth</p>
+                <p className="mb-1 text-[12px] uppercase text-gray-500">date of birth</p>
                 <p className="text-sm font-medium">
                     {info.dateOfBirth ? toFormattedDate(info.dateOfBirth) : 'Not specified'}
                 </p>
             </div>
-            <div className="basis-1/2 w-1/2">
+            <div className="w-1/2 basis-1/2">
                 <Map className="mb-3 size-6 text-primary" />
-                <p className="mb-1 uppercase text-gray-500 text-[12px]">nationality</p>
+                <p className="mb-1 text-[12px] uppercase text-gray-500">nationality</p>
                 <p className="text-sm">{info.nationality ? info.nationality : 'Not specified'}</p>
             </div>
-            <div className="basis-1/2 w-1/2">
+            <div className="w-1/2 basis-1/2">
                 <NotepadText className="mb-3 size-6 text-primary" />
-                <p className="mb-1 uppercase text-gray-500 text-[12px]">marital status</p>
+                <p className="mb-1 text-[12px] uppercase text-gray-500">marital status</p>
                 <p className="text-sm font-medium">
                     {info.maritalStatus ? capitalizeFirstLetter(info.maritalStatus) : 'Not specified'}
                 </p>
             </div>
-            <div className="basis-1/2 w-1/2">
+            <div className="w-1/2 basis-1/2">
                 <CircleUserRound className="mb-3 size-6 text-primary" />
-                <p className="mb-1 uppercase text-gray-500 text-[12px]">gender</p>
+                <p className="mb-1 text-[12px] uppercase text-gray-500">gender</p>
                 <p className="text-sm font-medium">
                     {info.gender ? capitalizeFirstLetter(info.gender) : 'Not specified'}
                 </p>

@@ -61,8 +61,8 @@ function NavLink({ href, label, isActive }: { href: string; label: string; isAct
         <Link
             href={href}
             className={clsx(
-                isActive ? 'text-primary font-medium lg:border-b-primary' : 'text-gray-600 font-normal',
-                'transition-all duration-200 py-2 lg:py-3 border-b-2 border-b-transparent text-base lg:text-sm hover:text-primary'
+                isActive ? 'font-medium text-primary lg:border-b-primary' : 'font-normal text-gray-600',
+                'border-b-2 border-b-transparent py-2 text-base transition-all duration-200 hover:text-primary lg:py-3 lg:text-sm'
             )}
         >
             {label}
@@ -75,7 +75,7 @@ export function Nav() {
     const { userInfo } = useContext(UserContext);
 
     return (
-        <nav className="nav-section flex flex-col lg:flex-row items-center gap-x-6">
+        <nav className="nav-section flex flex-col items-center gap-x-6 lg:flex-row">
             {commonNavigatePages.map((page, index) => {
                 const hasAccess = page.role === 'all' || hasPermission(userInfo, 'navigationBar', page.role);
 

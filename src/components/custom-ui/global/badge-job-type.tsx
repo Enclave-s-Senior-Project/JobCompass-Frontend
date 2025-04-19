@@ -7,13 +7,13 @@ export function BadgeJobType({ type }: { type: JobTypeEnum }) {
     return (
         <Badge
             className={clsx(
-                'cursor-default border-none rounded-xl px-4 shadow-none',
+                'cursor-default rounded-xl border-none px-4 shadow-none',
                 JobTypeEnum.FULL_TIME == type
-                    ? 'bg-primary-100 text-primary hover:text-white hover:bg-primary-400'
+                    ? 'bg-primary-100 text-primary hover:bg-primary-400 hover:text-white'
                     : JobTypeEnum.PART_TIME == type
-                      ? 'bg-green-100 text-green hover:text-white hover:bg-green-400'
+                      ? 'bg-green-100 text-green hover:bg-green-400 hover:text-white'
                       : JobTypeEnum.CONTRACT == type
-                        ? 'bg-warning-100 text-warning hover:text-white hover:bg-warning-400'
+                        ? 'bg-warning-100 text-warning hover:bg-warning-400 hover:text-white'
                         : ''
             )}
         >

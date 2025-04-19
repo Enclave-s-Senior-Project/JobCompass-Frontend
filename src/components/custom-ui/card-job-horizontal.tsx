@@ -28,7 +28,7 @@ export default function CardJobHorizontal(props: {
             : 'Unknown location';
     return (
         <motion.div
-            className="space-y-6 w-full rounded-md border-2 border-input hover:border-primary bg-white"
+            className="w-full space-y-6 rounded-md border-2 border-input bg-white hover:border-primary"
             variants={motionVariant.containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -37,24 +37,24 @@ export default function CardJobHorizontal(props: {
         >
             <div
                 className={clsx(
-                    'w-full flex gap-8 flex-wrap items-center justify-between p-5 border-2 rounded-xl hover:shadow-lg transition-colors',
+                    'flex w-full flex-wrap items-center justify-between gap-8 rounded-xl border-2 p-5 transition-colors hover:shadow-lg',
                     props.border ? 'border-2' : 'border-transparent'
                 )}
             >
                 <div className="flex items-center gap-5">
-                    <div className="w-16 h-w-16 bg-slate-100 rounded-lg flex items-center justify-center">
+                    <div className="h-w-16 flex w-16 items-center justify-center rounded-lg bg-slate-100">
                         <Link href={`/single-job/${job?.jobId}`}>
                             <img
                                 loading="lazy"
                                 src={job?.enterprise?.logoUrl || ''}
                                 alt={job?.enterprise?.name || 'Company Logo'}
-                                className="w-[68px] h-[68px] object-cover rounded-md"
+                                className="h-[68px] w-[68px] rounded-md object-cover"
                             />
                         </Link>
                     </div>
                     <div className="space-y-3">
                         <Link href={`/single-job/${job?.jobId}`}>
-                            <h3 className="font-semibold text-xl flex items-center gap-2 hover:underline">
+                            <h3 className="flex items-center gap-2 text-xl font-semibold hover:underline">
                                 {job?.name}&nbsp;
                                 {job?.type && <BadgeJobType type={job.type as JobTypeEnum} />}
                             </h3>
@@ -89,7 +89,7 @@ export default function CardJobHorizontal(props: {
                         </div>
                     </div>
                 </div>
-                <div className="flex-1 flex items-center justify-end gap-3">
+                <div className="flex flex-1 items-center justify-end gap-3">
                     {props.showMarkButton && (
                         <ButtonMark
                             handleUnMark={props.handleUnMark}
@@ -110,7 +110,7 @@ export default function CardJobHorizontal(props: {
                                     e.stopPropagation();
                                 }}
                             >
-                                Apply Now <LuArrowRight className="group-hover:translate-x-2 transition-all" />
+                                Apply Now <LuArrowRight className="transition-all group-hover:translate-x-2" />
                             </Button>
                         }
                     />

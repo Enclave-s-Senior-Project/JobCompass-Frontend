@@ -17,10 +17,10 @@ export default async function SignIn({ searchParams }: { searchParams?: Promise<
     return (
         <div className="space-y-8">
             <div>
-                <h5 className="mb-4 text-[32px] leading-10 font-medium">Sign in</h5>
+                <h5 className="mb-4 text-[32px] font-medium leading-10">Sign in</h5>
                 <p className="inline text-gray-600">Don&apos;t have account</p>
                 &nbsp;
-                <Link href={routes.signUp} className="text-primary font-medium">
+                <Link href={routes.signUp} className="font-medium text-primary">
                     Create account
                 </Link>
             </div>

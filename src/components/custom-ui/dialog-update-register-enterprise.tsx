@@ -26,18 +26,18 @@ export function DialogUpdateEnterprises(props: { enterprises: Enterprise | null 
                 type="button"
                 variant="outline-secondary"
                 onClick={handleDataEnterprise}
-                className="flex-1 md:flex-none w-[150px] h-12 text-[16px] shadow-none"
+                className="h-12 w-[150px] flex-1 text-[16px] shadow-none md:flex-none"
             >
                 Update
                 <ChevronRight className="ml-2 h-6 w-6" />
             </Button>
-            <DialogContent className="sm:max-w-[800px] px-2">
+            <DialogContent className="px-2 sm:max-w-[800px]">
                 <DialogHeader>
                     <div className="flex items-center justify-between">
                         <DialogTitle className="text-[18px]">Update Register Enterprise</DialogTitle>
                     </div>
                 </DialogHeader>
-                <div className="space-y-6 pt-4 max-h-[80vh] overflow-y-auto px-4">
+                <div className="max-h-[80vh] space-y-6 overflow-y-auto px-4 pt-4">
                     <FormUpdateRegisterEnterprises setOpen={setOpen} enterprises={enterprise} />
                 </div>
             </DialogContent>

@@ -30,9 +30,9 @@ export function HowItWorks() {
 
     return (
         <HomePart title="How JobCompass works">
-            <div className="py-5 relative grid gap-8 md:grid-cols-4">
+            <div className="relative grid gap-8 py-5 md:grid-cols-4">
                 {/* Curved Arrows for Desktop */}
-                <div className="absolute top-8 left-0 right-0 hidden md:block">
+                <div className="absolute left-0 right-0 top-8 hidden md:block">
                     {[...Array(3)].map((_, i) => (
                         <svg
                             key={i}

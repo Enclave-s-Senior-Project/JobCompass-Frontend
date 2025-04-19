@@ -126,14 +126,14 @@ export function EditJob(props: {
             }}
             className="space-y-4 bg-white"
         >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="flex flex-col gap-y-2">
                     <div className="text-base font-medium">
                         <h1>Job Title</h1>
                     </div>
                     <Input
                         className={clsx(
-                            'h-12 rounded-sm w-full',
+                            'h-12 w-full rounded-sm',
                             state.errors?.title
                                 ? 'border-2 border-danger ring-danger'
                                 : 'focus-visible:border-primary focus-visible:ring-primary'
@@ -141,14 +141,14 @@ export function EditJob(props: {
                         defaultValue={job.name}
                         name="title"
                     />
-                    <p className="text-red-500 text-[12px] font-medium">
+                    <p className="text-[12px] font-medium text-red-500">
                         {state.errors?.title && state.errors.title[0]}
                     </p>
                 </div>
 
                 <div className="flex flex-col gap-y-2">
                     <h1 className="text-base font-medium">Tag</h1>
-                    <div className="flex flex-col sm:flex-row gap-2">
+                    <div className="flex flex-col gap-2 sm:flex-row">
                         <div className="flex-1">
                             <MultiSelectSearchInput
                                 onChange={(newTagIds: string[]) => setSelectedTags(newTagIds)}
@@ -160,7 +160,7 @@ export function EditJob(props: {
                             <DialogAddTag refetch={refetch} />
                         </div>
                     </div>
-                    <p className="text-red-500 text-[12px] font-medium">{state.errors?.tags && state.errors.tags[0]}</p>
+                    <p className="text-[12px] font-medium text-red-500">{state.errors?.tags && state.errors.tags[0]}</p>
                 </div>
             </div>
             <div className="flex flex-col gap-y-2">
@@ -168,7 +168,7 @@ export function EditJob(props: {
                 <Select name="address" defaultValue={job.addresses?.[0]?.addressId}>
                     <SelectTrigger
                         className={clsx(
-                            'h-12 text-base rounded-sm',
+                            'h-12 rounded-sm text-base',
                             state.errors?.address
                                 ? 'border-2 border-danger focus:border-danger focus:ring-0'
                                 : 'focus:border-primary focus:ring-primary'
@@ -190,12 +190,12 @@ export function EditJob(props: {
                         )}
                     </SelectContent>
                 </Select>
-                <p className="text-red-500 text-[12px] font-medium">{state.errors?.address?.[0]}</p>
+                <p className="text-[12px] font-medium text-red-500">{state.errors?.address?.[0]}</p>
             </div>
 
             <div>
-                <h2 className="text-lg font-bold mt-8 mb-4">Salary</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <h2 className="mb-4 mt-8 text-lg font-bold">Salary</h2>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div className="flex flex-col gap-y-2">
                         <h1>Min Salary</h1>
                         <Input
@@ -209,7 +209,7 @@ export function EditJob(props: {
                             defaultValue={job.lowestWage}
                             name="minSalary"
                         />
-                        <p className="text-red-500 text-[12px] font-medium">{state.errors?.minSalary?.[0]}</p>
+                        <p className="text-[12px] font-medium text-red-500">{state.errors?.minSalary?.[0]}</p>
                     </div>
                     <div className="flex flex-col gap-y-2">
                         <h1>Max Salary</h1>
@@ -224,20 +224,20 @@ export function EditJob(props: {
                             defaultValue={job.highestWage}
                             name="maxSalary"
                         />
-                        <p className="text-red-500 text-[12px] font-medium">{state.errors?.maxSalary?.[0]}</p>
+                        <p className="text-[12px] font-medium text-red-500">{state.errors?.maxSalary?.[0]}</p>
                     </div>
                 </div>
             </div>
 
             <div>
-                <h2 className="text-lg font-bold mt-8 mb-4">Advance Information</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <h2 className="mb-4 mt-8 text-lg font-bold">Advance Information</h2>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                     <div className="flex flex-col gap-y-2">
                         <h1>Education</h1>
                         <Select name="education" defaultValue={job.education}>
                             <SelectTrigger
                                 className={clsx(
-                                    'h-12 text-base rounded-sm',
+                                    'h-12 rounded-sm text-base',
                                     state.errors?.education
                                         ? 'border-2 border-danger focus:border-danger focus:ring-0'
                                         : 'focus:border-primary focus:ring-primary'
@@ -253,7 +253,7 @@ export function EditJob(props: {
                                 ))}
                             </SelectContent>
                         </Select>
-                        <p className="text-red-500 text-[12px] font-medium">{state.errors?.education?.[0]}</p>
+                        <p className="text-[12px] font-medium text-red-500">{state.errors?.education?.[0]}</p>
                     </div>
                     <div className="flex flex-col gap-y-2">
                         <h1>Experience (Year)</h1>
@@ -268,14 +268,14 @@ export function EditJob(props: {
                             defaultValue={job.experience}
                             name="experience"
                         />
-                        <p className="text-red-500 text-[12px] font-medium">{state.errors?.experience?.[0]}</p>
+                        <p className="text-[12px] font-medium text-red-500">{state.errors?.experience?.[0]}</p>
                     </div>
                     <div className="flex flex-col gap-y-2">
                         <h1>Job Type</h1>
                         <Select name="jobType" defaultValue={job.type}>
                             <SelectTrigger
                                 className={clsx(
-                                    'h-12 text-base rounded-sm',
+                                    'h-12 rounded-sm text-base',
                                     state.errors?.jobType
                                         ? 'border-2 border-danger focus:border-danger focus:ring-0'
                                         : 'focus:border-primary focus:ring-primary'
@@ -291,7 +291,7 @@ export function EditJob(props: {
                                 ))}
                             </SelectContent>
                         </Select>
-                        <p className="text-red-500 text-[12px] font-medium">{state.errors?.jobType?.[0]}</p>
+                        <p className="text-[12px] font-medium text-red-500">{state.errors?.jobType?.[0]}</p>
                     </div>
                     <div className="flex flex-col gap-y-2">
                         <h1>Expiration Date</h1>
@@ -308,7 +308,7 @@ export function EditJob(props: {
                                 defaultValue={job.deadline}
                             />
                         </div>
-                        <p className="text-red-500 text-[12px] font-medium">{state.errors?.expirationDate?.[0]}</p>
+                        <p className="text-[12px] font-medium text-red-500">{state.errors?.expirationDate?.[0]}</p>
                     </div>
                     <div className="flex flex-col gap-y-2">
                         <h1>Job Category</h1>
@@ -319,7 +319,7 @@ export function EditJob(props: {
                         >
                             <SelectTrigger
                                 className={clsx(
-                                    'h-12 text-base rounded-sm',
+                                    'h-12 rounded-sm text-base',
                                     state.errors?.category
                                         ? 'border-2 border-danger focus:border-danger focus:ring-0'
                                         : 'focus:border-primary focus:ring-primary'
@@ -335,7 +335,7 @@ export function EditJob(props: {
                                 ))}
                             </SelectContent>
                         </Select>
-                        <p className="text-red-500 text-[12px] font-medium">{state.errors?.category?.[0]}</p>
+                        <p className="text-[12px] font-medium text-red-500">{state.errors?.category?.[0]}</p>
                     </div>
                     <div className="flex flex-col gap-y-2">
                         <h1>Job Specialization</h1>
@@ -345,13 +345,13 @@ export function EditJob(props: {
                             error={state.errors?.specializations}
                             defaultValue={resultQuery?.job?.specializations || []}
                         />
-                        <p className="text-red-500 text-[12px] font-medium">{state.errors?.specializations?.[0]}</p>
+                        <p className="text-[12px] font-medium text-red-500">{state.errors?.specializations?.[0]}</p>
                     </div>
                 </div>
             </div>
 
             <div>
-                <h2 className="text-lg font-bold mt-8 mb-4">Description & Responsibility</h2>
+                <h2 className="mb-4 mt-8 text-lg font-bold">Description & Responsibility</h2>
                 <div className="space-y-6">
                     <div className="flex flex-col gap-y-2">
                         <h1>Description</h1>
@@ -361,7 +361,7 @@ export function EditJob(props: {
                                 initialContent={description}
                                 hasError={!!state.errors?.description}
                             />
-                            <p className="text-red-500 text-[12px] font-medium">{state.errors?.description?.[0]}</p>
+                            <p className="text-[12px] font-medium text-red-500">{state.errors?.description?.[0]}</p>
                         </div>
                     </div>
 
@@ -374,7 +374,7 @@ export function EditJob(props: {
                                 hasError={!!state.errors?.responsibilities}
                             />
                         </div>
-                        <p className="text-red-500 text-[12px] font-medium">{state.errors?.responsibilities?.[0]}</p>
+                        <p className="text-[12px] font-medium text-red-500">{state.errors?.responsibilities?.[0]}</p>
                     </div>
                     <div className="flex flex-col gap-y-2">
                         <h1>Benefit</h1>
@@ -385,7 +385,7 @@ export function EditJob(props: {
                                 hasError={!!state.errors?.benefit}
                             />
                         </div>
-                        <p className="text-red-500 text-[12px] font-medium">{state.errors?.benefit?.[0]}</p>
+                        <p className="text-[12px] font-medium text-red-500">{state.errors?.benefit?.[0]}</p>
                     </div>
                     <div className="flex flex-col gap-y-2">
                         <h1>Requirements</h1>
@@ -396,7 +396,7 @@ export function EditJob(props: {
                                 hasError={!!state.errors?.requirements}
                             />
                         </div>
-                        <p className=" text-red-500 text-[12px] font-medium ">
+                        <p className="text-[12px] font-medium text-red-500">
                             {state.errors?.requirements && state.errors.requirements[0]}
                         </p>
                     </div>
@@ -413,7 +413,7 @@ export function EditJob(props: {
                     Cancel
                 </Button>
                 <Button type="submit" className="group w-full md:w-auto">
-                    Update Job <LuArrowRight className="group-hover:translate-x-2 transition-all duration-100" />
+                    Update Job <LuArrowRight className="transition-all duration-100 group-hover:translate-x-2" />
                 </Button>
             </div>
         </form>

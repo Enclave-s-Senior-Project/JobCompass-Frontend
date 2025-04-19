@@ -18,9 +18,7 @@ export const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordPro
         return (
             <div
                 className={cn(
-                    `relative flex h-9 w-full rounded-md border border-input bg-transparent text-sm shadow-sm transition-colors file:border-0 
-                    file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none 
-                    disabled:cursor-not-allowed disabled:opacity-50 md:text-sm overflow-hidden`,
+                    `relative flex h-9 w-full overflow-hidden rounded-md border border-input bg-transparent text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm`,
                     className
                 )}
             >
@@ -28,15 +26,15 @@ export const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordPro
                     {...props}
                     ref={ref}
                     type={hide ? 'password' : 'text'}
-                    className="shadow-none pr-12 h-full rounded-sm border-none"
+                    className="h-full rounded-sm border-none pr-12 shadow-none"
                 />
                 <BsEye
-                    className={clsx('absolute top-1/2 right-[18px] -translate-y-1/2 size-[22px]', hide ? 'hidden' : '')}
+                    className={clsx('absolute right-[18px] top-1/2 size-[22px] -translate-y-1/2', hide ? 'hidden' : '')}
                     onClick={() => handleTogglePasswordVisibility(false)}
                 />
                 <BsEyeSlash
                     className={clsx(
-                        'absolute top-1/2 right-[18px] -translate-y-1/2 size-[22px]',
+                        'absolute right-[18px] top-1/2 size-[22px] -translate-y-1/2',
                         !hide ? 'hidden' : ''
                     )}
                     onClick={() => handleTogglePasswordVisibility(true)}

@@ -7,7 +7,7 @@ export default function Home() {
     const { id } = useParams();
     return (
         <main className="container mx-auto w-full">
-            <div className="flex items-center text-sm text-muted-foreground mb-4">
+            <div className="mb-4 flex items-center text-sm text-muted-foreground">
                 <Link href="/" className="hover:text-primary">
                     Home
                 </Link>
@@ -19,7 +19,7 @@ export default function Home() {
                 <span className="text-foreground">Applications</span>
             </div>
 
-            <div className="flex justify-between items-center mb-6">
+            <div className="mb-6 flex items-center justify-between">
                 <h1 className="text-2xl font-bold">Job Applications</h1>
                 <div className="flex gap-2">
                     <Button variant="outline" size="md">

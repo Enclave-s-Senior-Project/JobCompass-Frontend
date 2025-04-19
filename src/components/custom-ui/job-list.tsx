@@ -21,12 +21,12 @@ export function JobsList({
     isOwn,
 }: JobsListProps) {
     return (
-        <div className="overflow-hidden space-y-4">
+        <div className="space-y-4 overflow-hidden">
             {isLoading ? (
                 <div className="space-y-4">
-                    <Skeleton className="w-full h-64"></Skeleton>
-                    <Skeleton className="w-full h-64"></Skeleton>
-                    <Skeleton className="w-full h-64"></Skeleton>
+                    <Skeleton className="h-64 w-full"></Skeleton>
+                    <Skeleton className="h-64 w-full"></Skeleton>
+                    <Skeleton className="h-64 w-full"></Skeleton>
                 </div>
             ) : (
                 jobs.map((job) => (

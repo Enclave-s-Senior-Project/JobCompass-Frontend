@@ -90,22 +90,22 @@ export default function CardCandidateHorizontal(props: {
     });
 
     return (
-        <motion.div className="space-y-3 w-full pt-10">
+        <motion.div className="w-full space-y-3 pt-10">
             {isPending ? (
                 [...Array(ITEM_PER_PAGE)].map((_, i) => (
                     <div key={i} className="flex items-center space-x-2">
                         <Skeleton className="h-20 w-20 rounded-md" />
-                        <div className="space-y-2 h-20 flex-1 flex flex-col">
+                        <div className="flex h-20 flex-1 flex-col space-y-2">
                             <Skeleton className="h-5 w-full" />
-                            <Skeleton className="flex-1 w-full" />
+                            <Skeleton className="w-full flex-1" />
                         </div>
                     </div>
                 ))
             ) : !resultQuery?.data?.length ? (
-                <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4">
-                    <FileX className="h-16 w-16 text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-semibold text-foreground mb-2">No candidates found</h3>
-                    <p className="text-muted-foreground max-w-[500px]">
+                <div className="flex min-h-[50vh] flex-col items-center justify-center px-4 text-center">
+                    <FileX className="mb-4 h-16 w-16 text-muted-foreground" />
+                    <h3 className="mb-2 text-lg font-semibold text-foreground">No candidates found</h3>
+                    <p className="max-w-[500px] text-muted-foreground">
                         Currently, there are no candidates listed. Please check back later or try searching with
                         different criteria.
                     </p>
@@ -114,7 +114,7 @@ export default function CardCandidateHorizontal(props: {
                 resultQuery.data.map((candidates) => (
                     <motion.div
                         key={candidates.profileId}
-                        className="w-full md:gap-24 flex gap-8 flex-wrap items-center justify-between p-5 border-2 rounded-md border-gray-100 hover:border-primary hover:shadow-lg transition-colors"
+                        className="flex w-full flex-wrap items-center justify-between gap-8 rounded-md border-2 border-gray-100 p-5 transition-colors hover:border-primary hover:shadow-lg md:gap-24"
                         variants={motionVariant.itemVariants}
                         initial="hidden"
                         whileInView="visible"
@@ -122,20 +122,20 @@ export default function CardCandidateHorizontal(props: {
                         whileHover={{ y: -2 }}
                     >
                         <div className="flex items-center gap-5">
-                            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center">
+                            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-100">
                                 <img
                                     loading="lazy"
                                     src={candidates?.profileUrl || defaultAvatar.src}
                                     alt={candidates?.fullName || 'Company Logo'}
-                                    className="w-[68px] h-[68px] object-cover rounded-full"
+                                    className="h-[68px] w-[68px] rounded-full object-cover"
                                 />
                             </div>
                             <div className="space-y-3">
-                                <h3 className="font-semibold text-xl flex items-center gap-2">
+                                <h3 className="flex items-center gap-2 text-xl font-semibold">
                                     {candidates?.fullName} 
                                 </h3>
-                                <span className="text-muted-foreground text-sm">{candidates?.fullName}</span>
-                                <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mt-2">
+                                <span className="text-sm text-muted-foreground">{candidates?.fullName}</span>
+                                <div className="mt-2 flex flex-wrap gap-4 text-sm text-muted-foreground">
                                     {candidates?.nationality && (
                                         <span className="flex items-center gap-1 text-sm">
                                             <MapPin className="h-5 w-5" />
@@ -157,7 +157,7 @@ export default function CardCandidateHorizontal(props: {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex-1 flex items-center justify-end gap-3">
+                        <div className="flex flex-1 items-center justify-end gap-3">
                             <ButtonMark
                                 mark={candidates?.is_favorite}
                                 handleMark={() => addFavoriteEnterpriseMutation.mutate(candidates?.profileId)}
@@ -171,7 +171,7 @@ export default function CardCandidateHorizontal(props: {
                                     router.push(`/find-candidates/candidate-profile/${candidates?.profileId}`);
                                 }}
                             >
-                                View detail <LuArrowRight className="group-hover:translate-x-2 transition-all" />
+                                View detail <LuArrowRight className="transition-all group-hover:translate-x-2" />
                             </Button>
                             {/* <DialogDetailCandidate id={candidates?.profileId} /> */}
                         </div>

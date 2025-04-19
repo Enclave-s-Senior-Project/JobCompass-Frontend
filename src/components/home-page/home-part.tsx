@@ -14,7 +14,7 @@ export function HomePart({
 }) {
     return (
         <section>
-            <div className="container max-w-screen-xl mx-auto px-4">
+            <div className="container mx-auto max-w-screen-xl px-4">
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -24,7 +24,7 @@ export function HomePart({
                         linkNode ? 'justify-between' : 'justify-center md:justify-between'
                     )}
                 >
-                    <h2 className="text-3xl md:text-4xl font-medium text-center md:text-left">{title}</h2>
+                    <h2 className="text-center text-3xl font-medium md:text-left md:text-4xl">{title}</h2>
                     {linkNode}
                 </motion.div>
                 <div>{children}</div>

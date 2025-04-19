@@ -14,15 +14,15 @@ type Props = {
 
 export function UserContactInformation({ contactInfo, socialLinks }: Props) {
     return (
-        <div className="p-6 rounded-md border-2 border-primary-50 space-y-4">
+        <div className="space-y-4 rounded-md border-2 border-primary-50 p-6">
             <p className="text-base font-medium">Contact Information</p>
             {/* location */}
             <div>
                 <div className="flex items-center gap-4">
                     <MapPinHouse className="size-8 text-primary" />
                     <div className="space-y-1">
-                        <p className="uppercase text-[12px] text-gray-600">location</p>
-                        <p className="text-black text-sm font-medium">{contactInfo?.nationality}</p>
+                        <p className="text-[12px] uppercase text-gray-600">location</p>
+                        <p className="text-sm font-medium text-black">{contactInfo?.nationality}</p>
                     </div>
                 </div>
             </div>
@@ -32,8 +32,8 @@ export function UserContactInformation({ contactInfo, socialLinks }: Props) {
                     <PhoneCall className="size-8 text-primary" />
                     <div className="space-y-2">
                         <div className="space-y-1">
-                            <p className="uppercase text-[12px] text-gray-600">PRIMARY PHONE</p>
-                            <p className="text-black text-sm font-medium">
+                            <p className="text-[12px] uppercase text-gray-600">PRIMARY PHONE</p>
+                            <p className="text-sm font-medium text-black">
                                 <a href="tel:+1-202-555-0141">{contactInfo?.phone}</a>
                             </p>
                         </div>
@@ -46,8 +46,8 @@ export function UserContactInformation({ contactInfo, socialLinks }: Props) {
                     <div className="flex items-center gap-4">
                         <Mail className="size-8 text-primary" />
                         <div className="space-y-1">
-                            <p className="uppercase text-[12px] text-gray-600">email address</p>
-                            <p className="text-black text-sm font-medium">
+                            <p className="text-[12px] uppercase text-gray-600">email address</p>
+                            <p className="text-sm font-medium text-black">
                                 <a href="mailto:ester.howard@gmail.com">ester.howard@gmail.com</a>
                             </p>
                         </div>

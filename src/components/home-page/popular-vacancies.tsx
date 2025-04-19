@@ -9,7 +9,7 @@ export function PopularVacancies() {
     return (
         <HomePart title="Most Popular Vacancies">
             <motion.div
-                className="grid gap-x-10 gap-y-12 grid-cols-2 lg:grid-cols-4 text-center md:text-left"
+                className="grid grid-cols-2 gap-x-10 gap-y-12 text-center md:text-left lg:grid-cols-4"
                 variants={motionVariant.containerVariants}
                 initial="hidden"
                 whileInView="visible"
@@ -21,7 +21,7 @@ export function PopularVacancies() {
                             <Link
                                 key={j}
                                 href="#"
-                                className="block text-lg hover:text-primary transition-colors duration-300"
+                                className="block text-lg transition-colors duration-300 hover:text-primary"
                             >
                                 {job}
                             </Link>

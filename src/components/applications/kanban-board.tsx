@@ -328,7 +328,7 @@ export default function KanbanBoard({ jobId }: KanbanBoardProps) {
             onDragOver={handleDragOver}
             onDragEnd={handleDragEnd}
         >
-            <div className="flex justify-between gap-2 overflow-x-auto pb-4 min-h-[60vh] max-h-[calc(100vh-200px)]">
+            <div className="flex max-h-[calc(100vh-200px)] min-h-[60vh] justify-between gap-2 overflow-x-auto pb-4">
                 {Array.isArray(columns) && columns.length > 0 ? (
                     columns.map((column) => (
                         <ColumnComponent

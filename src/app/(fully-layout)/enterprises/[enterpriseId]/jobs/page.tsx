@@ -12,7 +12,7 @@ const EnterpriseJobPage = () => {
     }
 
     return (
-        <section className="max-w-screen-xl mx-auto">
+        <section className="mx-auto max-w-screen-xl">
             <EnterpriseJobs enterpriseId={enterpriseId} limit={5} />
         </section>
     );

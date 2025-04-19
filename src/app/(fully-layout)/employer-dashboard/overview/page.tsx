@@ -21,7 +21,7 @@ export default function OverviewPage() {
         }
     }, []);
     return (
-        <div className="container mx-auto py-8 px-4">
+        <div className="container mx-auto px-4 py-8">
             <ComingSoon />
         </div>
     );

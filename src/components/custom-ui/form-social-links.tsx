@@ -169,13 +169,13 @@ export function FormSocialLinks({ useType }: { useType: 'candidate' | 'employer'
                 (useType === 'employer' && (isPendingQuerySLEnterprise || isLoadingQuerySLEnterprise))
                     ? Array.from({ length: 3 }).map((_, index) => (
                           <div key={index} className="grid grid-cols-12 gap-2">
-                              <Skeleton className="rounded-sm col-span-3 h-12" />
-                              <Skeleton className="rounded-sm col-span-9 h-12" />
+                              <Skeleton className="col-span-3 h-12 rounded-sm" />
+                              <Skeleton className="col-span-9 h-12 rounded-sm" />
                           </div>
                       ))
                     : socialLinks.map((socialLink, index) => (
                           <div key={socialLink.websiteId} className="relative">
-                              <label className="text-sm text-gray-900 cursor-default">Social Link {index + 1}</label>
+                              <label className="cursor-default text-sm text-gray-900">Social Link {index + 1}</label>
                               <InputSocialLink
                                   name="link"
                                   valueInput={socialLink.socialLink}
@@ -202,7 +202,7 @@ export function FormSocialLinks({ useType }: { useType: 'candidate' | 'employer'
                                   handleRemove={() => handleRemoveSocialLink(socialLink.websiteId ?? '')}
                               />
                               {errors?.[index]?.[0] && (
-                                  <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                                  <p className="absolute bottom-0 top-full mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-red-500">
                                       {errors[index][0]}
                                   </p>
                               )}
@@ -211,7 +211,7 @@ export function FormSocialLinks({ useType }: { useType: 'candidate' | 'employer'
             </div>
             <div>
                 {socialLinks.length >= 7 && (
-                    <p className="line-clamp-1 text-warning-500 text-[12px] font-medium mb-1 min-h-5">
+                    <p className="mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-warning-500">
                         The maximum number of social links is 7
                     </p>
                 )}

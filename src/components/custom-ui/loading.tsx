@@ -130,7 +130,7 @@ const CompassLoadingQuick = ({ isLoading = true }) => {
     return (
         <div className="flex flex-col items-center justify-center p-3" style={transitionStyle}>
             {/* Full Logo with Spinning Compass */}
-            <div className="w-64 relative mb-2">
+            <div className="relative mb-2 w-64">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100">
                     {/* Spinning Compass Icon */}
                     <g className="compass-spin">
@@ -200,11 +200,11 @@ const CompassLoadingQuick = ({ isLoading = true }) => {
             {/* Processing Text Section */}
             <div className="flex flex-col items-center text-center" style={textTransitionStyle}>
                 <div className="flex items-center">
-                    <span className="text-base font-normal text-primary message-cycle">Just a moment</span>
-                    <span className="flex space-x-1 ml-1">
-                        <span className="w-1 h-1 rounded-full bg-blue-500 dot-1" style={dotStyle}></span>
-                        <span className="w-1 h-1 rounded-full bg-blue-500 dot-2" style={dotStyle}></span>
-                        <span className="w-1 h-1 rounded-full bg-blue-500 dot-3" style={dotStyle}></span>
+                    <span className="message-cycle text-base font-normal text-primary">Just a moment</span>
+                    <span className="ml-1 flex space-x-1">
+                        <span className="dot-1 h-1 w-1 rounded-full bg-blue-500" style={dotStyle}></span>
+                        <span className="dot-2 h-1 w-1 rounded-full bg-blue-500" style={dotStyle}></span>
+                        <span className="dot-3 h-1 w-1 rounded-full bg-blue-500" style={dotStyle}></span>
                     </span>
                 </div>
             </div>

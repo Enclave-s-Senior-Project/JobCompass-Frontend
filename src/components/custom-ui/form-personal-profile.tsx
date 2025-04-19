@@ -125,7 +125,7 @@ export function FormPersonalProfile() {
                     type="button"
                     variant="outline"
                     size="md"
-                    className={clsx('text-sm', editable ? 'text-red-500 border-red-100 hover:border-red-500' : '')}
+                    className={clsx('text-sm', editable ? 'border-red-100 text-red-500 hover:border-red-500' : '')}
                     onClick={handleToggleEditable}
                 >
                     {editable ? <XCircle /> : <Edit />}
@@ -133,9 +133,9 @@ export function FormPersonalProfile() {
                 </Button>
             </div>
             <div className="space-y-4">
-                <div className="flex items-center gap-4 select-none">
+                <div className="flex select-none items-center gap-4">
                     <div className="w-24 md:w-40 lg:w-60">
-                        <label className="text-sm text-gray-900 cursor-default">Profile Picture</label>
+                        <label className="cursor-default text-sm text-gray-900">Profile Picture</label>
                         <ImageInput
                             disabled={!editable}
                             name="avatarFile"
@@ -145,7 +145,7 @@ export function FormPersonalProfile() {
                         />
                     </div>
                     <div className="flex-1">
-                        <label className="text-sm text-gray-900 cursor-default">Background Picture</label>
+                        <label className="cursor-default text-sm text-gray-900">Background Picture</label>
                         <ImageInput
                             disabled={!editable}
                             name="backgroundFile"
@@ -154,9 +154,9 @@ export function FormPersonalProfile() {
                         />
                     </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4 select-none">
+                <div className="grid select-none grid-cols-2 gap-4">
                     <div className="relative col-span-2 lg:col-span-1">
-                        <label htmlFor="" className="text-sm text-gray-900 cursor-default">
+                        <label htmlFor="" className="cursor-default text-sm text-gray-900">
                             Full name
                         </label>
                         <Input
@@ -173,12 +173,12 @@ export function FormPersonalProfile() {
                                     : 'focus-visible:border-primary focus-visible:ring-primary'
                             )}
                         />
-                        <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                        <p className="absolute bottom-0 top-full mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-red-500">
                             {errors?.fullName?.length > 0 && errors.fullName[0]}
                         </p>
                     </div>
                     <div className="relative col-span-2 lg:col-span-1">
-                        <label htmlFor="" className="text-sm text-gray-900 cursor-default">
+                        <label htmlFor="" className="cursor-default text-sm text-gray-900">
                             Phone
                         </label>
                         <Input
@@ -195,12 +195,12 @@ export function FormPersonalProfile() {
                                     : 'focus-visible:border-primary focus-visible:ring-primary'
                             )}
                         />
-                        <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                        <p className="absolute bottom-0 top-full mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-red-500">
                             {errors?.phone?.length > 0 && errors.phone[0]}
                         </p>
                     </div>
                     <div className="relative col-span-1">
-                        <label className="text-sm text-gray-900 cursor-default">Date Of Birth</label>
+                        <label className="cursor-default text-sm text-gray-900">Date Of Birth</label>
                         <Input
                             disabled={!editable}
                             value={formValue.dateOfBirth}
@@ -217,12 +217,12 @@ export function FormPersonalProfile() {
                                     : 'focus-visible:border-primary focus-visible:ring-primary'
                             )}
                         />
-                        <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                        <p className="absolute bottom-0 top-full mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-red-500">
                             {errors?.dateOfBirth?.length > 0 && errors.dateOfBirth[0]}
                         </p>
                     </div>
                     <div className="relative col-span-1">
-                        <label className="text-sm text-gray-900 cursor-default">Marital Status</label>
+                        <label className="cursor-default text-sm text-gray-900">Marital Status</label>
                         <Select
                             disabled={!editable}
                             name="maritalStatus"
@@ -233,7 +233,7 @@ export function FormPersonalProfile() {
                         >
                             <SelectTrigger
                                 className={clsx(
-                                    'h-12 text-base rounded-sm',
+                                    'h-12 rounded-sm text-base',
                                     errors?.maritalStatus?.length > 0
                                         ? 'border-2 border-danger focus:border-danger focus:ring-0'
                                         : 'focus:border-primary focus:ring-primary',
@@ -249,12 +249,12 @@ export function FormPersonalProfile() {
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
-                        <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                        <p className="absolute bottom-0 top-full mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-red-500">
                             {errors?.maritalStatus?.length > 0 && errors.maritalStatus[0]}
                         </p>
                     </div>
                     <div className="col-span-2 lg:col-span-1">
-                        <label htmlFor="" className="text-sm text-gray-900 cursor-default">
+                        <label htmlFor="" className="cursor-default text-sm text-gray-900">
                             Education
                         </label>
                         <RichTextEditor
@@ -263,11 +263,11 @@ export function FormPersonalProfile() {
                             onChange={handleChangeRichEditor}
                             placement="inside-bottom"
                             value={formValue.education}
-                            className="px-3 rounded-sm shadow-sm"
+                            className="rounded-sm px-3 shadow-sm"
                         />
                     </div>
                     <div className="col-span-2 lg:col-span-1">
-                        <label htmlFor="" className="text-sm text-gray-900 cursor-default">
+                        <label htmlFor="" className="cursor-default text-sm text-gray-900">
                             Experience
                         </label>
                         <RichTextEditor
@@ -276,7 +276,7 @@ export function FormPersonalProfile() {
                             value={formValue.experience}
                             onChange={handleChangeRichEditor}
                             placement="inside-bottom"
-                            className="px-3 rounded-sm shadow-sm"
+                            className="rounded-sm px-3 shadow-sm"
                         />
                     </div>
                 </div>

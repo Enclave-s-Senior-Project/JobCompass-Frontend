@@ -39,7 +39,7 @@ export function Search() {
     return (
         <form
             onSubmit={handleSubmit}
-            className="h-12 w-full lg:max-w-[668px] lg:w-[668px] flex items-center border border-input rounded-sm focus-within:border-primary-200"
+            className="flex h-12 w-full items-center rounded-sm border border-input focus-within:border-primary-200 lg:w-[668px] lg:max-w-[668px]"
         >
             <InputSelectSingle
                 className="max-w-40 border-none ring-0 focus-within:border-none focus-within:ring-0"
@@ -66,7 +66,7 @@ export function Search() {
                 id={inputId}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                className="flex-1 h-full border-none shadow-none focus-visible:ring-0 text-base font-normal"
+                className="h-full flex-1 border-none text-base font-normal shadow-none focus-visible:ring-0"
                 placeholder="Job title, keyword, company"
             />
             <button type="submit" className="hidden"></button>

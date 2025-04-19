@@ -25,7 +25,7 @@ export function NavigationSettingProfileBar({
                     key={sub.href}
                     href={sub.href}
                     className={clsx(
-                        'py-3 px-5 flex items-center gap-2 [&_svg]:size-6 text-sm font-medium border-b-2 transition-all',
+                        'flex items-center gap-2 border-b-2 px-5 py-3 text-sm font-medium transition-all [&_svg]:size-6',
                         (matchExactPage ? pathname === sub.href : pathname.startsWith(sub.href))
                             ? 'border-b-primary-500 text-primary'
                             : 'border-b-transparent text-gray-500'

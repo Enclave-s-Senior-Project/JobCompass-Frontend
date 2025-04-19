@@ -39,19 +39,19 @@ export function ContentAddTag(props: { setOpen: (value: boolean) => void; refetc
                             : 'focus-visible:border-primary focus-visible:ring-primary'
                     )}
                 />
-                <p className="text-red-500 text-[12px] font-medium">{state.errors?.name && state.errors.name[0]}</p>
+                <p className="text-[12px] font-medium text-red-500">{state.errors?.name && state.errors.name[0]}</p>
             </div>
 
             <div className="flex justify-between gap-3">
                 <Button
                     type="button"
                     variant="outline"
-                    className="w-[102px] h-[48px] text-[#0A65CC] bg-[#E7F0FA]"
+                    className="h-[48px] w-[102px] bg-[#E7F0FA] text-[#0A65CC]"
                     onClick={() => setOpen(false)}
                 >
                     Cancel
                 </Button>
-                <Button type="submit" isPending={isPending} className="w-[168px] h-[48px] bg-[#0A65CC] text-[#FFFFFF]">
+                <Button type="submit" isPending={isPending} className="h-[48px] w-[168px] bg-[#0A65CC] text-[#FFFFFF]">
                     Add Tag
                     <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>

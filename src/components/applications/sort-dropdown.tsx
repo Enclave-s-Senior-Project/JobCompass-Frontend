@@ -23,7 +23,7 @@ export default function SortDropdown() {
                 <DropdownMenuRadioGroup value={sortOption} onValueChange={setSortOption}>
                     <DropdownMenuRadioItem value="newest">
                         <div className="flex items-center gap-2">
-                            <div className="h-4 w-4 rounded-full border border-primary flex items-center justify-center">
+                            <div className="flex h-4 w-4 items-center justify-center rounded-full border border-primary">
                                 {sortOption === 'newest' && <div className="h-2 w-2 rounded-full bg-primary" />}
                             </div>
                             <span>Newest</span>
@@ -31,7 +31,7 @@ export default function SortDropdown() {
                     </DropdownMenuRadioItem>
                     <DropdownMenuRadioItem value="oldest">
                         <div className="flex items-center gap-2">
-                            <div className="h-4 w-4 rounded-full border border-primary flex items-center justify-center">
+                            <div className="flex h-4 w-4 items-center justify-center rounded-full border border-primary">
                                 {sortOption === 'oldest' && <div className="h-2 w-2 rounded-full bg-primary" />}
                             </div>
                             <span>Oldest</span>
