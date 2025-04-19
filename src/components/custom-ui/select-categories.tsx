@@ -152,10 +152,6 @@ const MultiSelectCategoriesSearchInput: React.FC<MultiSelectSearchInputProps> = 
         }
     };
 
-    useEffect(() => {
-        console.log('Current selectedItems:', selectedItems);
-    }, [selectedItems]);
-
     return (
         <div className="relative w-full" ref={dropdownRef}>
             <div
