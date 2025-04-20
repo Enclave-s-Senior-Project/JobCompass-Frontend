@@ -42,3 +42,10 @@ export enum EducationJobLevelEnum {
     BACHELORS = 'Bachelor’s',
     MASTERS_OR_HIGHER = 'Master’s or Higher',
 }
+
+export enum EnterpriseStatus {
+    ACTIVE = 'ACTIVE',
+    BLOCKED = 'BLOCKED',
+    REJECTED = 'REJECTED',
+    PENDING = 'PENDING',
+}
