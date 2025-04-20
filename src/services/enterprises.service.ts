@@ -227,4 +227,29 @@ export class EnterpriseService {
             handleErrorApi(error);
         }
     }
+
+    // API for administrator
+    public static async fetchPendingStatusEnterprise(pagination: DetailedRequest.GetPendingStatusEnterprise) {
+        try {
+            const dataResponse = await authAxios.get<ApiResponse<DetailedResponse.GetPendingStatusEnterprise>>(
+                '/pending',
+                { params: pagination }
+            );
+            return dataResponse.payload.value;
+        } catch (error) {
+            handleErrorApi(error);
+        }
+    }
+
+    public static async updateEnterpriseStatus(payload: DetailedRequest.UpdateEnterpriseStatus) {
+        try {
+            const dataResponse = await authAxios.patch<ApiResponse<null>>(`/status/${payload.enterpriseId}`, {
+                status: payload.status,
+                reason: payload.reason,
+            });
+            return dataResponse.payload.value;
+        } catch (error) {
+            handleErrorApi(error);
+        }
+    }
 }

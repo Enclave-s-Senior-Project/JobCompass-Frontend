@@ -7,57 +7,38 @@ import { hasPermission } from '@/lib/auth';
 import { UserContext } from '@/contexts';
 import { NotPermission } from '@/components/custom-ui/global/not-permission';
 import { AppSidebar } from '@/components/custom-ui/local/admin-dashboard/app-sidebar';
-import { usePathname } from 'next/navigation';
-import { capitalize } from 'lodash';
-import Link from 'next/link';
-import { cn } from '@/lib/utils';
+import { DynamicBreadcrumb } from '@/components/custom-ui/global/dynamic-breadcrumb';
 
-export const SidebarContext = createContext({
+type SidebarContextType = {
+    open: boolean;
+    setOpen: (state: boolean) => void;
+};
+
+export const SidebarContext = createContext<SidebarContextType>({
     open: true,
-    setOpen: (() => {}) as React.Dispatch<React.SetStateAction<boolean>>,
+    setOpen: () => {},
 });
 
 export default function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
     const { userInfo, logoutHandle } = useContext(UserContext);
 
-    const [openSidebar, setOpenSidebar] = useState(true);
-
-    const pathname = usePathname();
+    const [openSidebar, setOpenSidebar] = useState(localStorage.getItem('admin-sidebar-state') === 'true' || false);
 
     const isPermitted = userInfo && hasPermission(userInfo, 'adminDashboard', 'access');
 
+    const handleSidebarState = (state: boolean) => {
+        localStorage.setItem('admin-sidebar-state', state.toString());
+        setOpenSidebar(state);
+    };
+
     return isPermitted ? (
-        <SidebarContext.Provider value={{ open: openSidebar, setOpen: setOpenSidebar }}>
-            <SidebarProvider open={openSidebar} onOpenChange={setOpenSidebar}>
+        <SidebarContext.Provider value={{ open: openSidebar, setOpen: handleSidebarState }}>
+            <SidebarProvider open={openSidebar} onOpenChange={handleSidebarState}>
                 <AppSidebar user={userInfo} logout={logoutHandle} />
                 <main className="flex-1">
-                    <div className="flex items-center gap-4 border-b px-2 py-3 shadow-sm drop-shadow-sm">
+                    <div className="sticky top-0 z-10 flex items-center gap-4 border-b bg-white px-2 py-3 shadow-sm drop-shadow-sm">
                         <SidebarTrigger />
-                        <div>
-                            {pathname.split('/').map((sub, index) => {
-                                if (sub) {
-                                    const ownedHref = pathname
-                                        .split('/')
-                                        .slice(0, index + 1)
-                                        .join('/');
-                                    return (
-                                        <Link
-                                            href={ownedHref}
-                                            key={sub}
-                                            className={cn(
-                                                'text-sm transition-colors hover:font-medium hover:text-primary-500 hover:underline',
-                                                pathname === ownedHref
-                                                    ? 'pointer-events-none font-medium text-primary-500'
-                                                    : 'text-gray-500'
-                                            )}
-                                        >
-                                            {capitalize(sub.split('-').join(' '))}
-                                            {index < pathname.split('/').length - 1 && <span>&nbsp;/&nbsp;</span>}
-                                        </Link>
-                                    );
-                                }
-                            })}
-                        </div>
+                        <DynamicBreadcrumb />
                     </div>
                     {children}
                 </main>

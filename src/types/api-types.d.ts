@@ -12,6 +12,7 @@ import {
     Tag,
     User,
 } from './entities';
+import { EnterpriseStatus } from '@/lib/common-enum';
 
 interface ResponseWithMeta<T> {
     meta: Meta;
@@ -118,6 +119,8 @@ export namespace DetailedResponse {
     export interface GetNotifications extends ResponseWithMeta<Notification[]> {}
 
     export type GetNotification = Notification;
+
+    export type GetPendingStatusEnterprise = ResponseWithMeta<Enterprise[]>;
 }
 
 export namespace DetailedRequest {
@@ -325,4 +328,12 @@ export namespace DetailedRequest {
     }
 
     export interface UpdateApplicationStatus extends Array<Pick<AppliedJob, 'appliedJobId' | 'status'>> {}
+
+    export interface GetPendingStatusEnterprise extends Pagination {}
+
+    export interface UpdateEnterpriseStatus {
+        enterpriseId: string;
+        status: EnterpriseStatus;
+        reason?: string;
+    }
 }

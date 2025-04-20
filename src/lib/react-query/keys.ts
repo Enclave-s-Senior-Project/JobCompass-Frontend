@@ -28,4 +28,5 @@ export const queryKey = {
     enterpriseAddresses: 'enterprise-addresses',
     detailEnterprise: 'detail-enterprise',
     getCategories: 'get-categories',
+    pendingStatusEnterprises: 'pending-status-enterprises',
 };

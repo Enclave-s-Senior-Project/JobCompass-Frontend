@@ -5,8 +5,9 @@ import { Toaster } from 'react-hot-toast';
 import { EnterpriseProvider, NotificationProvider, ReactQueryProvider, UserProvider } from '@/contexts';
 
 export const metadata: Metadata = {
-    title: 'JobCompass',
-    description: 'Navigate your career, find your future',
+    title: process.env.NEXT_PUBLIC_WEBSITE_NAME + ' | ' + process.env.NEXT_PUBLIC_WEBSITE_SLOGAN,
+    description: process.env.NEXT_PUBLIC_WEBSITE_DESCRIPTION,
+    keywords: process.env.NEXT_PUBLIC_WEBSITE_KEYWORDS,
 };
 
 export default function RootLayout({
