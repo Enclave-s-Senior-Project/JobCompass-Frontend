@@ -128,4 +128,22 @@ export class JobService {
             throw err;
         }
     }
+
+    public static async checkPosition(jobId: string, point: number) {
+        try {
+            const dataResponse = await authAxios.get<ApiResponse<DetailedResponse.CheckPosition>>(
+                `/${jobId}/estimate-rank`,
+                { params: { plusPoints: point } }
+            );
+            return dataResponse.payload;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
 }

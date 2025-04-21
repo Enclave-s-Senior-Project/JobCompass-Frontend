@@ -20,4 +20,19 @@ export class BoostJobService {
             throw err;
         }
     }
+
+    public static async checkBoostJob(jobId: string) {
+        try {
+            const dataResponse = await authAxios.get<ApiResponse<null>>(`/${jobId}`);
+            return dataResponse.payload.value;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
 }

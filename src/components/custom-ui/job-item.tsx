@@ -7,7 +7,7 @@ import { JobStatusEnum } from '@/lib/common-enum';
 import { capitalize } from 'lodash';
 import clsx from 'clsx';
 import { Award, Calendar, Info, MapPin, MoreVerticalIcon, UsersRound, XCircle, Zap, ZapOff } from 'lucide-react';
-import { handleErrorToast, toDollarK, toFormattedDate } from '@/lib/utils';
+import { toDollarK, toFormattedDate } from '@/lib/utils';
 import { getRandomFeatureColor } from '@/lib/random-color';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@radix-ui/react-select';
@@ -19,6 +19,8 @@ import { BoostJobService } from '@/services';
 import { differenceInDays } from 'date-fns';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { EditJob } from './form-edit-job';
+import { DialogBoostJob } from './dialo-boost-job';
+import { toast } from '@/lib/toast';
 interface JobItemProps {
     job: Job;
     onSelect?: (jobId: string) => void;
@@ -30,22 +32,20 @@ interface JobItemProps {
 
 const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true, isOwn = false }: JobItemProps) => {
     const [openDialogEdit, setOpenDialogEdit] = useState(false);
+    const [openDialogBoost, setOpenDialogBoost] = useState(false);
     const router = useRouter();
-    async function handleButtonBoostJob() {
-        try {
-            await BoostJobService.bootJob({
-                jobId: job.jobId,
-            });
-        } catch (error) {
-            handleErrorToast(error);
-        }
-    }
     const handleUpdateSuccess = () => {
         setOpenDialogEdit(false);
     };
+    const checkBoostJob = async (jobId: string) => {
+        const temp = await BoostJobService.checkBoostJob(jobId);
+        if (temp) {
+            return toast.error('This job is already boosted');
+        }
+        setOpenDialogBoost(true);
+    };
     return (
         <>
-            {/* Dialog Edit Job */}
             <Dialog open={openDialogEdit} onOpenChange={setOpenDialogEdit}>
                 <DialogContent className="scrollbar-thumb-rounded-full h-[90vh] max-h-[900px] w-[1024px] max-w-none overflow-hidden overflow-y-auto rounded-lg pr-2 scrollbar-thin scrollbar-track-gray-100/30 scrollbar-thumb-gray-300">
                     <DialogHeader>
@@ -64,6 +64,14 @@ const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true
                     </div>
                 </DialogContent>
             </Dialog>
+            <DialogBoostJob
+                isOpen={openDialogBoost}
+                onClose={() => setOpenDialogBoost(false)}
+                refetchJob={refetchJob}
+                jobTitle={job.name}
+                jobId={job.jobId}
+                refetchDetailJob={refetchDetailJob}
+            />
             <Card
                 key={job.jobId}
                 className="cursor-pointer rounded-md p-2 shadow-sm transition-all hover:shadow-lg hover:drop-shadow-md md:p-4"
@@ -109,7 +117,7 @@ const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="w-56">
-                                    <DropdownMenuItem className="p-0" onClick={handleButtonBoostJob}>
+                                    <DropdownMenuItem className="p-0" onClick={() => checkBoostJob(job.jobId)}>
                                         <div className="flex w-full items-center px-4 py-2 text-left text-sm font-medium text-gray-600 transition-all hover:bg-primary-50 hover:text-primary">
                                             <Award className="mr-2 size-5" />
                                             Promote Job

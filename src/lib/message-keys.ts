@@ -48,6 +48,7 @@ const successKeyMessage = {
     UPDATE_REGISTER_ENTERPRISE_SUCCESSFUL: 'Enterprise update successful.',
     SUCCESSFUL_PAYMENT: 'Successful Payment',
     UNSUCCESSFUL_PAYMENT: 'Unsuccessful Payment',
+    JOB_BOOST_SUCCESSFUL: 'Job boost successful.',
 };
 
 export { errorKeyMessage, successKeyMessage, warningKeyMessage };
