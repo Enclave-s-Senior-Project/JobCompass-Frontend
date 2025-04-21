@@ -8,6 +8,7 @@ import { BoostJobService, JobService } from '@/services';
 import clsx from 'clsx';
 import { successKeyMessage } from '@/lib/message-keys';
 import { toast } from '@/lib/toast';
+import { handleErrorToast } from '@/lib/utils';
 
 interface DialogBoostJobProps {
     isOpen?: boolean;
@@ -41,11 +42,15 @@ export function DialogBoostJob({
     };
 
     const handlePromote = async () => {
-        await BoostJobService.bootJob({ jobId: jobId, pointsUsed: points });
+        try{
+            await BoostJobService.bootJob({ jobId: jobId, pointsUsed: points });
         refetchDetailJob();
         refetchJob();
         toast.success(successKeyMessage.JOB_BOOST_SUCCESSFUL);
         onClose();
+        }catch (error) {
+            handleErrorToast(error);
+        }
     };
 
     const checkRanking = async (point: number) => {
