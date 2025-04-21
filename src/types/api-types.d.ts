@@ -121,6 +121,17 @@ export namespace DetailedResponse {
     export type GetNotification = Notification;
 
     export type GetPendingStatusEnterprise = ResponseWithMeta<Enterprise[]>;
+
+    export type CheckPosition = {
+        estimatedRank: number;
+        projectedBoost: number;
+        plusPoints: number;
+        totalJobs: number;
+    };
+
+    export type CheckBoostJob = {
+        check: boolean;
+    };
 }
 
 export namespace DetailedRequest {
@@ -299,6 +310,7 @@ export namespace DetailedRequest {
     }
     export interface BoostJob {
         jobId: string;
+        pointsUsed: number;
     }
 
     export interface GetMyJobs extends Partial<Pagination>, Partial<FilterValues> {
