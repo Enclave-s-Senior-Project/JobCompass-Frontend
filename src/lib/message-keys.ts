@@ -32,7 +32,8 @@ const errorKeyMessage = {
     JOB_ADDED_WISHLIST: 'This job was added.',
     INVALID_ID: 'Invalid id',
     NOT_ALLOWED_UPDATE_APPLICATION_STATUS: 'Not allowed to update application status.',
-};
+    BOOST_JOB_LIMIT_EXCEEDED: 'Boost job limit exceeded.',
+};  
 
 const warningKeyMessage = {
     NOT_ALLOWED_UPDATE_APPLICATION_APPROVED_OR_DENIED:
