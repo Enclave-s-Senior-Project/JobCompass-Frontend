@@ -29,4 +29,5 @@ export const queryKey = {
     detailEnterprise: 'detail-enterprise',
     getCategories: 'get-categories',
     pendingStatusEnterprises: 'pending-status-enterprises',
+    dashboard: 'dashboard',
 };

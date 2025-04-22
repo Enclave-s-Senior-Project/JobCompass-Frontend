@@ -252,4 +252,13 @@ export class EnterpriseService {
             handleErrorApi(error);
         }
     }
+
+    public static async getInformationEnterprise() {
+        try {
+            const dataResponse = await authAxios.get<ApiResponse<DetailedResponse.getInformationEnterprise>>('/status');
+            return dataResponse.payload.value;
+        } catch (error) {
+            handleErrorApi(error);
+        }
+    }
 }
