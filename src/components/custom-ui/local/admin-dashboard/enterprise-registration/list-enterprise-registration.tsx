@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { queryKey } from '@/lib/react-query/keys';
 import { handleErrorToast } from '@/lib/utils';
 import { EnterpriseService } from '@/services/enterprises.service';
-import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Search } from 'lucide-react';
 import { DetailedRequest } from '@/types';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -35,7 +35,6 @@ const ListEnterpriseRegistration = memo(({ params }: Props) => {
         enabled: true,
         refetchOnWindowFocus: true,
         refetchOnReconnect: true,
-        placeholderData: keepPreviousData,
         retry: 2,
     });
 
@@ -150,7 +149,7 @@ const ListEnterpriseRegistration = memo(({ params }: Props) => {
                                             ))
                                         ) : (
                                             <TableRow>
-                                                <TableCell colSpan={6} className="h-24 text-center">
+                                                <TableCell colSpan={9} className="h-24 text-center">
                                                     No pending enterprises found.
                                                 </TableCell>
                                             </TableRow>

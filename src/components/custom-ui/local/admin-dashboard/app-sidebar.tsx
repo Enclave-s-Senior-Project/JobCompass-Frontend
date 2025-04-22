@@ -84,11 +84,11 @@ const menuItems: PrimarySidebarItem[] = [
         children: [
             {
                 title: 'Tags',
-                href: '/admin-dashboard/tags',
+                href: '/admin-dashboard/items/tags',
             },
             {
                 title: 'Categories',
-                href: '/admin-dashboard/categories',
+                href: '/admin-dashboard/items/categories',
             },
         ],
     },
