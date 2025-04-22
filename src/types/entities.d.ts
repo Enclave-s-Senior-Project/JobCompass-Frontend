@@ -129,6 +129,8 @@ export interface Categories {
     categoryId: string;
     categoryName: string;
     parent?: Categories;
+    updatedAt: string;
+    createdAt: string;
 }
 
 export interface CandidatesApplied {

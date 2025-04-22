@@ -91,7 +91,7 @@ export namespace DetailedResponse {
         meta: Meta;
     };
 
-    export type GetCategoriesPrimary = ResponseWithMeta<Categories[]>;
+    export type GetCategoriesPrimary = ResponseWithMeta<Array<Categories & { children?: Categories[] }>>;
 
     export type GetCategoriesChild = GetCategoriesPrimary;
 
@@ -347,5 +347,23 @@ export namespace DetailedRequest {
         enterpriseId: string;
         status: EnterpriseStatus;
         reason?: string;
+    }
+
+    export interface UpdateCategory {
+        categoryId: string;
+        categoryName: string;
+    }
+
+    export interface CreateCategory {
+        parentId?: string;
+        categoryName: string;
+    }
+
+    export interface DeleteCategory {
+        categoryId: string;
+    }
+
+    export interface DeleteCategories {
+        categoryIds: string[];
     }
 }
