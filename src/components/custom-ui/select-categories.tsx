@@ -5,19 +5,13 @@ import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useDebounce } from '@/hooks/useDebounce';
 import { CategoryService } from '@/services/categories.service';
+import { Categories } from '@/types';
 
 interface MultiSelectSearchInputProps {
     onChange: (selectedItems: Categories[]) => void;
     error?: string;
     defaultValue?: string[] | Categories[];
     disabled?: boolean;
-}
-
-export interface Categories {
-    isActive: any;
-    categoryId: string;
-    categoryName: string;
-    parent?: any;
 }
 
 enum OrderType {

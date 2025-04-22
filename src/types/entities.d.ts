@@ -92,10 +92,7 @@ export interface SocialLink {
 
 export type Role = 'USER' | 'ENTERPRISE' | 'ADMIN';
 
-export interface User {
-    createdAt: string;
-    updatedAt: string;
-    isActive: boolean;
+export interface User extends BaseEntity {
     profileId: string;
     fullName: string;
     profileUrl?: string;
@@ -116,21 +113,18 @@ export interface User {
     industry: Pick<Categories, 'categoryId' | 'categoryName'>;
     majority: Pick<Categories, 'categoryId' | 'categoryName'>;
 }
-export interface Tag {
-    isActive: boolean;
+export interface Tag extends BaseEntity {
     tagId: string;
     name: string;
-    color: string;
-    backgroundColor: string;
+    color?: string;
+    backgroundColor?: string;
 }
 
-export interface Categories {
+export interface Categories extends BaseEntity {
     isActive: any;
     categoryId: string;
     categoryName: string;
     parent?: Categories;
-    updatedAt: string;
-    createdAt: string;
 }
 
 export interface CandidatesApplied {
