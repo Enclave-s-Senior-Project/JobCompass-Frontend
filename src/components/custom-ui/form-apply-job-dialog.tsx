@@ -51,7 +51,7 @@ export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void; j
         }
         if (state.success) {
             toast.success(successKeyMessage.APPLY_JOB_SUCCESSFUL);
-            router.push('/single-job/' + jobId);
+            setOpen(false);
         }
     }, [state.success, state.errors, router, state.email]);
 
@@ -102,6 +102,7 @@ export function TextEditorApplyJob(props: { setOpen: (value: boolean) => void; j
 
             <div className="flex justify-between gap-3">
                 <Button
+                    type="reset"
                     variant="outline"
                     className="h-[48px] w-[102px] bg-[#E7F0FA] text-[#0A65CC]"
                     onClick={() => setOpen(false)}

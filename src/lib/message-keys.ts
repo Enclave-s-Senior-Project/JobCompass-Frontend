@@ -35,6 +35,13 @@ const errorKeyMessage = {
     BOOST_JOB_LIMIT_EXCEEDED: 'Boost job limit exceeded.',
     TAG_NOT_FOUND: 'Tag not found.',
     TAG_NAME_ALREADY_EXISTS: 'Tag name already exists.',
+    ENTERPRISE_NOT_ACTIVE: 'Enterprise not active.',
+    ENTERPRISE_MAX_LENGTH: 'Enterprise name too long.',
+    COUNTRY_MAX_LENGTH: 'Country name too long.',
+    CITY_MAX_LENGTH: 'City name too long.',
+    STREET_MAX_LENGTH: 'Street name too long.',
+    ZIP_CODE_MAX_LENGTH: 'Zip code too long.',
+    CAN_NOT_APPLY_OWN_JOB: 'Cannot apply to own job.',
 };
 
 const warningKeyMessage = {
