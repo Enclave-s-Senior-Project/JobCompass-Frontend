@@ -15,7 +15,7 @@ import { CategoryItem } from './item-category';
 import { toast } from '@/lib/toast';
 
 import { CreateCategoryDialog } from './dialog-create-category';
-import { DeleteCategoryDialog } from './dialog-delete-category';
+import { DeleteConfirmDialog } from '../../../global/dialog-delete-confirm';
 
 type Props = {
     params: DetailedRequest.Pagination;
@@ -119,36 +119,27 @@ export const ListCategories = memo(({ params }: Props) => {
     const handleSelectChildrenCategory = (categoryId: string) => {
         if (!data?.data) return;
 
-        let parentCategory,
-            childrenIds: string[] = [];
-
-        for (const cat of data.data) {
-            if (cat.children?.some((sub) => sub.categoryId === categoryId)) {
-                parentCategory = cat;
-                childrenIds = cat.children.map((sub) => sub.categoryId);
-                break;
-            }
-        }
+        // Find parent category containing this child
+        const parentCategory = data.data.find((cat) => cat.children?.some((sub) => sub.categoryId === categoryId));
 
         if (!parentCategory) return;
 
-        const parentCategoryId = parentCategory.categoryId;
+        // Use functional state update to ensure we're working with current state
+        setSelectedCategory((prevSelected) => {
+            const updatedSelection = new Set(prevSelected);
+            const parentCategoryId = parentCategory.categoryId;
 
-        // Handle selection logic outside of setState
-        const prevSelected = selectedCategory;
-        const prevSet = new Set(prevSelected);
-        let newSelected: string[];
+            if (updatedSelection.has(categoryId)) {
+                // Deselect this child category and its parent if needed
+                updatedSelection.delete(categoryId);
+                updatedSelection.delete(parentCategoryId);
+            } else {
+                // Select this child category
+                updatedSelection.add(categoryId);
+            }
 
-        if (prevSet.has(categoryId)) {
-            prevSet.delete(categoryId);
-            prevSet.delete(parentCategoryId);
-            newSelected = Array.from(prevSet);
-        } else {
-            prevSet.add(categoryId);
-            newSelected = Array.from(prevSet);
-        }
-
-        setSelectedCategory(newSelected);
+            return Array.from(updatedSelection);
+        });
     };
 
     const handleCreatePrimaryCategory = (categoryName: string) => {
@@ -189,7 +180,7 @@ export const ListCategories = memo(({ params }: Props) => {
                             handleCreateCategory={handleCreatePrimaryCategory}
                         />
 
-                        <DeleteCategoryDialog
+                        <DeleteConfirmDialog
                             triggerNode={
                                 <button
                                     disabled={selectedCategory.length === 0}
@@ -203,7 +194,8 @@ export const ListCategories = memo(({ params }: Props) => {
                             }
                             onDelete={handleDeleteManyCategories}
                             onClose={() => {}}
-                            title="Are you sure that these categories will be deleted?"
+                            title="Delete Category Confirmation"
+                            description="Are you sure you want to delete these categories? This action cannot be undone."
                         />
                     </div>
                 </CardHeader>

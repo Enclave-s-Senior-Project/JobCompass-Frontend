@@ -340,7 +340,7 @@ export function FormAddEnterprises({ setOpen, refetch }: { setOpen: (value: bool
                 <div className="w-1/2">
                     <label className="cursor-default text-sm text-gray-900">Category type</label>
                     <MultiSelectCategoriesSearchInput
-                        onChange={(newTagIds: Categories[]) => setCategories(newTagIds)}
+                        onChange={(selectedItems: Categories[]) => setCategories(selectedItems)}
                         error={state.errors?.category}
                     />
                     <p className="text-[12px] font-medium text-red-500">

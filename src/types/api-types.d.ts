@@ -132,6 +132,8 @@ export namespace DetailedResponse {
     export type CheckBoostJob = {
         check: boolean;
     };
+
+    export type GetAllTags = ResponseWithMeta<Tag[]>;
 }
 
 export namespace DetailedRequest {
@@ -365,5 +367,13 @@ export namespace DetailedRequest {
 
     export interface DeleteCategories {
         categoryIds: string[];
+    }
+
+    export interface UpdateTag extends Omit<Tag, 'isActive' | 'tagId' | 'createdAt' | 'updatedAt'> {}
+
+    export interface DeleteOneTag extends Pick<Tag, 'tagId'> {}
+
+    export interface DeleteManyTag {
+        tagIds: string[];
     }
 }

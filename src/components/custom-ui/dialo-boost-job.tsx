@@ -42,13 +42,13 @@ export function DialogBoostJob({
     };
 
     const handlePromote = async () => {
-        try{
+        try {
             await BoostJobService.bootJob({ jobId: jobId, pointsUsed: points });
-        refetchDetailJob();
-        refetchJob();
-        toast.success(successKeyMessage.JOB_BOOST_SUCCESSFUL);
-        onClose();
-        }catch (error) {
+            refetchDetailJob();
+            refetchJob();
+            toast.success(successKeyMessage.JOB_BOOST_SUCCESSFUL);
+            onClose();
+        } catch (error) {
             handleErrorToast(error);
         }
     };

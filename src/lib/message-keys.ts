@@ -33,7 +33,9 @@ const errorKeyMessage = {
     INVALID_ID: 'Invalid id',
     NOT_ALLOWED_UPDATE_APPLICATION_STATUS: 'Not allowed to update application status.',
     BOOST_JOB_LIMIT_EXCEEDED: 'Boost job limit exceeded.',
-};  
+    TAG_NOT_FOUND: 'Tag not found.',
+    TAG_NAME_ALREADY_EXISTS: 'Tag name already exists.',
+};
 
 const warningKeyMessage = {
     NOT_ALLOWED_UPDATE_APPLICATION_APPROVED_OR_DENIED:

@@ -2,13 +2,13 @@ import { TableCell, TableRow } from '@/components/ui/table';
 import { toast } from '@/lib/toast';
 import { cn, handleErrorToast, toFormattedDate } from '@/lib/utils';
 import { CategoryService } from '@/services';
-import { Categories, DetailedRequest, DetailedResponse } from '@/types';
+import { Categories, DetailedRequest } from '@/types';
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import { Check, ChevronRight, Plus, SquarePen, Trash } from 'lucide-react';
 import { useState, memo } from 'react';
 import { CreateCategoryDialog } from './dialog-create-category';
 import { SubCategoryItem } from './item-subcategory';
-import { DeleteCategoryDialog } from './dialog-delete-category';
+import { DeleteConfirmDialog } from '../../../global/dialog-delete-confirm';
 
 type Props = {
     category: Categories & { children?: Categories[] };
@@ -152,7 +152,7 @@ export const CategoryItem = memo(
                             >
                                 <SquarePen className="size-5" />
                             </button>
-                            <DeleteCategoryDialog
+                            <DeleteConfirmDialog
                                 triggerNode={
                                     <button className="rounded-sm p-1 text-danger-500 hover:bg-danger-50">
                                         <Trash className="size-5" />
@@ -162,6 +162,8 @@ export const CategoryItem = memo(
                                 onDelete={() => {
                                     deleteCategoryMutation.mutate(category.categoryId);
                                 }}
+                                title="Category Delete Confirmation"
+                                description={`Category "${category.categoryName}" will be deleted permanently. Are you sure?`}
                             />
 
                             <CreateCategoryDialog
@@ -200,3 +202,5 @@ export const CategoryItem = memo(
         );
     }
 );
+
+CategoryItem.displayName = 'CategoryItem';

@@ -1,12 +1,9 @@
 import { TableCell, TableRow } from '@/components/ui/table';
-import { toast } from '@/lib/toast';
-import { cn, handleErrorToast, toFormattedDate } from '@/lib/utils';
-import { CategoryService } from '@/services';
+import { cn, toFormattedDate } from '@/lib/utils';
 import { Categories } from '@/types';
-import { useMutation } from '@tanstack/react-query';
 import { Check, SquarePen, Trash } from 'lucide-react';
 import { memo, useState } from 'react';
-import { DeleteCategoryDialog } from './dialog-delete-category';
+import { DeleteConfirmDialog } from '../../../global/dialog-delete-confirm';
 
 type SubCategoryItemProps = {
     subcategory: Categories;
@@ -88,7 +85,7 @@ export const SubCategoryItem = memo(
                         >
                             <SquarePen className="size-5" />
                         </button>
-                        <DeleteCategoryDialog
+                        <DeleteConfirmDialog
                             triggerNode={
                                 <button className="rounded-sm p-1 text-danger-500 hover:bg-danger-50">
                                     <Trash className="size-5" />
@@ -96,7 +93,8 @@ export const SubCategoryItem = memo(
                             }
                             onClose={() => {}}
                             onDelete={() => handleDeleteCategory(subcategory.categoryId)}
-                            title={`The "${subcategory.categoryName}" will be deleted permanently. Are you sure?`}
+                            title="Delete Category Confirmation"
+                            description={`The "${subcategory.categoryName}" will be deleted permanently. Are you sure?`}
                         />
                     </div>
                 </TableCell>
@@ -104,3 +102,5 @@ export const SubCategoryItem = memo(
         );
     }
 );
+
+SubCategoryItem.displayName = 'SubCategoryItem';
