@@ -71,6 +71,7 @@ export interface Enterprise {
     status: string | null;
     enterpriseId: string;
     addresses: Address[] | null;
+    totalPoints?: number;
 }
 
 export interface CV {

@@ -122,6 +122,13 @@ export namespace DetailedResponse {
 
     export type GetPendingStatusEnterprise = ResponseWithMeta<Enterprise[]>;
 
+    export type getInformationEnterprise = Enterprise & {
+        latestJobs: Job[];
+        totalJobs: number;
+        totalCandidateFavorites: number;
+        totalBoostedJobs: number;
+    };
+
     export type CheckPosition = {
         estimatedRank: number;
         projectedBoost: number;
