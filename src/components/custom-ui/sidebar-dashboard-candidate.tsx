@@ -4,7 +4,7 @@ import { BellRing, Bookmark, BriefcaseBusiness, Layers, Settings } from 'lucide-
 export function SidebarDashboardCandidate() {
     const sidebarItems = [
         {
-            href: '/overview',
+            href: '/candidate-dashboard/overview',
             label: 'Overview',
             icon: <Layers />,
         },

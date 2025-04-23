@@ -152,7 +152,13 @@ const postJobSchema = z
             .string({
                 required_error: 'Expiration date is required',
             })
-            .nonempty('Expiration date cannot be empty'),
+            .nonempty('Expiration date cannot be empty')
+            .refine((date) => !isNaN(Date.parse(date)), {
+                message: 'Invalid date format',
+            })
+            .refine((date) => new Date(date) >= new Date(new Date().setHours(0, 0, 0, 0)), {
+                message: 'Expiration date cannot be in the past',
+            }),
         category: z
             .string({
                 required_error: 'Category is required',
