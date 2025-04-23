@@ -129,6 +129,12 @@ export namespace DetailedResponse {
         totalBoostedJobs: number;
     };
 
+    export type GetUserProfileById = User & {
+        appliedJob: AppliedJob[];
+        totalAppliedJob: number;
+        totalFavoriteJob: number;
+    };
+
     export type CheckPosition = {
         estimatedRank: number;
         projectedBoost: number;

@@ -125,4 +125,19 @@ export class UserService {
             throw err;
         }
     }
+
+    public static async getUserProfileById() {
+        try {
+            const res = await authAxios.get<ApiResponse<DetailedResponse.GetUserProfileById>>('/me');
+            return res.payload.value;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new Error({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
 }

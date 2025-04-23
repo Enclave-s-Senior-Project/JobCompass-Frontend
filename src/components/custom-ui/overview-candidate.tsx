@@ -3,25 +3,24 @@ import {
     BellIcon,
     BookmarkIcon,
     BriefcaseIcon,
-    BuildingIcon,
+    Calendar,
     ChevronDownIcon,
     ChevronRightIcon,
-    GlobeIcon,
+    ContactRound,
     MapPinIcon,
-    TrendingUpIcon,
-    UsersIcon,
+    User,
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
-import { EnterpriseService } from '@/services/enterprises.service';
-import { handleErrorToast } from '@/lib/utils';
-import JobRowDashboard from '../custom-ui/job-row-dashboard';
+import { handleErrorToast, toFormattedDate } from '@/lib/utils';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { UserService } from '@/services';
+import JobRowDashboardUser from './job-row-dashboard-candidate';
 
-export default function ComingSoon() {
+export default function OverviewCandidate() {
     const router = useRouter();
     const [isLoaded, setIsLoaded] = useState(false);
     const [isProfileExpanded, setIsProfileExpanded] = useState(false);
@@ -29,8 +28,7 @@ export default function ComingSoon() {
         queryKey: [queryKey.dashboard],
         queryFn: async () => {
             try {
-                const temp = await EnterpriseService.getInformationEnterprise();
-
+                const temp = await UserService.getUserProfileById();
                 return temp;
             } catch (error: any) {
                 console.log(error);
@@ -72,41 +70,9 @@ export default function ComingSoon() {
                 >
                     <h1 className="text-2xl font-semibold text-gray-900">
                         Hello,&nbsp;
-                        {resultQuery?.name}&nbsp;
+                        {resultQuery?.fullName}&nbsp;
                     </h1>
                     <p className="text-gray-500">Here is your daily activities and applications</p>
-                </motion.div>
-
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    className="rounded-lg bg-gradient-to-r from-purple-500 to-indigo-600 p-4 text-white shadow-lg"
-                >
-                    <div className="flex items-center gap-3">
-                        <div className="rounded-full bg-white/20 p-2">
-                            <TrendingUpIcon className="h-6 w-6" />
-                        </div>
-                        <div>
-                            <p className="text-sm font-medium text-purple-100">Enterprise Points</p>
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.8, duration: 0.5 }}
-                                className="flex items-end gap-1"
-                            >
-                                <span className="text-2xl font-bold">{resultQuery?.totalPoints}</span>
-                            </motion.div>
-                        </div>
-                    </div>
-                    <div className="mt-2 h-1.5 rounded-full bg-white/20">
-                        <motion.div
-                            initial={{ width: 0 }}
-                            animate={{ width: '100%' }}
-                            transition={{ delay: 1, duration: 0.8, ease: 'easeOut' }}
-                            className="h-full rounded-full bg-white"
-                        />
-                    </div>
                 </motion.div>
             </div>
 
@@ -129,9 +95,9 @@ export default function ComingSoon() {
                             transition={{ duration: 0.8, delay: 0.2 }}
                             className="text-2xl font-bold text-gray-900"
                         >
-                            {resultQuery?.totalJobs}
+                            {resultQuery?.totalAppliedJob}
                         </motion.h2>
-                        <p className="text-sm text-gray-600">Total jobs</p>
+                        <p className="text-sm text-gray-600">Applied Jobs</p>
                     </div>
                     <motion.div whileHover={{ rotate: 15 }} className="rounded-lg bg-blue-100 p-3">
                         <BriefcaseIcon className="h-6 w-6 text-blue-600" />
@@ -150,9 +116,9 @@ export default function ComingSoon() {
                             transition={{ duration: 0.8, delay: 0.3 }}
                             className="text-2xl font-bold text-gray-900"
                         >
-                            {resultQuery?.totalCandidateFavorites}
+                            {resultQuery?.totalFavoriteJob}
                         </motion.h2>
-                        <p className="text-sm text-gray-600">Favorite candidates</p>
+                        <p className="text-sm text-gray-600">Favorite Jobs</p>
                     </div>
                     <motion.div whileHover={{ rotate: 15 }} className="rounded-lg bg-amber-100 p-3">
                         <BookmarkIcon className="h-6 w-6 text-amber-600" />
@@ -171,9 +137,9 @@ export default function ComingSoon() {
                             transition={{ duration: 0.8, delay: 0.4 }}
                             className="text-2xl font-bold text-gray-900"
                         >
-                            {resultQuery?.totalBoostedJobs}
+                            22
                         </motion.h2>
-                        <p className="text-sm text-gray-600">Job promote</p>
+                        <p className="text-sm text-gray-600">Job Alerts</p>
                     </div>
                     <motion.div whileHover={{ rotate: 15 }} className="rounded-lg bg-green-100 p-3">
                         <BellIcon className="h-6 w-6 text-green-600" />
@@ -197,7 +163,7 @@ export default function ComingSoon() {
                                 className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-white/20"
                             >
                                 <Image
-                                    src={resultQuery?.logoUrl || '/placeholder.svg'}
+                                    src={resultQuery?.profileUrl || '/placeholder.svg'}
                                     alt="Profile"
                                     width={48}
                                     height={48}
@@ -228,7 +194,7 @@ export default function ComingSoon() {
                                 whileTap={{ scale: 0.95 }}
                                 className="flex items-center gap-1 rounded-md bg-white px-4 py-2 text-indigo-600 transition-colors hover:bg-gray-100"
                                 onClick={() => {
-                                    router.push('/employer-dashboard/settings/company-info');
+                                    router.push('/candidate-dashboard/settings/personal-profile');
                                 }}
                             >
                                 Edit Profile
@@ -255,37 +221,35 @@ export default function ComingSoon() {
                                     <h3 className="mb-3 font-medium">Enterprise Information</h3>
                                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                         <div className="flex items-center gap-2">
-                                            <BuildingIcon className="h-5 w-5 text-blue-200" />
-                                            <div>
-                                                <p className="text-sm text-blue-100">Company Name</p>
-                                                <p className="font-medium">{resultQuery?.name}</p>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center gap-2">
                                             <MapPinIcon className="h-5 w-5 text-blue-200" />
                                             <div>
-                                                <p className="text-sm text-blue-100">Address</p>
+                                                <p className="text-sm text-blue-100">National</p>
+                                                <p className="font-medium">{resultQuery?.nationality}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <User className="h-5 w-5 text-blue-200" />
+                                            <div>
+                                                <p className="text-sm text-blue-100">Gender</p>
+                                                <p className="font-medium">{resultQuery?.gender}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Calendar className="h-5 w-5 text-blue-200" />
+                                            <div>
+                                                <p className="text-sm text-blue-100">Date of birth</p>
                                                 <p className="font-medium">
-                                                    {resultQuery?.addresses?.[0]?.street} -{' '}
-                                                    {resultQuery?.addresses?.[0]?.city} -{' '}
-                                                    {resultQuery?.addresses?.[0]?.country}
+                                                    {resultQuery?.dateOfBirth
+                                                        ? toFormattedDate(resultQuery.dateOfBirth)
+                                                        : 'Date of birth not available'}
                                                 </p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <UsersIcon className="h-5 w-5 text-blue-200" />
+                                            <ContactRound className="h-5 w-5 text-blue-200" />
                                             <div>
-                                                <p className="text-sm text-blue-100">Company Size</p>
-                                                <p className="font-medium">{resultQuery?.teamSize}</p>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <GlobeIcon className="h-5 w-5 text-blue-200" />
-                                            <div>
-                                                <p className="text-sm text-blue-100">Industry</p>
-                                                <p className="font-medium">
-                                                    {resultQuery?.categories?.map((cat) => cat.categoryName).join(', ')}
-                                                </p>
+                                                <p className="text-sm text-blue-100">Marital Status</p>
+                                                <p className="font-medium">{resultQuery?.maritalStatus}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -304,10 +268,10 @@ export default function ComingSoon() {
                 className="mb-6"
             >
                 <div className="mb-4 flex items-center justify-between">
-                    <h2 className="text-lg font-semibold text-gray-900">Recently Posted Jobs</h2>
+                    <h2 className="text-lg font-semibold text-gray-900">Recently Applied</h2>
                     <motion.a
                         whileHover={{ x: 3 }}
-                        href="/employer-dashboard/my-jobs"
+                        href="/candidate-dashboard/applied-jobs"
                         className="flex items-center text-gray-500 hover:text-gray-700"
                     >
                         View all
@@ -338,7 +302,7 @@ export default function ComingSoon() {
                                     scope="col"
                                     className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                                 >
-                                    CREATE AT
+                                    Date Applied
                                 </th>
                                 <th
                                     scope="col"
@@ -355,11 +319,11 @@ export default function ComingSoon() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200 bg-white">
-                            {resultQuery?.latestJobs?.map((job) => (
-                                <JobRowDashboard
-                                    job={job}
-                                    key={job.jobId}
-                                    handleViewDetails={() => handleViewDetails(job.jobId)}
+                            {resultQuery?.appliedJob?.map((temp) => (
+                                <JobRowDashboardUser
+                                    temp={temp}
+                                    key={temp.job.jobId}
+                                    handleViewDetails={() => handleViewDetails(temp.job.jobId)}
                                 />
                             ))}
                         </tbody>
