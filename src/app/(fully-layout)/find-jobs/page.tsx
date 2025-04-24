@@ -1,5 +1,5 @@
 'use client';
-import { Suspense, useState, useCallback, useContext } from 'react';
+import { useState, useCallback, useContext } from 'react';
 import { LayoutGrid, List } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SearchForm } from '@/components/custom-ui/search-bar';
@@ -132,7 +132,9 @@ export default function Page() {
     }, [refetch]);
     return (
         <main className="min-h-dvh bg-white">
-            <SearchForm filters={activeFilters} setFilters={setActiveFilters} />
+            <div className="relative z-10">
+                <SearchForm filters={activeFilters} setFilters={setActiveFilters} />
+            </div>
             <div className="mx-auto mb-6 mt-6 flex max-w-screen-xl flex-col items-center justify-between gap-6 md:flex-row">
                 <div className="flex flex-1 flex-wrap items-center justify-between gap-2">
                     <div className="flex flex-wrap items-center gap-1">
@@ -319,18 +321,16 @@ export default function Page() {
                 </div>
             </div>
             <div className="container mx-auto max-w-screen-xl pb-4">
-                <Suspense fallback={<span>Loading...</span>}>
-                    <ListCardJobs
-                        viewType={viewType}
-                        perPage={itemsPerPage}
-                        option={option}
-                        data={resultQuery?.data}
-                        isPending={isPending || isFetching}
-                        meta={resultQuery?.meta as Meta}
-                        totalPages={totalPages}
-                        refetch={refetch}
-                    />
-                </Suspense>
+                <ListCardJobs
+                    viewType={viewType}
+                    perPage={itemsPerPage}
+                    option={option}
+                    data={resultQuery?.data}
+                    isPending={isPending || isFetching}
+                    meta={resultQuery?.meta as Meta}
+                    totalPages={totalPages}
+                    refetch={refetch}
+                />
             </div>
         </main>
     );

@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { Dispatch, memo, SetStateAction, useState } from 'react';
 import {
     DndContext,
     DragOverlay,
@@ -18,13 +18,7 @@ import {
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import ColumnComponent from './column';
 import ApplicationCard from './application-card';
-import { queryKey } from '@/lib/react-query/keys';
-import { useSearchParams } from 'next/navigation';
-import { AppliedJob, DetailedRequest, ShorthandApplication } from '@/types';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { handleErrorToast } from '@/lib/utils';
-import { ApplyJobService } from '@/services';
-import { useDebounce } from '@/hooks/useDebounce';
+import { ShorthandApplication } from '@/types';
 import { ApplyJobStatus } from '@/lib/common-enum';
 // Types
 export type Education = 'Master Degree' | 'Bachelor Degree' | 'Intermediate Degree' | 'High School Degree';
@@ -37,51 +31,14 @@ export interface ColumnType {
 }
 
 interface KanbanBoardProps {
-    jobId: string | string[] | undefined;
+    columns: ColumnType[];
+    setColumns: Dispatch<SetStateAction<ColumnType[]>>;
 }
 
-export default function KanbanBoard({ jobId }: KanbanBoardProps) {
-    const ITEM_PER_PAGE = 5;
-    const search = useSearchParams();
-
-    const page = Number(search.get('page') || 1);
-    const order = (search.get('order')?.toUpperCase() as 'ASC' | 'DESC') || 'ASC';
-    const { data: resultQuery } = useQuery({
-        queryKey: [queryKey.getApplyJobs, { jobId, order, page, take: ITEM_PER_PAGE }],
-        queryFn: async ({ queryKey }) => {
-            try {
-                const payload = await ApplyJobService.listCandidatesApplyJob(
-                    queryKey[1] as DetailedRequest.GetAppliedJob
-                );
-                return payload || []; // Ensure a valid return value
-            } catch (error: any) {
-                handleErrorToast(error);
-                return null; // Return fallback data to avoid query failure
-            }
-        },
-        staleTime: 1000 * 60, // 1 minute
-        retry: 2,
-        enabled: true,
-        placeholderData: (prevData) => prevData || [],
-    });
-
-    const [columns, setColumns] = useState<ColumnType[]>((resultQuery as ColumnType[]) || []);
+export const KanbanBoard = memo(({ columns, setColumns }: KanbanBoardProps) => {
     const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
     const [, setActiveColumn] = useState<ColumnType | null>(null);
     const [activeApplicant, setActiveApplicant] = useState<ShorthandApplication | null>(null);
-    const [beforeStateColumn, setBeforeStateColumn] = useState<ColumnType[]>([]);
-
-    const updateStatusMutation = useMutation({
-        mutationFn: async (changes: Array<Pick<AppliedJob, 'appliedJobId' | 'status'>>) =>
-            await ApplyJobService.updateApplicationStatus(changes),
-        onSuccess: () => {
-            setBeforeStateColumn(debouncedColumns);
-        },
-        onError: (error: any) => {
-            handleErrorToast(error);
-            setColumns(beforeStateColumn);
-        },
-    });
 
     // Configure sensors for drag detection
     const sensors = useSensors(
@@ -102,87 +59,6 @@ export default function KanbanBoard({ jobId }: KanbanBoardProps) {
             coordinateGetter: sortableKeyboardCoordinates,
         })
     );
-
-    // Move setTotalPages to a useEffect to avoid modifying state inside queryFn
-    useEffect(() => {
-        if (resultQuery) {
-            setColumns((resultQuery as ColumnType[]) || []);
-            setBeforeStateColumn((resultQuery as ColumnType[]) || []);
-        }
-    }, [resultQuery]);
-
-    const debouncedColumns = useDebounce(columns, 2000);
-
-    // Check for changes in the columns and update status
-    useEffect(() => {
-        const isChanged = compareChange(beforeStateColumn, debouncedColumns);
-        if (isChanged) {
-            const oldStateApplication = beforeStateColumn.reduce<ShorthandApplication[]>(
-                (acc, current) => acc.concat(current.applicants),
-                []
-            );
-            const currentStateApplication = debouncedColumns.reduce<ShorthandApplication[]>(
-                (acc, current) => acc.concat(current.applicants),
-                []
-            );
-
-            const changes = currentStateApplication
-                .filter((current: ShorthandApplication) => {
-                    return !oldStateApplication.some(
-                        (old: ShorthandApplication) =>
-                            old.appliedJobId === current.appliedJobId && old.status === current.status
-                    );
-                })
-                .map((current: ShorthandApplication) => {
-                    return {
-                        appliedJobId: current.appliedJobId,
-                        status: current.status,
-                    };
-                });
-
-            updateStatusMutation.mutate(changes);
-        }
-    }, [debouncedColumns]);
-
-    const compareChange = (oldState: ColumnType[], currentState: ColumnType[]) => {
-        let isChanged = false;
-
-        // Check for changes in column structure or applicant counts
-        if (oldState.length !== currentState.length) {
-            return true;
-        }
-
-        // Compare each column and its applicants
-        for (let i = 0; i < oldState.length; i++) {
-            const oldColumn = oldState[i];
-            const currentColumn = currentState.find((col) => col.id === oldColumn.id);
-
-            // If column doesn't exist anymore or has different count
-            if (!currentColumn || oldColumn.count !== currentColumn.count) {
-                isChanged = true;
-                break;
-            }
-
-            // Check if applicants have changed in this column
-            if (oldColumn.applicants.length !== currentColumn.applicants.length) {
-                isChanged = true;
-                break;
-            }
-
-            // Check if any applicants have been moved within or between columns
-            const applicantsMoved = oldColumn.applicants.some((oldApp) => {
-                const currentApp = currentColumn.applicants.find((app) => app.appliedJobId === oldApp.appliedJobId);
-                return !currentApp; // If applicant not found in current column, it has moved
-            });
-
-            if (applicantsMoved) {
-                isChanged = true;
-                break;
-            }
-        }
-
-        return isChanged;
-    };
 
     // Find the active item (column or applicant)
     const findActiveItem = (id: UniqueIdentifier) => {
@@ -347,6 +223,6 @@ export default function KanbanBoard({ jobId }: KanbanBoardProps) {
             </DragOverlay>
         </DndContext>
     );
-}
+});
 
-export type { ColumnType as Column };
+KanbanBoard.displayName = 'KanbanBoard';

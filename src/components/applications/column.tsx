@@ -2,7 +2,6 @@
 
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import type { Column as ColumnType } from './kanban-board';
 import ApplicationCard from './application-card';
 import { Grid2X2, MoreHorizontal, Trash } from 'lucide-react';
 import {
@@ -13,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Separator } from '@/components/ui/separator';
 import { ShorthandApplication } from '@/types';
+import { ColumnType } from './kanban-board';
 
 interface ColumnProps {
     column: ColumnType;

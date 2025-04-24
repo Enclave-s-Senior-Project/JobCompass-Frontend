@@ -42,6 +42,7 @@ const errorKeyMessage = {
     STREET_MAX_LENGTH: 'Street name too long.',
     ZIP_CODE_MAX_LENGTH: 'Zip code too long.',
     CAN_NOT_APPLY_OWN_JOB: 'Cannot apply to own job.',
+    JOB_NOT_FOUND: 'Job not found or not active.',
 };
 
 const warningKeyMessage = {
