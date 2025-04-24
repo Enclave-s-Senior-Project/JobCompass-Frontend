@@ -2,7 +2,6 @@
 import { Job } from '@/types';
 import { motion } from 'framer-motion';
 import { toFormattedDate } from '@/lib/utils';
-import { useRouter } from 'next/router';
 
 type props = {
     job: Job;
