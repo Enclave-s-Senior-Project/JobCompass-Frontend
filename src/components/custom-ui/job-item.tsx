@@ -7,8 +7,7 @@ import { JobStatusEnum } from '@/lib/common-enum';
 import { capitalize } from 'lodash';
 import clsx from 'clsx';
 import { Award, Calendar, Info, MapPin, MoreVerticalIcon, UsersRound, XCircle, Zap, ZapOff } from 'lucide-react';
-import { toDollarK, toFormattedDate } from '@/lib/utils';
-import { getRandomFeatureColor } from '@/lib/random-color';
+import { hexToRgb, toDollarK, toFormattedDate } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@radix-ui/react-select';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
@@ -211,9 +210,15 @@ const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true
 });
 
 const TagBadge = ({ tag }: { tag: Tag }) => {
-    const color = getRandomFeatureColor();
     return (
-        <span key={tag.tagId} className={clsx('rounded-lg px-2 py-0.5', color.text, color.bg)}>
+        <span
+            key={tag.tagId}
+            style={{
+                background: `rgba(${hexToRgb(tag.color || '')}, 0.2)`,
+                color: tag.color,
+            }}
+            className={clsx('rounded-lg px-2 py-0.5')}
+        >
             {tag.name}
         </span>
     );
