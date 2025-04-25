@@ -48,7 +48,7 @@ const menuItems: PrimarySidebarItem[] = [
     {
         icon: <UsersRound />,
         title: 'Candidates',
-        href: 'admin-dashboard/candidates',
+        href: '/admin-dashboard/candidate',
     },
     {
         icon: <Building2 />,

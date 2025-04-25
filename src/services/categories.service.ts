@@ -10,9 +10,12 @@ const authAxios = new AuthAxios('category');
 export class CategoryService {
     public static async getPrimaryCategories(pagination: DetailedRequest.Pagination) {
         try {
-            const temp = await axios.get<ApiResponse<DetailedResponse.GetCategoriesPrimary>>('/primary', {
-                params: pagination,
-            });
+            const temp = await authAxios.get<ApiResponse<DetailedResponse.GetCategoriesPrimary>>(
+                '/primary-enterprise',
+                {
+                    params: pagination,
+                }
+            );
             return temp?.payload?.value;
         } catch (err) {
             if (err instanceof AxiosError) {

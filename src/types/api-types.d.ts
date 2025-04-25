@@ -12,7 +12,7 @@ import {
     Tag,
     User,
 } from './entities';
-import { EnterpriseStatus } from '@/lib/common-enum';
+import { CandidateStatus, EnterpriseStatus } from '@/lib/common-enum';
 
 interface ResponseWithMeta<T> {
     meta: Meta;
@@ -147,6 +147,8 @@ export namespace DetailedResponse {
     };
 
     export type GetAllTags = ResponseWithMeta<Tag[]>;
+
+    export type GetCandidatesDashboard = ResponseWithMeta<User[]>;
 }
 
 export namespace DetailedRequest {
@@ -390,10 +392,25 @@ export namespace DetailedRequest {
         tagIds: string[];
     }
 
+    export interface GetCandidatesDashboard extends Pagination {}
+
     export interface GetListEnterprise extends Pagination {
         status?: EnterpriseStatus | 'all';
         organizationType?: string | 'all';
         categoryId?: string | 'all';
         address?: string;
+    }
+
+    export interface UpdateCandidateStatus {
+        enterpriseId: string;
+        status: CandidateStatus;
+        reason?: string;
+    }
+
+    export interface GetListCandidate extends Pagination {
+        status?: CandidateStatus | 'all';
+        gender?: GenderCandidate | 'all';
+        maritalStatus?: MaritalStatusCandidate | 'all';
+        nationality?: string;
     }
 }

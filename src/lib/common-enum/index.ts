@@ -56,3 +56,20 @@ export enum OrganizationType {
     PUBLIC = 'PUBLIC',
     OUTSOURCE = 'OUTSOURCE',
 }
+
+export enum CandidateStatus {
+    ACTIVE = 'ACTIVE',
+    BLOCKED = 'BLOCKED',
+    REJECTED = 'REJECTED',
+    PENDING = 'PENDING',
+}
+
+export enum GenderCandidate {
+    MALE = 'MALE',
+    FEMALE = 'FEMALE',
+}
+
+export enum MaritalStatusCandidate {
+    ALONE = 'ALONE',
+    MARRIED = 'MARRIED',
+}

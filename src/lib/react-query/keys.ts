@@ -29,6 +29,8 @@ export const queryKey = {
     detailEnterprise: 'detail-enterprise',
     getCategories: 'get-categories',
     pendingStatusEnterprises: 'pending-status-enterprises',
+    candidateDashboard: 'candidate-dashboard',
+    userProfileDashboard: 'user-profile-dashboard',
     dashboard: 'dashboard',
     enterpriseListManagement: 'enterprise-list-management',
 };
