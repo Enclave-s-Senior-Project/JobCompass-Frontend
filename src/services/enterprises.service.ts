@@ -67,7 +67,7 @@ export class EnterpriseService {
         }
     }
 
-    public static async getListEnterprise(data: DetailedRequest.GetListEnterprise) {
+    public static async getListEnterprise(data: DetailedRequest.GetListCandidate) {
         try {
             const temp = await authAxios.get<ApiResponse<DetailedResponse.GetDataEnterprises>>('', { params: data });
             return temp.payload.value;

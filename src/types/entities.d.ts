@@ -1,5 +1,5 @@
 import { Categories } from '@/types';
-import { EnterpriseStatus, JobStatusEnum, NotificationType } from '@/lib/common-enum';
+import { CandidateStatus, EnterpriseStatus, JobStatusEnum, NotificationType } from '@/lib/common-enum';
 import { Address, OrganizationType, SocialType } from './common-types';
 
 interface BaseEntity {
@@ -113,6 +113,7 @@ export interface User extends BaseEntity {
     roles: Role[];
     industry: Pick<Categories, 'categoryId' | 'categoryName'>;
     majority: Pick<Categories, 'categoryId' | 'categoryName'>;
+    account?: Account;
 }
 export interface Tag extends BaseEntity {
     tagId: string;
@@ -197,4 +198,17 @@ export interface ShorthandApplication {
     >;
     job: Pick<Job, 'type'>;
     cv: Pick<Resume, 'cvId' | 'cvUrl' | 'cvName'>;
+}
+
+export interface Account {
+    createdAt: string;
+    updatedAt: string;
+    isActive: boolean;
+    accountId: string;
+    facebookId: any;
+    googleId: any;
+    email: string;
+    password: string;
+    status: CandidateStatus;
+    roles: string[];
 }

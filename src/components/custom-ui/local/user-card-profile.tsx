@@ -14,9 +14,10 @@ import { hasPermission } from '@/lib/auth';
 type Props = {
     userInfo: User;
     isPending?: boolean;
+    temp?: boolean;
 };
 
-export function UserCardProfile({ userInfo, isPending = false }: Props) {
+export function UserCardProfile({ userInfo, isPending = false, temp = true }: Props) {
     const { userInfo: ownUserInfo } = useContext(UserContext);
     return (
         <div className="flex flex-wrap items-center justify-between gap-5 rounded-xl border bg-white p-10">
@@ -52,29 +53,31 @@ export function UserCardProfile({ userInfo, isPending = false }: Props) {
                     )}
                 </div>
             </div>
-            <div className="flex items-center gap-3">
-                {hasPermission(ownUserInfo, 'markCandidates', 'allowed') && (
-                    <ButtonMark className="border-2" disabled={isPending} />
-                )}
-                <Button
-                    disabled={isPending}
-                    variant="outline-secondary"
-                    size="lg"
-                    className="rounded-sm border-2 border-primary [&_svg]:size-6"
-                >
-                    <Mail className="hidden md:block" /> Send Mail
-                </Button>
-                {hasPermission(ownUserInfo, 'hireCandidate', 'hire') && (
+            {temp && (
+                <div className="flex items-center gap-3">
+                    {hasPermission(ownUserInfo, 'markCandidates', 'allowed') && (
+                        <ButtonMark className="border-2" disabled={isPending} />
+                    )}
                     <Button
                         disabled={isPending}
-                        variant="primary"
+                        variant="outline-secondary"
                         size="lg"
-                        className="rounded-sm border-2 [&_svg]:size-6"
+                        className="rounded-sm border-2 border-primary [&_svg]:size-6"
                     >
-                        <CircleArrowRight className="hidden md:block" /> Hire Candidates
+                        <Mail className="hidden md:block" /> Send Mail
                     </Button>
-                )}
-            </div>
+                    {hasPermission(ownUserInfo, 'hireCandidate', 'hire') && (
+                        <Button
+                            disabled={isPending}
+                            variant="primary"
+                            size="lg"
+                            className="rounded-sm border-2 [&_svg]:size-6"
+                        >
+                            <CircleArrowRight className="hidden md:block" /> Hire Candidates
+                        </Button>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

@@ -2,6 +2,7 @@ import { AuthAxios, BaseAxios } from '@/lib/axios';
 import { ApiResponse, DetailedRequest, DetailedResponse, GetDetailCandidate, Resume, SocialLink, User } from '@/types';
 import { AxiosError } from 'axios';
 import Error from 'next/error';
+import { handleErrorApi } from '.';
 
 const authAxios = new AuthAxios('user');
 const axios = new BaseAxios('user');
@@ -123,6 +124,32 @@ export class UserService {
                 });
             }
             throw err;
+        }
+    }
+
+    public static async getUserDashboard(data: DetailedRequest.GetListCandidate) {
+        try {
+            const dataResponse = await authAxios.get<ApiResponse<DetailedResponse.GetCandidatesDashboard>>(
+                '/candidates',
+                {
+                    params: data,
+                }
+            );
+            return dataResponse.payload.value;
+        } catch (error) {
+            handleErrorApi(error);
+        }
+    }
+
+    public static async updateUserStatus(payload: DetailedRequest.UpdateCandidateStatus) {
+        try {
+            const dataResponse = await authAxios.patch<ApiResponse<null>>(`/status/${payload.enterpriseId}`, {
+                status: payload.status,
+                reason: payload.reason,
+            });
+            return dataResponse.payload.value;
+        } catch (error) {
+            handleErrorApi(error);
         }
     }
 

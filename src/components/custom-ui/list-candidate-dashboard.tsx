@@ -1,72 +1,73 @@
 'use client';
 
-import { AdminDashboardPagination } from '@/components/custom-ui/global/pagination-admin-dashboard';
+import { memo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { queryKey } from '@/lib/react-query/keys';
 import { handleErrorToast } from '@/lib/utils';
-import { EnterpriseService } from '@/services/enterprises.service';
-import { DetailedRequest } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import { Search } from 'lucide-react';
-import { memo, useState } from 'react';
+import { DetailedRequest } from '@/types';
 import { useDebounce } from '@/hooks/useDebounce';
-import { EnterpriseItem } from './enterprise-item';
+import { AdminDashboardPagination } from '@/components/custom-ui/global/pagination-admin-dashboard';
+import { UserService } from '@/services';
+import { CandidateItem } from './candidates-items';
+import { FilterCandidateList } from './local/candidate-dashboard/filter-candidate';
 import { CiFilter } from 'react-icons/ci';
-import { FilterEnterpriseList } from './filter-enterprise-list';
 
-type Props = {
-    params: DetailedRequest.Pagination;
-};
+type Props = { params: DetailedRequest.GetListCandidate };
 
-export const EnterpriseList = memo(({ params }: Props) => {
-    const [searchParams, setSearchParams] = useState<DetailedRequest.GetListEnterprise>(params);
-
+const ListCandidateDashboard = memo(({ params }: Props) => {
+    const [searchParams, setSearchParams] = useState<DetailedRequest.GetListCandidate>(params);
     const searchDebounced = useDebounce(searchParams.options, 700);
 
-    const { data, isPending, isFetching, isRefetching, refetch } = useQuery({
-        queryKey: [queryKey.enterpriseListManagement, { ...searchParams, options: searchDebounced }],
+    const { data, isPending, isFetching, refetch, isRefetching } = useQuery({
+        queryKey: [queryKey.candidateDashboard, { ...searchParams, options: searchDebounced }],
         queryFn: async ({ queryKey }) => {
             try {
-                return await EnterpriseService.getListEnterprise(queryKey[1] as DetailedRequest.GetListCandidate);
+                return await UserService.getUserDashboard(queryKey[1] as DetailedRequest.GetListCandidate);
             } catch (error) {
                 handleErrorToast(error);
             }
         },
-        retry: 1,
+        enabled: true,
+        refetchOnWindowFocus: true,
+        refetchOnReconnect: true,
+        retry: 2,
     });
-
-    const handleFilter = (params: DetailedRequest.GetListEnterprise) => {
+    const handleFilter = (params: DetailedRequest.GetListCandidate) => {
         setSearchParams((prev) => ({ ...prev, ...params }));
     };
     const handleResetFilter = () => {
-        setSearchParams((prev) => ({
-            ...prev,
-            status: 'all',
-            categoryId: 'all',
-            address: '',
-            organizationType: 'all',
-        }));
+        setSearchParams((prev) => {
+            const newParams = { ...prev };
+            delete newParams.status;
+            delete newParams.gender;
+            delete newParams.maritalStatus;
+            delete newParams.nationality;
+            return newParams;
+        });
+        // Không cần gọi refetch() ở đây vì setSearchParams sẽ trigger query tự động
     };
 
     return (
         <div className="flex min-h-screen flex-col">
             <div className="flex-1 space-y-4 p-4 md:p-8">
                 <div className="flex items-center justify-between">
-                    <h1 className="text-2xl font-bold tracking-tight">Enterprises Management</h1>
+                    <h1 className="text-2xl font-bold tracking-tight">List Candidates</h1>
                 </div>
 
                 <Card className="rounded-md shadow-sm">
                     <CardHeader className="flex flex-row items-center justify-between px-6 py-4">
-                        <CardTitle className="text-base font-medium">Enterprises List</CardTitle>
+                        <CardTitle className="text-base font-medium">Candidates</CardTitle>
                         <div className="flex items-center gap-2">
                             <div className="relative w-64">
                                 <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                                 <Input
                                     type="search"
-                                    placeholder="Search enterprises..."
+                                    placeholder="Search candidates..."
                                     className="h-8 w-full rounded-sm pl-8 text-sm placeholder:text-sm focus-within:border-gray-500 focus-visible:ring-0"
                                     value={searchParams.options}
                                     onChange={(e) =>
@@ -93,7 +94,7 @@ export const EnterpriseList = memo(({ params }: Props) => {
                                     <SelectItem value="30">30</SelectItem>
                                 </SelectContent>
                             </Select>
-                            <FilterEnterpriseList
+                            <FilterCandidateList
                                 onFilter={handleFilter}
                                 onReset={handleResetFilter}
                                 params={searchParams}
@@ -116,31 +117,31 @@ export const EnterpriseList = memo(({ params }: Props) => {
                                 <Table>
                                     <TableHeader>
                                         <TableRow>
-                                            <TableHead>Enterprise</TableHead>
-                                            <TableHead>Org. Type</TableHead>
+                                            <TableHead>Candidate</TableHead>
+                                            <TableHead>Gender</TableHead>
                                             <TableHead>Location</TableHead>
-                                            <TableHead>Industries / Fields</TableHead>
+                                            <TableHead>Married Status</TableHead>
                                             <TableHead>Team size</TableHead>
                                             <TableHead>Phone</TableHead>
                                             <TableHead>Founded in</TableHead>
-                                            <TableHead>Created at</TableHead>
-                                            <TableHead>Status</TableHead>
+                                            <TableHead>Founded in</TableHead>
                                             <TableHead className="text-right">Actions</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
                                         {data?.data && data?.data.length > 0 ? (
                                             data?.data.map((enterprise) => (
-                                                <EnterpriseItem
-                                                    key={enterprise.enterpriseId}
-                                                    enterprise={enterprise}
+                                                <CandidateItem
+                                                    key={enterprise.profileId}
+                                                    candidate={enterprise}
+                                                    account={enterprise?.account}
                                                     refetch={refetch}
                                                 />
                                             ))
                                         ) : (
                                             <TableRow>
                                                 <TableCell colSpan={9} className="h-24 text-center">
-                                                    No enterprises found.
+                                                    No pending candidate found.
                                                 </TableCell>
                                             </TableRow>
                                         )}
@@ -150,7 +151,6 @@ export const EnterpriseList = memo(({ params }: Props) => {
                         )}
                     </CardContent>
                 </Card>
-
                 <AdminDashboardPagination
                     meta={data?.meta}
                     page={searchParams.page || 1}
@@ -161,4 +161,6 @@ export const EnterpriseList = memo(({ params }: Props) => {
     );
 });
 
-EnterpriseList.displayName = 'EnterpriseList';
+ListCandidateDashboard.displayName = 'ListCandidateDashboard';
+
+export { ListCandidateDashboard };

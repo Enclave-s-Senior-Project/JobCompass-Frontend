@@ -1,0 +1,151 @@
+'use client';
+
+import Image from 'next/image';
+import defaultBackgroundImage from '@/assets/images/avatar/default-background.jpg';
+import ShareProfile from '@/components/custom-ui/share-profile';
+import { useParams } from 'next/navigation';
+import { useQueries } from '@tanstack/react-query';
+import { queryKey } from '@/lib/react-query/keys';
+import { handleErrorToast } from '@/lib/utils';
+import { UserService } from '@/services/user.service';
+import { DetailedRequest, Resume, User } from '@/types';
+import { UserCardProfile } from '@/components/custom-ui/local/user-card-profile';
+import UserRelatedInformation from '@/components/custom-ui/global/user-related-information';
+import { DownloadResume } from '@/components/custom-ui/global/download-resume';
+import { RichTextContent } from '@/components/custom-ui/global/rich-text-content';
+import { UserContactInformation } from '@/components/custom-ui/global/user-contact-information';
+
+export default function FindCandidatesAdminPage() {
+    const params = useParams<{ id: string }>();
+
+    const userProfileQuery = useQueries({
+        queries: [
+            {
+                queryKey: [queryKey.userProfileDashboard, params?.id],
+                queryFn: async ({ queryKey }) => {
+                    try {
+                        if (queryKey[1]) {
+                            return await UserService.getUserProfile({
+                                profileId: queryKey[1],
+                            } as DetailedRequest.GetUserProfileByProfileId);
+                        }
+                    } catch (error) {
+                        handleErrorToast(error);
+                    }
+                },
+                staleTime: 1000 * 60 * 15,
+            },
+            {
+                queryKey: [queryKey.userResume, params?.id],
+                queryFn: async ({ queryKey }) => {
+                    try {
+                        if (queryKey[1]) {
+                            return await UserService.getUserResume({
+                                profileId: queryKey[1],
+                            } as DetailedRequest.GetUserProfileByProfileId);
+                        }
+                    } catch (error) {
+                        handleErrorToast(error);
+                    }
+                },
+                staleTime: 1000 * 60 * 15,
+            },
+            {
+                queryKey: [queryKey.candidateSocialLinks, params?.id],
+                queryFn: async ({ queryKey }) => {
+                    try {
+                        if (queryKey[1]) {
+                            return await UserService.getSocialLinks({
+                                profileId: queryKey[1],
+                            } as DetailedRequest.GetSocialLinksByProfileId);
+                        }
+                    } catch (error) {
+                        handleErrorToast(error);
+                    }
+                },
+                staleTime: 1000 * 60 * 15,
+            },
+        ],
+    });
+
+    return (
+        <div className="container mx-auto">
+            <div className="z-0 h-56 max-w-screen-2xl overflow-hidden rounded-b-lg border">
+                <Image src={defaultBackgroundImage} alt="Background image" className="h-full w-full object-cover" />
+            </div>
+            <div className="z-10 mx-auto max-w-screen-xl -translate-y-20 space-y-12">
+                {/* user card */}
+                <UserCardProfile
+                    userInfo={userProfileQuery[0].data as User}
+                    isPending={userProfileQuery[0].data === undefined || userProfileQuery[0].isPending}
+                    temp={false}
+                />
+
+                <div className="grid grid-cols-12 gap-4 px-2 sm:px-0 md:gap-8 lg:gap-14">
+                    <div className="col-span-12 space-y-9 md:col-span-7">
+                        <div className="space-y-4">
+                            <RichTextContent
+                                className="break-normal text-gray-700"
+                                content={
+                                    userProfileQuery?.[0].data?.introduction
+                                        ? userProfileQuery?.[0].data?.introduction
+                                        : 'No introduction'
+                                }
+                            />
+                        </div>
+                        <div className="space-y-4">
+                            <p className="text-xl font-semibold text-primary-700">Education</p>
+                            <RichTextContent
+                                className="break-normal text-gray-700"
+                                content={
+                                    userProfileQuery?.[0].data?.education
+                                        ? userProfileQuery?.[0].data?.education
+                                        : 'No education'
+                                }
+                            />
+                        </div>
+                        <div className="space-y-4">
+                            <p className="text-xl font-semibold text-primary-700">Experience</p>
+                            <RichTextContent
+                                className="break-normal text-gray-700"
+                                content={
+                                    userProfileQuery?.[0].data?.experience
+                                        ? userProfileQuery?.[0].data?.experience
+                                        : 'No experience'
+                                }
+                            />
+                        </div>
+                        {/* Share profile for breakpoint from md */}
+                        <div className="hidden md:block">
+                            <ShareProfile />
+                        </div>
+                    </div>
+                    <div className="col-span-12 space-y-6 md:col-span-5">
+                        <UserRelatedInformation
+                            info={{
+                                dateOfBirth: userProfileQuery?.[0]?.data?.dateOfBirth,
+                                gender: userProfileQuery?.[0]?.data?.gender,
+                                maritalStatus: userProfileQuery?.[0]?.data?.maritalStatus,
+                                nationality: userProfileQuery?.[0]?.data?.nationality,
+                            }}
+                        />
+                        {/* Download Resume */}
+                        <DownloadResume resumes={userProfileQuery?.[1].data as Resume[]} />
+                        {/* Contact information */}
+                        <UserContactInformation
+                            contactInfo={{
+                                nationality: userProfileQuery?.[0]?.data?.nationality,
+                                phone: userProfileQuery?.[0]?.data?.phone,
+                            }}
+                            socialLinks={userProfileQuery?.[2]?.data || []}
+                        />
+                    </div>
+                    {/* Share profile for breakpoint below md  */}
+                    <div className="col-span-12 block md:hidden">
+                        <ShareProfile />
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
