@@ -49,3 +49,10 @@ export enum EnterpriseStatus {
     REJECTED = 'REJECTED',
     PENDING = 'PENDING',
 }
+
+export enum OrganizationType {
+    PRIVATE = 'PRIVATE',
+    FLAT = 'FLAT',
+    PUBLIC = 'PUBLIC',
+    OUTSOURCE = 'OUTSOURCE',
+}

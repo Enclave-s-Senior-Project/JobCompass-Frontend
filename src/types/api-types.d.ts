@@ -389,4 +389,11 @@ export namespace DetailedRequest {
     export interface DeleteManyTag {
         tagIds: string[];
     }
+
+    export interface GetListEnterprise extends Pagination {
+        status?: EnterpriseStatus | 'all';
+        organizationType?: string | 'all';
+        categoryId?: string | 'all';
+        address?: string;
+    }
 }

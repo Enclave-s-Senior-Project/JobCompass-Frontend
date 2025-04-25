@@ -43,11 +43,18 @@ const errorKeyMessage = {
     ZIP_CODE_MAX_LENGTH: 'Zip code too long.',
     CAN_NOT_APPLY_OWN_JOB: 'Cannot apply to own job.',
     JOB_NOT_FOUND: 'Job not found or not active.',
+    CATEGORY_NOT_FOUND: 'Category not found.',
+    REASON_REQUIRED: 'Reason is required for blocking or rejecting.',
 };
 
 const warningKeyMessage = {
     NOT_ALLOWED_UPDATE_APPLICATION_APPROVED_OR_DENIED:
         'Not allowed to update applications that are already approved or denied.',
+    JOB_IS_OPENED: 'Job is opened.',
+    JOB_IS_CLOSED: 'Job is closed.',
+    CATEGORY_MAY_BE_IN_USE: 'Category may be in use.',
+    TAG_MAY_BE_IN_USE: 'Tag may be in use.',
+    ENTERPRISE_STATUS_ALREADY_SET: 'Enterprise status already set.',
 };
 
 const successKeyMessage = {

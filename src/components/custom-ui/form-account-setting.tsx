@@ -7,12 +7,7 @@ import { useEffect, useState } from 'react';
 import { DialogUpdateEnterprises } from './dialog-update-register-enterprise';
 import { AlertCircle } from 'lucide-react';
 import { toast } from '@/lib/toast';
-export enum IsActive {
-    PENDING = 'PENDING',
-    ACTIVE = 'ACTIVE',
-    BLOCKED = 'PUBLIC',
-    REJECTED = 'REJECTED',
-}
+import { EnterpriseStatus } from '@/lib/common-enum';
 
 export function FormAccountSetting() {
     const { data: temp, refetch } = useQuery({
@@ -49,7 +44,7 @@ export function FormAccountSetting() {
             <h3 className="font-semibold">Enterprise Registration</h3>
             {check ? (
                 <DialogAddEnterprises refetch={refetch} />
-            ) : temp?.status === IsActive.ACTIVE ? (
+            ) : temp?.status === EnterpriseStatus.ACTIVE ? (
                 <p className="inline-block rounded-sm bg-primary px-4 py-2 font-semibold text-white">
                     You are an enterprise.
                 </p>

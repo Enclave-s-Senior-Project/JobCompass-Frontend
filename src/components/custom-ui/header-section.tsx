@@ -42,7 +42,7 @@ export function HeaderSection() {
             <div
                 className={clsx(
                     'overflow-hidden bg-gray-50 px-3 transition-all lg:h-fit',
-                    showMenuMobile ? 'h-72' : 'h-0'
+                    showMenuMobile ? 'h-96' : 'h-0'
                 )}
             >
                 <div className="container mx-auto flex max-w-screen-xl flex-col items-center justify-between lg:flex-row">
