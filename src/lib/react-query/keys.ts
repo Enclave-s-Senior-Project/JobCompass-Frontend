@@ -30,4 +30,5 @@ export const queryKey = {
     getCategories: 'get-categories',
     pendingStatusEnterprises: 'pending-status-enterprises',
     dashboard: 'dashboard',
+    enterpriseListManagement: 'enterprise-list-management',
 };

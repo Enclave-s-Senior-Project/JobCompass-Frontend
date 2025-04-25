@@ -1,5 +1,5 @@
 import { Categories } from '@/types';
-import { JobStatusEnum, NotificationType } from '@/lib/common-enum';
+import { EnterpriseStatus, JobStatusEnum, NotificationType } from '@/lib/common-enum';
 import { Address, OrganizationType, SocialType } from './common-types';
 
 interface BaseEntity {
@@ -68,7 +68,7 @@ export interface Enterprise {
     bio: string;
     isPremium: boolean;
     expiredPremium: string;
-    status: string | null;
+    status: EnterpriseStatus | null;
     enterpriseId: string;
     addresses: Address[] | null;
     totalPoints?: number;

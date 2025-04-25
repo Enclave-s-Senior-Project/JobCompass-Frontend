@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useState } from 'react';
+import { AdminDashboardPagination } from '@/components/custom-ui/global/pagination-admin-dashboard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -8,78 +8,59 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { queryKey } from '@/lib/react-query/keys';
 import { handleErrorToast } from '@/lib/utils';
 import { EnterpriseService } from '@/services/enterprises.service';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { Search } from 'lucide-react';
 import { DetailedRequest } from '@/types';
+import { useQuery } from '@tanstack/react-query';
+import { Search } from 'lucide-react';
+import { memo, useState } from 'react';
 import { useDebounce } from '@/hooks/useDebounce';
-import { EnterpriseRegistrationItem } from './item-enterprise-registration';
-import { toast } from '@/lib/toast';
-import { EnterpriseStatus } from '@/lib/common-enum';
-import { AdminDashboardPagination } from '@/components/custom-ui/global/pagination-admin-dashboard';
+import { EnterpriseItem } from './enterprise-item';
+import { CiFilter } from 'react-icons/ci';
+import { FilterEnterpriseList } from './filter-enterprise-list';
 
-type Props = { params: DetailedRequest.Pagination };
+type Props = {
+    params: DetailedRequest.Pagination;
+};
 
-const ListEnterpriseRegistration = memo(({ params }: Props) => {
-    const [searchParams, setSearchParams] = useState<DetailedRequest.Pagination>(params);
+export const EnterpriseList = memo(({ params }: Props) => {
+    const [searchParams, setSearchParams] = useState<DetailedRequest.GetListEnterprise>(params);
+
     const searchDebounced = useDebounce(searchParams.options, 700);
 
-    const { data, isPending, isFetching, refetch, isRefetching } = useQuery({
-        queryKey: [queryKey.pendingStatusEnterprises, { ...searchParams, options: searchDebounced }],
+    const { data, isPending, isFetching, isRefetching, refetch } = useQuery({
+        queryKey: [queryKey.enterpriseListManagement, { ...searchParams, options: searchDebounced }],
         queryFn: async ({ queryKey }) => {
             try {
-                return await EnterpriseService.fetchPendingStatusEnterprise(queryKey[1] as DetailedRequest.Pagination);
+                return await EnterpriseService.getListEnterprise(queryKey[1] as DetailedRequest.GetListEnterprise);
             } catch (error) {
                 handleErrorToast(error);
             }
         },
-        enabled: true,
-        refetchOnWindowFocus: true,
-        refetchOnReconnect: true,
-        retry: 2,
+        retry: 1,
     });
 
-    const updateEnterpriseStatusMutation = useMutation({
-        mutationFn: async (params: {
-            enterpriseId: string;
-            status: EnterpriseStatus.ACTIVE | EnterpriseStatus.REJECTED;
-            reason?: string;
-        }) => {
-            const defaultRejectMessage = `We regret to inform you that your enterprise registration was not approved at this time. Thank you for your interest in ${process.env.NEXT_PUBLIC_WEBSITE_NAME}.`;
-            const reason =
-                params.status === EnterpriseStatus.REJECTED ? params.reason || defaultRejectMessage : undefined;
-
-            await EnterpriseService.updateEnterpriseStatus({
-                enterpriseId: params.enterpriseId,
-                status: params.status,
-                reason,
-            });
-        },
-        onSuccess: () => {
-            toast.success('Updated enterprise status!');
-            refetch();
-        },
-        onError: (error) => {
-            handleErrorToast(error);
-        },
-    });
-
-    const handleApprove = (enterpriseId: string) => {
-        updateEnterpriseStatusMutation.mutate({ enterpriseId, status: EnterpriseStatus.ACTIVE });
+    const handleFilter = (params: DetailedRequest.GetListEnterprise) => {
+        setSearchParams((prev) => ({ ...prev, ...params }));
     };
-
-    const handleReject = (enterpriseId: string, reason: string) => {
-        updateEnterpriseStatusMutation.mutate({ enterpriseId, status: EnterpriseStatus.REJECTED, reason });
+    const handleResetFilter = () => {
+        setSearchParams((prev) => ({
+            ...prev,
+            status: 'all',
+            categoryId: 'all',
+            address: '',
+            organizationType: 'all',
+        }));
     };
 
     return (
         <div className="flex min-h-screen flex-col">
             <div className="flex-1 space-y-4 p-4 md:p-8">
                 <div className="flex items-center justify-between">
-                    <h1 className="text-2xl font-bold tracking-tight">Pending Enterprises</h1>
+                    <h1 className="text-2xl font-bold tracking-tight">Enterprises Management</h1>
                 </div>
+
                 <Card className="rounded-md shadow-sm">
                     <CardHeader className="flex flex-row items-center justify-between px-6 py-4">
-                        <CardTitle className="text-base font-medium">Pending Enterprise Registrations</CardTitle>
+                        <CardTitle className="text-base font-medium">Enterprises List</CardTitle>
                         <div className="flex items-center gap-2">
                             <div className="relative w-64">
                                 <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -112,6 +93,16 @@ const ListEnterpriseRegistration = memo(({ params }: Props) => {
                                     <SelectItem value="30">30</SelectItem>
                                 </SelectContent>
                             </Select>
+                            <FilterEnterpriseList
+                                onFilter={handleFilter}
+                                onReset={handleResetFilter}
+                                params={searchParams}
+                                nodeTrigger={
+                                    <button className="max-h-9 rounded-sm bg-muted/50 p-1 hover:bg-muted [&_svg]:size-6">
+                                        <CiFilter />
+                                    </button>
+                                }
+                            />
                         </div>
                     </CardHeader>
                     <CardContent className="p-0">
@@ -132,24 +123,24 @@ const ListEnterpriseRegistration = memo(({ params }: Props) => {
                                             <TableHead>Team size</TableHead>
                                             <TableHead>Phone</TableHead>
                                             <TableHead>Founded in</TableHead>
-                                            <TableHead>Submitted</TableHead>
+                                            <TableHead>Created at</TableHead>
+                                            <TableHead>Status</TableHead>
                                             <TableHead className="text-right">Actions</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
                                         {data?.data && data?.data.length > 0 ? (
                                             data?.data.map((enterprise) => (
-                                                <EnterpriseRegistrationItem
+                                                <EnterpriseItem
                                                     key={enterprise.enterpriseId}
                                                     enterprise={enterprise}
-                                                    handleApprove={handleApprove}
-                                                    handleReject={handleReject}
+                                                    refetch={refetch}
                                                 />
                                             ))
                                         ) : (
                                             <TableRow>
                                                 <TableCell colSpan={9} className="h-24 text-center">
-                                                    No pending enterprises found.
+                                                    No enterprises found.
                                                 </TableCell>
                                             </TableRow>
                                         )}
@@ -159,6 +150,7 @@ const ListEnterpriseRegistration = memo(({ params }: Props) => {
                         )}
                     </CardContent>
                 </Card>
+
                 <AdminDashboardPagination
                     meta={data?.meta}
                     page={searchParams.page || 1}
@@ -169,6 +161,4 @@ const ListEnterpriseRegistration = memo(({ params }: Props) => {
     );
 });
 
-ListEnterpriseRegistration.displayName = 'ListEnterpriseRegistration';
-
-export { ListEnterpriseRegistration };
+EnterpriseList.displayName = 'EnterpriseList';

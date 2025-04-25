@@ -47,13 +47,6 @@ export interface CandidateProfileType {
     introduction: string;
 }
 
-export enum OrganizationType {
-    PRIVATE = 'PRIVATE',
-    FLAT = 'FLAT',
-    PUBLIC = 'PUBLIC',
-    OUTSOURCE = 'OUTSOURCE',
-}
-
 export type CompanyProfileFoundingType = {
     email: string;
     companyVision: string;

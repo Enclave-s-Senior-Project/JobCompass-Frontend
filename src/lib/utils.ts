@@ -43,7 +43,6 @@ export const getClientSideCookie = (name: string): string | undefined => {
 export const handleErrorToast = (err: any) => {
     const defaultErrorMessage = 'Oops! Please try again';
     if (err?.props?.statusCode < 200) {
-        console.log(err?.props?.title);
         const warnMessage =
             warningKeyMessage[err?.props?.title as keyof typeof warningKeyMessage] || defaultErrorMessage;
         toast.warning(warnMessage);

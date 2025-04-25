@@ -67,9 +67,9 @@ export class EnterpriseService {
         }
     }
 
-    public static async getListEnterprise(data: DetailedRequest.ParamListJobsCredentials) {
+    public static async getListEnterprise(data: DetailedRequest.GetListEnterprise) {
         try {
-            const temp = await axios.get<ApiResponse<DetailedResponse.GetDataEnterprises>>('', { params: data });
+            const temp = await authAxios.get<ApiResponse<DetailedResponse.GetDataEnterprises>>('', { params: data });
             return temp.payload.value;
         } catch (err) {
             if (err instanceof AxiosError) {
