@@ -19,6 +19,26 @@ import { UserContext } from '@/contexts';
 import { DropdownMenu, DropdownMenuContent } from '@radix-ui/react-dropdown-menu';
 import { DropdownMenuTrigger } from '../ui/dropdown-menu';
 
+export const EXPERIENCE_OPTIONS = [
+    { id: '0-1', label: '0 - 1 year' },
+    { id: '1-2', label: '1 - 2 years' },
+    { id: '2-4', label: '2 - 4 years' },
+    { id: '4-8', label: '4 - 8 years' },
+    { id: '8-10', label: '8 - 10 years' },
+    { id: '10+', label: '10+ years' },
+];
+
+export const SALARY_OPTIONS = [
+    { id: '50-1000', label: '$50-$1000' },
+    { id: '1000-2000', label: '$1000-$2000' },
+    { id: '3000-4000', label: '$3000-$4000' },
+    { id: '4000-6000', label: '$4000-$6000' },
+    { id: '6000-8000', label: '$6000-$8000' },
+    { id: '8000-10000', label: '$8000-$10000' },
+    { id: '10000-15000', label: '$10000-$15000' },
+    { id: '15000-999999', label: '$15000+' },
+];
+
 interface SearchFormProps {
     filters: DetailedRequest.SearchFilterListJobsCredentials;
     setFilters: React.Dispatch<React.SetStateAction<DetailedRequest.SearchFilterListJobsCredentials>>;
@@ -60,26 +80,6 @@ const SearchForm = memo(({ filters, setFilters }: SearchFormProps) => {
         enabled: !!activeParentCategory,
         staleTime: 1000 * 60 * 5,
     });
-
-    const EXPERIENCE_OPTIONS = [
-        { id: '0-1', label: '0 - 1 year' },
-        { id: '1-2', label: '1 - 2 years' },
-        { id: '2-4', label: '2 - 4 years' },
-        { id: '4-8', label: '4 - 8 years' },
-        { id: '8-10', label: '8 - 10 years' },
-        { id: '10+', label: '10+ years' },
-    ];
-
-    const SALARY_OPTIONS = [
-        { id: '50-1000', label: '$50-$1000' },
-        { id: '1000-2000', label: '$1000-$2000' },
-        { id: '3000-4000', label: '$3000-$4000' },
-        { id: '4000-6000', label: '$4000-$6000' },
-        { id: '6000-8000', label: '$6000-$8000' },
-        { id: '8000-10000', label: '$8000-$10000' },
-        { id: '10000-15000', label: '$10000-$15000' },
-        { id: '15000-999999', label: '$15000+' },
-    ];
 
     const JOB_TYPE_OPTIONS = Object.entries(JobTypeEnum);
 

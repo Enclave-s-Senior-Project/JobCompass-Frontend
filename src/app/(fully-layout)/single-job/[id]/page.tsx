@@ -23,15 +23,14 @@ import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import { JobService } from '@/services/job.service';
-import moment from 'moment';
-import DOMPurify from 'dompurify';
-import { Suspense, useContext, useEffect, useRef } from 'react';
-import { handleErrorToast } from '@/lib/utils';
+import { Suspense, useContext } from 'react';
+import { handleErrorToast, toFormattedDate } from '@/lib/utils';
 import { NotFound } from '@/components/custom-ui/not-found';
 import { UserContext } from '@/contexts';
 import { ListTag } from '@/components/custom-ui/list-tags';
 import { toast } from '@/lib/toast';
 import { RichTextContent } from '@/components/custom-ui/global/rich-text-content';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function SingleJob() {
     return (
@@ -47,11 +46,6 @@ function PageContentOfSingleJob() {
     const isLog = localStorage.getItem('logged') ?? false;
     const { userInfo } = useContext(UserContext);
     const { id } = useParams<{ id: string }>();
-    const descriptionRef = useRef<HTMLDivElement>(null);
-    const responsibilityRef = useRef<HTMLDivElement>(null);
-    const benefitsRef = useRef<HTMLDivElement>(null);
-    const enterpriseDescRef = useRef<HTMLDivElement>(null);
-    const bioEnterpriseRef = useRef<HTMLDivElement>(null);
 
     const { data: resultQuery, refetch } = useQuery({
         queryKey: [queryKey.detailJob, id],
@@ -76,25 +70,7 @@ function PageContentOfSingleJob() {
             toast.error('Oops! Something went wrong');
         }
     };
-    useEffect(() => {
-        if (resultQuery) {
-            if (descriptionRef.current) {
-                descriptionRef.current.innerHTML = DOMPurify.sanitize(resultQuery.description || '');
-            }
-            if (responsibilityRef.current) {
-                responsibilityRef.current.innerHTML = DOMPurify.sanitize(resultQuery.responsibility || '');
-            }
-            if (benefitsRef.current) {
-                benefitsRef.current.innerHTML = DOMPurify.sanitize(resultQuery.enterpriseBenefits || '');
-            }
-            if (enterpriseDescRef.current) {
-                enterpriseDescRef.current.innerHTML = DOMPurify.sanitize(resultQuery.enterprise?.description || '');
-            }
-            if (bioEnterpriseRef.current) {
-                bioEnterpriseRef.current.innerHTML = DOMPurify.sanitize(resultQuery.enterprise?.bio || '');
-            }
-        }
-    }, [resultQuery]);
+
     const handleAddFavoriteJob = async (jobId: string) => {
         try {
             await JobService.addFavoriteJob({ jobId });
@@ -130,17 +106,21 @@ function PageContentOfSingleJob() {
                 <div className="rounded-lg bg-white">
                     <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
                         <div className="flex items-center gap-4">
-                            <div className="relative h-[96px] w-[96px] overflow-hidden rounded-full bg-gradient-to-br from-pink-500 to-orange-400">
-                                <img
+                            <Avatar className="size-24 bg-gradient-to-b from-slate-50 to-primary-100">
+                                <AvatarImage
+                                    height={100}
+                                    width={100}
+                                    className="size-full object-cover object-center"
                                     src={resultQuery?.enterprise?.logoUrl}
-                                    alt="Company logo"
-                                    className="h-full w-full object-cover"
                                 />
-                            </div>
+                                <AvatarFallback>{resultQuery?.enterprise?.name}</AvatarFallback>
+                            </Avatar>
                             <div>
                                 <div className="flex items-center gap-2">
-                                    <h1 className="text-xl">{resultQuery?.name}</h1>
-                                    <ListTag tag={resultQuery?.tags ?? []} />
+                                    <h1 className="text-xl">
+                                        {resultQuery?.name}&nbsp;
+                                        <ListTag tag={resultQuery?.tags ?? []} />
+                                    </h1>
                                 </div>
                                 <div className="mt-2 flex flex-wrap gap-5 text-sm text-muted-foreground">
                                     <span className="flex flex-row gap-1 text-[#474C54]">
@@ -221,13 +201,15 @@ function PageContentOfSingleJob() {
                                     <NotepadText className="mb-3 size-6 text-primary" />
                                     <p className="mb-1 text-[12px] uppercase text-gray-500">JOB POSTED</p>
                                     <p className="text-sm font-medium">
-                                        {moment(resultQuery?.createdAt).format('YYYY-MM-DD')}
+                                        {toFormattedDate(resultQuery?.createdAt as string)}
                                     </p>
                                 </div>
                                 <div className="flex flex-col items-start">
                                     <Clock8 className="mb-3 size-6 text-primary" />
                                     <p className="mb-1 text-[12px] uppercase text-gray-500">JOB EXPIRE IN</p>
-                                    <p className="text-sm font-medium">{resultQuery?.deadline}</p>
+                                    <p className="text-sm font-medium">
+                                        {toFormattedDate(resultQuery?.deadline as string)}
+                                    </p>
                                 </div>
                                 <div className="flex flex-col items-start">
                                     <BriefcaseBusiness className="mb-3 size-6 text-primary" />
@@ -271,10 +253,9 @@ function PageContentOfSingleJob() {
 
                                     <div>
                                         <h2 className="text-[20px]">{resultQuery?.enterprise?.name}</h2>
-                                        <div ref={bioEnterpriseRef}></div>
-                                        {/* <p className="text-[14px] text-[#767F8C]">
-                                            {resultQuery?.enterprise?.description}
-                                        </p> */}
+                                        <p className="text-sm font-semibold italic text-gray-700">
+                                            {resultQuery?.enterprise?.bio}
+                                        </p>
                                     </div>
                                 </div>
                             </CardHeader>
@@ -284,7 +265,7 @@ function PageContentOfSingleJob() {
                                         <p className="text-[16px] text-muted-foreground">Founded in:</p>
                                         <p className="text-[16px]">
                                             {resultQuery?.enterprise.foundedIn
-                                                ? moment(resultQuery.enterprise.foundedIn).format('YYYY-MM-DD')
+                                                ? toFormattedDate(resultQuery?.enterprise?.foundedIn || Date.now())
                                                 : 'Unknown'}
                                         </p>
                                     </div>
@@ -307,7 +288,7 @@ function PageContentOfSingleJob() {
                                     <div className="flex items-center justify-between">
                                         <p className="text-[16px] text-muted-foreground">Industry:</p>
                                         <p className="text-[16px]">
-                                            {resultQuery?.enterprise?.categories?.map((c) => c.categoryName).join(',')}
+                                            {resultQuery?.categories?.[0]?.categoryName ?? 'Unknown Category'}
                                         </p>
                                     </div>
                                 </div>

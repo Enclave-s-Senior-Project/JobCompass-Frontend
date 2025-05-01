@@ -2,7 +2,7 @@
 
 import { AdminDashboardPagination } from '@/components/custom-ui/global/pagination-admin-dashboard';
 import { DetailedRequest, Tag } from '@/types';
-import { memo, useEffect, useState } from 'react';
+import { memo, useState } from 'react';
 import { Plus, Trash } from 'lucide-react';
 import { DeleteConfirmDialog } from '../../../global/dialog-delete-confirm';
 import { cn, handleErrorToast } from '@/lib/utils';
@@ -62,10 +62,6 @@ export const ListTags = memo(({ params }: Props) => {
             handleErrorToast(error);
         },
     });
-
-    useEffect(() => {
-        console.log(data);
-    }, [data]);
 
     const handleSelectTag = (tagId: string) => {
         if (selectedTags.includes(tagId)) {

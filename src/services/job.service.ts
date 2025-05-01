@@ -2,6 +2,7 @@ import { AuthAxios, BaseAxios } from '@/lib/axios';
 import { ApiResponse, DetailedRequest, DetailedResponse, Job } from '@/types';
 import { AxiosError } from 'axios';
 import NextError from 'next/error';
+import { handleErrorApi } from '.';
 
 const axios = new BaseAxios('job');
 const authAxios = new AuthAxios('job');
@@ -99,18 +100,12 @@ export class JobService {
         }
     }
 
-    public static async filterJob(data: DetailedRequest.ParamListJobsCredentials) {
+    public static async findJobs(data: DetailedRequest.GetListJob) {
         try {
-            const temp = await axios.get<ApiResponse<DetailedResponse.GetAllJobs>>('', { params: data });
+            const temp = await authAxios.get<ApiResponse<DetailedResponse.GetAllJobs>>('', { params: data });
             return temp.payload.value;
         } catch (err) {
-            if (err instanceof AxiosError) {
-                throw new NextError({
-                    statusCode: Number(err.status || err.response?.status),
-                    title: err.response?.data.message,
-                });
-            }
-            throw err;
+            handleErrorApi(err);
         }
     }
 
@@ -144,6 +139,15 @@ export class JobService {
                 });
             }
             throw err;
+        }
+    }
+
+    public static async changeStatusJob(idJob: string, data: DetailedRequest.ChangeStatusJob) {
+        try {
+            const tmp = await authAxios.patch<ApiResponse<null>>(`/${idJob}/status`, data);
+            return tmp?.payload?.value;
+        } catch (error) {
+            handleErrorApi(error);
         }
     }
 }

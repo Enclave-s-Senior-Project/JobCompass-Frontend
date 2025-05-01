@@ -17,7 +17,7 @@ export const queryKey = {
     jobsOfEnterprise: 'jobs-of-enterprise',
     ownEnterpriseJobs: 'own-enterprise-jobs',
     listJobs: 'list-jobs',
-    filterJob: 'filter-job',
+    getJobManagement: 'get-job-management',
     enterpriseJob: 'enterprise-job',
     ownResumes: 'own-resumes',
     candidatesApplied: 'candidates-applied',

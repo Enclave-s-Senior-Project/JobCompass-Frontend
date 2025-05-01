@@ -16,8 +16,10 @@ export function ListTag({ tag }: { tag: Tag[] }) {
                                     style={{
                                         backgroundColor: `rgba(${hexToRgb(feature.color || '')}, 0.2)`,
                                         color: feature.color,
+                                        borderColor: `rgba(${hexToRgb(feature.color || '')}, 0.5)`,
+                                        borderWidth: '1px',
                                     }}
-                                    className={`max-w-[80px] overflow-hidden truncate whitespace-nowrap rounded-full border border-gray-300 border-opacity-50 px-2 py-1 text-xs md:max-w-[100px] lg:max-w-[120px]`}
+                                    className={`max-w-[80px] overflow-hidden truncate whitespace-nowrap rounded-full border-opacity-50 px-2 py-1 text-xs md:max-w-[100px] lg:max-w-[120px]`}
                                 >
                                     {feature.name}
                                 </span>
