@@ -210,7 +210,7 @@ export function FormUpdateRegisterEnterprises(props: {
                 <label className="cursor-default text-sm text-gray-900">Address</label>
                 <div className="mt-2 grid grid-cols-4 gap-4">
                     <div>
-                        <Select name="country" value={country} disabled>
+                        <Select name="country" value={country}>
                             <SelectTrigger className="h-12 rounded-sm border text-base focus:border-primary focus:ring-1 focus:ring-primary">
                                 <SelectValue placeholder="Select a country" />
                             </SelectTrigger>
@@ -227,7 +227,7 @@ export function FormUpdateRegisterEnterprises(props: {
                         </p>
                     </div>
                     <div>
-                        <Select name="city" value={city} disabled>
+                        <Select name="city" value={city}>
                             <SelectTrigger className="h-12 rounded-sm border text-base focus:border-primary focus:ring-1 focus:ring-primary">
                                 <SelectValue placeholder="Select a city" />
                             </SelectTrigger>
@@ -247,7 +247,6 @@ export function FormUpdateRegisterEnterprises(props: {
                             name="street"
                             placeholder="Street"
                             type="text"
-                            disabled
                             value={street}
                             onChange={(e) => setStreet(e.target.value)}
                             className={clsx(
@@ -264,7 +263,6 @@ export function FormUpdateRegisterEnterprises(props: {
                             name="zipCode"
                             placeholder="Zip Code"
                             type="text"
-                            disabled
                             value={zipCode}
                             onChange={(e) => setZipCode(e.target.value)}
                             className={clsx(

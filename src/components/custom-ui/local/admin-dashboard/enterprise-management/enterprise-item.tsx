@@ -4,8 +4,8 @@ import { memo, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { TableCell, TableRow } from '@/components/ui/table';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { ArrowDownUp, Ban, Check, Clock, Info, PhoneCall, ShieldCheck, UsersRound, X } from 'lucide-react';
+import { Tooltip, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { ArrowDownUp, Ban, Check, Clock, EllipsisVertical, PhoneCall, ShieldCheck, UsersRound, X } from 'lucide-react';
 import Image from 'next/image';
 import { cn, handleErrorToast, toFormattedDate } from '@/lib/utils';
 import { DetailedRequest, Enterprise } from '@/types';
@@ -14,6 +14,13 @@ import { DialogChangeEnterpriseStatus } from './dialog-change-enteprise-status';
 import { useMutation } from '@tanstack/react-query';
 import { EnterpriseService } from '@/services/enterprises.service';
 import { toast } from '@/lib/toast';
+import Link from 'next/link';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const EnterpriseItem = memo(({ enterprise, refetch }: { enterprise: Enterprise; refetch: () => void }) => {
     const [loadingToastId, setLoadingToastId] = useState<string | null>(null);
@@ -141,30 +148,7 @@ const EnterpriseItem = memo(({ enterprise, refetch }: { enterprise: Enterprise; 
                 </div>
             </TableCell>
             <TableCell className="text-right">
-                <div className="flex justify-end gap-2">
-                    <TooltipProvider>
-                        <Tooltip delayDuration={200}>
-                            <TooltipTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    size="icon-md"
-                                    onClick={() =>
-                                        window.open(`/admin-dashboard/enterprise/${enterprise.enterpriseId}`, '_blank')
-                                    }
-                                >
-                                    <Info className="h-4 w-4" />
-                                </Button>
-                            </TooltipTrigger>
-
-                            <TooltipContent
-                                side="bottom"
-                                className="rounded-2xl border border-primary-200 bg-primary-50 px-3 py-1 text-primary shadow-sm drop-shadow-sm"
-                            >
-                                <p>View details</p>
-                            </TooltipContent>
-                        </Tooltip>
-                    </TooltipProvider>
-
+                <div className="flex items-center justify-end gap-2">
                     <TooltipProvider>
                         <Tooltip delayDuration={200}>
                             <DialogChangeEnterpriseStatus
@@ -179,15 +163,31 @@ const EnterpriseItem = memo(({ enterprise, refetch }: { enterprise: Enterprise; 
                                 onSubmit={handleUpdateEnterpriseStatus}
                                 currentStatus={enterprise.status || EnterpriseStatus.PENDING}
                             />
-
-                            <TooltipContent
-                                side="bottom"
-                                className="rounded-2xl border border-primary-200 bg-primary-50 px-3 py-1 text-primary shadow-sm drop-shadow-sm"
-                            >
-                                <p>Change status</p>
-                            </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger>
+                            <Button variant="ghost" size="icon-md">
+                                <EllipsisVertical className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <DropdownMenuItem>
+                                <button
+                                    onClick={() =>
+                                        window.open(`/admin-dashboard/enterprise/${enterprise.enterpriseId}`, '_blank')
+                                    }
+                                >
+                                    View details
+                                </button>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <Link href={`/admin-dashboard/jobs?enterpriseId=${enterprise.enterpriseId}`}>
+                                    View jobs
+                                </Link>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
             </TableCell>
         </TableRow>

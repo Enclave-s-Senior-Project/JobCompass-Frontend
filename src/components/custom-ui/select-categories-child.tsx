@@ -44,11 +44,10 @@ const MultiSelectCategoriesChildSearchInput: React.FC<MultiSelectSearchInputProp
             const searchValue = (debouncedSearchTerm ?? '').trim();
             const id = categoryId;
             const data = {
-                name: searchValue,
+                options: searchValue,
                 order: OrderType.ASC,
                 page: 1,
                 take: 5,
-                options: '',
             };
             return await CategoryService.getCategoriesChildren(id, data);
         },

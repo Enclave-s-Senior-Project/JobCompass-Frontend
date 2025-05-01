@@ -67,16 +67,17 @@ const menuItems: PrimarySidebarItem[] = [
     {
         icon: <Combine />,
         title: 'Jobs',
-        children: [
-            {
-                title: 'Expired jobs',
-                href: '/admin-dashboard/jobs/expired',
-            },
-            {
-                title: 'Active jobs',
-                href: '/admin-dashboard/jobs/active',
-            },
-        ],
+        href: '/admin-dashboard/jobs',
+        // children: [
+        //     {
+        //         title: 'Expired jobs',
+        //         href: '/admin-dashboard/jobs/expired',
+        //     },
+        //     {
+        //         title: 'Active jobs',
+        //         href: '/admin-dashboard/jobs/active',
+        //     },
+        // ],
     },
     {
         icon: <AlignEndVertical />,

@@ -29,7 +29,7 @@ export default function Page() {
 
     const [activeFilters, setActiveFilters] = useState<DetailedRequest.SearchFilterListJobsCredentials>({
         keyword: title || '',
-        location: country || '',
+        location: country || userInfo?.nationality || '',
         parentCategoryId: userInfo?.industry
             ? { categoryId: userInfo.industry.categoryId, categoryName: userInfo.industry.categoryName, isActive: true }
             : null,
@@ -46,8 +46,7 @@ export default function Page() {
         const salaryRange = filters.salary?.split('-').map(Number) || [];
         return {
             name: filters.keyword || undefined,
-            country: filters.location ? filters.location.split(',')[1]?.trim() : undefined,
-            city: filters.location ? filters.location.split(',')[0]?.trim() : undefined,
+            location: filters.location ? filters.location : undefined,
             industryCategoryId: filters.parentCategoryId?.categoryId || undefined,
             majorityCategoryId: filters.childrenCategoryId?.categoryId || undefined,
             minWage: salaryRange[0] || undefined,

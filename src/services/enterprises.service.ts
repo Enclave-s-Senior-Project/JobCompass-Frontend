@@ -261,4 +261,15 @@ export class EnterpriseService {
             handleErrorApi(error);
         }
     }
+
+    public static async getOverviewEnterprise(name: string) {
+        try {
+            const dataResponse = await authAxios.get<ApiResponse<DetailedResponse.OverviewEnterprise>>('/overview', {
+                params: { name },
+            });
+            return dataResponse.payload.value;
+        } catch (error) {
+            handleErrorApi(error);
+        }
+    }
 }

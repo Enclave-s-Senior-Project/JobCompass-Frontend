@@ -76,7 +76,8 @@ const updatePersonalProfile = z.object({
     phone: z
         .string()
         .regex(/^\+?[0-9]{7,15}$/, 'Phone is invalid')
-        .optional(),
+        .optional()
+        .or(z.literal('')),
     maritalStatus: z.enum(['ALONE', 'MARRIED'], { message: 'Marital status is invalid' }).nullable().optional(),
     dateOfBirth: z
         .string()

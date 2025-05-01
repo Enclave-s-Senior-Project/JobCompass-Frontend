@@ -12,7 +12,7 @@ import {
     Tag,
     User,
 } from './entities';
-import { CandidateStatus, EnterpriseStatus } from '@/lib/common-enum';
+import { CandidateStatus, EducationJobLevelEnum, EnterpriseStatus, JobStatusEnum, JobTypeEnum } from '@/lib/common-enum';
 
 interface ResponseWithMeta<T> {
     meta: Meta;
@@ -149,6 +149,9 @@ export namespace DetailedResponse {
     export type GetAllTags = ResponseWithMeta<Tag[]>;
 
     export type GetCandidatesDashboard = ResponseWithMeta<User[]>;
+
+    export interface OverviewEnterprise
+        extends Array<Pick<Enterprise, 'enterpriseId' | 'name' | 'logoUrl' | 'status'>> {}
 }
 
 export namespace DetailedRequest {
@@ -412,5 +415,26 @@ export namespace DetailedRequest {
         gender?: GenderCandidate | 'all';
         maritalStatus?: MaritalStatusCandidate | 'all';
         nationality?: string;
+    }
+
+    export interface GetListJob extends Pagination {
+        name?: string;
+        location?: string;
+        industryCategoryId?: string;
+        majorityCategoryId?: string;
+        minWage?: number;
+        maxWage?: number;
+        experience?: string;
+        type?: JobTypeEnum[];
+        education?: EducationJobLevelEnum[];
+        enterpriseId?: string;
+        status?: JobStatusEnum;
+        minDeadline?: string;
+        maxDeadline?: string;
+    }
+
+    export interface ChangeStatusJob {
+        status: JobStatusEnum;
+        reason?: string;
     }
 }

@@ -55,6 +55,7 @@ const warningKeyMessage = {
     CATEGORY_MAY_BE_IN_USE: 'Category may be in use.',
     TAG_MAY_BE_IN_USE: 'Tag may be in use.',
     ENTERPRISE_STATUS_ALREADY_SET: 'Enterprise status already set.',
+    JOB_SAME_STATUS: 'Job already has the same status.',
 };
 
 const successKeyMessage = {

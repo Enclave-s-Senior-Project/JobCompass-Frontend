@@ -36,7 +36,8 @@ export function FormEmailVerify() {
             toast.error(state.errors.code[0]);
         }
         if (state.success && state.email) {
-            router.push('/');
+            toast.success('Email verified successfully. Please sign in.');
+            router.push('/sign-in');
         }
     }, [state.success, state.errors, router, state.email]);
     return (
