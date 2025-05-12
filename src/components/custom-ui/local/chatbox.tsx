@@ -1,38 +1,63 @@
 'use client';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { UserContext } from '@/contexts';
-import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
+import { AIService } from '@/services';
+import { AIChatMessage, DetailedRequest } from '@/types';
+import { useMutation } from '@tanstack/react-query';
 import { Loader2, Send } from 'lucide-react';
 import { memo, useContext, useEffect, useRef, useState } from 'react';
+import { ConversationalMessage } from './conversational-message';
 
-type Message = {
-    id: string;
-    content: string;
-    sender: 'user' | 'bot';
-    timestamp: Date;
+export interface LocalMessage extends Pick<AIChatMessage, 'content' | 'role'> {
+    timestamp: number;
+    failed?: boolean;
+}
+
+const initMessage: LocalMessage = {
+    content: 'Hello! How can I help you today?',
+    role: 'assistant',
+    timestamp: Date.now(),
 };
 
 const ChatBox = memo(() => {
     const { userInfo } = useContext(UserContext);
 
-    const [messages, setMessages] = useState<Message[]>([
-        {
-            id: '1',
-            content: 'Hello! How can I help you today?',
-            sender: 'bot',
-            timestamp: new Date(),
-        },
-    ]);
+    const [messages, setMessages] = useState<LocalMessage[]>([initMessage]);
     const [inputValue, setInputValue] = useState('');
-    const [isPending, setIsPending] = useState(false);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    const { mutate: conversation, isPending: isConversationPending } = useMutation({
+        mutationFn: (data: DetailedRequest.AIConversationRequest) => AIService.conversation(data),
+        onSuccess: (data) => {
+            if (data?.choices[0].message.content) {
+                const newMessage: LocalMessage = {
+                    content: data?.choices[0].message.content,
+                    role: 'assistant',
+                    timestamp: Date.now(),
+                };
+                setMessages((prev) => [...prev, newMessage]);
+                handleUpdateMessagesOnLocalStorage(newMessage);
+
+                // Clear input value after receiving response
+                setInputValue('');
+            }
+        },
+        onError: () => {
+            const errorMessage: LocalMessage = {
+                content: 'There was an error, please try again later',
+                failed: true,
+                role: 'assistant',
+                timestamp: Date.now(),
+            };
+            setMessages((prev) => [...prev, errorMessage]);
+            handleUpdateMessagesOnLocalStorage(errorMessage);
+        },
+    });
 
     // Auto-scroll to bottom when messages change
     useEffect(() => {
@@ -42,108 +67,89 @@ const ChatBox = memo(() => {
     // Load messages from local storage when the component mounts
     useEffect(() => {
         const storedMessages = JSON.parse(
-            localStorage.getItem(`messages:${userInfo?.account_id}`) || '[]'
-        ) as Message[];
+            localStorage.getItem(`messages:${userInfo?.profileId}`) || '[]'
+        ) as LocalMessage[];
 
         if (storedMessages.length > 0) {
             setMessages(storedMessages);
         }
     }, []);
 
-    useEffect(() => {
-        if (messages.length === 0) return;
-        // Save last 20 messages to local storage whenever they change
-        localStorage.setItem(`messages:${userInfo?.account_id}`, JSON.stringify(messages.slice(-20)));
-    }, [messages]);
+    const handleUpdateMessagesOnLocalStorage = (message: LocalMessage) => {
+        if (!message) return;
+        const oldMessages = JSON.parse(
+            localStorage.getItem(`messages:${userInfo?.profileId}`) || '[]'
+        ) as LocalMessage[];
+        localStorage.setItem(`messages:${userInfo?.profileId}`, JSON.stringify([...oldMessages, message]));
+    };
 
     const handleSendMessage = () => {
-        if (isPending) return;
+        if (isConversationPending) return;
         if (inputValue.trim() === '') return;
 
         // Add user message
-        const userMessage: Message = {
-            id: Date.now().toString(),
+        const userMessage: LocalMessage = {
             content: inputValue,
-            sender: 'user',
-            timestamp: new Date(),
+            role: 'user',
+            timestamp: Date.now(),
         };
 
         setMessages((prev) => [...prev, userMessage]);
-        setInputValue('');
+        handleUpdateMessagesOnLocalStorage(userMessage);
 
-        // Simulate bot response after a short delay
-        setTimeout(() => {
-            const botMessage: Message = {
-                id: (Date.now() + 1).toString(),
-                content: `I received your message: "${inputValue}"`,
-                sender: 'bot',
-                timestamp: new Date(),
-            };
-            setMessages((prev) => [...prev, botMessage]);
-            setIsPending(false);
-        }, 1000);
+        const slicedMessages = messages.length >= 20 ? messages.slice(-50) : messages;
+
+        const history =
+            slicedMessages?.filter(
+                (message) =>
+                    !message.failed && {
+                        content: message.content,
+                        role: message.role,
+                    }
+            ) || [];
+
+        conversation({ question: inputValue, history });
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             handleSendMessage();
-            setIsPending(true);
         }
+    };
+
+    const handleClearHistoryConversation = () => {
+        localStorage.removeItem(`messages:${userInfo?.profileId}`);
+        setMessages([initMessage]);
     };
 
     return (
         <Card className="flex h-[500px] w-full max-w-96 flex-col rounded-md shadow-xl drop-shadow-xl">
-            <CardHeader className="border-b px-4 py-3">
+            <CardHeader className="flex flex-row items-center justify-between border-b px-4 py-3">
                 <CardTitle className="text-lg font-medium">Chat with AI Assistant</CardTitle>
+                <button
+                    onClick={handleClearHistoryConversation}
+                    className="text-[12px] text-primary-300 transition-colors hover:text-primary-500 hover:underline"
+                >
+                    Clear history
+                </button>
             </CardHeader>
             <CardContent className="flex-1 overflow-hidden p-0">
                 <ScrollArea className="h-[380px] p-4">
                     <div className="flex flex-col gap-x-3 gap-y-4">
                         {messages.map((message) => (
-                            <div
-                                key={message.id}
-                                className={cn(
-                                    'flex max-w-[80%] items-start gap-2',
-                                    message.sender === 'user' ? 'ml-auto' : ''
-                                )}
-                            >
-                                {message.sender === 'bot' && (
-                                    <Avatar>
-                                        <AvatarImage
-                                            className="scale-150"
-                                            src="/images/chat-bot-icon.jpg"
-                                            alt="@shadcn"
-                                        />
-                                        <AvatarFallback>CN</AvatarFallback>
-                                    </Avatar>
-                                )}
-                                <div
-                                    className={cn(
-                                        'relative min-w-14 max-w-full cursor-pointer text-wrap break-words rounded-b-xl px-3 py-2 text-sm transition-all',
-                                        message.sender === 'user'
-                                            ? 'rounded-t-none rounded-tl-2xl bg-primary text-primary-foreground hover:bg-primary-600'
-                                            : 'rounded-t-none rounded-tr-2xl bg-gray-50 text-start hover:bg-gray-100'
-                                    )}
-                                >
-                                    {message.content}
-                                    <span
-                                        className={cn(
-                                            'absolute -bottom-4 text-[10px] italic text-gray-500',
-                                            message.sender === 'user' ? 'right-2' : 'left-2'
-                                        )}
-                                    >
-                                        {format(message.timestamp, 'h:mm a')}
-                                    </span>
-                                </div>
-                                {message.sender === 'user' && (
-                                    <Avatar>
-                                        <AvatarImage src={userInfo?.profileUrl} alt={userInfo?.fullName} />
-                                        <AvatarFallback>CN</AvatarFallback>
-                                    </Avatar>
-                                )}
-                            </div>
+                            <ConversationalMessage key={message.timestamp} message={message} userInfo={userInfo} />
                         ))}
+                        {isConversationPending && (
+                            <ConversationalMessage
+                                message={{
+                                    content: '',
+                                    role: 'assistant',
+                                    timestamp: Date.now(),
+                                }}
+                                isMessageLoading={true}
+                            />
+                        )}
                         <div ref={messagesEndRef} />
                     </div>
                 </ScrollArea>
@@ -155,15 +161,20 @@ const ChatBox = memo(() => {
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        className="h-12 rounded-md shadow-none transition-all focus-visible:border focus-visible:border-primary-500 focus-visible:ring-1 focus-visible:ring-primary-500"
+                        disabled={isConversationPending}
+                        className="h-10 rounded-sm text-sm shadow-none transition-all placeholder:text-sm focus-visible:border focus-visible:border-primary-500 focus-visible:ring-1 focus-visible:ring-primary-500"
                     />
                     <Button
-                        size="icon-lg"
-                        className="h-12"
+                        size="icon-md"
+                        className="h-10"
                         onClick={handleSendMessage}
-                        disabled={inputValue.trim() === '' || isPending}
+                        disabled={inputValue.trim() === '' || isConversationPending}
                     >
-                        {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                        {isConversationPending ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                            <Send className="h-4 w-4" />
+                        )}
                         <span className="sr-only">Send message</span>
                     </Button>
                 </div>

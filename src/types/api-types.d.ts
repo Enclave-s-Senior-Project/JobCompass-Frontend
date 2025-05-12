@@ -1,5 +1,12 @@
 import { FilterValues } from '@/components/custom-ui/local/filter-my-jobs';
-import { PersonalProfileType, UserType, Address, CandidateProfileType } from './common-types';
+import {
+    PersonalProfileType,
+    UserType,
+    Address,
+    CandidateProfileType,
+    HistoryQuestion,
+    AIChatResponse,
+} from './common-types';
 import {
     AppliedJob,
     CandidatesApplied,
@@ -186,6 +193,8 @@ export namespace DetailedResponse {
         name: string;
         revenue: number;
     };
+
+    export interface AIConversationResponse extends AIChatResponse {}
 }
 
 export namespace DetailedRequest {
@@ -470,5 +479,9 @@ export namespace DetailedRequest {
     export interface ChangeStatusJob {
         status: JobStatusEnum;
         reason?: string;
+    }
+    export interface AIConversationRequest {
+        question: string;
+        history: HistoryQuestion[];
     }
 }

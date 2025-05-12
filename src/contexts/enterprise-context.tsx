@@ -39,7 +39,7 @@ export function EnterpriseProvider({ children }: { children: React.ReactNode }) 
         },
         staleTime: 1000 * 60 * 5,
         retry: 2,
-        enabled: isHydrated && !!userInfo,
+        enabled: isHydrated && userInfo?.roles.includes('ENTERPRISE'),
     });
 
     const deactivateEnterprise = () => {

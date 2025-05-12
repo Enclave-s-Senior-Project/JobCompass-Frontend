@@ -15,8 +15,8 @@ let isRefreshing = false;
 let refreshTokenPromise: Promise<any> | null = null;
 
 export class AuthAxios extends BaseAxios {
-    constructor(prefix: string) {
-        super(prefix);
+    constructor(prefix: string, baseURL?: string) {
+        super(prefix, baseURL);
         this._initRequestInterceptor();
     }
 

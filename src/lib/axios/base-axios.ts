@@ -4,9 +4,10 @@ import Error from 'next/error';
 
 export class BaseAxios {
     protected axiosInstance: AxiosInstance;
-    constructor(prefix: string) {
+    constructor(prefix: string, baseURL?: string) {
+        const defaultBaseURL = baseURL || process.env.NEXT_PUBLIC_APP_SERVER_URL;
         this.axiosInstance = axios.create({
-            baseURL: `${process.env.NEXT_PUBLIC_APP_SERVER_URL}/${prefix}`,
+            baseURL: `${defaultBaseURL}/${prefix}`,
             timeout: 10000,
             withCredentials: true,
             headers: { 'Content-Type': 'application/json' },
