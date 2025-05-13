@@ -2,18 +2,17 @@
 
 import Image from 'next/image';
 import defaultBackgroundImage from '@/assets/images/avatar/default-background.jpg';
-import ShareProfile from '@/components/custom-ui/share-profile';
 import { useParams } from 'next/navigation';
 import { useQueries } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import { handleErrorToast } from '@/lib/utils';
 import { UserService } from '@/services/user.service';
-import { DetailedRequest, Resume, User } from '@/types';
-import { UserCardProfile } from '@/components/custom-ui/local/user-card-profile';
-import UserRelatedInformation from '@/components/custom-ui/global/user-related-information';
-import { DownloadResume } from '@/components/custom-ui/global/download-resume';
-import { RichTextContent } from '@/components/custom-ui/global/rich-text-content';
-import { UserContactInformation } from '@/components/custom-ui/global/user-contact-information';
+import { DetailedRequest, Resume } from '@/types';
+import { CardNameCandidate } from '@/components/custom-ui/local/candidate-admin-management/card-name-candidate';
+import { CardContactInformation } from '@/components/custom-ui/local/candidate-admin-management/card-contact-information';
+import { CardPersonalDetail } from '@/components/custom-ui/local/candidate-admin-management/card-personal-detail';
+import { DetailInformation } from '@/components/custom-ui/local/candidate-admin-management/detail-information';
+import { CardResume } from '@/components/custom-ui/local/candidate-admin-management/card-resume';
 
 export default function FindCandidatesAdminPage() {
     const params = useParams<{ id: string }>();
@@ -69,80 +68,46 @@ export default function FindCandidatesAdminPage() {
     });
 
     return (
-        <div className="container mx-auto">
+        <div className="container mx-auto py-6">
             <div className="z-0 h-56 max-w-screen-2xl overflow-hidden rounded-b-lg border">
-                <Image src={defaultBackgroundImage} alt="Background image" className="h-full w-full object-cover" />
+                <Image
+                    src={userProfileQuery[0].data?.pageUrl || defaultBackgroundImage}
+                    alt="Background image"
+                    width={1280}
+                    height={720}
+                    className="h-full w-full object-cover"
+                />
             </div>
             <div className="z-10 mx-auto max-w-screen-xl -translate-y-20 space-y-12">
-                {/* user card */}
-                <UserCardProfile
-                    userInfo={userProfileQuery[0].data as User}
-                    isPending={userProfileQuery[0].data === undefined || userProfileQuery[0].isPending}
-                    temp={false}
-                />
-
-                <div className="grid grid-cols-12 gap-4 px-2 sm:px-0 md:gap-8 lg:gap-14">
-                    <div className="col-span-12 space-y-9 md:col-span-7">
-                        <div className="space-y-4">
-                            <RichTextContent
-                                className="break-normal text-gray-700"
-                                content={
-                                    userProfileQuery?.[0].data?.introduction
-                                        ? userProfileQuery?.[0].data?.introduction
-                                        : 'No introduction'
-                                }
-                            />
-                        </div>
-                        <div className="space-y-4">
-                            <p className="text-xl font-semibold text-primary-700">Education</p>
-                            <RichTextContent
-                                className="break-normal text-gray-700"
-                                content={
-                                    userProfileQuery?.[0].data?.education
-                                        ? userProfileQuery?.[0].data?.education
-                                        : 'No education'
-                                }
-                            />
-                        </div>
-                        <div className="space-y-4">
-                            <p className="text-xl font-semibold text-primary-700">Experience</p>
-                            <RichTextContent
-                                className="break-normal text-gray-700"
-                                content={
-                                    userProfileQuery?.[0].data?.experience
-                                        ? userProfileQuery?.[0].data?.experience
-                                        : 'No experience'
-                                }
-                            />
-                        </div>
-                        {/* Share profile for breakpoint from md */}
-                        <div className="hidden md:block">
-                            <ShareProfile />
-                        </div>
-                    </div>
-                    <div className="col-span-12 space-y-6 md:col-span-5">
-                        <UserRelatedInformation
-                            info={{
-                                dateOfBirth: userProfileQuery?.[0]?.data?.dateOfBirth,
-                                gender: userProfileQuery?.[0]?.data?.gender,
-                                maritalStatus: userProfileQuery?.[0]?.data?.maritalStatus,
-                                nationality: userProfileQuery?.[0]?.data?.nationality,
-                            }}
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                    <div className="space-y-6 lg:col-span-1">
+                        <CardNameCandidate
+                            name={userProfileQuery[0]?.data?.fullName}
+                            major={userProfileQuery[0].data?.majority?.categoryName}
+                            industry={userProfileQuery[0].data?.industry?.categoryName}
+                            status={userProfileQuery[0].data?.status}
+                            avatar={userProfileQuery[0].data?.profileUrl}
                         />
-                        {/* Download Resume */}
-                        <DownloadResume resumes={userProfileQuery?.[1].data as Resume[]} />
-                        {/* Contact information */}
-                        <UserContactInformation
-                            contactInfo={{
-                                nationality: userProfileQuery?.[0]?.data?.nationality,
-                                phone: userProfileQuery?.[0]?.data?.phone,
-                            }}
-                            socialLinks={userProfileQuery?.[2]?.data || []}
+                        <CardContactInformation
+                            email={userProfileQuery[0].data?.email}
+                            location={userProfileQuery[0].data?.nationality}
+                            phone={userProfileQuery[0].data?.phone}
+                            socialLinks={userProfileQuery[2].data}
+                        />
+                        <CardPersonalDetail
+                            dateOfBirth={userProfileQuery[0].data?.dateOfBirth}
+                            gender={userProfileQuery[0].data?.gender}
+                            maritalStatus={userProfileQuery[0].data?.maritalStatus}
+                            nationality={userProfileQuery[0].data?.nationality}
                         />
                     </div>
-                    {/* Share profile for breakpoint below md  */}
-                    <div className="col-span-12 block md:hidden">
-                        <ShareProfile />
+                    <div className="space-y-6 lg:col-span-2">
+                        <DetailInformation
+                            overview={userProfileQuery[0].data?.introduction}
+                            experience={userProfileQuery[0].data?.experience}
+                            education={userProfileQuery[0].data?.education}
+                        />
+                        <CardResume resumes={userProfileQuery[1].data as Resume[]} />
                     </div>
                 </div>
             </div>

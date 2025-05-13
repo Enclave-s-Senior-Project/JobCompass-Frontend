@@ -158,6 +158,34 @@ export namespace DetailedResponse {
 
     export interface OverviewEnterprise
         extends Array<Pick<Enterprise, 'enterpriseId' | 'name' | 'logoUrl' | 'status'>> {}
+
+    export type GetDetailCandidate = User & {
+        email?: string;
+        isFavorite?: boolean;
+        status?: CandidateStatus;
+    };
+
+    export type GetTotal = {
+        totalUser: number;
+        totalEnterprise: number;
+        totalCandidate: number;
+        totalJob: number;
+    };
+
+    export type GetListCandidateApply = {
+        applyJobs: AppliedJob[];
+        enterprises: Enterprise[];
+    };
+
+    export type GetListTopApplyJob = {
+        jobName: string;
+        applyCount: number;
+    };
+
+    export type GetDataRevenue = {
+        name: string;
+        revenue: number;
+    };
 }
 
 export namespace DetailedRequest {

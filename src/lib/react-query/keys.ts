@@ -33,4 +33,9 @@ export const queryKey = {
     userProfileDashboard: 'user-profile-dashboard',
     dashboard: 'dashboard',
     enterpriseListManagement: 'enterprise-list-management',
+    candidateList: 'candidate-list',
+    getTotal: 'get-total',
+    getListCandidateApply: 'get-list-candidate-apply',
+    getListTopApplyJob: 'get-list-top-apply-job',
+    getDataRevenue: 'get-data-revenue',
 };

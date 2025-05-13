@@ -1,16 +1,24 @@
 'use client';
-import CardCandidateHorizontal from '@/components/custom-ui/card-candidate-horizontal';
+import { CardCandidateHorizontal } from '@/components/custom-ui/card-candidate-horizontal';
 import FilterSidebarCandidate, {
     defaultFiltersSidebar,
     FilterValuesSidebar,
 } from '@/components/custom-ui/local/filter-candidate';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { queryKey } from '@/lib/react-query/keys';
+import { handleErrorToast } from '@/lib/utils';
+import { EnterpriseService } from '@/services/enterprises.service';
 import { DetailedRequest } from '@/types';
+import { useQuery } from '@tanstack/react-query';
 import { SlidersHorizontal } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function ListCandidates() {
+    const search = useSearchParams();
+    const page = Number(search.get('page') || 1);
+
     const [showFilter, setShowFilter] = useState(false);
     const [option, setOption] = useState<'ASC' | 'DESC'>('ASC');
     const [itemsPerPage, setItemsPerPage] = useState(6);
@@ -26,6 +34,33 @@ export default function ListCandidates() {
     useEffect(() => {
         setFilters((prev) => ({ ...prev, order: option }));
     }, [option]);
+
+    const {
+        refetch,
+        data: resultQuery,
+        isPending,
+    } = useQuery({
+        queryKey: [
+            queryKey.candidateList,
+            {
+                order: option,
+                page,
+                take: 10,
+                categories: filters.categories.length ? filters.categories : undefined,
+                gender: filters.gender === 'all' ? undefined : filters.gender,
+                maritalStatus: filters.maritalStatus === 'all' ? undefined : filters.maritalStatus,
+            },
+        ],
+        queryFn: async ({ queryKey }) => {
+            try {
+                const payload = await EnterpriseService.getCandidates(queryKey[1] as DetailedRequest.GetCandidates);
+                return payload;
+            } catch (error: any) {
+                handleErrorToast(error);
+            }
+        },
+        enabled: true,
+    });
 
     return (
         <main className="min-h-dvh bg-white">
@@ -78,11 +113,9 @@ export default function ListCandidates() {
             <div className="mx-auto mb-6 mt-6 flex max-w-screen-xl flex-col items-start justify-between gap-5 md:flex-row">
                 <div className="w-full">
                     <CardCandidateHorizontal
-                        perPage={itemsPerPage || 6}
-                        order={option}
-                        maritalStatus={filters.maritalStatus === 'all' ? undefined : filters.maritalStatus}
-                        gender={filters.gender === 'all' ? undefined : filters.gender}
-                        categories={filters.categories.length ? filters.categories : undefined}
+                        candidates={resultQuery?.data || []}
+                        refetch={refetch}
+                        isPending={isPending}
                     />
                 </div>
             </div>

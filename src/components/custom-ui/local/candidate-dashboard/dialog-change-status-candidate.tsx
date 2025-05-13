@@ -122,7 +122,10 @@ export const DialogChangeCandidateStatus = memo(({ nodeTrigger, onClose, onSubmi
                         </Button>
                     </DialogClose>
                     <DialogClose asChild>
-                        <Button type="submit" onClick={() => onSubmit(activeStatus, reason)}></Button>
+                        <Button type="submit" onClick={() => onSubmit(activeStatus, reason)}>
+                            {' '}
+                            Change
+                        </Button>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>

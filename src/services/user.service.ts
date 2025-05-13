@@ -68,7 +68,7 @@ export class UserService {
 
     public static async getUserProfile(data: DetailedRequest.GetUserProfileByProfileId) {
         try {
-            const res = await axios.get<ApiResponse<User>>(`/${data.profileId}`);
+            const res = await authAxios.get<ApiResponse<DetailedResponse.GetDetailCandidate>>(`/${data.profileId}`);
             return res.payload.value;
         } catch (err) {
             if (err instanceof AxiosError) {

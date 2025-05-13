@@ -141,11 +141,12 @@ export interface CandidatesApplied {
 export interface Resume extends CV {}
 
 export interface AppliedJob extends BaseEntity {
-    appliedJobId: string;
-    coverLetter: string;
-    status: string;
+    appliedJobId?: string;
+    coverLetter?: string;
+    status?: string;
     job: Job;
-    address: Address[];
+    address?: Address[];
+    profile?: User;
 }
 
 export interface GetDetailCandidate {

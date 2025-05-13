@@ -21,7 +21,7 @@ export default function UserRelatedInformation({ info }: Props) {
             <div className="w-1/2 basis-1/2">
                 <Map className="mb-3 size-6 text-primary" />
                 <p className="mb-1 text-[12px] uppercase text-gray-500">nationality</p>
-                <p className="text-sm">{info.nationality ? info.nationality : 'Not specified'}</p>
+                <p className="text-sm font-medium">{info.nationality ? info.nationality : 'Not specified'}</p>
             </div>
             <div className="w-1/2 basis-1/2">
                 <NotepadText className="mb-3 size-6 text-primary" />
