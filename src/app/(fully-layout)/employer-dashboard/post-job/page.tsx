@@ -173,7 +173,7 @@ export default function PostJobForm() {
                             ) : (
                                 resultQuery?.temp?.map((temp) => (
                                     <SelectItem key={temp.addressId} value={temp.addressId || ''}>
-                                        {temp.street} - {temp.street} - {temp.city} - {temp.country}
+                                        {temp.street} - {temp.city} - {temp.country}
                                     </SelectItem>
                                 ))
                             )}

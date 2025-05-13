@@ -49,7 +49,6 @@ const ListCandidateDashboard = memo(({ params }: Props) => {
             delete newParams.nationality;
             return newParams;
         });
-        // Không cần gọi refetch() ở đây vì setSearchParams sẽ trigger query tự động
     };
 
     return (
@@ -119,12 +118,12 @@ const ListCandidateDashboard = memo(({ params }: Props) => {
                                         <TableRow>
                                             <TableHead>Candidate</TableHead>
                                             <TableHead>Gender</TableHead>
-                                            <TableHead>Location</TableHead>
+                                            <TableHead>Nationality</TableHead>
                                             <TableHead>Married Status</TableHead>
-                                            <TableHead>Team size</TableHead>
+                                            <TableHead>Is Premium</TableHead>
                                             <TableHead>Phone</TableHead>
-                                            <TableHead>Founded in</TableHead>
-                                            <TableHead>Founded in</TableHead>
+                                            <TableHead>Date Of Birth</TableHead>
+                                            <TableHead>Status</TableHead>
                                             <TableHead className="text-right">Actions</TableHead>
                                         </TableRow>
                                     </TableHeader>

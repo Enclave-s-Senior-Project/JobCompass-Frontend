@@ -9,14 +9,15 @@ import { queryKey } from '@/lib/react-query/keys';
 import { handleErrorToast } from '@/lib/utils';
 import { UserService } from '@/services/user.service';
 import { DetailedRequest, Resume, User } from '@/types';
-import { UserCardProfile } from '@/components/custom-ui/local/user-card-profile';
 import UserRelatedInformation from '@/components/custom-ui/global/user-related-information';
 import { DownloadResume } from '@/components/custom-ui/global/download-resume';
 import { RichTextContent } from '@/components/custom-ui/global/rich-text-content';
 import { UserContactInformation } from '@/components/custom-ui/global/user-contact-information';
+import { DetailCandidateCardProfile } from '@/components/custom-ui/local/detail-candidate-card-profile';
 
 export default function FindCandidatesPage() {
     const params = useParams<{ profileId: string }>();
+    console.log('Render');
 
     const userProfileQuery = useQueries({
         queries: [
@@ -33,7 +34,6 @@ export default function FindCandidatesPage() {
                         handleErrorToast(error);
                     }
                 },
-                staleTime: 1000 * 60 * 15,
             },
             {
                 queryKey: [queryKey.userResume, params?.profileId],
@@ -48,7 +48,6 @@ export default function FindCandidatesPage() {
                         handleErrorToast(error);
                     }
                 },
-                staleTime: 1000 * 60 * 15,
             },
             {
                 queryKey: [queryKey.candidateSocialLinks, params?.profileId],
@@ -71,13 +70,20 @@ export default function FindCandidatesPage() {
     return (
         <div className="container mx-auto">
             <div className="z-0 h-56 max-w-screen-2xl overflow-hidden rounded-b-lg border">
-                <Image src={defaultBackgroundImage} alt="Background image" className="h-full w-full object-cover" />
+                <Image
+                    src={userProfileQuery[0].data?.pageUrl || defaultBackgroundImage}
+                    alt="Background image"
+                    width={1280}
+                    height={720}
+                    className="h-full w-full object-cover"
+                />
             </div>
             <div className="z-10 mx-auto max-w-screen-xl -translate-y-20 space-y-12">
                 {/* user card */}
-                <UserCardProfile
+                <DetailCandidateCardProfile
                     userInfo={userProfileQuery[0].data as User}
                     isPending={userProfileQuery[0].data === undefined || userProfileQuery[0].isPending}
+                    refetch={userProfileQuery[0].refetch}
                 />
 
                 <div className="grid grid-cols-12 gap-4 px-2 sm:px-0 md:gap-8 lg:gap-14">

@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { ArrowDownUp, Ban, Check, Clock, Info, PhoneCall, UsersRound, X } from 'lucide-react';
+import { ArrowDownUp, Ban, Check, Clock, Info, PhoneCall, X } from 'lucide-react';
 import Image from 'next/image';
 import { Account, User } from '@/types';
 import { toast } from '@/lib/toast';
@@ -99,8 +99,20 @@ const CandidateItem = memo(
 
                 <TableCell>
                     <div className="flex items-center gap-1">
-                        <UsersRound className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-nowrap text-[12px]">{candidate.isActive ? 'Active' : 'Inactive'}</span>
+                        {candidate?.isPremium ? (
+                            <Check className="h-4 w-4 text-green" />
+                        ) : (
+                            <X className="h-4 w-4 text-danger" />
+                        )}
+
+                        <span
+                            className={cn(
+                                'text-nowrap text-[12px] font-semibold',
+                                candidate?.isPremium ? 'text-green' : 'text-danger'
+                            )}
+                        >
+                            {candidate?.isPremium ? 'Active' : 'Inactive'}
+                        </span>
                     </div>
                 </TableCell>
 

@@ -135,7 +135,10 @@ const postJobSchema = z
         description: z.string().min(20, 'Description is required and must be at least 20 characters'),
         responsibilities: z.string().min(20, 'Responsibility is required and must be at least 20 characters'),
         type: z.string().max(50).optional(),
-        experience: z.coerce.number().min(1, 'Experience must be a positive number'),
+        experience: z.coerce
+            .number()
+            .min(1, 'Experience must be a positive number')
+            .max(30, 'Experience must not exceed 30 years'),
         deadline: z
             .string()
             .optional()

@@ -26,7 +26,7 @@ import { JobService } from '@/services/job.service';
 import { Suspense, useContext } from 'react';
 import { handleErrorToast, toFormattedDate } from '@/lib/utils';
 import { NotFound } from '@/components/custom-ui/not-found';
-import { UserContext } from '@/contexts';
+import { EnterpriseContext, UserContext } from '@/contexts';
 import { ListTag } from '@/components/custom-ui/list-tags';
 import { toast } from '@/lib/toast';
 import { RichTextContent } from '@/components/custom-ui/global/rich-text-content';
@@ -46,7 +46,7 @@ function PageContentOfSingleJob() {
     const isLog = localStorage.getItem('logged') ?? false;
     const { userInfo } = useContext(UserContext);
     const { id } = useParams<{ id: string }>();
-
+    const { enterpriseInfo } = useContext(EnterpriseContext);
     const { data: resultQuery, refetch } = useQuery({
         queryKey: [queryKey.detailJob, id],
         queryFn: async () => {
@@ -155,16 +155,22 @@ function PageContentOfSingleJob() {
                                     className={`h-[24px] w-[24px] ${isFavorite ? 'text-blue-500' : 'text-gray-500'}`}
                                 />
                             </Button>
-                            <DialogApplyJob
-                                nameJob={resultQuery?.name || 'Unknown Job'}
-                                jobId={resultQuery?.jobId || id}
-                                trigger={
-                                    <Button className="h-[56px] w-[248px] flex-1 text-[16px] md:flex-none">
-                                        Apply Now
-                                        <ChevronRight className="ml-2 h-6 w-6" />
-                                    </Button>
-                                }
-                            />
+                            {resultQuery?.enterprise?.enterpriseId === enterpriseInfo?.enterpriseId ? (
+                                <Button className="h-[56px] w-[248px] flex-1 text-[16px] md:flex-none" disabled>
+                                    Cannot Apply to Your Own Job
+                                </Button>
+                            ) : (
+                                <DialogApplyJob
+                                    nameJob={resultQuery?.name || 'Unknown Job'}
+                                    jobId={resultQuery?.jobId || id}
+                                    trigger={
+                                        <Button className="h-[56px] w-[248px] flex-1 text-[16px] md:flex-none">
+                                            Apply Now
+                                            <ChevronRight className="ml-2 h-6 w-6" />
+                                        </Button>
+                                    }
+                                />
+                            )}
                         </div>
                     </div>
                 </div>
