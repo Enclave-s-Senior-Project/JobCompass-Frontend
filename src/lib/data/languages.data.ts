@@ -39,7 +39,6 @@ export const languagesData: Record<string, Country> = {
         cities: ['Seoul', 'Busan', 'Incheon', 'Daegu', 'Gwangju', 'Gyeonggi', 'Jeju'],
         flag: '🇰🇷',
     },
-    // Indonesia: {
     //     cities: [
     //         'Jakarta',
     //         'Surabaya',
@@ -65,7 +64,6 @@ export const languagesData: Record<string, Country> = {
         cities: ['Ho Chi Minh City', 'Hanoi', 'Da Nang', 'Haiphong', 'Can Tho', 'Hue'],
         flag: '🇻🇳',
     },
-    // Malaysia: {
     //     cities: ['Kuala Lumpur', 'Penang', 'Johor Bahru', 'Kota Kinabalu', 'Malacca', 'Selangor', 'Sabah', 'Sarawak'],
     //     flag: '🇲🇾',
     // },
@@ -73,7 +71,6 @@ export const languagesData: Record<string, Country> = {
         cities: ['Singapore', 'Jurong', 'Tampines', 'Woodlands', 'Sentosa'],
         flag: '🇸🇬',
     },
-    // Pakistan: {
     //     cities: ['Karachi', 'Lahore', 'Islamabad', 'Faisalabad', 'Rawalpindi', 'Punjab', 'Sindh', 'Khyber Pakhtunkhwa'],
     //     flag: '🇵🇰',
     // },
@@ -218,7 +215,6 @@ export const languagesData: Record<string, Country> = {
         ],
         flag: '🇫🇷',
     },
-    // Italy: {
     //     cities: ['Rome', 'Milan', 'Naples', 'Turin', 'Venice', 'Lombardy', 'Lazio', 'Campania'],
     //     flag: '🇮🇹',
     // },
@@ -247,7 +243,6 @@ export const languagesData: Record<string, Country> = {
         ],
         flag: '🇷🇺',
     },
-    // Poland: {
     //     cities: ['Warsaw', 'Kraków', 'Wrocław', 'Gdańsk', 'Łódź', 'Masovia', 'Lesser Poland', 'Silesia'],
     //     flag: '🇵🇱',
     // },
@@ -374,186 +369,4 @@ export const languagesData: Record<string, Country> = {
         ],
         flag: '🇨🇦',
     },
-    // Mexico: {
-    //     cities: [
-    //         'Mexico City',
-    //         'Guadalajara',
-    //         'Monterrey',
-    //         'Puebla',
-    //         'Tijuana',
-    //         'Jalisco',
-    //         'Nuevo León',
-    //         'Baja California',
-    //     ],
-    //     flag: '🇲🇽',
-    // },
-    // Cuba: {
-    //     cities: [
-    //         'Havana',
-    //         'Santiago de Cuba',
-    //         'Camagüey',
-    //         'Holguín',
-    //         'Santa Clara',
-    //         'Havana Province',
-    //         'Santiago de Cuba Province',
-    //     ],
-    //     flag: '🇨🇺',
-    // },
-    // Guatemala: {
-    //     cities: [
-    //         'Guatemala City',
-    //         'Quetzaltenango',
-    //         'Escuintla',
-    //         'Mixco',
-    //         'Antigua',
-    //         'Guatemala Department',
-    //         'Quetzaltenango Department',
-    //     ],
-    //     flag: '🇬🇹',
-    // },
-    // Honduras: {
-    //     cities: ['Tegucigalpa', 'San Pedro Sula', 'La Ceiba', 'Choluteca', 'Comayagua', 'Francisco Morazán', 'Cortés'],
-    //     flag: '🇭🇳',
-    // },
-    // 'El Salvador': {
-    //     cities: [
-    //         'San Salvador',
-    //         'Santa Ana',
-    //         'San Miguel',
-    //         'Soyapango',
-    //         'Ahuachapán',
-    //         'La Libertad',
-    //         'Santa Ana Department',
-    //     ],
-    //     flag: '🇸🇻',
-    // },
-    // Nicaragua: {
-    //     cities: ['Managua', 'León', 'Granada', 'Masaya', 'Chinandega', 'Managua Department', 'León Department'],
-    //     flag: '🇳🇮',
-    // },
-    // 'Costa Rica': {
-    //     cities: ['San José', 'Alajuela', 'Cartago', 'Heredia', 'Puntarenas', 'San José Province', 'Guanacaste'],
-    //     flag: '🇨🇷',
-    // },
-    // Panama: {
-    //     cities: ['Panama City', 'Colón', 'David', 'La Chorrera', 'Santiago', 'Panamá Province', 'Chiriquí'],
-    //     flag: '🇵🇦',
-    // },
-    // 'Dominican Republic': {
-    //     cities: [
-    //         'Santo Domingo',
-    //         'Santiago de los Caballeros',
-    //         'La Romana',
-    //         'San Pedro de Macorís',
-    //         'Puerto Plata',
-    //         'Distrito Nacional',
-    //     ],
-    //     flag: '🇩🇴',
-    // },
-    // Haiti: {
-    //     cities: ['Port-au-Prince', 'Cap-Haïtien', 'Gonaïves', 'Les Cayes', 'Jacmel', 'Ouest', 'Nord'],
-    //     flag: '🇭🇹',
-    // },
-    // Jamaica: {
-    //     cities: ['Kingston', 'Montego Bay', 'Spanish Town', 'Portmore', 'Mandeville', 'Saint Andrew', 'Saint James'],
-    //     flag: '🇯🇲',
-    // },
-    // Brazil: {
-    //     cities: [
-    //         'São Paulo',
-    //         'Rio de Janeiro',
-    //         'Brasília',
-    //         'Salvador',
-    //         'Fortaleza',
-    //         'São Paulo State',
-    //         'Rio de Janeiro State',
-    //         'Minas Gerais',
-    //     ],
-    //     flag: '🇧🇷',
-    // },
-    // Argentina: {
-    //     cities: [
-    //         'Buenos Aires',
-    //         'Córdoba',
-    //         'Rosario',
-    //         'Mendoza',
-    //         'La Plata',
-    //         'Buenos Aires Province',
-    //         'Córdoba Province',
-    //     ],
-    //     flag: '🇦🇷',
-    // },
-    // Colombia: {
-    //     cities: [
-    //         'Bogotá',
-    //         'Medellín',
-    //         'Cali',
-    //         'Barranquilla',
-    //         'Cartagena',
-    //         'Cundinamarca',
-    //         'Antioquia',
-    //         'Valle del Cauca',
-    //     ],
-    //     flag: '🇨🇴',
-    // },
-    // Peru: {
-    //     cities: ['Lima', 'Arequipa', 'Trujillo', 'Cusco', 'Chiclayo', 'Lima Region', 'Arequipa Region'],
-    //     flag: '🇵🇪',
-    // },
-    // Chile: {
-    //     cities: [
-    //         'Santiago',
-    //         'Valparaíso',
-    //         'Concepción',
-    //         'La Serena',
-    //         'Antofagasta',
-    //         'Santiago Metropolitan',
-    //         'Valparaíso Region',
-    //     ],
-    //     flag: '🇨🇱',
-    // },
-    // Venezuela: {
-    //     cities: ['Caracas', 'Maracaibo', 'Valencia', 'Barquisimeto', 'Maracay', 'Miranda', 'Zulia', 'Carabobo'],
-    //     flag: '🇻🇪',
-    // },
-    // Ecuador: {
-    //     cities: ['Quito', 'Guayaquil', 'Cuenca', 'Santo Domingo', 'Machala', 'Pichincha', 'Guayas'],
-    //     flag: '🇪🇨',
-    // },
-    // Bolivia: {
-    //     cities: [
-    //         'La Paz',
-    //         'Santa Cruz de la Sierra',
-    //         'Cochabamba',
-    //         'Sucre',
-    //         'Oruro',
-    //         'Santa Cruz Department',
-    //         'Cochabamba Department',
-    //     ],
-    //     flag: '🇧🇴',
-    // },
-    // Paraguay: {
-    //     cities: [
-    //         'Asunción',
-    //         'Ciudad del Este',
-    //         'San Lorenzo',
-    //         'Luque',
-    //         'Encarnación',
-    //         'Central Department',
-    //         'Alto Paraná',
-    //     ],
-    //     flag: '🇵🇾',
-    // },
-    // Uruguay: {
-    //     cities: ['Montevideo', 'Salto', 'Paysandú', 'Maldonado', 'Rivera', 'Montevideo Department', 'Canelones'],
-    //     flag: '🇺🇾',
-    // },
-    // Guyana: {
-    //     cities: ['Georgetown', 'Linden', 'New Amsterdam', 'Bartica', 'Demerara-Mahaica', 'East Berbice-Corentyne'],
-    //     flag: '🇬🇾',
-    // },
-    // Suriname: {
-    //     cities: ['Paramaribo', 'Lelydorp', 'Nieuw Nickerie', 'Moengo', 'Brokopondo', 'Sipaliwini'],
-    //     flag: '🇸🇷',
-    // },
 };

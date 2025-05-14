@@ -299,7 +299,21 @@ const uploadCVSchema = z.object({
 const updateCVSchema = z.object({
     cvName: z.string().min(8, 'Resume name is at least 8 characters').max(20, 'Resume name is at most 20 characters'),
 });
-const validCountries = ['United States', 'Canada', 'Vietnam', 'France', 'Germany'];
+const validCountries = [
+    'United States',
+    'China',
+    'India',
+    'Japan',
+    'South Korea',
+    'Philippines',
+    'Vietnam',
+    'Singapore',
+    'United Kingdom',
+    'Germany',
+    'France',
+    'Russia',
+    'Canada',
+];
 
 const addressSchema = z.object({
     country: z
