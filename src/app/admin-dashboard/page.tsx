@@ -85,8 +85,8 @@ export default function AdminDashboardPage() {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                 <Card className="col-span-4">
                     <CardHeader>
-                        <CardTitle>Doanh thu</CardTitle>
-                        <CardDescription>Doanh thu theo tháng trong năm nay</CardDescription>
+                        <CardTitle>revenue</CardTitle>
+                        <CardDescription>Monthly revenue this year</CardDescription>
                     </CardHeader>
                     <CardContent className="pl-2">
                         <RevenueChart temp={dashboardQueries[3].data || []} />
@@ -110,7 +110,6 @@ export default function AdminDashboardPage() {
                 <Card className="col-span-4">
                     <CardHeader>
                         <CardTitle>Recent job applications</CardTitle>
-                        {/* <CardDescription>Có 128 đơn ứng tuyển mới trong tháng này</CardDescription> */}
                     </CardHeader>
                     <CardContent>
                         {dashboardQueries[1].isLoading ? (
