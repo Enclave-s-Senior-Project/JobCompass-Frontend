@@ -32,6 +32,31 @@ import { toast } from '@/lib/toast';
 import { RichTextContent } from '@/components/custom-ui/global/rich-text-content';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
+// New service function to fetch related jobs
+const fetchRelatedJobs = async (jobId: string) => {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_AI_SERVER}/suggest/related-jobs/${jobId}`, {
+            method: 'GET',
+            headers: {
+                'accept': 'application/json',
+            },
+        });
+        if (!response.ok) {
+            throw new Error('Failed to fetch related jobs');
+        }
+        const data = await response.json();
+        return data.payload; // Assuming payload contains the array of jobs
+    } catch (error: any) {
+        handleErrorToast(error);
+        throw error;
+    }
+};
+
+// Function to truncate long job titles
+const truncateTitle = (title: string, maxLength: number = 20) => {
+    return title.length > maxLength ? title.substring(0, maxLength) + '...' : title;
+};
+
 export default function SingleJob() {
     return (
         <Suspense fallback={<span>Loading...</span>}>
@@ -47,6 +72,8 @@ function PageContentOfSingleJob() {
     const { userInfo } = useContext(UserContext);
     const { id } = useParams<{ id: string }>();
     const { enterpriseInfo } = useContext(EnterpriseContext);
+
+    // Query for job details
     const { data: resultQuery, refetch } = useQuery({
         queryKey: [queryKey.detailJob, id],
         queryFn: async () => {
@@ -60,11 +87,18 @@ function PageContentOfSingleJob() {
         enabled: !!id,
     });
 
+    // New query for related jobs
+    const { data: relatedJobs } = useQuery({
+        queryKey: [queryKey.relatedJobs, id],
+        queryFn: () => fetchRelatedJobs(id),
+        enabled: !!id,
+    });
+
     const removeFavoriteJobMutation = async (jobId: string) => {
         try {
             await JobService.removeFavoriteJob({ jobId });
             await refetch();
-            toast.success('Job remove to favorite list');
+            toast.success('Job removed from favorite list');
         } catch (error: any) {
             handleErrorToast(error);
             toast.error('Oops! Something went wrong');
@@ -118,7 +152,7 @@ function PageContentOfSingleJob() {
                             <div>
                                 <div className="flex items-center gap-2">
                                     <h1 className="text-xl">
-                                        {resultQuery?.name}&nbsp;
+                                        {resultQuery?.name} 
                                         <ListTag tag={resultQuery?.tags ?? []} />
                                     </h1>
                                 </div>
@@ -194,7 +228,6 @@ function PageContentOfSingleJob() {
                             <p className="text-xl font-semibold text-primary-700">Requirements</p>
                             <RichTextContent content={resultQuery?.requirements || 'No requirement.'} />
                         </div>
-                        {/* Share profile for breakpoint from md */}
                         <div className="hidden md:block">
                             <ShareProfile />
                         </div>
@@ -245,18 +278,16 @@ function PageContentOfSingleJob() {
                             </div>
                         </div>
 
-                        {/* Contact information */}
                         <Card className="mx-auto max-w-2xl border-2 border-primary-50 shadow-none">
                             <CardHeader className="space-y-2">
                                 <div className="flex items-center gap-4">
                                     <img
                                         src={resultQuery?.enterprise?.logoUrl}
-                                        alt="Instagram logo"
+                                        alt="Company logo"
                                         width={56}
                                         height={56}
                                         className="h-14 w-14 rounded-full object-cover"
                                     />
-
                                     <div>
                                         <h2 className="text-[20px]">{resultQuery?.enterprise?.name}</h2>
                                         <p className="text-sm font-semibold italic text-gray-700">
@@ -323,7 +354,6 @@ function PageContentOfSingleJob() {
                             </CardContent>
                         </Card>
                     </div>
-                    {/* Share profile for breakpoint below md  */}
                     <div className="col-span-12 block md:hidden">
                         <ShareProfile />
                     </div>
@@ -343,19 +373,69 @@ function PageContentOfSingleJob() {
                         </nav>
                     </div>
                     <div>
-                        <div className="grid gap-4 pb-8 sm:grid-cols-2 lg:grid-cols-3">
-                            <div className="col-span-full flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-200 bg-gray-50 py-12 text-center">
-                                <FileX className="mb-4 h-16 w-16 text-muted-foreground" />
-                                <h3 className="mb-2 text-lg font-semibold text-foreground">No related jobs found</h3>
-                                <p className="max-w-[500px] text-muted-foreground">
-                                    We couldn&apos;t find any related job listings at the moment. Please check back
-                                    later or explore other job categories.
-                                </p>
-                                <Button variant="outline" className="mt-4">
-                                    <Link href="/jobs">Browse All Jobs</Link>
-                                </Button>
+                        {relatedJobs?.length > 0 ? (
+                            <div className="grid gap-4 pb-8 sm:grid-cols-2 lg:grid-cols-3">
+                                {relatedJobs.map((job: any) => (
+                                    <Card
+                                        key={job.jobId}
+                                        className="border-2 border-primary-50 shadow-none hover:shadow-md transition-shadow"
+                                    >
+                                        <CardHeader className="flex flex-row items-center gap-4">
+                                            <Avatar className="size-12">
+                                                <AvatarImage src={job.enterprise.logoUrl} alt={job.enterprise.name} />
+                                                <AvatarFallback>{job.enterprise.name[0]}</AvatarFallback>
+                                            </Avatar>
+                                            <div>
+                                                <Link href={`/single-job/${job.jobId}`}>
+                                                    <h3 className="text-lg font-semibold text-primary-700 hover:underline line-clamp-1">
+                                                        {truncateTitle(job.name)}
+                                                    </h3>
+                                                </Link>
+                                                <p className="text-sm text-muted-foreground line-clamp-1">
+                                                    {job.enterprise.name}
+                                                </p>
+                                            </div>
+                                        </CardHeader>
+                                        <CardContent className="space-y-4">
+                                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                                <MapPin className="h-4 w-4 text-primary" />
+                                                <span className="line-clamp-1">
+                                                    {job.addresses[0]?.city}, {job.addresses[0]?.country}
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                                <Wallet className="h-4 w-4 text-primary" />
+                                                <span>
+                                                    ${job.lowestWage.toLocaleString()} - $
+                                                    {job.highestWage.toLocaleString()}
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                                <BriefcaseBusiness className="h-4 w-4 text-primary" />
+                                                <span>{job.type}</span>
+                                            </div>
+                                            <ListTag tag={job.tags} />
+                                        </CardContent>
+                                    </Card>
+                                ))}
                             </div>
-                        </div>
+                        ) : (
+                            <div className="grid gap-4 pb-8 sm:grid-cols-2 lg:grid-cols-3">
+                                <div className="col-span-full flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-200 bg-gray-50 py-12 text-center">
+                                    <FileX className="mb-4 h-16 w-16 text-muted-foreground" />
+                                    <h3 className="mb-2 text-lg font-semibold text-foreground">
+                                        No related jobs found
+                                    </h3>
+                                    <p className="max-w-[500px] text-muted-foreground">
+                                        We couldn't find any related job listings at the moment. Please check back
+                                        later or explore other job categories.
+                                    </p>
+                                    <Button variant="outline" className="mt-4">
+                                        <Link href="/jobs">Browse All Jobs</Link>
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </main>

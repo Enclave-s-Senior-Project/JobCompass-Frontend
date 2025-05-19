@@ -38,4 +38,5 @@ export const queryKey = {
     getListCandidateApply: 'get-list-candidate-apply',
     getListTopApplyJob: 'get-list-top-apply-job',
     getDataRevenue: 'get-data-revenue',
+    relatedJobs: 'related-jobs',
 };
