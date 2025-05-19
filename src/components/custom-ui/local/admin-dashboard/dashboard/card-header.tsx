@@ -30,7 +30,6 @@ export function CardHeaderDashboard({ totalUser, totalCandidate, totalEnterprise
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">{totalUser}</div>
-                    <p className="text-xs text-muted-foreground">+2.5% so với tháng trước</p>
                 </CardContent>
             </Card>
             <Card>
@@ -54,7 +53,6 @@ export function CardHeaderDashboard({ totalUser, totalCandidate, totalEnterprise
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">{totalEnterprise}</div>
-                    <p className="text-xs text-muted-foreground">+10.1% so với tháng trước</p>
                 </CardContent>
             </Card>
             <Card>
@@ -76,7 +74,6 @@ export function CardHeaderDashboard({ totalUser, totalCandidate, totalEnterprise
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">{totalCandidate}</div>
-                    <p className="text-xs text-muted-foreground">+7.2% so với tháng trước</p>
                 </CardContent>
             </Card>
             <Card>
@@ -97,7 +94,6 @@ export function CardHeaderDashboard({ totalUser, totalCandidate, totalEnterprise
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">{totalJob}</div>
-                    <p className="text-xs text-muted-foreground">+5.4% so với tháng trước</p>
                 </CardContent>
             </Card>
         </>
