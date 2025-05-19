@@ -1,5 +1,8 @@
+'use client';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
+import DOMPurify from 'dompurify';
 import { format } from 'date-fns';
 import { memo } from 'react';
 import { DotLoading } from '../loading';
@@ -16,9 +19,13 @@ export const ConversationalMessage = memo(
         userInfo?: User | null;
         isMessageLoading?: boolean;
     }) => {
+        // Sanitize HTML content for assistant messages
+        const sanitizeHTML = (html: string) => {
+            return DOMPurify.sanitize(html, { USE_PROFILES: { html: true } });
+        };
+
         return (
             <div
-                key={message.timestamp}
                 className={cn('flex max-w-[90%] items-start gap-2', message.role === 'user' ? 'ml-auto' : '')}
             >
                 {message.role === 'assistant' && (
@@ -38,8 +45,17 @@ export const ConversationalMessage = memo(
                         isMessageLoading ? 'p-4' : ''
                     )}
                 >
-                    {isMessageLoading ? <DotLoading /> : message.content}
-
+                    {isMessageLoading ? (
+                        <DotLoading />
+                    ) : message.role === 'assistant' ? (
+                        <div
+                            dangerouslySetInnerHTML={{
+                                __html: sanitizeHTML(message.content),
+                            }}
+                        />
+                    ) : (
+                        message.content
+                    )}
                     <span
                         className={cn(
                             'absolute -bottom-4 text-[10px] italic text-gray-500',

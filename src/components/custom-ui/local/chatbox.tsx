@@ -5,14 +5,14 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { UserContext } from '@/contexts';
-import { AIService } from '@/services';
-import { AIChatMessage, DetailedRequest } from '@/types';
 import { useMutation } from '@tanstack/react-query';
 import { Loader2, Send } from 'lucide-react';
 import { memo, useContext, useEffect, useRef, useState } from 'react';
 import { ConversationalMessage } from './conversational-message';
 
-export interface LocalMessage extends Pick<AIChatMessage, 'content' | 'role'> {
+export interface LocalMessage {
+    content: string;
+    role: 'user' | 'assistant';
     timestamp: number;
     failed?: boolean;
 }
@@ -28,23 +28,34 @@ const ChatBox = memo(() => {
 
     const [messages, setMessages] = useState<LocalMessage[]>([initMessage]);
     const [inputValue, setInputValue] = useState('');
-
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
+    // Mutation to call the AI server API
     const { mutate: conversation, isPending: isConversationPending } = useMutation({
-        mutationFn: (data: DetailedRequest.AIConversationRequest) => AIService.conversation(data),
+        mutationFn: async (data: { query: string; chat_history: { type: string; content: string }[] }) => {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_APP_AI_SERVER}/conversation/ask`, {
+                method: 'POST',
+                headers: {
+                    'accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                throw new Error('API request failed');
+            }
+
+            return response.json();
+        },
         onSuccess: (data) => {
-            if (data?.choices[0].message.content) {
+            if (data?.response) {
                 const newMessage: LocalMessage = {
-                    content: data?.choices[0].message.content,
+                    content: data.response,
                     role: 'assistant',
                     timestamp: Date.now(),
                 };
                 setMessages((prev) => [...prev, newMessage]);
-                handleUpdateMessagesOnLocalStorage(newMessage);
-
-                // Clear input value after receiving response
-                setInputValue('');
             }
         },
         onError: () => {
@@ -55,7 +66,6 @@ const ChatBox = memo(() => {
                 timestamp: Date.now(),
             };
             setMessages((prev) => [...prev, errorMessage]);
-            handleUpdateMessagesOnLocalStorage(errorMessage);
         },
     });
 
@@ -72,20 +82,20 @@ const ChatBox = memo(() => {
 
         if (storedMessages.length > 0) {
             setMessages(storedMessages);
+        } else {
+            // Ensure initial message has a fresh timestamp
+            setMessages([{ ...initMessage, timestamp: Date.now() }]);
         }
-    }, []);
+    }, [userInfo?.profileId]);
 
-    const handleUpdateMessagesOnLocalStorage = (message: LocalMessage) => {
-        if (!message) return;
-        const oldMessages = JSON.parse(
-            localStorage.getItem(`messages:${userInfo?.profileId}`) || '[]'
-        ) as LocalMessage[];
-        localStorage.setItem(`messages:${userInfo?.profileId}`, JSON.stringify([...oldMessages, message]));
-    };
+    // Save last 20 messages to local storage whenever they change
+    useEffect(() => {
+        if (messages.length === 0) return;
+        localStorage.setItem(`messages:${userInfo?.profileId}`, JSON.stringify(messages.slice(-20)));
+    }, [messages, userInfo?.profileId]);
 
     const handleSendMessage = () => {
-        if (isConversationPending) return;
-        if (inputValue.trim() === '') return;
+        if (isConversationPending || inputValue.trim() === '') return;
 
         // Add user message
         const userMessage: LocalMessage = {
@@ -95,20 +105,19 @@ const ChatBox = memo(() => {
         };
 
         setMessages((prev) => [...prev, userMessage]);
-        handleUpdateMessagesOnLocalStorage(userMessage);
+        setInputValue('');
 
-        const slicedMessages = messages.length >= 20 ? messages.slice(-50) : messages;
+        // Prepare chat history (limit to last 20 messages to avoid large payloads)
+        const slicedMessages = messages.length >= 20 ? messages.slice(-20) : messages;
+        const chat_history = slicedMessages
+            .filter((message) => !message.failed)
+            .map((message) => ({
+                type: message.role === 'user' ? 'human' : 'ai',
+                content: message.content,
+            }));
 
-        const history =
-            slicedMessages?.filter(
-                (message) =>
-                    !message.failed && {
-                        content: message.content,
-                        role: message.role,
-                    }
-            ) || [];
-
-        conversation({ question: inputValue, history });
+        // Call the mutation
+        conversation({ query: userMessage.content, chat_history });
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -120,7 +129,7 @@ const ChatBox = memo(() => {
 
     const handleClearHistoryConversation = () => {
         localStorage.removeItem(`messages:${userInfo?.profileId}`);
-        setMessages([initMessage]);
+        setMessages([{ ...initMessage, timestamp: Date.now() }]);
     };
 
     return (
@@ -138,7 +147,11 @@ const ChatBox = memo(() => {
                 <ScrollArea className="h-[380px] p-4">
                     <div className="flex flex-col gap-x-3 gap-y-4">
                         {messages.map((message) => (
-                            <ConversationalMessage key={message.timestamp} message={message} userInfo={userInfo} />
+                            <ConversationalMessage
+                                key={message.timestamp}
+                                message={message}
+                                userInfo={userInfo}
+                            />
                         ))}
                         {isConversationPending && (
                             <ConversationalMessage
