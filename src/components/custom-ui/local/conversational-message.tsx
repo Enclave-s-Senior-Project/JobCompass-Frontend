@@ -25,9 +25,7 @@ export const ConversationalMessage = memo(
         };
 
         return (
-            <div
-                className={cn('flex max-w-[90%] items-start gap-2', message.role === 'user' ? 'ml-auto' : '')}
-            >
+            <div className={cn('flex max-w-[90%] items-start gap-2', message.role === 'user' ? 'ml-auto' : '')}>
                 {message.role === 'assistant' && (
                     <Avatar>
                         <AvatarImage className="scale-150" src="/images/chat-bot-icon.jpg" alt="@shadcn" />

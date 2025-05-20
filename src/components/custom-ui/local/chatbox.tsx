@@ -36,7 +36,7 @@ const ChatBox = memo(() => {
             const response = await fetch(`${process.env.NEXT_PUBLIC_APP_AI_SERVER}/conversation/ask`, {
                 method: 'POST',
                 headers: {
-                    'accept': 'application/json',
+                    accept: 'application/json',
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data),
@@ -147,11 +147,7 @@ const ChatBox = memo(() => {
                 <ScrollArea className="h-[380px] p-4">
                     <div className="flex flex-col gap-x-3 gap-y-4">
                         {messages.map((message) => (
-                            <ConversationalMessage
-                                key={message.timestamp}
-                                message={message}
-                                userInfo={userInfo}
-                            />
+                            <ConversationalMessage key={message.timestamp} message={message} userInfo={userInfo} />
                         ))}
                         {isConversationPending && (
                             <ConversationalMessage

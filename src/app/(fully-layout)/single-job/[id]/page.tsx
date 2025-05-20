@@ -38,7 +38,7 @@ const fetchRelatedJobs = async (jobId: string) => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_APP_AI_SERVER}/suggest/related-jobs/${jobId}`, {
             method: 'GET',
             headers: {
-                'accept': 'application/json',
+                accept: 'application/json',
             },
         });
         if (!response.ok) {
@@ -378,7 +378,7 @@ function PageContentOfSingleJob() {
                                 {relatedJobs.map((job: any) => (
                                     <Card
                                         key={job.jobId}
-                                        className="border-2 border-primary-50 shadow-none hover:shadow-md transition-shadow"
+                                        className="border-2 border-primary-50 shadow-none transition-shadow hover:shadow-md"
                                     >
                                         <CardHeader className="flex flex-row items-center gap-4">
                                             <Avatar className="size-12">
@@ -387,11 +387,11 @@ function PageContentOfSingleJob() {
                                             </Avatar>
                                             <div>
                                                 <Link href={`/single-job/${job.jobId}`}>
-                                                    <h3 className="text-lg font-semibold text-primary-700 hover:underline line-clamp-1">
+                                                    <h3 className="line-clamp-1 text-lg font-semibold text-primary-700 hover:underline">
                                                         {truncateTitle(job.name)}
                                                     </h3>
                                                 </Link>
-                                                <p className="text-sm text-muted-foreground line-clamp-1">
+                                                <p className="line-clamp-1 text-sm text-muted-foreground">
                                                     {job.enterprise.name}
                                                 </p>
                                             </div>
