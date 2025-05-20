@@ -427,7 +427,7 @@ function PageContentOfSingleJob() {
                                         No related jobs found
                                     </h3>
                                     <p className="max-w-[500px] text-muted-foreground">
-                                        We couldn't find any related job listings at the moment. Please check back
+                                        We couldn&apos;t find any related job listings at the moment. Please check back
                                         later or explore other job categories.
                                     </p>
                                     <Button variant="outline" className="mt-4">
