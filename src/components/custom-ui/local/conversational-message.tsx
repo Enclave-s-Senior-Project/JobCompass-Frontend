@@ -8,6 +8,7 @@ import { memo } from 'react';
 import { DotLoading } from '../loading';
 import { LocalMessage } from './chatbox';
 import { User } from '@/types';
+import '@/app/chatbot.css';
 
 export const ConversationalMessage = memo(
     ({
@@ -47,6 +48,7 @@ export const ConversationalMessage = memo(
                         <DotLoading />
                     ) : message.role === 'assistant' ? (
                         <div
+                            className="chat-message"
                             dangerouslySetInnerHTML={{
                                 __html: sanitizeHTML(message.content),
                             }}

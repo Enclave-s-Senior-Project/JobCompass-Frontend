@@ -144,7 +144,7 @@ const ChatBox = memo(() => {
                 </button>
             </CardHeader>
             <CardContent className="flex-1 overflow-hidden p-0">
-                <ScrollArea className="h-[380px] p-4">
+                <ScrollArea className="h-[380px] p-2">
                     <div className="flex flex-col gap-x-3 gap-y-4">
                         {messages.map((message) => (
                             <ConversationalMessage key={message.timestamp} message={message} userInfo={userInfo} />
