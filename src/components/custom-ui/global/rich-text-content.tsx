@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import React from 'react';
 
 type Props = {
@@ -6,5 +7,5 @@ type Props = {
 };
 
 export function RichTextContent({ content, className }: Props) {
-    return <div className={className} dangerouslySetInnerHTML={{ __html: content }}></div>;
+    return <div className={cn('rich-text-content', className)} dangerouslySetInnerHTML={{ __html: content }}></div>;
 }
