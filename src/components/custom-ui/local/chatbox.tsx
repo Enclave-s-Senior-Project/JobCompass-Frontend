@@ -6,9 +6,11 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { UserContext } from '@/contexts';
 import { useMutation } from '@tanstack/react-query';
-import { Loader2, Send } from 'lucide-react';
+import { Loader2, Send, SquareArrowUpRight } from 'lucide-react';
 import { memo, useContext, useEffect, useRef, useState } from 'react';
 import { ConversationalMessage } from './conversational-message';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 export interface LocalMessage {
     content: string;
@@ -26,6 +28,7 @@ const initMessage: LocalMessage = {
 const ChatBox = memo(() => {
     const { userInfo } = useContext(UserContext);
 
+    const [isPersonalized, setIsPersonalized] = useState(false);
     const [messages, setMessages] = useState<LocalMessage[]>([initMessage]);
     const [inputValue, setInputValue] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -88,10 +91,10 @@ const ChatBox = memo(() => {
         }
     }, [userInfo?.profileId]);
 
-    // Save last 20 messages to local storage whenever they change
+    // Save last 50 messages to local storage whenever they change
     useEffect(() => {
         if (messages.length === 0) return;
-        localStorage.setItem(`messages:${userInfo?.profileId}`, JSON.stringify(messages.slice(-20)));
+        localStorage.setItem(`messages:${userInfo?.profileId}`, JSON.stringify(messages.slice(-50)));
     }, [messages, userInfo?.profileId]);
 
     const handleSendMessage = () => {
@@ -133,14 +136,14 @@ const ChatBox = memo(() => {
     };
 
     return (
-        <Card className="flex h-[500px] w-full max-w-96 flex-col rounded-md shadow-xl drop-shadow-xl">
-            <CardHeader className="flex flex-row items-center justify-between border-b px-4 py-3">
-                <CardTitle className="text-lg font-medium">Chat with AI Assistant</CardTitle>
+        <Card className="flex h-[550px] w-[480px] flex-col rounded-md shadow-xl drop-shadow-xl">
+            <CardHeader className="flex flex-row items-center justify-between border-b px-2 py-3">
+                <CardTitle className="text-lg font-medium">JobCompass Assistant</CardTitle>
                 <button
                     onClick={handleClearHistoryConversation}
-                    className="text-[12px] text-primary-300 transition-colors hover:text-primary-500 hover:underline"
+                    className="text-[12px] text-gray-500 transition-colors hover:text-primary-500 hover:underline"
                 >
-                    Clear history
+                    <SquareArrowUpRight className="h-8 w-8" />
                 </button>
             </CardHeader>
             <CardContent className="flex-1 overflow-hidden p-0">
@@ -164,28 +167,43 @@ const ChatBox = memo(() => {
                 </ScrollArea>
             </CardContent>
             <CardFooter className="border-t p-3">
-                <div className="flex w-full items-center gap-2">
-                    <Input
-                        placeholder="Type a message..."
-                        value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        disabled={isConversationPending}
-                        className="h-10 rounded-sm text-sm shadow-none transition-all placeholder:text-sm focus-visible:border focus-visible:border-primary-500 focus-visible:ring-1 focus-visible:ring-primary-500"
-                    />
-                    <Button
-                        size="icon-md"
-                        className="h-10"
-                        onClick={handleSendMessage}
-                        disabled={inputValue.trim() === '' || isConversationPending}
-                    >
-                        {isConversationPending ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : (
-                            <Send className="h-4 w-4" />
-                        )}
-                        <span className="sr-only">Send message</span>
-                    </Button>
+                <div className="flex w-full flex-col">
+                    <div className="mb-2 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <Switch checked={isPersonalized} onCheckedChange={(value) => setIsPersonalized(value)} />
+                            <Label>Personalized</Label>
+                        </div>
+                        <div>
+                            {isPersonalized ? (
+                                <p className="text-sm italic text-gray-500">Tailored responses based on your profile</p>
+                            ) : (
+                                <p className="text-sm italic text-gray-500">General responses</p>
+                            )}
+                        </div>
+                    </div>
+                    <div className="flex w-full items-center gap-2">
+                        <Input
+                            placeholder="Type a message..."
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            disabled={isConversationPending}
+                            className="h-10 rounded-sm text-sm shadow-none transition-all placeholder:text-sm focus-visible:border focus-visible:border-primary-500 focus-visible:ring-1 focus-visible:ring-primary-500"
+                        />
+                        <Button
+                            size="md"
+                            className="h-10"
+                            onClick={handleSendMessage}
+                            disabled={inputValue.trim() === '' || isConversationPending}
+                        >
+                            {isConversationPending ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                                <Send className="h-4 w-4" />
+                            )}
+                            <span className="sr-only">Send message</span>
+                        </Button>
+                    </div>
                 </div>
             </CardFooter>
         </Card>
