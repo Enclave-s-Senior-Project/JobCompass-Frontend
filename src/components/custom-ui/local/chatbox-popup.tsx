@@ -5,11 +5,8 @@ import Image from 'next/image';
 
 const ChatbotPopup = memo(() => {
     return (
-        <Popover>
+        <Popover open>
             <PopoverTrigger asChild>
-                {/* <Button variant="primary" size="icon-lg" className="rounded-full">
-                    <Bot />
-                </Button> */}
                 <button className="size-14 overflow-hidden rounded-full shadow-lg drop-shadow-sm">
                     <Image
                         className="h-full w-full p-0"
@@ -20,7 +17,7 @@ const ChatbotPopup = memo(() => {
                     />
                 </button>
             </PopoverTrigger>
-            <PopoverContent className="w-full max-w-96 border-0 p-0 shadow-none" align="end" side="left">
+            <PopoverContent className="w-full max-w-[480px] border-0 p-0 shadow-none" align="end" side="left">
                 <ChatBox />
             </PopoverContent>
         </Popover>
