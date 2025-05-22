@@ -20,10 +20,10 @@ import { DialogApplyJob } from '@/components/custom-ui/dialog-apply-job';
 import Link from 'next/link';
 import { routes } from '@/configs/routes';
 import { useParams, usePathname, useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import { JobService } from '@/services/job.service';
-import { Suspense, useContext } from 'react';
+import { Suspense, useContext, useEffect } from 'react';
 import { handleErrorToast, toFormattedDate } from '@/lib/utils';
 import { NotFound } from '@/components/custom-ui/not-found';
 import { EnterpriseContext, UserContext } from '@/contexts';
@@ -31,6 +31,7 @@ import { ListTag } from '@/components/custom-ui/list-tags';
 import { toast } from '@/lib/toast';
 import { RichTextContent } from '@/components/custom-ui/global/rich-text-content';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { DetailedRequest } from '@/types';
 
 // New service function to fetch related jobs
 const fetchRelatedJobs = async (jobId: string) => {
@@ -93,6 +94,24 @@ function PageContentOfSingleJob() {
         queryFn: () => fetchRelatedJobs(id),
         enabled: !!id,
     });
+
+    const createRecentJob = useMutation({
+        mutationFn: async (payload: DetailedRequest.CreateRecentJob) => {
+            try {
+                if (payload.jobId && payload.profileId)
+                    await JobService.createRecentJob({ jobId: payload.jobId, profileId: payload.profileId });
+            } catch (error: any) {
+                handleErrorToast(error);
+            }
+        },
+    });
+
+    useEffect(() => {
+        createRecentJob.mutate({
+            jobId: id,
+            profileId: userInfo?.profileId ?? '',
+        });
+    }, []);
 
     const removeFavoriteJobMutation = async (jobId: string) => {
         try {
