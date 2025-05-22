@@ -484,4 +484,9 @@ export namespace DetailedRequest {
         question: string;
         history: HistoryQuestion[];
     }
+
+    export interface CreateRecentJob {
+        jobId: string;
+        profileId: string;
+    }
 }

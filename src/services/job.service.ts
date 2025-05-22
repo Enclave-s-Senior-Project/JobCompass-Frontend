@@ -150,4 +150,19 @@ export class JobService {
             handleErrorApi(error);
         }
     }
+
+    public static async createRecentJob(data: DetailedRequest.CreateRecentJob) {
+        try {
+            const dataResponse = await axios.post<ApiResponse<null>>('/recent', data);
+            return dataResponse.payload.value;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
 }
