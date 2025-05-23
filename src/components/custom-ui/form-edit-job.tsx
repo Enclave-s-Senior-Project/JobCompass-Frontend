@@ -35,7 +35,7 @@ export function EditJob(props: {
     const { userInfo } = useContext(UserContext);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-    const [state, onSubmit] = useActionState(updateJob, {
+    const [state, onSubmit, isPending] = useActionState(updateJob, {
         title: '',
         tags: [] as Tag[],
         minSalary: '',
@@ -412,7 +412,7 @@ export function EditJob(props: {
                 >
                     Cancel
                 </Button>
-                <Button type="submit" className="group w-full md:w-auto">
+                <Button type="submit" className="group w-full md:w-auto" isPending={isPending}>
                     Update Job <LuArrowRight className="transition-all duration-100 group-hover:translate-x-2" />
                 </Button>
             </div>

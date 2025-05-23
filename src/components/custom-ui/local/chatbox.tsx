@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { UserContext } from '@/contexts';
+import { EnterpriseContext, UserContext } from '@/contexts';
 import { useMutation } from '@tanstack/react-query';
 import { Loader2, Send, SquareArrowUpRight } from 'lucide-react';
 import { memo, useContext, useEffect, useRef, useState } from 'react';
@@ -27,15 +27,21 @@ const initMessage: LocalMessage = {
 
 const ChatBox = memo(() => {
     const { userInfo } = useContext(UserContext);
+    const { enterpriseInfo } = useContext(EnterpriseContext);
 
-    const [isPersonalized, setIsPersonalized] = useState(false);
+    const [isPersonalized, setIsPersonalized] = useState(true);
     const [messages, setMessages] = useState<LocalMessage[]>([initMessage]);
     const [inputValue, setInputValue] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     // Mutation to call the AI server API
     const { mutate: conversation, isPending: isConversationPending } = useMutation({
-        mutationFn: async (data: { query: string; chat_history: { type: string; content: string }[] }) => {
+        mutationFn: async (data: {
+            query: string;
+            chat_history: { type: string; content: string }[];
+            profileId?: string;
+            enterpriseId?: string;
+        }) => {
             const response = await fetch(`${process.env.NEXT_PUBLIC_APP_AI_SERVER}/conversation/ask`, {
                 method: 'POST',
                 headers: {
@@ -120,7 +126,12 @@ const ChatBox = memo(() => {
             }));
 
         // Call the mutation
-        conversation({ query: userMessage.content, chat_history });
+        conversation({
+            query: userMessage.content,
+            chat_history,
+            profileId: isPersonalized ? userInfo?.profileId : undefined,
+            enterpriseId: isPersonalized ? enterpriseInfo?.enterpriseId : undefined,
+        });
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
