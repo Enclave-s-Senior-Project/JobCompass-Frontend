@@ -445,10 +445,9 @@ export namespace DetailedRequest {
     export interface GetCandidatesDashboard extends Pagination {}
 
     export interface GetListEnterprise extends Pagination {
-        status?: EnterpriseStatus | 'all';
         organizationType?: string | 'all';
-        categoryId?: string | 'all';
         address?: string;
+        name?: string;
     }
 
     export interface UpdateCandidateStatus {
@@ -492,5 +491,9 @@ export namespace DetailedRequest {
     export interface CreateRecentJob {
         jobId: string;
         profileId: string;
+    }
+
+    export interface GetListEnterprise extends Pagination {
+        organizationType: string[];
     }
 }

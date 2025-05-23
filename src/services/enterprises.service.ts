@@ -67,9 +67,20 @@ export class EnterpriseService {
         }
     }
 
-    public static async getListEnterprise(data: DetailedRequest.GetListCandidate) {
+    public static async getListEnterprise(data: DetailedRequest.GetListEnterprise) {
         try {
-            const temp = await authAxios.get<ApiResponse<DetailedResponse.GetDataEnterprises>>('', { params: data });
+            let query = `order=${data.order || 'ASC'}&page=${data.page}&take=${data.take}&name=${data.name || ''}`;
+
+            if (Array.isArray(data.organizationType) && data.organizationType.length > 0) {
+                const organizaionType = data.organizationType.map((cat) => `organizationType=${cat}`).join('&');
+                query += `&${organizaionType}`;
+            }
+
+            if (Array.isArray(data.address) && data.address.length > 0) {
+                const locations = data.address.map((add) => `address=${add}`).join('&');
+                query += `&${locations}`;
+            }
+            const temp = await authAxios.get<ApiResponse<DetailedResponse.GetDataEnterprises>>(`?${query}`);
             return temp.payload.value;
         } catch (err) {
             if (err instanceof AxiosError) {
