@@ -2,13 +2,13 @@ import React, { memo } from 'react';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import Image from 'next/image';
 import jobPlaceholder from '@/assets/images/placeholder/job-placeholder.jpg';
-import { Check, DollarSign, MapPin, X } from 'lucide-react';
+import { Check, MapPin, X } from 'lucide-react';
 import { AppliedJob } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BadgeJobType } from '@/components/custom-ui/global/badge-job-type';
 import { JobTypeEnum } from '@/lib/common-enum';
-import { getAppliedJobStatus, getJobAddress, toDollarK, toFormattedDate } from '@/lib/utils';
+import { getAppliedJobStatus, getJobAddress, toFormattedDate } from '@/lib/utils';
 import Link from 'next/link';
 
 type Props = {
@@ -75,10 +75,12 @@ export const AppliedJobList = memo(({ items = [], isPending = false }: Props) =>
                                                       <span className="line-clamp-1">{jobAddresses}</span>
                                                   </span>
                                                   <span className="flex items-center gap-1 text-sm">
-                                                      <DollarSign className="h-5 w-5" /> $
+                                                      {/* <DollarSign className="h-5 w-5" /> $
                                                       {toDollarK(Number(appliedJob?.job?.lowestWage) || 0)} - $
                                                       {toDollarK(Number(appliedJob?.job?.highestWage) || 0)}
-                                                      /month
+                                                      /month */}
+                                                      {appliedJob?.job?.lowestWage} - {appliedJob?.job?.highestWage}
+                                                      <span className="text-xs text-gray-500"> (USD)</span>
                                                   </span>
                                               </div>
                                           </div>

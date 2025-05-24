@@ -130,7 +130,7 @@ const MultiSelectSearchInput: React.FC<MultiSelectSearchInputProps> = ({ onChang
                     </div>
                 ))}
                 <input
-                    className="min-w-[100px] flex-1 border-none bg-transparent text-sm outline-none sm:min-w-[120px]"
+                    className="min-w-[100px] flex-1 border-none bg-transparent text-base outline-none sm:min-w-[120px]"
                     placeholder={selectedItems.length === 0 ? 'Select tags...' : ''}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}

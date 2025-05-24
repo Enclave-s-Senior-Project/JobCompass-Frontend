@@ -67,14 +67,16 @@ export default function CardJobHorizontal(props: {
                                 <MapPin className="h-5 w-5" /> {addresses}
                             </span>
                             <span className="flex items-center gap-1 text-sm">
-                                <DollarSign className="h-5 w-5" /> $
-                                {Number(job?.lowestWage) > 1000
+                                <DollarSign className="h-5 w-5" />
+                                {/* {Number(job?.lowestWage) > 1000
                                     ? `${Number(job?.lowestWage) / 1000}K`
                                     : job?.lowestWage}{' '}
                                 - $
                                 {Number(job?.highestWage) > 1000
                                     ? `${Number(job?.highestWage) / 1000}K`
-                                    : job?.highestWage}
+                                    : job?.highestWage} */}
+                                {job?.lowestWage} - {job?.highestWage}
+                                <span className="text-xs text-gray-500"> (USD)</span>
                             </span>
                             {new Date(job?.deadline).getTime() < Date.now() ? (
                                 <span className="flex items-center gap-1 text-sm text-danger">

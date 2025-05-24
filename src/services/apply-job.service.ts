@@ -88,4 +88,12 @@ export class ApplyJobService {
             handleErrorApi(err);
         }
     }
+    public static async getTotalsApplicants() {
+        try {
+            const dataResponse = await authAxios.get<ApiResponse<DetailedResponse.GetTotalsApplicants>>(`/total`);
+            return dataResponse.payload?.value;
+        } catch (err) {
+            handleErrorApi(err);
+        }
+    }
 }

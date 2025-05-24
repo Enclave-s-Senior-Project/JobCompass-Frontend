@@ -124,6 +124,7 @@ export default function PostJobForm() {
                                     : 'focus-visible:border-primary focus-visible:ring-primary'
                             )}
                             defaultValue={state.title}
+                            placeholder='e.g. "Software Engineer"'
                             name="title"
                         />
                         <p className="text-[12px] font-medium text-red-500">
@@ -195,18 +196,19 @@ export default function PostJobForm() {
                             <h1 className="text-base font-medium">Min Salary</h1>
 
                             <div className="relative">
-                                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                    <DollarSign className="h-5 w-5 text-gray-400" />
+                                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                    USD
                                 </div>
 
                                 <Input
                                     className={clsx(
-                                        'h-12 rounded-sm pl-10',
+                                        'h-12 rounded-sm pl-14',
                                         state.errors?.minSalary
                                             ? 'border-2 border-danger ring-danger'
                                             : 'focus-visible:border-primary focus-visible:ring-primary'
                                     )}
                                     type="number"
+                                    placeholder='e.g. "1000"'
                                     defaultValue={state.minSalary}
                                     name="minSalary"
                                 />
@@ -220,18 +222,19 @@ export default function PostJobForm() {
                             <h1 className="text-base font-medium">Max Salary</h1>
 
                             <div className="relative">
-                                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                    <DollarSign className="h-5 w-5 text-gray-400" />
+                                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                    USD
                                 </div>
 
                                 <Input
                                     className={clsx(
-                                        'h-12 rounded-sm pl-10',
+                                        'h-12 rounded-sm pl-14',
                                         state.errors?.maxSalary
                                             ? 'border-2 border-danger ring-danger'
                                             : 'focus-visible:border-primary focus-visible:ring-primary'
                                     )}
                                     type="number"
+                                    placeholder='e.g. "2000"'
                                     defaultValue={state.maxSalary}
                                     name="maxSalary"
                                 />
@@ -285,6 +288,7 @@ export default function PostJobForm() {
                                         : 'focus-visible:border-primary focus-visible:ring-primary'
                                 )}
                                 type="number"
+                                placeholder='e.g. "2"'
                                 defaultValue={state.experience}
                                 name="experience"
                             />

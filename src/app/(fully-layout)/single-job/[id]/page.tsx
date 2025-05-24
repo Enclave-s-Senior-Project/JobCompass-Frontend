@@ -278,8 +278,9 @@ function PageContentOfSingleJob() {
                                     <Wallet className="mb-3 size-6 text-primary" />
                                     <p className="mb-1 text-[12px] uppercase text-gray-500">SALARY</p>
                                     <p className="text-sm">
-                                        ${resultQuery?.lowestWage} - {resultQuery?.highestWage}
+                                        {resultQuery?.lowestWage} - {resultQuery?.highestWage}
                                     </p>
+                                    <span className="text-xs text-gray-500"> (USD)</span>
                                 </div>
                                 <div className="flex flex-col items-start">
                                     <MapPin className="mb-3 size-6 text-primary" />
