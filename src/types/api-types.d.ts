@@ -194,6 +194,10 @@ export namespace DetailedResponse {
         revenue: number;
     };
 
+    export interface GetTotalsApplicants {
+        totals: number | 0;
+    }
+
     export interface AIConversationResponse extends AIChatResponse {}
 }
 

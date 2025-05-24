@@ -1,11 +1,11 @@
 'use client';
 import {
-    BellIcon,
-    BookmarkIcon,
     BriefcaseIcon,
     BuildingIcon,
     ChevronDownIcon,
     ChevronRightIcon,
+    CircleFadingArrowUp,
+    FileUser,
     GlobeIcon,
     MapPinIcon,
     TrendingUpIcon,
@@ -30,14 +30,13 @@ export default function ComingSoon() {
         queryFn: async () => {
             try {
                 const temp = await EnterpriseService.getInformationEnterprise();
-
                 return temp;
             } catch (error: any) {
-                console.log(error);
                 handleErrorToast(error);
             }
         },
     });
+
     useEffect(() => {
         setIsLoaded(true);
     }, []);
@@ -150,12 +149,12 @@ export default function ComingSoon() {
                             transition={{ duration: 0.8, delay: 0.3 }}
                             className="text-2xl font-bold text-gray-900"
                         >
-                            {resultQuery?.totalCandidateFavorites}
+                            {resultQuery?.totalsApplicants as number}
                         </motion.h2>
-                        <p className="text-sm text-gray-600">Favorite candidates</p>
+                        <p className="text-sm text-gray-600">Total applicants</p>
                     </div>
                     <motion.div whileHover={{ rotate: 15 }} className="rounded-lg bg-amber-100 p-3">
-                        <BookmarkIcon className="h-6 w-6 text-amber-600" />
+                        <FileUser className="h-6 w-6 text-amber-600" />
                     </motion.div>
                 </motion.div>
 
@@ -173,10 +172,10 @@ export default function ComingSoon() {
                         >
                             {resultQuery?.totalBoostedJobs}
                         </motion.h2>
-                        <p className="text-sm text-gray-600">Job promote</p>
+                        <p className="text-sm text-gray-600">Promoted Jobs</p>
                     </div>
                     <motion.div whileHover={{ rotate: 15 }} className="rounded-lg bg-green-100 p-3">
-                        <BellIcon className="h-6 w-6 text-green-600" />
+                        <CircleFadingArrowUp className="h-6 w-6 text-green-600" />
                     </motion.div>
                 </motion.div>
             </motion.div>

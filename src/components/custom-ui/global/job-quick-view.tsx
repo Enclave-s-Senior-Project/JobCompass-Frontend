@@ -179,6 +179,7 @@ export function JobQuickView({ job }: Props) {
                                 <span className="font-semibold">
                                     {Number(job?.lowestWage) ?? 0}&nbsp;-&nbsp;
                                     {Number(job?.highestWage) ?? 0}
+                                    <span className="text-xs text-gray-500"> (USD)</span>
                                 </span>
                             </div>
                         </div>

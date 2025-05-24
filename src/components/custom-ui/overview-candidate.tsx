@@ -181,7 +181,7 @@ export default function OverviewCandidate() {
                                 onClick={() => setIsProfileExpanded(!isProfileExpanded)}
                                 className="flex items-center gap-1 rounded-md bg-white/20 px-4 py-2 text-white transition-colors hover:bg-white/30"
                             >
-                                {isProfileExpanded ? 'Hide Details' : 'Show Enterprise Details'}
+                                {isProfileExpanded ? 'Hide Details' : 'Show Profile Details'}
                                 <motion.div
                                     animate={{ rotate: isProfileExpanded ? 180 : 0 }}
                                     transition={{ duration: 0.3 }}

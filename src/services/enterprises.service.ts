@@ -2,7 +2,7 @@ import { AuthAxios, BaseAxios } from '@/lib/axios';
 import { ApiResponse, DetailedRequest, DetailedResponse, Enterprise } from '@/types';
 import { AxiosError } from 'axios';
 import NextError from 'next/error';
-import { handleErrorApi } from '.';
+import { ApplyJobService, handleErrorApi } from '.';
 
 const authAxios = new AuthAxios('enterprise');
 const axios = new BaseAxios('enterprise');
@@ -255,8 +255,15 @@ export class EnterpriseService {
 
     public static async getInformationEnterprise() {
         try {
-            const dataResponse = await authAxios.get<ApiResponse<DetailedResponse.getInformationEnterprise>>('/status');
-            return dataResponse.payload.value;
+            const [enterpriseInfo, applicantsInfo] = await Promise.all([
+                authAxios.get<ApiResponse<DetailedResponse.getInformationEnterprise>>('/status'),
+                ApplyJobService.getTotalsApplicants(),
+            ]);
+
+            return {
+                ...enterpriseInfo.payload.value,
+                totalsApplicants: applicantsInfo || 0,
+            };
         } catch (error) {
             handleErrorApi(error);
         }

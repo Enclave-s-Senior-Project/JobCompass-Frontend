@@ -170,8 +170,8 @@ const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true
                         <div>
                             <p className="text-sm text-gray-500">Salary range</p>
                             <p>
-                                {toDollarK(Number(job?.lowestWage) || 0)} - {toDollarK(Number(job?.highestWage) || 0)} /
-                                month
+                                {toDollarK(Number(job?.lowestWage) || 0)} - {toDollarK(Number(job?.highestWage) || 0)}{' '}
+                                (USD / month)
                             </p>
                         </div>
                         <div>
