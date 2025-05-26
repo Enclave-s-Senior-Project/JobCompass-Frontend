@@ -36,7 +36,6 @@ export default function AppliedJobPage() {
                 handleErrorToast(error);
             }
         },
-        staleTime: 1000 * 60 * 5, // Increase stale time to reduce fetches,
         placeholderData: keepPreviousData,
     });
 
