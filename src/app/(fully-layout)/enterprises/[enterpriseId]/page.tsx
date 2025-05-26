@@ -22,10 +22,13 @@ export default function DetailEnterprise() {
         refetch,
         isPending,
     } = useQuery({
-        queryKey: [queryKey.detailEnterprise],
-        queryFn: async () => {
+        queryKey: [queryKey.detailEnterprise, enterpriseId],
+        queryFn: async ({ queryKey }) => {
             try {
-                const temp = await EnterpriseService.getEnterpriseById(enterpriseId);
+                if (!queryKey[1]) {
+                    throw new Error('Enterprise ID is required');
+                }
+                const temp = await EnterpriseService.getEnterpriseById(queryKey[1]);
                 if (temp) {
                     setEnterprise(temp.value);
                     setJobs(temp.value?.jobs || []);
