@@ -87,7 +87,7 @@ export const DialogChangeCandidateStatus = memo(({ nodeTrigger, onClose, onSubmi
                                     ? upperCase(CandidateStatus.BLOCKED)
                                     : capitalize(CandidateStatus.BLOCKED)}
                             </button>
-                            <button
+                            {/* <button
                                 onClick={() => handleActiveStatus(CandidateStatus.REJECTED)}
                                 className={cn(
                                     'rounded-md border-2 border-purple-50 px-4 py-2 text-purple-700 transition-all hover:bg-purple-50',
@@ -99,7 +99,7 @@ export const DialogChangeCandidateStatus = memo(({ nodeTrigger, onClose, onSubmi
                                 {activeStatus === CandidateStatus.REJECTED
                                     ? upperCase(CandidateStatus.REJECTED)
                                     : capitalize(CandidateStatus.REJECTED)}
-                            </button>
+                            </button> */}
                         </div>
 
                         <span className="mt-2 text-sm text-gray-700">

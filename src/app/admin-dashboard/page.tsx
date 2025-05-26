@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { queryKey } from '@/lib/react-query/keys';
 import { handleErrorToast } from '@/lib/utils';
 import { DashboardService } from '@/services/dashboard.service';
+import { DetailedResponse } from '@/types';
 import { useQueries } from '@tanstack/react-query';
 import React, { useState } from 'react';
 
@@ -59,8 +60,23 @@ export default function AdminDashboardPage() {
                 queryFn: async () => {
                     try {
                         const payload = await DashboardService.getDataRevenue();
-                        return payload || null;
+                        const statistic: DetailedResponse.GetDataRevenue[] = [];
+                        if (!payload || payload.length === 0) {
+                            return statistic;
+                        }
+
+                        for (let i = 0; i < payload?.length; i++) {
+                            let revenue = 0;
+                            if (statistic.length > 0) revenue = statistic[i - 1].revenue + payload[i].revenue;
+                            statistic.push({
+                                name: payload[i].name,
+                                revenue: revenue,
+                            });
+                        }
+
+                        return statistic;
                     } catch (error: any) {
+                        console.error(error);
                         handleErrorToast(error);
                     }
                 },
@@ -85,7 +101,7 @@ export default function AdminDashboardPage() {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                 <Card className="col-span-4">
                     <CardHeader>
-                        <CardTitle>revenue</CardTitle>
+                        <CardTitle>Revenue</CardTitle>
                         <CardDescription>Monthly revenue this year</CardDescription>
                     </CardHeader>
                     <CardContent className="pl-2">
