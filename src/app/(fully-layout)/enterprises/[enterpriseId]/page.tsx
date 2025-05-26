@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import { EnterpriseCard } from '@/components/custom-ui/local/enterprise-card';
-import { Enterprise } from '@/types';
+import { Enterprise, Job } from '@/types';
 import { useState } from 'react';
 import ShareProfile from '@/components/custom-ui/share-profile';
 import { RichTextContent } from '@/components/custom-ui/global/rich-text-content';
@@ -16,6 +16,7 @@ import { TopJob } from '@/components/custom-ui/top-job';
 export default function DetailEnterprise() {
     const { enterpriseId } = useParams<{ enterpriseId: string }>();
     const [enterprise, setEnterprise] = useState<Enterprise | undefined>(undefined);
+    const [jobs, setJobs] = useState<Job[]>([]);
     const {
         data: resultQuery,
         refetch,
@@ -27,6 +28,7 @@ export default function DetailEnterprise() {
                 const temp = await EnterpriseService.getEnterpriseById(enterpriseId);
                 if (temp) {
                     setEnterprise(temp.value);
+                    setJobs(temp.value?.jobs || []);
                 }
                 return temp;
             } catch (error: any) {
@@ -98,14 +100,16 @@ export default function DetailEnterprise() {
                             <ShareProfile />
                         </div>
                     </div>
-                    <div className="col-span-12 space-y-6 md:col-span-5">
-                        <TopJob
-                            jobs={resultQuery?.value?.jobs ?? []}
-                            refetchJob={refetch}
-                            isLoading={isPending}
-                            refetchDetailJob={refetch}
-                        />
-                    </div>
+                    {jobs?.length > 0 ? (
+                        <div className="col-span-12 space-y-6 md:col-span-5">
+                            <TopJob
+                                jobs={resultQuery?.value?.jobs ?? []}
+                                refetchJob={refetch}
+                                isLoading={isPending}
+                                refetchDetailJob={refetch}
+                            />
+                        </div>
+                    ) : null}
                 </div>
             </div>
         </div>

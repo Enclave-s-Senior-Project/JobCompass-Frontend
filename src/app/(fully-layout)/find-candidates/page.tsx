@@ -5,11 +5,12 @@ import FilterSidebarCandidate, {
     FilterValuesSidebar,
 } from '@/components/custom-ui/local/filter-candidate';
 import { Button } from '@/components/ui/button';
+import { PrimaryPagination } from '@/components/ui/pagination';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { queryKey } from '@/lib/react-query/keys';
 import { handleErrorToast } from '@/lib/utils';
 import { EnterpriseService } from '@/services/enterprises.service';
-import { DetailedRequest } from '@/types';
+import { DetailedRequest, Meta } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import { SlidersHorizontal } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
@@ -18,7 +19,7 @@ import { useEffect, useState } from 'react';
 export default function ListCandidates() {
     const search = useSearchParams();
     const page = Number(search.get('page') || 1);
-
+    const [totalPages, setTotalPages] = useState(0);
     const [showFilter, setShowFilter] = useState(false);
     const [option, setOption] = useState<'ASC' | 'DESC'>('ASC');
     const [itemsPerPage, setItemsPerPage] = useState(6);
@@ -45,7 +46,7 @@ export default function ListCandidates() {
             {
                 order: option,
                 page,
-                take: 10,
+                take: itemsPerPage,
                 categories: filters.categories.length ? filters.categories : undefined,
                 gender: filters.gender === 'all' ? undefined : filters.gender,
                 maritalStatus: filters.maritalStatus === 'all' ? undefined : filters.maritalStatus,
@@ -54,6 +55,7 @@ export default function ListCandidates() {
         queryFn: async ({ queryKey }) => {
             try {
                 const payload = await EnterpriseService.getCandidates(queryKey[1] as DetailedRequest.GetCandidates);
+                if (Number(payload?.meta.pageCount) > 0) setTotalPages(Number(payload?.meta.pageCount) || 0);
                 return payload;
             } catch (error: any) {
                 handleErrorToast(error);
@@ -119,6 +121,18 @@ export default function ListCandidates() {
                     />
                 </div>
             </div>
+            {/* Pagination */}
+            {Number(totalPages) > 1 && (
+                <div className="pt-5">
+                    <PrimaryPagination
+                        meta={resultQuery?.meta as Meta}
+                        pagination={{
+                            page,
+                        }}
+                        totalPages={totalPages}
+                    />
+                </div>
+            )}
         </main>
     );
 }
