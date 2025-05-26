@@ -24,3 +24,4 @@ export const PaginationListEnterprise = memo(() => {
         </div>
     );
 });
+PaginationListEnterprise.displayName = 'pagination-list-enterprise';

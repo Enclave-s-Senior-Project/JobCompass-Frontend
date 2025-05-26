@@ -110,3 +110,4 @@ export const CardListEnterprise = memo(({ enterprise, isPending }: props) => {
         </div>
     );
 });
+CardListEnterprise.displayName = 'card-list-enterprise';

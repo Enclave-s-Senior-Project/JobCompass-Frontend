@@ -118,3 +118,4 @@ export const FilterListEnterprise = memo(({ onApplyFilters }: Props) => {
         </div>
     );
 });
+FilterListEnterprise.displayName = 'filter-list-enterprise';

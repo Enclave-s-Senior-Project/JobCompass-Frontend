@@ -52,3 +52,4 @@ export const HeaderListEnterprise = memo(({ total = 0, option, itemsPerPage, set
         </div>
     );
 });
+HeaderListEnterprise.displayName = 'header-list-enterprise';
