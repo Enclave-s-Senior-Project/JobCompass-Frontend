@@ -100,16 +100,18 @@ export default function Enterprises() {
                                     </div>
                                 </div>
                             </div>
-                            <CardListEnterprise enterprise={resultQuery?.data || []} />
-                            <div className="pt-4">
-                                <PrimaryPagination
-                                    meta={resultQuery?.meta as Meta}
-                                    pagination={{
-                                        page,
-                                    }}
-                                    totalPages={totalPages}
-                                />
-                            </div>
+                            <CardListEnterprise enterprise={resultQuery?.data || []} isPending={isPending} />
+                            {resultQuery?.data && resultQuery.data.length > 0 && (
+                                <div className="pt-4">
+                                    <PrimaryPagination
+                                        meta={resultQuery?.meta as Meta}
+                                        pagination={{
+                                            page,
+                                        }}
+                                        totalPages={totalPages}
+                                    />
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
