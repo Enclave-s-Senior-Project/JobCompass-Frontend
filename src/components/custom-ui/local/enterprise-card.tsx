@@ -2,14 +2,10 @@
 
 import { Enterprise } from '@/types';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { ButtonMark } from '@/components/custom-ui/button-mark';
 import { Button } from '@/components/ui/button';
-import { CircleArrowRight, Mail, MapPin } from 'lucide-react';
+import { Mail, MapPin } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import defaultAvatarImage from '@/assets/images/avatar/default-avatar.jpg';
-import { UserContext } from '@/contexts';
-import { useContext } from 'react';
-import { hasPermission } from '@/lib/auth';
 
 type Props = {
     enterpriseInfo?: Enterprise;
@@ -17,7 +13,6 @@ type Props = {
 };
 
 export function EnterpriseCard({ enterpriseInfo, isPending = false }: Props) {
-    const { userInfo: ownUserInfo } = useContext(UserContext);
     return (
         <div className="flex flex-wrap items-center justify-between gap-5 rounded-xl border bg-white p-10">
             <div className="flex items-center gap-3 md:gap-6">
@@ -55,18 +50,18 @@ export function EnterpriseCard({ enterpriseInfo, isPending = false }: Props) {
                 </div>
             </div>
             <div className="flex items-center gap-3">
-                {hasPermission(ownUserInfo, 'markCandidates', 'allowed') && (
+                {/* {hasPermission(ownUserInfo, 'markCandidates', 'allowed') && (
                     <ButtonMark className="border-2" disabled={isPending} />
-                )}
+                )} */}
                 <Button
                     disabled={isPending}
                     variant="outline-secondary"
                     size="lg"
-                    className="rounded-sm border-2 border-primary [&_svg]:size-6"
+                    className="rounded-sm border-2 border-primary [&_svg]:size-7"
                 >
                     <Mail className="hidden md:block" /> Send Mail
                 </Button>
-                {hasPermission(ownUserInfo, 'hireCandidate', 'hire') && (
+                {/* {hasPermission(ownUserInfo, 'hireCandidate', 'hire') && (
                     <Button
                         disabled={isPending}
                         variant="primary"
@@ -75,7 +70,7 @@ export function EnterpriseCard({ enterpriseInfo, isPending = false }: Props) {
                     >
                         <CircleArrowRight className="hidden md:block" /> Hire Candidates
                     </Button>
-                )}
+                )} */}
             </div>
         </div>
     );

@@ -40,4 +40,8 @@ export const queryKey = {
     getDataRevenue: 'get-data-revenue',
     relatedJobs: 'related-jobs',
     applicationDetails: 'application-details',
+    getTotalHomePage: 'get-total-home-page',
+    getCategoryHomePage: 'get-category-home-page',
+    getCategoryChildHomePage: 'get-category-child-home-page',
+    getJobHomePage: 'get-job-home-page',
 };

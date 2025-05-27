@@ -182,7 +182,7 @@ const CandidateItem = memo(
                                         variant="outline"
                                         size="icon-md"
                                         onClick={() =>
-                                            window.open(`/admin-dashboard/candidate/${candidate.profileId}`, '_blank')
+                                            window.open(`/admin-dashboard/user/${candidate.profileId}`, '_blank')
                                         }
                                     >
                                         <Info className="h-4 w-4" />

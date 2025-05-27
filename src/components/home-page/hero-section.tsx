@@ -3,14 +3,33 @@
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, MapPin } from 'lucide-react';
-import CountUp from 'react-countup';
 import { PiBriefcaseDuotone } from 'react-icons/pi';
 import { BiBuildings } from 'react-icons/bi';
-
 import { SvgBanner } from '@/components/custom-ui/svg-banner';
 import { IconPresent } from '../custom-ui/icon-present';
+import { useQuery } from '@tanstack/react-query';
+import { queryKey } from '@/lib/react-query/keys';
+import { DashboardService } from '@/services/dashboard.service';
+import { handleErrorToast } from '@/lib/utils';
 
 export function HeroSection() {
+    const { data } = useQuery({
+        queryKey: [queryKey.getTotalHomePage],
+        queryFn: async () => {
+            try {
+                return await DashboardService.getTotalHomePage();
+            } catch (error) {
+                handleErrorToast(error);
+            }
+        },
+        retry: 1,
+    });
+    const stats = [
+        { number: data?.totalJobActive, label: 'Live Jobs', icon: PiBriefcaseDuotone },
+        { number: data?.totalEnterprise, label: 'Companies', icon: BiBuildings },
+        { number: data?.totalUser, label: 'Job Seekers', icon: PiBriefcaseDuotone },
+        { number: data?.totalJob, label: 'New Jobs', icon: PiBriefcaseDuotone },
+    ];
     return (
         <section>
             <section className="container mx-auto max-w-screen-xl px-4">
@@ -65,9 +84,7 @@ export function HeroSection() {
                             >
                                 <IconPresent.Icon Icon={Icon} size="lg" />
                                 <div>
-                                    <h3 className="text-xl font-medium text-black md:text-2xl">
-                                        <CountUp start={0} end={stat.number} duration={2.5} separator="," />
-                                    </h3>
+                                    <h3 className="text-xl font-medium text-black md:text-2xl">{stat.number}</h3>
                                     <p className="text-base text-gray-600">{stat.label}</p>
                                 </div>
                             </IconPresent.Group>
@@ -78,10 +95,3 @@ export function HeroSection() {
         </section>
     );
 }
-
-const stats = [
-    { number: 175324, label: 'Live Jobs', icon: PiBriefcaseDuotone },
-    { number: 97354, label: 'Companies', icon: BiBuildings },
-    { number: 3847154, label: 'Job Seekers', icon: PiBriefcaseDuotone },
-    { number: 7532, label: 'New Jobs', icon: PiBriefcaseDuotone },
-];
