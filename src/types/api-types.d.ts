@@ -199,6 +199,15 @@ export namespace DetailedResponse {
     }
 
     export interface AIConversationResponse extends AIChatResponse {}
+
+    export interface GetApplicationDetails
+        extends Pick<AppliedJob, 'appliedJobId' | 'coverLetter' | 'updatedAt' | 'createdAt' | 'status'> {
+        profile: Pick<
+            User,
+            'profileId' | 'fullName' | 'profileUrl' | 'industry' | 'majority' | 'nationality' | 'gender'
+        >;
+        cv: Pick<Resume, 'cvId' | 'cvName' | 'cvUrl' | 'size'>;
+    }
 }
 
 export namespace DetailedRequest {
@@ -492,5 +501,10 @@ export namespace DetailedRequest {
     export interface CreateRecentJob {
         jobId: string;
         profileId: string;
+    }
+
+    export interface GetApplicationDetails {
+        applicationId: string;
+        role: 'candidate' | 'enterprise';
     }
 }

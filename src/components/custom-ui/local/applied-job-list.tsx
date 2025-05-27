@@ -2,14 +2,16 @@ import React, { memo } from 'react';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import Image from 'next/image';
 import jobPlaceholder from '@/assets/images/placeholder/job-placeholder.jpg';
-import { Check, MapPin, X } from 'lucide-react';
+import { Check, Clock, MapPin, X } from 'lucide-react';
 import { AppliedJob } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BadgeJobType } from '@/components/custom-ui/global/badge-job-type';
-import { JobTypeEnum } from '@/lib/common-enum';
-import { getAppliedJobStatus, getJobAddress, toFormattedDate } from '@/lib/utils';
+import { ApplyJobStatus, JobTypeEnum } from '@/lib/common-enum';
+import { getJobAddress, toFormattedDate } from '@/lib/utils';
 import Link from 'next/link';
+import { DialogApplicationDetails } from '../global/dialog-application-details';
+import { capitalize } from 'lodash';
 
 type Props = {
     items: AppliedJob[];
@@ -39,7 +41,6 @@ export const AppliedJobList = memo(({ items = [], isPending = false }: Props) =>
                       ))
                     : items.map((appliedJob) => {
                           const jobAddresses = getJobAddress(appliedJob?.job.addresses || []);
-                          const status = getAppliedJobStatus(appliedJob);
 
                           return (
                               <TableRow key={appliedJob.appliedJobId}>
@@ -92,18 +93,26 @@ export const AppliedJobList = memo(({ items = [], isPending = false }: Props) =>
                                           : 'Not specified'}
                                   </TableCell>
                                   <TableCell>
-                                      {status ? (
+                                      {appliedJob.status === ApplyJobStatus.APPROVED ? (
                                           <span className="flex items-center gap-1 text-sm text-green-500">
-                                              <Check className="size-4" /> Active
+                                              <Check className="size-4" /> {capitalize(appliedJob.status)}
+                                          </span>
+                                      ) : appliedJob.status === ApplyJobStatus.PENDING ? (
+                                          <span className="flex items-center gap-1 text-sm text-warning-500">
+                                              <Clock className="size-4" /> {capitalize(appliedJob.status)}
                                           </span>
                                       ) : (
-                                          <span className="flex items-center gap-1 text-sm text-danger-500">
-                                              <X className="size-4" /> Inactive
+                                          <span className="flex items-center gap-1 text-sm text-warning-500">
+                                              <X className="size-4" /> {capitalize(appliedJob.status)}
                                           </span>
                                       )}
                                   </TableCell>
                                   <TableCell className="py-5">
-                                      <Button size="md">View Details</Button>
+                                      <DialogApplicationDetails
+                                          nodeTrigger={<Button size="md">View Details</Button>}
+                                          applicationId={appliedJob.appliedJobId}
+                                          role="candidate"
+                                      />
                                   </TableCell>
                               </TableRow>
                           );

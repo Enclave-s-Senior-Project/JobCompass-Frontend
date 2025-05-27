@@ -45,6 +45,7 @@ const errorKeyMessage = {
     JOB_NOT_FOUND: 'Job not found or not active.',
     CATEGORY_NOT_FOUND: 'Category not found.',
     REASON_REQUIRED: 'Reason is required for blocking or rejecting.',
+    APPLIED_JOB_NOT_FOUND: "Applied job not found or you're not permitted.",
 };
 
 const warningKeyMessage = {

@@ -96,4 +96,21 @@ export class ApplyJobService {
             handleErrorApi(err);
         }
     }
+
+    public static async getApplicationDetails(body: DetailedRequest.GetApplicationDetails) {
+        try {
+            const dataResponse = await authAxios.get<ApiResponse<DetailedResponse.GetApplicationDetails>>(
+                `/${body.applicationId}/details`,
+                {
+                    params: {
+                        role: body.role,
+                    },
+                }
+            );
+
+            return dataResponse.payload?.value;
+        } catch (error) {
+            handleErrorApi(error);
+        }
+    }
 }
