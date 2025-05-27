@@ -233,7 +233,7 @@ export default function JobPricing() {
                     <Button
                         type="submit"
                         className="group w-full md:w-auto"
-                        onClick={() => payment.mutate({ amountPaid: 30, premiumType: 'PREMIUM' })}
+                        onClick={() => payment.mutate({ amountPaid: 50, premiumType: 'PREMIUM' })}
                     >
                         Choose Plan <LuArrowRight className="transition-all duration-100 group-hover:translate-x-2" />
                     </Button>
