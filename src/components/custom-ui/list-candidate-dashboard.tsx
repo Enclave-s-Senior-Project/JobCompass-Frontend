@@ -55,12 +55,12 @@ const ListCandidateDashboard = memo(({ params }: Props) => {
         <div className="flex min-h-screen flex-col">
             <div className="flex-1 space-y-4 p-4 md:p-8">
                 <div className="flex items-center justify-between">
-                    <h1 className="text-2xl font-bold tracking-tight">List Candidates</h1>
+                    <h1 className="text-2xl font-bold tracking-tight">List users</h1>
                 </div>
 
                 <Card className="rounded-md shadow-sm">
                     <CardHeader className="flex flex-row items-center justify-between px-6 py-4">
-                        <CardTitle className="text-base font-medium">Candidates</CardTitle>
+                        <CardTitle className="text-base font-medium">Users</CardTitle>
                         <div className="flex items-center gap-2">
                             <div className="relative w-64">
                                 <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

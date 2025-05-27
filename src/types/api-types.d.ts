@@ -208,6 +208,31 @@ export namespace DetailedResponse {
         >;
         cv: Pick<Resume, 'cvId' | 'cvName' | 'cvUrl' | 'size'>;
     }
+
+    export type GetTotalHomePage = {
+        totalUser: number;
+        totalEnterprise: number;
+        totalJobActive: number;
+        totalJob: number;
+    };
+
+    export type GetCategoryHomePage = {
+        createdAt: string;
+        updatedAt: string;
+        isActive: string;
+        categoryId: string;
+        categoryName: string;
+    };
+
+    export type GetJobHomePage = {
+        jobId: string;
+        jobName: string;
+        lowestWage: number;
+        highestWage: number;
+        type: string;
+        introImg: string;
+        enterprise: Enterprise;
+    };
 }
 
 export namespace DetailedRequest {

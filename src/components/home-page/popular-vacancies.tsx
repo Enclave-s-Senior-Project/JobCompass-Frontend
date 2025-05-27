@@ -4,8 +4,28 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { HomePart } from './home-part';
 import { motionVariant } from '@/lib/motion-variants';
+import { queryKey } from '@/lib/react-query/keys';
+import { useQuery } from '@tanstack/react-query';
+import { DashboardService } from '@/services/dashboard.service';
+import { handleErrorToast } from '@/lib/utils';
 
 export function PopularVacancies() {
+    const { data } = useQuery({
+        queryKey: [queryKey.getCategoryChildHomePage],
+        queryFn: async () => {
+            try {
+                return await DashboardService.getCategoryChildHomePage();
+            } catch (error) {
+                handleErrorToast(error);
+            }
+        },
+        retry: 1,
+    });
+
+    const columns = data
+        ? Array.from({ length: Math.ceil(data.length / 3) }, (_, i) => data.slice(i * 3, i * 3 + 3))
+        : [];
+
     return (
         <HomePart title="Most Popular Vacancies">
             <motion.div
@@ -15,7 +35,7 @@ export function PopularVacancies() {
                 whileInView="visible"
                 viewport={{ once: true }}
             >
-                {vacancies.map((column, i) => (
+                {columns.map((column, i) => (
                     <motion.div key={i} className="space-y-4" variants={motionVariant.itemVariants}>
                         {column.map((job, j) => (
                             <Link
@@ -32,10 +52,3 @@ export function PopularVacancies() {
         </HomePart>
     );
 }
-
-const vacancies = [
-    ['Accommodation', 'Manufacture Engineer', 'Financial Manager'],
-    ['Engineer', 'Software Developer', 'Management Analysis'],
-    ['Receptionist', 'Psychologist', 'IT Manager'],
-    ['Data Scientist', 'Operations Research Analysis', 'Other'],
-];

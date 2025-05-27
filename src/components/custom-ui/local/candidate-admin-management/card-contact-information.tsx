@@ -1,9 +1,7 @@
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { SocialLink } from '@/types';
 import { Separator } from '@radix-ui/react-select';
-import { Link, Mail, MapPin, Phone } from 'lucide-react';
-import { FaFacebookF, FaInstagram, FaLinkedin, FaXTwitter, FaYoutube } from 'react-icons/fa6';
+import { Mail, MapPin, Phone } from 'lucide-react';
 
 type props = {
     location?: string;
@@ -11,7 +9,7 @@ type props = {
     email?: string;
     socialLinks?: SocialLink[];
 };
-export function CardContactInformation({ location, phone, email, socialLinks }: props) {
+export function CardContactInformation({ location, phone, email }: props) {
     return (
         <Card>
             <CardHeader>
@@ -44,7 +42,7 @@ export function CardContactInformation({ location, phone, email, socialLinks }: 
 
                 <Separator />
 
-                <div>
+                {/* <div>
                     <p className="mb-3 text-sm text-muted-foreground">Social Profiles</p>
                     <div className="flex items-center gap-3">
                         {Array.isArray(socialLinks) && socialLinks.length > 0 ? (
@@ -69,7 +67,7 @@ export function CardContactInformation({ location, phone, email, socialLinks }: 
                             <span className="text-sm font-medium italic">&lt;Unknown&gt;</span>
                         )}
                     </div>
-                </div>
+                </div> */}
             </CardContent>
         </Card>
     );
