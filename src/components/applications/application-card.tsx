@@ -2,10 +2,11 @@
 
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Download } from 'lucide-react';
+import { Download, Expand } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { downloadFileViaURL, toFormattedDate } from '@/lib/utils';
 import { ShorthandApplication } from '@/types';
+import { DialogApplicationDetails } from '../custom-ui/global/dialog-application-details';
 
 interface ApplicationCardProps {
     applicant: ShorthandApplication;
@@ -34,20 +35,33 @@ export default function ApplicationCard({ applicant }: ApplicationCardProps) {
             {...listeners}
             className="cursor-grab touch-manipulation rounded-sm border bg-card p-4 active:cursor-grabbing"
         >
-            <div className="mb-3 flex items-center gap-3">
-                <Avatar className="h-10 w-10">
-                    <AvatarImage
-                        src={applicant?.profile?.profileUrl}
-                        alt={applicant?.profile?.fullName}
-                        className="object-cover object-center"
-                        height={50}
-                        width={50}
-                    />
-                    <AvatarFallback>{applicant?.profile?.fullName.charAt(0)}</AvatarFallback>
-                </Avatar>
+            <div className="mb-3 flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                    <Avatar className="h-10 w-10">
+                        <AvatarImage
+                            src={applicant?.profile?.profileUrl}
+                            alt={applicant?.profile?.fullName}
+                            className="object-cover object-center"
+                            height={50}
+                            width={50}
+                        />
+                        <AvatarFallback>{applicant?.profile?.fullName.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                        <h4 className="font-medium">{applicant?.profile?.fullName}</h4>
+                        <p className="text-sm text-muted-foreground">{applicant?.job?.type}</p>
+                    </div>
+                </div>
                 <div>
-                    <h4 className="font-medium">{applicant?.profile?.fullName}</h4>
-                    <p className="text-sm text-muted-foreground">{applicant?.job?.type}</p>
+                    <DialogApplicationDetails
+                        nodeTrigger={
+                            <button>
+                                <Expand className="size-5 text-primary-500 hover:text-primary-700" />
+                            </button>
+                        }
+                        applicationId={applicant.appliedJobId}
+                        role="enterprise"
+                    />
                 </div>
             </div>
 

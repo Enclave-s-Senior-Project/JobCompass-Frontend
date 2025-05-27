@@ -1,14 +1,16 @@
 import React, { memo } from 'react';
 import { Card } from '@/components/ui/card';
 import { AppliedJob } from '@/types';
-import { Calendar, Check, DollarSign, MapPin, X } from 'lucide-react';
+import { Calendar, Check, Clock, DollarSign, MapPin, X } from 'lucide-react';
 import Image from 'next/image';
 import jobPlaceholder from '@/assets/images/placeholder/job-placeholder.jpg';
 import { BadgeJobType } from '../global/badge-job-type';
-import { JobTypeEnum } from '@/lib/common-enum';
-import { getAppliedJobStatus, getJobAddress, toDollarK, toFormattedDate } from '@/lib/utils';
+import { ApplyJobStatus, JobTypeEnum } from '@/lib/common-enum';
+import { getJobAddress, toDollarK, toFormattedDate } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { DialogApplicationDetails } from '../global/dialog-application-details';
+import { capitalize } from 'lodash';
 
 type Props = {
     items: AppliedJob[];
@@ -22,7 +24,6 @@ const AppliedJobListMobile = memo(({ items = [], isPending }: Props) => {
                 ? Array.from({ length: 3 }).map((_, index) => <Skeleton key={index} className="h-20 w-full" />)
                 : items.map((appliedJob) => {
                       const jobAddresses = getJobAddress(appliedJob?.job.addresses || []);
-                      const status = getAppliedJobStatus(appliedJob);
                       return (
                           <Card key={appliedJob.appliedJobId} className="mb-3 rounded-sm bg-white p-2 shadow-sm">
                               <div className="flex items-start gap-2">
@@ -52,9 +53,8 @@ const AppliedJobListMobile = memo(({ items = [], isPending }: Props) => {
                                           </div>
                                           <div className="flex items-center text-sm text-gray-600">
                                               <DollarSign />
-                                              {toDollarK(Number(appliedJob?.job?.lowestWage) || 0)} - $
-                                              {toDollarK(Number(appliedJob?.job?.highestWage) || 0)}
-                                              /month
+                                              {toDollarK(Number(appliedJob?.job?.lowestWage) || 0)} -
+                                              {toDollarK(Number(appliedJob?.job?.highestWage) || 0)}&nbsp; (USD/month)
                                           </div>
                                           <div className="flex items-center text-sm text-gray-600">
                                               <Calendar />
@@ -63,21 +63,24 @@ const AppliedJobListMobile = memo(({ items = [], isPending }: Props) => {
                                       </div>
 
                                       <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
-                                          {status ? (
+                                          {appliedJob.status === ApplyJobStatus.APPROVED ? (
                                               <span className="flex items-center gap-1 text-sm text-green-500">
-                                                  <Check className="size-4" /> Active
+                                                  <Check className="size-4" /> {capitalize(appliedJob.status)}
+                                              </span>
+                                          ) : appliedJob.status === ApplyJobStatus.PENDING ? (
+                                              <span className="flex items-center gap-1 text-sm text-warning-500">
+                                                  <Clock className="size-4" /> {capitalize(appliedJob.status)}
                                               </span>
                                           ) : (
-                                              <span className="flex items-center gap-1 text-sm text-danger-500">
-                                                  <X className="size-4" /> Inactive
+                                              <span className="flex items-center gap-1 text-sm text-warning-500">
+                                                  <X className="size-4" /> {capitalize(appliedJob.status)}
                                               </span>
                                           )}
-                                          <Button
-                                              size="md"
-                                              onClick={() => alert(`View details for job ${appliedJob.appliedJobId}`)}
-                                          >
-                                              View Details
-                                          </Button>
+                                          <DialogApplicationDetails
+                                              nodeTrigger={<Button size="md">View Details</Button>}
+                                              applicationId={appliedJob.appliedJobId}
+                                              role="candidate"
+                                          />
                                       </div>
                                   </div>
                               </div>

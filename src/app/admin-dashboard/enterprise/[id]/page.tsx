@@ -108,7 +108,11 @@ function DetailInformation({ enterpriseId }: { enterpriseId: string }) {
 
                                     <div className="mt-2 flex gap-2">
                                         {details?.categories.map((cat) => (
-                                            <Badge variant="outline" className="mb-2 text-muted-foreground">
+                                            <Badge
+                                                key={cat.categoryId}
+                                                variant="outline"
+                                                className="mb-2 text-muted-foreground"
+                                            >
                                                 {cat.categoryName}
                                             </Badge>
                                         ))}
