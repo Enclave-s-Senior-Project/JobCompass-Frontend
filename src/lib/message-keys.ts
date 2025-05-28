@@ -46,6 +46,8 @@ const errorKeyMessage = {
     CATEGORY_NOT_FOUND: 'Category not found.',
     REASON_REQUIRED: 'Reason is required for blocking or rejecting.',
     APPLIED_JOB_NOT_FOUND: "Applied job not found or you're not permitted.",
+    JOB_NOT_OPEN: 'Job is not open.',
+    'User not authorized to login': 'User not authorized to login.',
 };
 
 const warningKeyMessage = {

@@ -29,6 +29,7 @@ export function DialogBoostJob({
 }: DialogBoostJobProps) {
     const [points, setPoints] = useState<number>(0);
     const [rankPosition, setRankPosition] = useState<number | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const isChecking = false;
     useEffect(() => {
         if (!isOpen) {
@@ -42,6 +43,7 @@ export function DialogBoostJob({
     };
 
     const handlePromote = async () => {
+        setIsLoading(true);
         try {
             await BoostJobService.bootJob({ jobId: jobId, pointsUsed: points });
             refetchDetailJob();
@@ -50,6 +52,8 @@ export function DialogBoostJob({
             onClose();
         } catch (error) {
             handleErrorToast(error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -141,6 +145,7 @@ export function DialogBoostJob({
                         </Button>
                     </DialogClose>
                     <Button
+                        isPending={isLoading}
                         onClick={handlePromote}
                         disabled={points <= 0}
                         className="h-10 bg-blue-600 transition-colors hover:bg-primary-500"

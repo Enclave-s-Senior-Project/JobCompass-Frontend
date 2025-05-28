@@ -83,7 +83,7 @@ export const JobItem = memo(({ job, refetchList }: Props) => {
                 {job?.addresses && job?.addresses.length > 0 ? (
                     <div>
                         <p className="text-nowrap">{job?.addresses[0]?.city}</p>
-                        <p className="text-nowrap text-sm text-muted-foreground">{job?.addresses[0]?.country}</p>
+                        <p className="text-nowrap text-sm text-muted-foreground">{job?.addresses?.[0]?.country}</p>
                     </div>
                 ) : (
                     <span className="text-muted-foreground">No address</span>
