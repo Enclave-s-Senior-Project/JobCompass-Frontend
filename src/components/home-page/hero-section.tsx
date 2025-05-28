@@ -11,8 +11,17 @@ import { useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import { DashboardService } from '@/services/dashboard.service';
 import { handleErrorToast } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export function HeroSection() {
+    const [inputs, setInputs] = useState<{ title: string; location: string }>({
+        title: '',
+        location: '',
+    });
+
+    const router = useRouter();
+
     const { data } = useQuery({
         queryKey: [queryKey.getTotalHomePage],
         queryFn: async () => {
@@ -24,12 +33,21 @@ export function HeroSection() {
         },
         retry: 1,
     });
+
     const stats = [
         { number: data?.totalJobActive, label: 'Live Jobs', icon: PiBriefcaseDuotone },
         { number: data?.totalEnterprise, label: 'Companies', icon: BiBuildings },
         { number: data?.totalUser, label: 'Job Seekers', icon: PiBriefcaseDuotone },
         { number: data?.totalJob, label: 'New Jobs', icon: PiBriefcaseDuotone },
     ];
+
+    const handleFind = () => {
+        if (!inputs.title && !inputs.location) {
+            return;
+        }
+        router.push('/find-jobs?country=' + inputs.location + '&search=' + inputs.title);
+    };
+
     return (
         <section>
             <section className="container mx-auto max-w-screen-xl px-4">
@@ -51,18 +69,22 @@ export function HeroSection() {
                                     <Input
                                         className="h-full flex-1 border-none text-base font-normal shadow-none focus-visible:ring-0"
                                         placeholder="Job title, keyword..."
+                                        value={inputs.title}
+                                        onChange={(e) => setInputs((prev) => ({ ...prev, title: e.target.value }))}
                                     />
                                 </div>
                                 <div className="flex items-center">
                                     <MapPin className="h-6 w-6 text-primary sm:mx-2" />
                                     <Input
                                         className="h-full flex-1 border-none text-base font-normal shadow-none focus-visible:ring-0"
-                                        placeholder="Your location"
+                                        placeholder="Your country"
+                                        value={inputs.location}
+                                        onChange={(e) => setInputs((prev) => ({ ...prev, location: e.target.value }))}
                                     />
                                 </div>
                             </div>
                             <div className="flex items-center">
-                                <Button size="xl" className="text-base">
+                                <Button size="xl" className="text-base" onClick={handleFind}>
                                     Find Jobs
                                 </Button>
                             </div>
