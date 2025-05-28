@@ -53,14 +53,16 @@ export function EnterpriseCard({ enterpriseInfo, isPending = false }: Props) {
                 {/* {hasPermission(ownUserInfo, 'markCandidates', 'allowed') && (
                     <ButtonMark className="border-2" disabled={isPending} />
                 )} */}
-                <Button
-                    disabled={isPending}
-                    variant="outline-secondary"
-                    size="lg"
-                    className="rounded-sm border-2 border-primary [&_svg]:size-7"
-                >
-                    <Mail className="hidden md:block" /> Send Mail
-                </Button>
+                <a href={`mailto:${enterpriseInfo?.email}`} target="_blank" rel="noopener noreferrer">
+                    <Button
+                        disabled={isPending}
+                        variant="outline-secondary"
+                        size="lg"
+                        className="rounded-sm border-2 border-primary [&_svg]:size-7"
+                    >
+                        <Mail className="hidden md:block" /> Send Mail
+                    </Button>
+                </a>
                 {/* {hasPermission(ownUserInfo, 'hireCandidate', 'hire') && (
                     <Button
                         disabled={isPending}

@@ -33,7 +33,7 @@ export function Search() {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        router.push('/find-jobs?country=' + select.selectValue + '&search=' + inputValue);
+        router.replace('/find-jobs?country=' + select.selectValue + '&search=' + inputValue);
     };
 
     return (

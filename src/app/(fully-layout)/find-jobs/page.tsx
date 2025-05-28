@@ -24,7 +24,7 @@ export default function Page() {
 
     const [viewType, setViewType] = useState<'grid' | 'list'>('grid');
     const [itemsPerPage, setItemsPerPage] = useState(6);
-    const [option, setOption] = useState('ASC');
+    const [option] = useState('ASC');
     const [totalPages, setTotalPages] = useState(0);
 
     const [activeFilters, setActiveFilters] = useState<DetailedRequest.SearchFilterListJobsCredentials>({
@@ -86,7 +86,7 @@ export default function Page() {
                     options,
                     ...transformFiltersToDto(appliedFilters),
                 });
-                if (Number(payload?.meta.pageCount) > 0) setTotalPages(Number(payload?.meta.pageCount) || 0);
+                setTotalPages(Number(payload?.meta.pageCount) || 0);
                 return payload;
             } catch (error: any) {
                 handleErrorToast(error);
@@ -129,6 +129,7 @@ export default function Page() {
         setActiveFilters(clearedFilters);
         refetch();
     }, [refetch]);
+
     return (
         <main className="min-h-dvh bg-white">
             <div className="relative z-10">
@@ -274,17 +275,6 @@ export default function Page() {
                     </div>
                 </div>
                 <div className="flex flex-wrap items-center gap-4">
-                    <Select onValueChange={setOption}>
-                        <SelectTrigger className="h-[48px] w-[180px] rounded-md border bg-white px-2 py-1.5 text-sm focus:ring-0 focus:ring-offset-0">
-                            <SelectValue placeholder={option === 'ASC' ? 'Latest' : 'Oldest'} />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectItem value="ASC">Latest</SelectItem>
-                                <SelectItem value="DESC">Oldest</SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
                     <Select onValueChange={(value) => setItemsPerPage(Number(value))}>
                         <SelectTrigger className="h-[48px] w-[180px] rounded-md border bg-white px-2 py-1.5 text-sm focus:ring-0 focus:ring-offset-0">
                             <SelectValue placeholder={`${itemsPerPage} per page`} />

@@ -305,20 +305,13 @@ const SearchForm = memo(({ filters, setFilters }: SearchFormProps) => {
                                                             onChange={() => handleExperienceChange(option.id)}
                                                             className="h-4 w-4 rounded-full border-gray-300 text-primary focus:ring-primary"
                                                         />
-                                                        <div
-                                                            className={`absolute flex h-4 w-4 items-center justify-center rounded-full border ${localFilters.experience === option.id ? 'border-primary' : 'border-gray-300'}`}
+                                                        <label
+                                                            htmlFor={`experience-${option.id}`}
+                                                            className="ml-6 cursor-pointer text-sm text-gray-700"
                                                         >
-                                                            {localFilters.experience === option.id && (
-                                                                <div className="h-2 w-2 rounded-full bg-primary"></div>
-                                                            )}
-                                                        </div>
+                                                            {option.label}
+                                                        </label>
                                                     </div>
-                                                    <label
-                                                        htmlFor={`experience-${option.id}`}
-                                                        className="ml-6 cursor-pointer text-sm text-gray-700"
-                                                    >
-                                                        {option.label}
-                                                    </label>
                                                 </div>
                                             ))}
                                         </div>
@@ -340,20 +333,13 @@ const SearchForm = memo(({ filters, setFilters }: SearchFormProps) => {
                                                             onChange={() => handleSalaryChange(option.id)}
                                                             className="h-4 w-4 rounded-full border-gray-300 text-primary focus:ring-primary"
                                                         />
-                                                        <div
-                                                            className={`absolute flex h-4 w-4 items-center justify-center rounded-full border ${localFilters.salary === option.id ? 'border-primary' : 'border-gray-300'}`}
+                                                        <label
+                                                            htmlFor={`salary-${option.id}`}
+                                                            className="ml-6 cursor-pointer text-sm text-gray-700"
                                                         >
-                                                            {localFilters.salary === option.id && (
-                                                                <div className="h-2 w-2 rounded-full bg-primary"></div>
-                                                            )}
-                                                        </div>
+                                                            {option.label}
+                                                        </label>
                                                     </div>
-                                                    <label
-                                                        htmlFor={`salary-${option.id}`}
-                                                        className="ml-6 cursor-pointer text-sm text-gray-700"
-                                                    >
-                                                        {option.label}
-                                                    </label>
                                                 </div>
                                             ))}
                                         </div>

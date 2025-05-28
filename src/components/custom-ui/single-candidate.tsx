@@ -4,7 +4,7 @@ import { UserService } from '@/services/user.service';
 import { DetailedRequest, Resume } from '@/types';
 import { useMutation, useQueries } from '@tanstack/react-query';
 import { RichTextContent } from './global/rich-text-content';
-import ShareProfile from './share-profile';
+// import ShareProfile from './share-profile';
 import UserRelatedInformation from './global/user-related-information';
 import { UserContactInformation } from './global/user-contact-information';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
@@ -172,9 +172,9 @@ export default function SingleCandidate(props: { id: string }) {
                         />
                     </div>
                     {/* Share profile for breakpoint from md */}
-                    <div className="hidden md:block">
+                    {/* <div className="hidden md:block">
                         <ShareProfile />
-                    </div>
+                    </div> */}
                 </div>
                 <div className="col-span-12 space-y-6 md:col-span-5">
                     <UserRelatedInformation

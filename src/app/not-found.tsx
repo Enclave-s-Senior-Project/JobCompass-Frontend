@@ -23,7 +23,7 @@ export function NotFound() {
         <div className="flex min-h-[60vh] items-center justify-center p-4">
             <div className="flex w-[80%] max-w-5xl flex-col items-center justify-center gap-4 md:flex-row">
                 <div className="max-w-md">
-                    <h1 className="mb-4 text-3xl font-bold md:text-4xl">Opps! Page not found</h1>
+                    <h1 className="mb-4 text-3xl font-bold md:text-4xl">Oops! Page not found</h1>
                     <p className="mb-8 text-muted-foreground">
                         Something went wrong. It&apos;s look like the link is broken or the page is removed.
                     </p>

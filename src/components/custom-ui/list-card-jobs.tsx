@@ -2,7 +2,6 @@
 
 import { Meta } from '@/types';
 import { JobCardTwoType } from './card-job-two-type';
-import { FileX } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
 import { PrimaryPagination } from '../ui/pagination';
 import { JobsList } from './job-list';
@@ -30,10 +29,6 @@ export default function ListCardJobs(props: {
     const { viewType, data, isPending, meta, totalPages } = props;
 
     const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
-
-    useEffect(() => {
-        console.log(selectedJobId);
-    }, [selectedJobId]);
 
     const { data: jobDetails, refetch: refetchDetailJob } = useQuery({
         queryKey: [queryKey.detailJob, selectedJobId],
@@ -88,11 +83,20 @@ export default function ListCardJobs(props: {
                             ))}
                         </div>
                     )
-                ) : !data?.length ? (
+                ) : data === undefined || data === null ? (
                     <div className="flex min-h-[50vh] flex-col items-center justify-center px-4 text-center">
-                        <FileX className="mb-4 h-16 w-16 text-muted-foreground" />
-                        <h3 className="mb-2 text-lg font-semibold text-foreground">No jobs found</h3>
-                        <p className="max-w-[500px] text-muted-foreground">
+                        <h3 className="mb-2 text-base font-semibold text-foreground text-gray-600">
+                            No jobs to display
+                        </h3>
+                        <p className="max-w-[500px] text-sm text-muted-foreground">
+                            Try using the search bar or applying filters to find jobs that match your preferences. You
+                            can filter by location, job type, salary range, and more.
+                        </p>
+                    </div>
+                ) : data?.length === 0 ? (
+                    <div className="flex min-h-[50vh] flex-col items-center justify-center px-4 text-center">
+                        <h3 className="mb-2 text-base font-semibold text-foreground text-gray-600">No jobs found</h3>
+                        <p className="max-w-[500px] text-sm text-muted-foreground">
                             Currently, there are no jobs posted. Please check back later or try searching with different
                             criteria.
                         </p>

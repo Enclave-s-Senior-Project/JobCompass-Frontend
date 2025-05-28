@@ -9,7 +9,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { JobStatusEnum } from '@/lib/common-enum';
-import { cn, toFormattedDate } from '@/lib/utils';
+import { cn, hexToRgb, toFormattedDate } from '@/lib/utils';
 import { Job } from '@/types';
 import {
     Briefcase,
@@ -29,7 +29,6 @@ import { differenceInDays } from 'date-fns';
 import { RichTextContent } from './rich-text-content';
 import Link from 'next/link';
 import { FaFacebookF, FaLinkedin, FaXTwitter } from 'react-icons/fa6';
-import { getRandomFeatureColor } from '@/lib/random-color';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 type Props = {
@@ -304,15 +303,14 @@ export function JobQuickView({ job }: Props) {
                             <h4 className="mb-2 text-xs font-semibold uppercase text-gray-500">Tags</h4>
                             <div className="flex flex-wrap gap-2">
                                 {job?.tags.map((tag, index) => {
-                                    const { bg, text } = getRandomFeatureColor();
                                     return (
                                         <Badge
                                             key={index}
-                                            className={cn(
-                                                `rounded-full px-3 py-0.5 hover:${bg} hover:${text}`,
-                                                bg,
-                                                text
-                                            )}
+                                            style={{
+                                                background: `rgba(${hexToRgb(tag.color || '')}, 0.2)`,
+                                                color: tag.color,
+                                            }}
+                                            className={cn(`rounded-full px-3 py-0.5`)}
                                         >
                                             {tag.name}
                                         </Badge>

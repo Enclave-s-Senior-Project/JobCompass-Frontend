@@ -13,7 +13,16 @@ import { routes } from '@/configs/routes';
 import { useContext } from 'react';
 import { UserContext } from '@/contexts/user-context';
 import { hasPermission } from '@/lib/auth';
-import { Bookmark, BriefcaseBusiness, CircleUserRound, Clock4, LayoutDashboard, LogOut, Settings } from 'lucide-react';
+import {
+    Bookmark,
+    Box,
+    BriefcaseBusiness,
+    CircleUserRound,
+    Clock4,
+    LayoutDashboard,
+    LogOut,
+    Settings,
+} from 'lucide-react';
 import { NotificationAlert } from './local/notification-alert';
 
 const commonNavigatePages = [
@@ -25,8 +34,8 @@ const commonNavigatePages = [
 
 const enterpriseNavigatePages = [
     { href: '/employer-dashboard/overview', icon: <LayoutDashboard />, label: 'Enterprise Dashboard' },
+    { href: '/employer-dashboard/settings/company-info', icon: <Settings />, label: 'Enterprise Settings' },
     { href: '/employer-dashboard/my-jobs', icon: <BriefcaseBusiness />, label: 'My Jobs' },
-    { href: '/employer-dashboard/settings/company-info', icon: <Settings />, label: 'Settings' },
 ];
 
 export function SwitchSignIn() {
@@ -79,6 +88,13 @@ export function SwitchSignIn() {
                         </>
                     )}
                     <DropdownMenuSeparator />
+                    {userInfo?.roles.includes('USER') && !userInfo?.roles.includes('ENTERPRISE') && (
+                        <DropdownMenuItem className="py-2 pr-3 [&_svg]:size-5" asChild>
+                            <Link href="/candidate-dashboard/settings/account">
+                                <Box /> Register Enterprise
+                            </Link>
+                        </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem className="py-2 pr-3 [&_svg]:size-5" onClick={logoutHandle}>
                         <LogOut />
                         Sign Out

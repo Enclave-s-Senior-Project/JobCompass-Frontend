@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import defaultBackgroundImage from '@/assets/images/avatar/default-background.jpg';
-import ShareProfile from '@/components/custom-ui/share-profile';
 import { useParams } from 'next/navigation';
 import { useQueries } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
@@ -121,9 +120,9 @@ export default function FindCandidatesPage() {
                             />
                         </div>
                         {/* Share profile for breakpoint from md */}
-                        <div className="hidden md:block">
+                        {/* <div className="hidden md:block">
                             <ShareProfile />
-                        </div>
+                        </div> */}
                     </div>
                     <div className="col-span-12 space-y-6 md:col-span-5">
                         <UserRelatedInformation
@@ -146,9 +145,9 @@ export default function FindCandidatesPage() {
                         />
                     </div>
                     {/* Share profile for breakpoint below md  */}
-                    <div className="col-span-12 block md:hidden">
+                    {/* <div className="col-span-12 block md:hidden">
                         <ShareProfile />
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

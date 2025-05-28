@@ -96,10 +96,7 @@ const EnterpriseRegistrationItem = memo(
                                     variant="outline"
                                     size="icon-md"
                                     onClick={() =>
-                                        window.open(
-                                            `/admin-dashboard/enterprise/registration/${enterprise.enterpriseId}`,
-                                            '_blank'
-                                        )
+                                        window.open(`/admin-dashboard/enterprise/${enterprise.enterpriseId}`, '_blank')
                                     }
                                 >
                                     <Info className="h-4 w-4" />

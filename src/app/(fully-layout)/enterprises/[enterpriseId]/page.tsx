@@ -9,7 +9,6 @@ import Image from 'next/image';
 import { EnterpriseCard } from '@/components/custom-ui/local/enterprise-card';
 import { Enterprise, Job } from '@/types';
 import { useState } from 'react';
-import ShareProfile from '@/components/custom-ui/share-profile';
 import { RichTextContent } from '@/components/custom-ui/global/rich-text-content';
 import { TopJob } from '@/components/custom-ui/top-job';
 
@@ -99,9 +98,9 @@ export default function DetailEnterprise() {
                         </div>
 
                         {/* Share profile for breakpoint from md */}
-                        <div className="hidden md:block">
+                        {/* <div className="hidden md:block">
                             <ShareProfile />
-                        </div>
+                        </div> */}
                     </div>
                     {jobs?.length > 0 ? (
                         <div className="col-span-12 space-y-6 md:col-span-5">

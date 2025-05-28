@@ -1,5 +1,5 @@
 import { SidebarDashboard } from '@/components/custom-ui/sidebar-dashboard';
-import { BellRing, Bookmark, BriefcaseBusiness, Layers, Settings } from 'lucide-react';
+import { Bookmark, BriefcaseBusiness, Layers, Settings } from 'lucide-react';
 
 export function SidebarDashboardCandidate() {
     const sidebarItems = [
@@ -18,12 +18,12 @@ export function SidebarDashboardCandidate() {
             label: 'Favorite Jobs',
             icon: <Bookmark />,
         },
-        {
-            href: '/job-alerts',
-            label: 'Job Alert',
-            icon: <BellRing />,
-            badge: '09',
-        },
+        // {
+        //     href: '/job-alerts',
+        //     label: 'Job Alert',
+        //     icon: <BellRing />,
+        //     badge: '09',
+        // },
         {
             href: '/candidate-dashboard/settings',
             label: 'Settings',

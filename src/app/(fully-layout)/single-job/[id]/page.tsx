@@ -14,7 +14,6 @@ import {
     MapPin,
     FileX,
 } from 'lucide-react';
-import ShareProfile from '@/components/custom-ui/share-profile';
 import { FaFacebookF, FaInstagram, FaXTwitter, FaYoutube } from 'react-icons/fa6';
 import { DialogApplyJob } from '@/components/custom-ui/dialog-apply-job';
 import Link from 'next/link';
@@ -160,15 +159,17 @@ function PageContentOfSingleJob() {
                 <div className="rounded-lg bg-white">
                     <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
                         <div className="flex items-center gap-4">
-                            <Avatar className="size-24 bg-gradient-to-b from-slate-50 to-primary-100">
-                                <AvatarImage
-                                    height={100}
-                                    width={100}
-                                    className="size-full object-cover object-center"
-                                    src={resultQuery?.enterprise?.logoUrl}
-                                />
-                                <AvatarFallback>{resultQuery?.enterprise?.name}</AvatarFallback>
-                            </Avatar>
+                            <Link href={`/enterprises/${resultQuery?.enterprise?.enterpriseId}`}>
+                                <Avatar className="size-24 bg-gradient-to-b from-slate-50 to-primary-100">
+                                    <AvatarImage
+                                        height={100}
+                                        width={100}
+                                        className="size-full object-cover object-center"
+                                        src={resultQuery?.enterprise?.logoUrl}
+                                    />
+                                    <AvatarFallback>{resultQuery?.enterprise?.name}</AvatarFallback>
+                                </Avatar>{' '}
+                            </Link>
                             <div>
                                 <div className="flex items-center gap-2">
                                     <h1 className="text-xl">
@@ -248,9 +249,9 @@ function PageContentOfSingleJob() {
                             <p className="text-xl font-semibold text-primary-700">Requirements</p>
                             <RichTextContent content={resultQuery?.requirements || 'No requirement.'} />
                         </div>
-                        <div className="hidden md:block">
+                        {/* <div className="hidden md:block">
                             <ShareProfile />
-                        </div>
+                        </div> */}
                     </div>
                     <div className="col-span-12 space-y-6 md:col-span-5">
                         <div className="flex flex-col gap-y-6 rounded-md border-2 border-primary-50 p-6">
@@ -379,9 +380,9 @@ function PageContentOfSingleJob() {
                             </CardContent>
                         </Card>
                     </div>
-                    <div className="col-span-12 block md:hidden">
+                    {/* <div className="col-span-12 block md:hidden">
                         <ShareProfile />
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* Related Jobs Section */}
