@@ -20,6 +20,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { EditJob } from './form-edit-job';
 import { DialogBoostJob } from './dialo-boost-job';
 import { toast } from '@/lib/toast';
+import Link from 'next/link';
 interface JobItemProps {
     job: Job;
     onSelect?: (jobId: string) => void;
@@ -88,7 +89,9 @@ const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true
                                 height={500}
                             />
                             <div>
-                                <h3 className="text-lg font-semibold">{job?.name}</h3>
+                                <Link href={`/single-job/${job.jobId}`} key={job.jobId}>
+                                    <h3 className="text-lg font-semibold hover:underline">{job?.name}</h3>
+                                </Link>
                                 <p className="flex flex-wrap items-center text-sm text-gray-500">
                                     <span className="text-nowrap">{job?.categories?.[0]?.categoryName}</span>
                                     &nbsp;•&nbsp;

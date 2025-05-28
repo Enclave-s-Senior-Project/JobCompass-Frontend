@@ -35,22 +35,17 @@ import { DetailedRequest } from '@/types';
 
 // New service function to fetch related jobs
 const fetchRelatedJobs = async (jobId: string) => {
-    try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_AI_SERVER}/suggest/related-jobs/${jobId}`, {
-            method: 'GET',
-            headers: {
-                accept: 'application/json',
-            },
-        });
-        if (!response.ok) {
-            throw new Error('Failed to fetch related jobs');
-        }
-        const data = await response.json();
-        return data.payload; // Assuming payload contains the array of jobs
-    } catch (error: any) {
-        handleErrorToast(error);
-        throw error;
+    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_AI_SERVER}/suggest/related-jobs/${jobId}`, {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+        },
+    });
+    if (!response.ok) {
+        throw new Error('Failed to fetch related jobs');
     }
+    const data = await response.json();
+    return data.payload; // Assuming payload contains the array of jobs
 };
 
 // Function to truncate long job titles
@@ -91,7 +86,13 @@ function PageContentOfSingleJob() {
     // New query for related jobs
     const { data: relatedJobs } = useQuery({
         queryKey: [queryKey.relatedJobs, id],
-        queryFn: () => fetchRelatedJobs(id),
+        queryFn: async () => {
+            try {
+                return await fetchRelatedJobs(id);
+            } catch {
+                return null;
+            }
+        },
         enabled: !!id,
     });
 
@@ -309,7 +310,11 @@ function PageContentOfSingleJob() {
                                         className="h-14 w-14 rounded-full object-cover"
                                     />
                                     <div>
-                                        <h2 className="text-[20px]">{resultQuery?.enterprise?.name}</h2>
+                                        <Link href={`/enterprises/${resultQuery?.enterprise?.enterpriseId}`}>
+                                            <h2 className="text-[20px] hover:underline">
+                                                {resultQuery?.enterprise?.name}
+                                            </h2>
+                                        </Link>
                                         <p className="text-sm font-semibold italic text-gray-700">
                                             {resultQuery?.enterprise?.bio}
                                         </p>

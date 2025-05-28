@@ -1,7 +1,6 @@
 import { Job } from '@/types';
 import { JobItem } from './job-item';
 import { Skeleton } from '@/components/ui/skeleton';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { motionVariant } from '@/lib/motion-variants';
 
@@ -43,17 +42,17 @@ export function JobsList({
                         viewport={{ once: true }}
                         // whileHover={{ y: -2 }}
                     >
-                        <Link href={`/single-job/${job.jobId}`} key={job.jobId}>
-                            <JobItem
-                                refetchDetailJob={refetchDetailJob}
-                                refetchJob={refetchJob}
-                                key={job.jobId}
-                                job={job}
-                                onSelect={onSelectItem}
-                                temp={temp}
-                                isOwn={isOwn}
-                            />
-                        </Link>
+                        {/* <Link href={`/single-job/${job.jobId}`} key={job.jobId}> */}
+                        <JobItem
+                            refetchDetailJob={refetchDetailJob}
+                            refetchJob={refetchJob}
+                            key={job.jobId}
+                            job={job}
+                            onSelect={onSelectItem}
+                            temp={temp}
+                            isOwn={isOwn}
+                        />
+                        {/* </Link> */}
                     </motion.div>
                 ))
             )}
