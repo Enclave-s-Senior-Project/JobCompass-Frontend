@@ -38,8 +38,8 @@ const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true
         setOpenDialogEdit(false);
     };
     const checkBoostJob = async (jobId: string) => {
-        const temp = await BoostJobService.checkBoostJob(jobId);
-        if (temp) {
+        const temp: any = await BoostJobService.checkBoostJob(jobId);
+        if (temp?.boostJob) {
             return toast.error('This job is already boosted');
         }
         setOpenDialogBoost(true);
