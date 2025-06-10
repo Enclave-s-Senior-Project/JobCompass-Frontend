@@ -14,7 +14,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from '@/component
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { memo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { BoostJobService } from '@/services';
+import { BoostJobService, JobService } from '@/services';
 import { differenceInDays } from 'date-fns';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { EditJob } from './form-edit-job';
@@ -43,6 +43,21 @@ const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true
             return toast.error('This job is already boosted');
         }
         setOpenDialogBoost(true);
+    };
+    const closeJob = async (jobId: string) => {
+        const temp: any = await JobService.closeJob(jobId);
+        refetchJob();
+        if (temp?.job) {
+            return toast.success('Job closed successfully');
+        }
+    };
+    const openJob = async (jobId: string) => {
+        const temp: any = await JobService.openJob(jobId);
+        refetchJob();
+        refetchJob();
+        if (temp?.job) {
+            return toast.success('Job opened successfully');
+        }
     };
     return (
         <>
@@ -131,12 +146,21 @@ const JobItem = memo(({ job, onSelect, refetchJob, refetchDetailJob, temp = true
                                             Update Job
                                         </div>
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem className="p-0">
-                                        <div className="flex w-full items-center px-4 py-2 text-left text-sm font-medium text-gray-600 transition-all hover:bg-danger-50 hover:text-danger">
-                                            <XCircle className="mr-2 size-5" />
-                                            Close Job
-                                        </div>
-                                    </DropdownMenuItem>
+                                    {job?.status === JobStatusEnum.OPEN ? (
+                                        <DropdownMenuItem className="p-0" onClick={() => closeJob(job.jobId)}>
+                                            <div className="flex w-full items-center px-4 py-2 text-left text-sm font-medium text-gray-600 transition-all hover:bg-danger-50 hover:text-danger">
+                                                <XCircle className="mr-2 size-5" />
+                                                Close Job
+                                            </div>
+                                        </DropdownMenuItem>
+                                    ) : (
+                                        <DropdownMenuItem className="p-0" onClick={() => openJob(job.jobId)}>
+                                            <div className="flex w-full items-center px-4 py-2 text-left text-sm font-medium text-gray-600 transition-all hover:bg-danger-50 hover:text-danger">
+                                                <XCircle className="mr-2 size-5" />
+                                                Open Job
+                                            </div>
+                                        </DropdownMenuItem>
+                                    )}
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         )}

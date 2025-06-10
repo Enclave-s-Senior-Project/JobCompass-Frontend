@@ -165,4 +165,32 @@ export class JobService {
             throw err;
         }
     }
+    public static async closeJob(jobId: string) {
+        try {
+            const dataResponse = await authAxios.patch<ApiResponse<null>>(`/${jobId}/close`);
+            return dataResponse.payload.value;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
+    public static async openJob(jobId: string) {
+        try {
+            const dataResponse = await authAxios.patch<ApiResponse<null>>(`/${jobId}/open`);
+            return dataResponse.payload.value;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
 }

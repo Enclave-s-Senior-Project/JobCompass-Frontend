@@ -48,6 +48,9 @@ const errorKeyMessage = {
     APPLIED_JOB_NOT_FOUND: "Applied job not found or you're not permitted.",
     JOB_NOT_OPEN: 'Job is not open.',
     'User not authorized to login': 'User not authorized to login.',
+    NOT_ALLOW_TO_CLOSE_JOB: 'You are not allowed to close this job.',
+    JOB_IS_OPEN: 'Job is open.',
+    JOB_DEADLINE_INVALID: 'Job deadline is invalid.',
 };
 
 const warningKeyMessage = {
