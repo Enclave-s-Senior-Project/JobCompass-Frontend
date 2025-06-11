@@ -51,6 +51,7 @@ const errorKeyMessage = {
     NOT_ALLOW_TO_CLOSE_JOB: 'You are not allowed to close this job.',
     JOB_IS_OPEN: 'Job is open.',
     JOB_DEADLINE_INVALID: 'Job deadline is invalid.',
+    JOB_IS_CLOSED: 'Job is closed.',
 };
 
 const warningKeyMessage = {
