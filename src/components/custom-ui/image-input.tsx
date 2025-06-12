@@ -16,6 +16,7 @@ interface ImageInputProps {
     isAvatar?: boolean;
     isError?: boolean;
     value?: string;
+    disabled?: boolean;
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -42,7 +43,7 @@ const createEmptyChangeEvent = (
 
 // Main Component
 export const ImageInput = memo(
-    ({ name, initImage, isAvatar = false, isError = false, onChange, value }: ImageInputProps) => {
+    ({ name, initImage, isAvatar = false, isError = false, onChange, value, disabled }: ImageInputProps) => {
         const [image, setImage] = useState<ImageData>({
             size: 0,
             url: initImage ?? value ?? '',
@@ -84,7 +85,7 @@ export const ImageInput = memo(
         );
 
         return (
-            <div className="relative w-full pb-5">
+            <div className={clsx('relative w-full pb-5', disabled ? 'cursor-not-allowed' : 'cursor-pointer')}>
                 <div className={containerClasses} onClick={handleSelectFile}>
                     {image.url ? (
                         <img src={image.url} alt="Profile Picture" className={imageClasses} />
@@ -99,6 +100,7 @@ export const ImageInput = memo(
                     name={name}
                     className="hidden"
                     onChange={handleImageChange}
+                    disabled={disabled}
                     // value={value}
                     multiple={false}
                     accept="image/jpg,image/png,image/jpeg"
@@ -107,11 +109,11 @@ export const ImageInput = memo(
                 {image.size > 0 && (
                     <div className="absolute bottom-0 flex items-center gap-3 text-[10px] md:text-[12px]">
                         <span className="text-gray-600">{image.size} MB</span>
-                        <span className="text-gray-900 hover:underline cursor-pointer" onClick={handleResetImage}>
+                        <span className="cursor-pointer text-gray-900 hover:underline" onClick={handleResetImage}>
                             Remove
                         </span>
                         <span
-                            className="hidden lg:block text-primary font-medium hover:underline cursor-pointer"
+                            className="hidden cursor-pointer font-medium text-primary hover:underline lg:block"
                             onClick={handleSelectFile}
                         >
                             Replace

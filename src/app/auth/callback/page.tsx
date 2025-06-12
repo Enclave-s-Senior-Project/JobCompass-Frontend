@@ -3,36 +3,58 @@
 import { useContext, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { setLoginCookie, storeTokenInfo } from '@/lib/auth';
-import { toast } from 'sonner';
 import { UserContext } from '@/contexts';
 import { CompassLoadingQuick } from '@/components/custom-ui/loading';
+import { toast } from '@/lib/toast';
+import { useMutation } from '@tanstack/react-query';
+import { AuthService } from '@/services';
+import { DetailedRequest } from '@/types';
+import { handleErrorToast } from '@/lib/utils';
 
 const CallbackPage = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { refreshMe } = useContext(UserContext);
 
+    const confirmLoginMutation = useMutation({
+        mutationFn: async (data: DetailedRequest.ConfirmOAuth2Login) => AuthService.confirmOAuth2Login(data),
+        onSuccess: async (data) => {
+            if (data) {
+                storeTokenInfo(data?.accessToken as string, data?.tokenType, data?.accessTokenExpires);
+                setLoginCookie(data?.refreshTokenExpires);
+                refreshMe();
+                // get redirect URL from local storage and remove it
+                const redirect = localStorage.getItem('redirectAfterLogin');
+                localStorage.removeItem('redirectAfterLogin');
+
+                // redirect to the URL or to the home page
+                if (redirect) router.push(redirect);
+                else router.push('/');
+            }
+        },
+        onError: (error) => {
+            console.log(error);
+            handleErrorToast(error);
+            router.push('/sign-in');
+        },
+    });
+
     useEffect(() => {
-        const tokenType = searchParams.get('tokenType');
-        const accessToken = searchParams.get('accessToken');
-        const accessTokenExpires = Number(searchParams.get('accessTokenExpires'));
+        const authToken = searchParams.get('authToken')?.toString();
+        const iv = searchParams.get('iv')?.toString();
+        const provider = searchParams.get('provider')?.toString();
 
-        if (!JSON.parse(sessionStorage.getItem('onLoginOauth2') || 'false')) {
-            router.back();
+        if (!authToken || !iv || !provider) {
+            toast.error('Invalid callback parameters');
+            router.push('/sign-in');
+            return;
         }
 
-        if (tokenType && accessToken && accessTokenExpires) {
-            sessionStorage.removeItem('onLoginOauth2'); // remove after checking
-            storeTokenInfo(accessToken, tokenType, accessTokenExpires);
-            setLoginCookie();
-
-            refreshMe();
-
-            toast.success('Login successful');
-            router.push('/'); // Redirect to dashboard after login
-        } else {
-            router.push('/sign-in'); // Redirect back if missing data
-        }
+        confirmLoginMutation.mutate({
+            authToken: authToken,
+            iv: iv,
+            provider: provider,
+        });
     }, [router, searchParams]);
 
     return <CompassLoadingQuick />;

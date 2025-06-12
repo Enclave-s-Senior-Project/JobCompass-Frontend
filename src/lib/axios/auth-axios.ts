@@ -1,38 +1,89 @@
 import { InternalAxiosRequestConfig } from 'axios';
 import { BaseAxios } from './base-axios';
-import { getStoredTokenInfo, storeTokenInfo } from '../auth';
+import {
+    clearLoginCookie,
+    clearTokenInfo,
+    clearUserAndEnterpriseInfoLocalStorage,
+    getStoredTokenInfo,
+    setLoginCookie,
+    storeTokenInfo,
+} from '../auth';
+import { toast } from '@/lib/toast';
+
+// Global variable to store the refresh token promise
+let isRefreshing = false;
+let refreshTokenPromise: Promise<any> | null = null;
 
 export class AuthAxios extends BaseAxios {
-    constructor(prefix: string) {
-        super(prefix);
+    constructor(prefix: string, baseURL?: string) {
+        super(prefix, baseURL);
         this._initRequestInterceptor();
     }
 
     private async _refreshToken() {
-        const { AuthService } = await import('@/services/auth.service');
-        return AuthService.refreshToken();
+        // If already refreshing, return existing promise
+        if (isRefreshing) {
+            return refreshTokenPromise;
+        }
+
+        // Set refreshing flag and create new promise
+        isRefreshing = true;
+
+        // Create new refresh token promise
+        refreshTokenPromise = (async () => {
+            try {
+                const { AuthService } = await import('@/services/auth.service');
+                return await AuthService.refreshToken();
+            } catch (error) {
+                console.error('Failed to refresh token:', error);
+                toast.error('Session expired. Please log in again.');
+                clearLoginCookie();
+                clearTokenInfo();
+                clearUserAndEnterpriseInfoLocalStorage();
+                throw error; // Re-throw to handle in the interceptor
+            } finally {
+                // Reset refreshing state regardless of outcome
+                isRefreshing = false;
+                setTimeout(() => {
+                    refreshTokenPromise = null;
+                }, 1000); // Clear after a delay
+            }
+        })();
+
+        return refreshTokenPromise;
     }
 
     private _initRequestInterceptor() {
         this.axiosInstance.interceptors.request.use(
             async (config: InternalAxiosRequestConfig) => {
                 const { isLogged, accessToken, accessType, tokenExpires } = getStoredTokenInfo();
-                if (isLogged && tokenExpires && tokenExpires < Date.now()) {
-                    const res = await this._refreshToken();
-                    if (res) {
-                        storeTokenInfo(res.accessToken, res.tokenType, res.accessTokenExpires);
-                        config.headers['Authorization'] = `${res.tokenType} ${res.accessToken}`;
-                        return config;
+
+                // Check if token refresh is needed
+                if (isLogged && accessToken && accessType && tokenExpires < Date.now()) {
+                    try {
+                        const res = await this._refreshToken();
+                        if (res) {
+                            storeTokenInfo(res.accessToken, res.tokenType, res.accessTokenExpires);
+                            setLoginCookie(res.refreshTokenExpires);
+                            config.headers['Authorization'] = `${res.tokenType} ${res.accessToken}`;
+                            return config;
+                        }
+                    } catch {
+                        clearLoginCookie();
+                        clearTokenInfo();
+                        clearUserAndEnterpriseInfoLocalStorage();
+                        throw new Error('Session expired. Please log in again.');
                     }
                 }
 
+                // Set Authorization header if we have token
                 if (accessToken && accessType) {
                     config.headers['Authorization'] = `${accessType} ${accessToken}`;
                 }
+
                 return config;
             },
             (error) => {
-                console.log('Error here', error);
                 return Promise.reject(error);
             }
         );

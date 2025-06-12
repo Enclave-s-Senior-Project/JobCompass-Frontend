@@ -13,12 +13,12 @@ export function DialogAddEnterprises({ refetch }: { refetch: () => void }) {
             <Button
                 type="button"
                 onClick={() => setOpen(true)}
-                className="flex-1 md:flex-none w-[248px] h-12 text-[16px]"
+                className="h-12 w-[248px] flex-1 text-[16px] md:flex-none"
             >
                 Register Enterprise
                 <ChevronRight className="ml-2 h-6 w-6" />
             </Button>
-            <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto">
+            <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-[800px]">
                 <DialogHeader>
                     <div className="flex items-center justify-between">
                         <DialogTitle className="text-[18px]">Register Enterprise</DialogTitle>

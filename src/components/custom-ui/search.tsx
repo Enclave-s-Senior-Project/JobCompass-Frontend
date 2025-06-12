@@ -1,53 +1,75 @@
 'use client';
 
-import React, { useId, useState } from 'react';
-import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
+import React, { useEffect, useId, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { HiMiniMagnifyingGlass } from 'react-icons/hi2';
-import Image from 'next/image';
 import { languagesData } from '@/lib/data/languages.data';
+import { InputSelectSingle, InputSelectSingleItem } from './input-select-single';
+import { useRouter } from 'next/navigation';
 
 export function Search() {
-    const [select, setSelect] = useState<string>('en');
+    const [select, setSelect] = useState<{ inputValue: string; selectValue: string }>({
+        inputValue: 'Vietnam',
+        selectValue: 'Vietnam',
+    });
+    const [inputValue, setInputValue] = useState('');
+
+    const [countries, setCountries] = useState<any[]>(Object.entries(languagesData));
+
+    const router = useRouter();
 
     const inputId = useId();
 
+    useEffect(() => {
+        const filteredCountries = Object.entries(languagesData).filter((language) => {
+            const splitted = select.inputValue.split(' ');
+            const text = splitted.length > 1 ? splitted[1] : splitted[0];
+            return language[0].toLowerCase().startsWith(text.toLowerCase());
+        });
+
+        setCountries(filteredCountries);
+    }, [select.inputValue]);
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        router.replace('/find-jobs?country=' + select.selectValue + '&search=' + inputValue);
+    };
+
     return (
-        <div className="h-12 w-full lg:max-w-[668px] lg:w-[668px] flex items-center border border-input rounded-sm focus-within:border-primary-200">
-            <Select onValueChange={setSelect}>
-                <SelectTrigger className="max-w-44 h-full w-fit justify-start border-1 border-transparent shadow-none rounded-sm focus:ring-0">
-                    <div className="flex items-center gap-2">
-                        <Image
-                            src={languagesData[select].imageUrl}
-                            alt={languagesData[select].title}
-                            className="hidden lg:inline h-full w-full object-center object-cover"
-                            height={16}
-                            width={24}
-                        />
-                        <span className="text-gray-600 text-base">{languagesData[select].title}</span>
-                    </div>
-                </SelectTrigger>
-                <SelectContent defaultValue={select}>
-                    {Object.entries(languagesData).map((language) => (
-                        <SelectItem key={language[0]} value={language[0]} className="flex items-center">
-                            <div className="flex items-center gap-2">
-                                <Image src={language[1].imageUrl} alt={language[1].title} height={16} width={24} />
-                                <span className="text-gray-600">{language[1].title}</span>
-                            </div>
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
+        <form
+            onSubmit={handleSubmit}
+            className="flex h-12 w-full items-center rounded-sm border border-input focus-within:border-primary-200 lg:w-[668px] lg:max-w-[668px]"
+        >
+            <InputSelectSingle
+                className="max-w-40 border-none ring-0 focus-within:border-none focus-within:ring-0"
+                placeholder="Country"
+                inputValue={select.inputValue}
+                onChangeInputValue={(value: string) => {
+                    setSelect((prev) => ({ ...prev, inputValue: value }));
+                }}
+                selectValue={select.selectValue}
+                onChangeSelectValue={(value: string) => {
+                    setSelect((prev) => ({ ...prev, selectValue: value }));
+                }}
+            >
+                {countries.map((language) => (
+                    <InputSelectSingleItem key={language[0]} value={language[0]} label={language[0]} />
+                ))}
+            </InputSelectSingle>
+
             <Separator orientation="vertical" className="h-3/5" />
             <label htmlFor={inputId} className="p-2">
                 <HiMiniMagnifyingGlass className="size-6 text-primary" />
             </label>
             <Input
                 id={inputId}
-                className="flex-1 h-full border-none shadow-none focus-visible:ring-0 text-base font-normal"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                className="h-full flex-1 border-none text-base font-normal shadow-none focus-visible:ring-0"
                 placeholder="Job title, keyword, company"
             />
-        </div>
+            <button type="submit" className="hidden"></button>
+        </form>
     );
 }

@@ -1,14 +1,13 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { inter } from '@/components/font';
-import ReactQueryProvider from './providers/react-query-provider';
-import { UserProvider } from '@/contexts/user-context';
-import { EnterpriseProvider } from '@/contexts/enterprise-context';
-import { Toaster } from '@/components/ui/sonner';
+import { Toaster } from 'react-hot-toast';
+import { EnterpriseProvider, NotificationProvider, ReactQueryProvider, UserProvider } from '@/contexts';
 
 export const metadata: Metadata = {
-    title: 'JobCompass',
-    description: 'Navigate your career, find your future',
+    title: process.env.NEXT_PUBLIC_WEBSITE_NAME + ' | ' + process.env.NEXT_PUBLIC_WEBSITE_SLOGAN,
+    description: process.env.NEXT_PUBLIC_WEBSITE_DESCRIPTION,
+    keywords: process.env.NEXT_PUBLIC_WEBSITE_KEYWORDS,
 };
 
 export default function RootLayout({
@@ -19,21 +18,13 @@ export default function RootLayout({
     return (
         <html suppressHydrationWarning={true} lang="en">
             <body className={`${inter.className} antialiased`}>
-                <Toaster
-                    richColors={true}
-                    position="top-right"
-                    theme="system"
-                    closeButton={true}
-                    toastOptions={{
-                        style: {
-                            borderRadius: '4px',
-                        },
-                    }}
-                />
+                <Toaster position="top-right" reverseOrder={false} gutter={8} />
                 <ReactQueryProvider>
                     <UserProvider>
                         <EnterpriseProvider>
-                            <main>{children}</main>
+                            <NotificationProvider>
+                                <main>{children}</main>
+                            </NotificationProvider>
                         </EnterpriseProvider>
                     </UserProvider>
                 </ReactQueryProvider>

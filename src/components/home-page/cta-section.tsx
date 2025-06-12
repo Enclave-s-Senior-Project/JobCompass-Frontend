@@ -5,26 +5,26 @@ import { LuArrowRight } from 'react-icons/lu';
 export function CTASection() {
     return (
         <section>
-            <div className="container max-w-screen-xl mx-auto px-4">
-                <div className="grid md:grid-cols-2 gap-8">
-                    <Card className="p-12 bg-gray-100">
-                        <h3 className="text-3xl font-medium mb-4">Become a Candidate</h3>
-                        <p className="text-muted-foreground mb-6">
+            <div className="container mx-auto max-w-screen-xl px-4">
+                <div className="grid gap-8 md:grid-cols-2">
+                    <Card className="bg-gray-100 p-12">
+                        <h3 className="mb-4 text-3xl font-medium">Become a Candidate</h3>
+                        <p className="mb-6 text-muted-foreground">
                             Create your profile and let employers find you. Apply to jobs with just one click.
                         </p>
                         <Button variant="third" size="xl" className="group transition-all">
                             Register Now{' '}
-                            <LuArrowRight className="group-hover:translate-x-2 transition-all duration-100" />
+                            <LuArrowRight className="transition-all duration-100 group-hover:translate-x-2" />
                         </Button>
                     </Card>
-                    <Card className="p-12 bg-primary text-primary-foreground">
-                        <h3 className="text-3xl font-medium mb-4">Become an Employer</h3>
-                        <p className="text-primary-foreground/80 mb-6">
+                    <Card className="bg-primary p-12 text-primary-foreground">
+                        <h3 className="mb-4 text-3xl font-medium">Become an Employer</h3>
+                        <p className="mb-6 text-primary-foreground/80">
                             Post jobs and find the perfect candidate. Streamline your hiring process.
                         </p>
                         <Button variant="third" size="xl" className="group transition-all">
                             Register Now{' '}
-                            <LuArrowRight className="group-hover:translate-x-2 transition-all duration-100" />
+                            <LuArrowRight className="transition-all duration-100 group-hover:translate-x-2" />
                         </Button>
                     </Card>
                 </div>

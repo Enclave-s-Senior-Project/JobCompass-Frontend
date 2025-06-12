@@ -2,6 +2,7 @@ import { AuthAxios, BaseAxios } from '@/lib/axios';
 import { ApiResponse, DetailedRequest, DetailedResponse, User } from '@/types';
 import { AxiosError } from 'axios';
 import NextError from 'next/error';
+import { handleErrorApi } from '.';
 
 const axios = new BaseAxios('auth');
 const authAxios = new AuthAxios('auth');
@@ -39,7 +40,6 @@ export class AuthService {
 
     public static async register(data: Omit<DetailedRequest.SignUpRequest, 'confirmPassword'>) {
         try {
-            console.log('register', data);
             const temp = await axios.post<ApiResponse<DetailedResponse.SignUp>>('/register', data);
             return temp.payload;
         } catch (err: any) {
@@ -55,8 +55,7 @@ export class AuthService {
 
     public static async refreshToken(): Promise<DetailedResponse.RefreshToken | undefined> {
         try {
-            console.log('Run refresh api');
-            const res = await axios.post<ApiResponse<DetailedResponse.RefreshToken>>('/refresh-token', {});
+            const res = await axios.post<ApiResponse<DetailedResponse.RefreshToken>>('/refresh-token');
             return res.payload.value;
         } catch (error) {
             console.error('Refresh token call API :', error);
@@ -66,7 +65,6 @@ export class AuthService {
 
     public static async verifyEmail(data: DetailedRequest.VerifyEmailRequest) {
         try {
-            console.log('data', data);
             const temp = await axios.post<ApiResponse<DetailedResponse.VerifyEmail>>('/verify-email', data);
             return temp.payload;
         } catch (err: any) {
@@ -144,7 +142,6 @@ export class AuthService {
 
     public static async loginViaFacebook() {
         try {
-            console.log('Service running');
             const dataResponse = await axios.get<ApiResponse<User>>('/facebook');
             return dataResponse.payload;
         } catch (err) {
@@ -155,6 +152,19 @@ export class AuthService {
                 });
             }
             throw err;
+        }
+    }
+
+    public static async confirmOAuth2Login(data: DetailedRequest.ConfirmOAuth2Login) {
+        try {
+            const { provider, ...payload } = data;
+            const dataResponse = await axios.post<ApiResponse<DetailedResponse.SignIn>>(
+                `/${provider}/confirm`,
+                payload
+            );
+            return dataResponse.payload.value;
+        } catch (err) {
+            handleErrorApi(err);
         }
     }
 }

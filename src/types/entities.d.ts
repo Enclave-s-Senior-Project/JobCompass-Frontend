@@ -1,4 +1,18 @@
-import { Address, SocialType } from './common-types';
+import { Categories } from '@/types';
+import { CandidateStatus, EnterpriseStatus, JobStatusEnum, NotificationType } from '@/lib/common-enum';
+import { Address, OrganizationType, SocialType } from './common-types';
+
+interface BaseEntity {
+    createdAt: string;
+    updatedAt: string;
+    isActive: boolean;
+}
+
+interface BoostedJob {
+    id: string;
+    boostedAt: string;
+    pointsUsed: number;
+}
 
 export interface Job {
     createdAt: string;
@@ -14,8 +28,9 @@ export interface Job {
     experience: number;
     deadline: string;
     introImg: string;
-    status: boolean;
+    status: JobStatusEnum;
     education: string;
+    categories: Categories[];
     enterprise: Enterprise;
     tags: Tag[] | null;
     addresses: Address[] | null;
@@ -23,6 +38,14 @@ export interface Job {
     addresses: Address[];
     profiles: User[] | null;
     isFavorite: boolean | null;
+    enterpriseBenefits: string | null;
+    applicationCount: number;
+    isBoost: boolean;
+    views: number;
+    requirements: string;
+    categories: Categories[];
+    specializations: Categories[];
+    boostedJob: BoostedJob | null;
 }
 
 export interface Enterprise {
@@ -34,19 +57,21 @@ export interface Enterprise {
     email: string;
     phone: string;
     description: string;
-    enterpriseBenefits: string;
+    benefit: string;
     companyVision: string;
     logoUrl: string;
     backgroundImageUrl: string;
-    foundedIn: string;
-    organizationType: string;
+    foundedIn: Date;
+    organizationType: OrganizationType;
     teamSize: string;
-    industryType: string;
+    categories: Categories[];
     bio: string;
     isPremium: boolean;
     expiredPremium: string;
-    status: string | null;
+    status: EnterpriseStatus | null;
     enterpriseId: string;
+    addresses: Address[] | null;
+    totalPoints?: number;
 }
 
 export interface CV {
@@ -56,6 +81,8 @@ export interface CV {
     cvId: string;
     cvUrl: string;
     cvName: string;
+    size: number;
+    isPublished: boolean;
 }
 
 export interface SocialLink {
@@ -66,7 +93,63 @@ export interface SocialLink {
 
 export type Role = 'USER' | 'ENTERPRISE' | 'ADMIN';
 
-export interface User {
+export interface User extends BaseEntity {
+    profileId: string;
+    fullName: string;
+    profileUrl?: string;
+    pageUrl?: string;
+    introduction?: string;
+    phone?: string;
+    view: number;
+    gender?: string;
+    education?: string;
+    nationality?: string;
+    dateOfBirth?: string;
+    maritalStatus?: string;
+    isPremium: boolean;
+    expiredPremium?: any;
+    experience?: string;
+    account_id: string;
+    roles: Role[];
+    industry: Pick<Categories, 'categoryId' | 'categoryName'>;
+    majority: Pick<Categories, 'categoryId' | 'categoryName'>;
+    account?: Account;
+}
+export interface Tag extends BaseEntity {
+    tagId: string;
+    name: string;
+    color?: string;
+    backgroundColor?: string;
+}
+
+export interface Categories extends BaseEntity {
+    isActive: any;
+    categoryId: string;
+    categoryName: string;
+    parent?: Categories;
+}
+
+export interface CandidatesApplied {
+    userId: number;
+    id: number;
+    title: string;
+    completed: boolean;
+    profile: User;
+    job: Job;
+}
+
+export interface Resume extends CV {}
+
+export interface AppliedJob extends BaseEntity {
+    appliedJobId?: string;
+    coverLetter?: string;
+    status?: string;
+    job: Job;
+    address?: Address[];
+    profile?: User;
+}
+
+export interface GetDetailCandidate {
     createdAt: string;
     updatedAt: string;
     isActive: boolean;
@@ -87,18 +170,46 @@ export interface User {
     experience?: string;
     account_id: string;
     roles: Role[];
-}
-export interface Tag {
-    isActive: boolean;
-    tagId: string;
-    name: string;
-    color: string;
-    backgroundColor: string;
+    industry: Pick<Categories, 'categoryId' | 'categoryName'>;
+    majority: Pick<Categories, 'categoryId' | 'categoryName'>;
+    isFavorite?: boolean;
+    coverLetter?: string;
 }
 
-export interface Categories {
-    isActive: any;
-    categoryId: string;
-    categoryName: string;
-    parent: any;
+export interface Notification {
+    notificationId: string;
+    type: NotificationType;
+    link?: string;
+    title: string;
+    message: string;
+    isRead: boolean;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export interface ShorthandApplication {
+    createdAt: Date;
+    updatedAt: Date;
+    appliedJobId: string;
+    coverLetter: string;
+    status: string;
+    profile: Pick<
+        User,
+        'profileId' | 'fullName' | 'profileUrl' | 'gender' | 'education' | 'nationality' | 'experience'
+    >;
+    job: Pick<Job, 'type'>;
+    cv: Pick<Resume, 'cvId' | 'cvUrl' | 'cvName'>;
+}
+
+export interface Account {
+    createdAt: string;
+    updatedAt: string;
+    isActive: boolean;
+    accountId: string;
+    facebookId: any;
+    googleId: any;
+    email: string;
+    password: string;
+    status: CandidateStatus;
+    roles: string[];
 }

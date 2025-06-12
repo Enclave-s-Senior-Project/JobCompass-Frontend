@@ -11,7 +11,7 @@ export default function Home() {
     return (
         <main className="min-h-screen">
             {/* Hero Section */}
-            <div className="py-16 md:py-24 bg-gray-50">
+            <div className="bg-gray-50 py-16 md:py-24">
                 <HeroSection />
             </div>
 
@@ -21,7 +21,7 @@ export default function Home() {
             </div>
 
             {/* How it works */}
-            <div className="py-16 md:py-24 bg-gray-50">
+            <div className="bg-gray-50 py-16 md:py-24">
                 <HowItWorks />
             </div>
 
@@ -31,14 +31,14 @@ export default function Home() {
             </div>
 
             {/* Featured Jobs */}
-            <div className="py-16 md:py-24 bg-gray-50">
+            <div className="bg-gray-50 py-16 md:py-24">
                 <FeatureJobs />
             </div>
             <div className="py-16 md:py-24">
                 <TopCompanies />
             </div>
             {/* Testimonials */}
-            <div className="py-16 md:py-24 bg-gray-50">
+            <div className="bg-gray-50 py-16 md:py-24">
                 <Testimonials />
             </div>
 

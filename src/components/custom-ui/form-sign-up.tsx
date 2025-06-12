@@ -37,16 +37,16 @@ export function FormSignUp() {
         <form className="sign-up-form flex flex-col space-y-8" action={onSubmit} autoComplete="sign-up">
             <div className="flex items-center justify-between">
                 <div>
-                    <h5 className="mb-4 text-[32px] leading-10 font-medium">Create account</h5>
+                    <h5 className="mb-4 text-[32px] font-medium leading-10">Create account</h5>
                     <p className="inline text-gray-600">Already have account?</p>&nbsp;
-                    <Link href={routes.signIn} className="text-primary font-medium">
+                    <Link href={routes.signIn} className="font-medium text-primary">
                         Log in
                     </Link>
                 </div>
             </div>
             <div className="space-y-5">
                 <div className="flex items-center gap-5">
-                    <div className="relative flex-1 flex flex-col">
+                    <div className="relative flex flex-1 flex-col">
                         <Input
                             defaultValue={state.full_name}
                             color="danger"
@@ -60,12 +60,12 @@ export function FormSignUp() {
                                     : 'focus-visible:border-primary focus-visible:ring-primary'
                             )}
                         />
-                        <p className="absolute top-full line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                        <p className="absolute top-full mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-red-500">
                             {state.errors?.full_name && state.errors.full_name[0]}
                         </p>
                     </div>
 
-                    <div className="relative flex-1 flex flex-col">
+                    <div className="relative flex flex-1 flex-col">
                         <Input
                             defaultValue={state.username}
                             name="username"
@@ -78,7 +78,7 @@ export function FormSignUp() {
                                     : 'focus-visible:border-primary focus-visible:ring-primary'
                             )}
                         />
-                        <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                        <p className="absolute bottom-0 top-full mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-red-500">
                             {state.errors?.username && state.errors.username[0]}
                         </p>
                     </div>
@@ -96,7 +96,7 @@ export function FormSignUp() {
                                 : 'focus-visible:border-primary focus-visible:ring-primary'
                         )}
                     />
-                    <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                    <p className="absolute bottom-0 top-full mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-red-500">
                         {state.errors?.email && state.errors.email[0]}
                     </p>
                 </div>
@@ -115,7 +115,7 @@ export function FormSignUp() {
                                 : 'focus-within:border-primary focus-within:ring-1 focus-within:ring-primary focus-visible:ring-primary'
                         )}
                     />
-                    <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                    <p className="absolute bottom-0 top-full mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-red-500">
                         {state.errors?.password && state.errors.password[0]}
                     </p>
                 </div>
@@ -134,7 +134,7 @@ export function FormSignUp() {
                                 : 'focus-within:border-primary focus-within:ring-1 focus-within:ring-primary focus-visible:ring-primary'
                         )}
                     />
-                    <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                    <p className="absolute bottom-0 top-full mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-red-500">
                         {state.errors?.confirmPassword && state.errors.confirmPassword[0]}
                     </p>
                 </div>
@@ -147,17 +147,17 @@ export function FormSignUp() {
                         className="size-5 border-primary-200 shadow-none"
                         required
                     />
-                    <label htmlFor={checkboxId} className="select-none cursor-pointer text-sm">
+                    <label htmlFor={checkboxId} className="cursor-pointer select-none text-sm">
                         I&#39;ve read and agree with your
                     </label>
                 </div>
                 &nbsp;
-                <Link href="/terms-and-services" className="text-primary text-sm hover:underline font-medium">
+                <Link href="/terms-and-services" className="text-sm font-medium text-primary hover:underline">
                     Terms of Services
                 </Link>
             </div>
             <Button type="submit" size="xl" className="group rounded-sm text-base font-semibold" isPending={isPending}>
-                Create account <LuArrowRight className="group-hover:translate-x-2 transition-all" />
+                Create account <LuArrowRight className="transition-all group-hover:translate-x-2" />
             </Button>
             <div className="space-y-4">
                 <p className="line-clamp-1 text-center text-sm text-gray-500">or</p>

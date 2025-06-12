@@ -1,5 +1,5 @@
 import { AuthAxios, BaseAxios } from '@/lib/axios';
-import { ApiResponse, DetailedRequest, SocialLink, User } from '@/types';
+import { ApiResponse, DetailedRequest, SocialLink } from '@/types';
 import { AxiosError } from 'axios';
 import Error from 'next/error';
 
@@ -22,9 +22,37 @@ export class WebsiteService {
         }
     }
 
-    public static async getCandidateSocialLinks(data: Pick<User, 'profileId'>) {
+    public static async getCandidateSocialLinks(params: { profileId: string }) {
         try {
-            const res = await baseAxios.get<ApiResponse<SocialLink[]>>(`/profile/${data.profileId}`);
+            const res = await baseAxios.get<ApiResponse<SocialLink[]>>(`/profile/${params.profileId}`);
+            return res.payload.value;
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                throw new Error({
+                    statusCode: Number(error.status || error.response?.status),
+                    title: error.response?.data.message,
+                });
+            }
+            throw error;
+        }
+    }
+    public static async getEmployerSocialLinks(params: { enterpriseId: string }) {
+        try {
+            const res = await baseAxios.get<ApiResponse<SocialLink[]>>(`/enterprise/${params.enterpriseId}`);
+            return res.payload.value;
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                throw new Error({
+                    statusCode: Number(error.status || error.response?.status),
+                    title: error.response?.data.message,
+                });
+            }
+            throw error;
+        }
+    }
+    public static async updateEmployerSocialLinks(data: DetailedRequest.UpdateEnterpriseSocialLinks) {
+        try {
+            const res = await authAxios.post<ApiResponse<null>>('/enterprise', data);
             return res.payload.value;
         } catch (error) {
             if (error instanceof AxiosError) {

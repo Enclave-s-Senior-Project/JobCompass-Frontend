@@ -1,5 +1,5 @@
 import { SidebarDashboard } from '@/components/custom-ui/sidebar-dashboard';
-import { Bookmark, BriefcaseBusiness, Layers, Settings, CircleUser, CirclePlus, NotebookText } from 'lucide-react';
+import { BriefcaseBusiness, Layers, Settings, CirclePlus, NotebookText } from 'lucide-react';
 
 export function SidebarDashboardEmployer() {
     const sidebarItems = [
@@ -7,11 +7,6 @@ export function SidebarDashboardEmployer() {
             href: '/employer-dashboard/overview',
             label: 'Overview',
             icon: <Layers />,
-        },
-        {
-            href: '/employer-dashboard/employers-profile',
-            label: 'Employers Profile',
-            icon: <CircleUser />,
         },
         {
             href: '/employer-dashboard/post-job',
@@ -24,12 +19,7 @@ export function SidebarDashboardEmployer() {
             icon: <BriefcaseBusiness />,
         },
         {
-            href: '/employer-dashboard/saved-candidates',
-            label: 'Saved Candidates',
-            icon: <Bookmark />,
-        },
-        {
-            href: '/employer-dashboard/plans-billing',
+            href: '/pricing-plans',
             label: 'Plans & Billing',
             icon: <NotebookText />,
         },

@@ -1,5 +1,111 @@
 'use client';
 
+const LoadingOnlyIcon = () => {
+    return (
+        <div className="fui-loading-default">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <style jsx>{`
+                .fui-loading-default {
+                    display: inline-block;
+                    position: relative;
+                    width: 80px;
+                    height: 80px;
+                }
+                .fui-loading-default div {
+                    position: absolute;
+                    width: 6px;
+                    height: 6px;
+                    background: #9dc1eb;
+                    border-radius: 50%;
+                    animation: lds-default 1.2s linear infinite;
+                }
+                .fui-loading-default div:nth-child(1) {
+                    animation-delay: 0s;
+                    top: 37px;
+                    left: 66px;
+                }
+                .fui-loading-default div:nth-child(2) {
+                    animation-delay: -0.1s;
+                    top: 22px;
+                    left: 62px;
+                }
+                .fui-loading-default div:nth-child(3) {
+                    animation-delay: -0.2s;
+                    top: 11px;
+                    left: 52px;
+                }
+                .fui-loading-default div:nth-child(4) {
+                    animation-delay: -0.3s;
+                    top: 7px;
+                    left: 37px;
+                }
+                .fui-loading-default div:nth-child(5) {
+                    animation-delay: -0.4s;
+                    top: 11px;
+                    left: 22px;
+                }
+                .fui-loading-default div:nth-child(6) {
+                    animation-delay: -0.5s;
+                    top: 22px;
+                    left: 11px;
+                }
+                .fui-loading-default div:nth-child(7) {
+                    animation-delay: -0.6s;
+                    top: 37px;
+                    left: 7px;
+                }
+                .fui-loading-default div:nth-child(8) {
+                    animation-delay: -0.7s;
+                    top: 52px;
+                    left: 11px;
+                }
+                .fui-loading-default div:nth-child(9) {
+                    animation-delay: -0.8s;
+                    top: 62px;
+                    left: 22px;
+                }
+                .fui-loading-default div:nth-child(10) {
+                    animation-delay: -0.9s;
+                    top: 66px;
+                    left: 37px;
+                }
+                .fui-loading-default div:nth-child(11) {
+                    animation-delay: -1s;
+                    top: 62px;
+                    left: 52px;
+                }
+                .fui-loading-default div:nth-child(12) {
+                    animation-delay: -1.1s;
+                    top: 52px;
+                    left: 62px;
+                }
+                @keyframes lds-default {
+                    0%,
+                    20%,
+                    80%,
+                    100% {
+                        transform: scale(1);
+                    }
+                    50% {
+                        transform: scale(1.5);
+                    }
+                }
+            `}</style>
+        </div>
+    );
+};
+
 const CompassLoadingQuick = ({ isLoading = true }) => {
     // Base transition style
     const transitionStyle = {
@@ -24,7 +130,7 @@ const CompassLoadingQuick = ({ isLoading = true }) => {
     return (
         <div className="flex flex-col items-center justify-center p-3" style={transitionStyle}>
             {/* Full Logo with Spinning Compass */}
-            <div className="w-64 relative mb-2">
+            <div className="relative mb-2 w-64">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100">
                     {/* Spinning Compass Icon */}
                     <g className="compass-spin">
@@ -94,11 +200,11 @@ const CompassLoadingQuick = ({ isLoading = true }) => {
             {/* Processing Text Section */}
             <div className="flex flex-col items-center text-center" style={textTransitionStyle}>
                 <div className="flex items-center">
-                    <span className="text-base font-normal text-primary message-cycle">Just a moment</span>
-                    <span className="flex space-x-1 ml-1">
-                        <span className="w-1 h-1 rounded-full bg-blue-500 dot-1" style={dotStyle}></span>
-                        <span className="w-1 h-1 rounded-full bg-blue-500 dot-2" style={dotStyle}></span>
-                        <span className="w-1 h-1 rounded-full bg-blue-500 dot-3" style={dotStyle}></span>
+                    <span className="message-cycle text-base font-normal text-primary">Just a moment</span>
+                    <span className="ml-1 flex space-x-1">
+                        <span className="dot-1 h-1 w-1 rounded-full bg-blue-500" style={dotStyle}></span>
+                        <span className="dot-2 h-1 w-1 rounded-full bg-blue-500" style={dotStyle}></span>
+                        <span className="dot-3 h-1 w-1 rounded-full bg-blue-500" style={dotStyle}></span>
                     </span>
                 </div>
             </div>
@@ -162,4 +268,51 @@ const CompassLoadingQuick = ({ isLoading = true }) => {
     );
 };
 
-export { CompassLoadingQuick };
+const DotLoading = () => {
+    return (
+        <div className="loader">
+            <style jsx>{`
+                /* HTML: <div class="loader"></div> */
+                .loader {
+                    width: 20px;
+                    aspect-ratio: 2;
+                    --_g: no-repeat radial-gradient(circle closest-side, #000 90%, #0000);
+                    background:
+                        var(--_g) 0% 50%,
+                        var(--_g) 50% 50%,
+                        var(--_g) 100% 50%;
+                    background-size: calc(100% / 3) 50%;
+                    animation: l3 1.2s infinite linear;
+                }
+                @keyframes l3 {
+                    20% {
+                        background-position:
+                            0% 0%,
+                            50% 50%,
+                            100% 50%;
+                    }
+                    40% {
+                        background-position:
+                            0% 100%,
+                            50% 0%,
+                            100% 50%;
+                    }
+                    60% {
+                        background-position:
+                            0% 50%,
+                            50% 100%,
+                            100% 0%;
+                    }
+                    80% {
+                        background-position:
+                            0% 50%,
+                            50% 50%,
+                            100% 100%;
+                    }
+                }
+            `}</style>
+        </div>
+    );
+};
+
+export { CompassLoadingQuick, LoadingOnlyIcon, DotLoading };

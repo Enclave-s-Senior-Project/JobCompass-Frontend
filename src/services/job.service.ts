@@ -2,6 +2,7 @@ import { AuthAxios, BaseAxios } from '@/lib/axios';
 import { ApiResponse, DetailedRequest, DetailedResponse, Job } from '@/types';
 import { AxiosError } from 'axios';
 import NextError from 'next/error';
+import { handleErrorApi } from '.';
 
 const axios = new BaseAxios('job');
 const authAxios = new AuthAxios('job');
@@ -9,7 +10,7 @@ const authAxios = new AuthAxios('job');
 export class JobService {
     public static async getAllJobs(data: DetailedRequest.ParamListJobsCredentials) {
         try {
-            const temp = await axios.get<ApiResponse<DetailedResponse.GetAllJobs>>('', { params: data });
+            const temp = await axios.get<ApiResponse<DetailedResponse.GetAllJobs>>('search', { params: data });
             return temp.payload.value;
         } catch (err) {
             if (err instanceof AxiosError) {
@@ -21,7 +22,6 @@ export class JobService {
             throw err;
         }
     }
-
     public static async getFavoriteJobs(data: DetailedRequest.FavoriteJobs) {
         try {
             const dataResponse = await authAxios.get<ApiResponse<DetailedResponse.FavoriteJobs>>('/wishlist', {
@@ -85,9 +85,103 @@ export class JobService {
         }
     }
 
-    public static async detailJob(id: string) {
+    public static async detailJob(id: string, data: DetailedRequest.CheckWishlist) {
         try {
-            const dataResponse = await authAxios.get<ApiResponse<Job>>(`/${id}`);
+            const dataResponse = await axios.get<ApiResponse<Job>>(`/${id}`, { params: data });
+            return dataResponse.payload.value;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
+
+    public static async findJobs(data: DetailedRequest.GetListJob) {
+        try {
+            const temp = await authAxios.get<ApiResponse<DetailedResponse.GetAllJobs>>('', { params: data });
+            return temp.payload.value;
+        } catch (err) {
+            handleErrorApi(err);
+        }
+    }
+
+    public static async updateJob(idJob: string, data: DetailedRequest.postJobCredentials) {
+        try {
+            const dataResponse = await authAxios.put<ApiResponse<null>>(`/${idJob}`, data);
+            return dataResponse.payload.value;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
+
+    public static async checkPosition(jobId: string, point: number) {
+        try {
+            const dataResponse = await authAxios.get<ApiResponse<DetailedResponse.CheckPosition>>(
+                `/${jobId}/estimate-rank`,
+                { params: { plusPoints: point } }
+            );
+            return dataResponse.payload;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
+
+    public static async changeStatusJob(idJob: string, data: DetailedRequest.ChangeStatusJob) {
+        try {
+            const tmp = await authAxios.patch<ApiResponse<null>>(`/${idJob}/status`, data);
+            return tmp?.payload?.value;
+        } catch (error) {
+            handleErrorApi(error);
+        }
+    }
+
+    public static async createRecentJob(data: DetailedRequest.CreateRecentJob) {
+        try {
+            const dataResponse = await axios.post<ApiResponse<null>>('/recent', data);
+            return dataResponse.payload.value;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
+    public static async closeJob(jobId: string) {
+        try {
+            const dataResponse = await authAxios.patch<ApiResponse<null>>(`/${jobId}/close`);
+            return dataResponse.payload.value;
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                throw new NextError({
+                    statusCode: Number(err.status || err.response?.status),
+                    title: err.response?.data.message,
+                });
+            }
+            throw err;
+        }
+    }
+    public static async openJob(jobId: string) {
+        try {
+            const dataResponse = await authAxios.patch<ApiResponse<null>>(`/${jobId}/open`);
             return dataResponse.payload.value;
         } catch (err) {
             if (err instanceof AxiosError) {

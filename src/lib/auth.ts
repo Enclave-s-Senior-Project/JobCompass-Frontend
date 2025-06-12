@@ -21,6 +21,26 @@ type Permissions = {
         dataType: null;
         action: 'access';
     };
+    markCandidates: {
+        dataType: null;
+        action: 'allowed';
+    };
+    hireCandidate: {
+        dataType: null;
+        action: 'hire';
+    };
+    navigationBar: {
+        dataType: null;
+        action: 'enterprise' | 'admin';
+    };
+    pricingPlans: {
+        dataType: null;
+        action: 'access';
+    };
+    adminDashboard: {
+        dataType: null;
+        action: 'access';
+    };
 };
 
 const ROLES = {
@@ -31,6 +51,16 @@ const ROLES = {
             delete: true,
             view: true,
         },
+        navigationBar: {
+            admin: true,
+            enterprise: true,
+        },
+        pricingPlans: {
+            access: true,
+        },
+        adminDashboard: {
+            access: true,
+        },
     },
     ENTERPRISE: {
         job: {
@@ -40,6 +70,18 @@ const ROLES = {
             view: true,
         },
         enterpriseDashboard: {
+            access: true,
+        },
+        markCandidates: {
+            allowed: true,
+        },
+        hireCandidate: {
+            hire: true,
+        },
+        navigationBar: {
+            enterprise: true,
+        },
+        pricingPlans: {
             access: true,
         },
     },
@@ -54,18 +96,21 @@ const ROLES = {
 } as const satisfies RolesWithPermissions;
 
 export function hasPermission<Resource extends keyof Permissions>(
-    user: User,
+    user: User | null,
     resource: Resource,
     action: Permissions[Resource]['action'],
     data?: Permissions[Resource]['dataType']
 ) {
-    return user.roles?.some((role) => {
-        const permission = (ROLES as RolesWithPermissions)[role][resource]?.[action];
-        if (permission == null) return false;
+    return (
+        user &&
+        user.roles?.some((role) => {
+            const permission = (ROLES as RolesWithPermissions)[role][resource]?.[action];
+            if (permission == null) return false;
 
-        if (typeof permission === 'boolean') return permission;
-        return data != null && permission(user, data);
-    });
+            if (typeof permission === 'boolean') return permission;
+            return data != null && permission(user, data);
+        })
+    );
 }
 
 export function getStoredTokenInfo() {
@@ -91,12 +136,17 @@ export function clearTokenInfo() {
     localStorage.removeItem('access_expires');
 }
 
-export function setLoginCookie() {
-    document.cookie = 'login=true; path=/';
+export function clearUserAndEnterpriseInfoLocalStorage() {
+    localStorage.removeItem('user');
+    localStorage.removeItem('enterprise');
+}
+
+export function setLoginCookie(expire: number) {
+    document.cookie = `login=true; path=/; Max-Age=${expire};`;
 }
 
 export function clearLoginCookie() {
-    document.cookie = 'login=false; path=/';
+    document.cookie = 'login=false; path=/;';
 }
 
 // USAGE:

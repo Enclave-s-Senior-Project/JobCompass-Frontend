@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { ArrowLeft, ArrowRight, MoreHorizontal } from 'lucide-react';
+import { memo } from 'react';
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { ButtonProps, buttonVariants } from '@/components/ui/button';
+import { Button, ButtonProps, buttonVariants } from '@/components/ui/button';
 import { Url } from 'next/dist/shared/lib/router/router';
 import Link from 'next/link';
 import { DetailedRequest, Meta } from '@/types';
@@ -44,8 +45,8 @@ const PaginationLink = ({ className, isActive, isNavigate, size = 'icon-lg', ...
                 variant: isActive ? 'primary' : isNavigate ? 'secondary' : 'ghost',
                 size,
             }),
-            'rounded-full min-h-12 min-w-12 shadow-none',
-            props.disabled ? 'opacity-60 pointer-events-none' : '',
+            'min-h-12 min-w-12 rounded-full shadow-none',
+            props.disabled ? 'pointer-events-none opacity-60' : '',
             className
         )}
         {...props}
@@ -62,7 +63,7 @@ const PaginationPrevious = ({ className, ...props }: React.ComponentProps<typeof
                 variant: 'secondary',
                 size: 'icon-lg',
             }),
-            'p-3 rounded-full shadow-none',
+            'rounded-full p-3 shadow-none',
             className
         )}
         {...props}
@@ -81,7 +82,7 @@ const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof Pag
                 variant: 'secondary',
                 size: 'icon-lg',
             }),
-            'p-3 rounded-full shadow-none',
+            'rounded-full p-3 shadow-none',
             className
         )}
         {...props}
@@ -101,89 +102,122 @@ PaginationEllipsis.displayName = 'PaginationEllipsis';
 
 const getPageNumbers = (meta: Meta) => {
     const rangeWithDots: Array<number | string> = [];
-    const currentPage = meta?.page;
-    const totalPages = meta?.pageCount;
+    const { page, pageCount } = meta;
 
-    // Always show first page
-    rangeWithDots.push(1);
-
-    if (currentPage <= 3) {
-        // Near start: show 2,3
-        for (let i = 2; i <= Math.min(3, totalPages - 1); i++) {
-            rangeWithDots.push(i);
-        }
-        if (totalPages > 4) {
-            rangeWithDots.push('ellipsis');
-        }
-    } else if (currentPage >= totalPages - 2) {
-        // Near end: show last 3 pages
-        if (totalPages > 4) {
-            rangeWithDots.push('ellipsis');
-        }
-        for (let i = Math.max(totalPages - 2, 2); i < totalPages; i++) {
-            rangeWithDots.push(i);
-        }
+    if (pageCount <= 5) {
+        for (let i = 1; i <= pageCount; i++) rangeWithDots.push(i);
     } else {
-        // Middle: show current page and one adjacent
-        rangeWithDots.push('ellipsis1');
-        rangeWithDots.push(currentPage);
-        rangeWithDots.push('ellipsis2');
-    }
-
-    // Always show last page if different from first
-    if (totalPages > 1) {
-        rangeWithDots.push(totalPages);
+        if (page > 3) rangeWithDots.push(1, 'ellipsis');
+        for (let i = Math.max(1, page - 1); i <= Math.min(page + 1, pageCount); i++) rangeWithDots.push(i);
+        if (page < pageCount - 2) rangeWithDots.push('ellipsis', pageCount);
     }
 
     return rangeWithDots;
 };
 
-const PrimaryPagination = ({
+const PrimaryPagination = memo(
+    ({
+        meta,
+        totalPages,
+        pagination,
+    }: {
+        meta: Meta;
+        pagination: DetailedRequest.Pagination;
+        totalPages: number | string;
+    }) => {
+        return (
+            <Pagination>
+                <PaginationContent>
+                    <PaginationItem className="mr-2">
+                        <PaginationPrevious
+                            href={`?page=${Number(meta?.page) - 1}${pagination.order ? `&order=${pagination.order}` : ''}${pagination.options ? `&option=${pagination.options}` : ''}`}
+                            disabled={!meta?.hasPreviousPage}
+                        />
+                    </PaginationItem>
+                    {getPageNumbers({ ...meta, pageCount: totalPages } as Meta).map((pageNum, index) =>
+                        pageNum === 'ellipsis1' || pageNum === 'ellipsis2' || pageNum === 'ellipsis' ? (
+                            <PaginationItem key={index}>
+                                <PaginationEllipsis />
+                            </PaginationItem>
+                        ) : (
+                            <PaginationItem key={index}>
+                                <PaginationLink
+                                    href={`?page=${pageNum}${pagination.order ? `&order=${pagination.order}` : ''}${pagination.options ? `&option=${pagination.options}` : ''}`}
+                                    isActive={meta?.page === pageNum}
+                                >
+                                    {pageNum}
+                                </PaginationLink>
+                            </PaginationItem>
+                        )
+                    )}
+                    <PaginationItem className="ml-2">
+                        <PaginationNext
+                            href={`?page=${Number(meta?.page) + 1}${pagination.order ? `&order=${pagination.order}` : ''}${pagination.options ? `&option=${pagination.options}` : ''}`}
+                            disabled={!meta?.hasNextPage}
+                        />
+                    </PaginationItem>
+                </PaginationContent>
+            </Pagination>
+        );
+    }
+);
+PrimaryPagination.displayName = 'PrimaryPagination';
+
+const SimplePagination = ({
     meta,
-    totalPages,
-    pagination,
+    onPageChange,
 }: {
     meta: Meta;
-    pagination: DetailedRequest.Pagination;
-    totalPages: number | string;
+    onPageChange: React.Dispatch<React.SetStateAction<number>>;
 }) => {
+    const handleNextPage = () => {
+        if (meta.hasNextPage) {
+            onPageChange((page) => page + 1);
+        }
+    };
+
+    const handleBackPage = () => {
+        if (meta.hasPreviousPage) {
+            onPageChange((page) => page - 1);
+        }
+    };
+
     return (
-        <Pagination>
-            <PaginationContent>
-                <PaginationItem className="mr-2">
-                    <PaginationPrevious
-                        href={`?page=${Number(meta?.page) - 1}&order=${pagination.order}&option=${pagination.option}`}
-                        disabled={!meta?.hasPreviousPage}
-                    />
+        <Pagination className="justify-start">
+            <PaginationContent className="gap-1">
+                <PaginationItem>
+                    <Button
+                        size="icon-md"
+                        variant="outline-secondary"
+                        onClick={handleBackPage}
+                        disabled={!meta.hasPreviousPage}
+                    >
+                        <ChevronLeft />
+                    </Button>
                 </PaginationItem>
-                {getPageNumbers({ ...meta, pageCount: totalPages } as Meta).map((pageNum, index) =>
-                    pageNum === 'ellipsis1' || pageNum === 'ellipsis2' || pageNum === 'ellipsis' ? (
-                        <PaginationItem key={index}>
-                            <PaginationEllipsis />
-                        </PaginationItem>
-                    ) : (
-                        <PaginationItem key={index}>
-                            <PaginationLink
-                                href={`?page=${pageNum}&order=${pagination.order}&option=${pagination.option}`}
-                                isActive={meta?.page === pageNum}
-                            >
-                                {pageNum}
-                            </PaginationLink>
-                        </PaginationItem>
-                    )
-                )}
-                <PaginationItem className="ml-2">
-                    <PaginationNext
-                        href={`?page=${Number(meta?.page) + 1}&order=${pagination.order}&option=${pagination.option}`}
-                        disabled={!meta?.hasNextPage}
-                    />
+                <PaginationItem>
+                    <Button
+                        size="icon-md"
+                        variant="outline-secondary"
+                        onClick={handleNextPage}
+                        disabled={!meta.hasNextPage}
+                    >
+                        <ChevronRight />
+                    </Button>
+                </PaginationItem>
+                <PaginationItem>
+                    <p className="text-nowrap text-sm italic text-gray-600">
+                        {meta.page} of {meta.pageCount} pages
+                    </p>
                 </PaginationItem>
             </PaginationContent>
         </Pagination>
     );
 };
+SimplePagination.displayName = 'SimplePagination';
 
 export {
+    getPageNumbers,
     Pagination,
     PaginationContent,
     PaginationLink,
@@ -191,6 +225,6 @@ export {
     PaginationPrevious,
     PaginationNext,
     PaginationEllipsis,
-    getPageNumbers,
     PrimaryPagination,
+    SimplePagination,
 };

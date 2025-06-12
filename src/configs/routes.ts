@@ -4,4 +4,5 @@ export const routes = {
     signUp: '/sign-up',
     forgetPassword: '/forget-password',
     verifyEmail: '/email-verify',
+    postJob: '/employer-dashboard/post-job',
 };

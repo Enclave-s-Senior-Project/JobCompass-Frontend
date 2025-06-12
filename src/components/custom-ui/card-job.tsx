@@ -1,9 +1,10 @@
 'use client';
 import { Job } from '@/types';
 import { motion } from 'framer-motion';
-import { MapPin } from 'lucide-react';
+import { Building2, Calendar, HandCoins, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { motionVariant } from '@/lib/motion-variants';
+import { ListTag } from './list-tags';
 
 export default function CardJob(props: { job: Job }) {
     const { job } = props;
@@ -11,55 +12,79 @@ export default function CardJob(props: { job: Job }) {
         job.addresses?.[0]?.city && job.addresses?.[0]?.country
             ? `${job.addresses[0].city}, ${job.addresses[0].country}`
             : 'Unknown location';
+    const infoItems = [];
 
+    if (job.type) {
+        infoItems.push(
+            <div key="type" className="flex flex-row items-center gap-1">
+                <Calendar className="h-4 w-4" /> <span>{job.type}</span>
+            </div>
+        );
+    }
+
+    if (job.lowestWage && job.highestWage) {
+        infoItems.push(
+            <div key="wage" className="flex flex-row items-center gap-1">
+                <HandCoins className="h-4 w-4" />
+                <span>
+                    ${job.lowestWage}-${job.highestWage}
+                </span>
+            </div>
+        );
+    }
+
+    if (job?.enterprise?.name) {
+        infoItems.push(
+            <div key="enterprise" className="flex flex-row items-center gap-1">
+                <Building2 className="h-4 w-4" /> {job.enterprise.name}
+            </div>
+        );
+    }
     return (
-        <Link href={`/single-job?id=${job.jobId}`}>
+        <Link href={`/single-job/${job.jobId}`}>
             <motion.div
-                className="bg-white rounded-3xl p-6 border hover:border-[#0A65CC] transition-shadow flex flex-col justify-center xl:w-[424px] xl:h-[204px]"
-                variants={motionVariant.cardVariants}
+                className="flex h-[204px] w-[414px] flex-col justify-center rounded-md border-2 bg-white p-6 transition-shadow hover:border-[#0A65CC] sm:h-[180px] sm:w-[350px] md:h-[200px] md:w-[400px] lg:h-[204px] lg:w-[414px] xl:h-[204px] xl:w-[414px]"
+                variants={motionVariant.containerVariants}
                 initial="hidden"
                 animate="visible"
                 whileHover="hover"
             >
-                <div className="flex items-start justify-between mb-4 ">
+                <div className="mb-4 flex items-start justify-between">
                     <div className="flex items-start gap-4">
-                        <div className=" relative rounded-lg overflow-hidden border-none flex-shrink-0 bg-gray-50">
+                        <div className="relative flex-shrink-0 overflow-hidden rounded-lg border-none bg-gray-50">
                             <img
-                                src={job.introImg || 'https://www.foxsports.com/soccer/cristiano-ronaldo-player'}
-                                alt={job.enterprise.name || 'Company logo'}
+                                src={job.enterprise?.logoUrl || ''}
                                 width={48}
                                 height={48}
-                                className="object-contain size-14 rounded-sm"
+                                className="h-14 w-14 rounded-sm object-cover"
+                                alt={job.enterprise?.name}
                             />
                         </div>
 
                         <div className="gap-4">
-                            <div className="flex items-center gap-2 mb-1">
-                                <h3 className="font-medium">{job.enterprise.name}</h3>
-                                {/* {job.featured && (
-                                    <span className="text-xs bg-red-50 text-red-500 px-2 py-1 rounded-full">
-                                        Featured
-                                    </span>
-                                )} */}
-                                <span className="text-xs bg-red-50 text-red-500 px-2 py-1 rounded-full">Featured</span>
+                            <div className="mb-1 flex min-h-[20px] items-center gap-2">
+                                <ListTag tag={job?.tags ?? []} />
                             </div>
                             <div className="flex items-center text-sm text-gray-500">
-                                <MapPin className="h-4 w-4 mr-1 flex-shrink-0 text-[#939AAD]" />
-                                <span className=" text-[#939AAD]">{addresses}</span>
+                                <MapPin className="mr-1 h-4 w-4 flex-shrink-0 text-[#939AAD]" />
+                                <span className="text-[#939AAD]">{addresses}</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="space-y-[8px] ">
-                    <h2 className=" text-blue-600 text-[20px]/[32px] font-medium">{job.name}</h2>
-                    <div className="flex items-center gap-2 text-sm text-[#636A80]">
-                        <span>{job.type}</span>
-                        <span>•</span>
-                        <span>
-                            ${job.lowestWage}-${job.highestWage}
-                        </span>
-                    </div>
+                <div className="space-y-[8px]">
+                    <h2 className="text-[20px]/[32px] font-medium text-blue-600">{job.name}</h2>
+                    {infoItems.length > 0 && (
+                        <div className="flex items-center gap-2 text-sm text-[#636A80]">
+                            {infoItems.map((item, index) => (
+                                <span key={index} className="flex items-center gap-2">
+                                    {index > 0 && <span> | </span>}
+                                    {item}
+                                </span>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </motion.div>
         </Link>

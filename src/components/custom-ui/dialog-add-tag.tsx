@@ -5,7 +5,7 @@ import { Button } from '../ui/button';
 import { ChevronRight } from 'lucide-react';
 import { ContentAddTag } from './content-dialog-add-tag';
 
-export function DialogAddTag() {
+export function DialogAddTag({ refetch }: { refetch: () => void }) {
     const [open, setOpen] = useState(false);
 
     return (
@@ -13,7 +13,7 @@ export function DialogAddTag() {
             <Button
                 type="button"
                 onClick={() => setOpen(true)}
-                className="flex-1 md:flex-none w-[248px] h-12 text-[16px]"
+                className="h-12 w-full px-4 text-[16px] sm:w-auto"
                 variant="outline"
             >
                 Add Tag
@@ -26,7 +26,7 @@ export function DialogAddTag() {
                     </div>
                 </DialogHeader>
                 <div className="space-y-6 pt-4">
-                    <ContentAddTag setOpen={setOpen} />
+                    <ContentAddTag setOpen={setOpen} refetch={refetch} />
                 </div>
             </DialogContent>
         </Dialog>

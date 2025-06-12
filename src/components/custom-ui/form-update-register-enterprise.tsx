@@ -2,17 +2,20 @@
 import { useActionState, useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import { ChevronRight } from 'lucide-react';
-import { updateRegisterEnterprice } from '@/lib/action';
-import { toast } from 'sonner';
+import { updateRegisterEnterprise } from '@/lib/action';
+import { toast } from '@/lib/toast';
 import { successKeyMessage } from '@/lib/message-keys';
 import { Input } from '../ui/input';
 import clsx from 'clsx';
 import { ImageInput } from './image-input';
 import RichTextEditor from './rich-text-editor';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup } from '../ui/select';
-import { Enterprise } from '@/types';
+import { Categories, Enterprise } from '@/types';
 import { EnterpriseService } from '@/services/enterprises.service';
+import MultiSelectCategoriesSearchInput from './select-categories';
+import { languagesData } from '@/lib/data/languages.data';
 
+const localCountries = Object.entries(languagesData).map(([key]) => key);
 export function FormUpdateRegisterEnterprises(props: {
     setOpen: (value: boolean) => void;
     enterprises: Enterprise | null;
@@ -20,7 +23,8 @@ export function FormUpdateRegisterEnterprises(props: {
     const { setOpen, enterprises } = props;
     const [enterprise, setEnterprise] = useState<Enterprise | null>(enterprises);
     const [checkLogo, setCheckLogo] = useState(false);
-    const [state, onSubmit, isPending] = useActionState(updateRegisterEnterprice, {
+    const [categories, setCategories] = useState<Categories[]>([]);
+    const [state, onSubmit, isPending] = useActionState(updateRegisterEnterprise, {
         id: enterprise?.enterpriseId,
         logo: enterprise?.logoUrl || '',
         logoUrl: enterprise?.logoUrl || '',
@@ -31,21 +35,35 @@ export function FormUpdateRegisterEnterprises(props: {
         size: enterprise?.teamSize,
         foundedIn: enterprise?.foundedIn,
         organizationType: enterprise?.organizationType,
-        industryType: enterprise?.industryType,
+        categories: enterprise?.categories,
         bio: enterprise?.bio,
-        enterpriseBenefits: enterprise?.enterpriseBenefits,
+        enterpriseBenefits: enterprise?.benefit,
         description: enterprise?.description,
         errors: {},
         success: false,
     });
+    const [country, setCountry] = useState(state.country);
+    const [city, setCity] = useState(state.city);
+    const [street, setStreet] = useState(state.street);
+    const [zipCode, setZipCode] = useState(state.zipCode);
     const [enterpriseBenefits, setEnterpriseBenefits] = useState(state.enterpriseBenefits);
     const [description, setDescription] = useState(state.description);
     const fetchEnterpriseData = async () => {
         const updatedEnterprise = await EnterpriseService.checkEnterprise();
         if (updatedEnterprise?.value) {
+            const fetchedCategories = updatedEnterprise.value.categories || [];
+            setCategories(fetchedCategories);
             setEnterprise(updatedEnterprise.value);
+            setCountry(updatedEnterprise?.value?.addresses?.[0].country);
+            setCity(updatedEnterprise?.value?.addresses?.[0].city);
+            setStreet(updatedEnterprise?.value?.addresses?.[0].street);
+            setZipCode(updatedEnterprise?.value?.addresses?.[0].zipCode);
         }
     };
+
+    useEffect(() => {
+        fetchEnterpriseData();
+    }, []);
 
     useEffect(() => {
         if (state.errors?.logo) {
@@ -55,7 +73,7 @@ export function FormUpdateRegisterEnterprises(props: {
         }
         if (state.success) {
             fetchEnterpriseData();
-            toast.success(successKeyMessage.UPDATE_REGISTER_ENTERPRISE_SUCCESSFULL);
+            toast.success(successKeyMessage.UPDATE_REGISTER_ENTERPRISE_SUCCESSFUL);
             setOpen(false);
         }
     }, [state.success, state.errors]);
@@ -73,20 +91,27 @@ export function FormUpdateRegisterEnterprises(props: {
             action={(formData) => {
                 formData.set('description', description);
                 formData.set('enterpriseBenefits', enterpriseBenefits);
+                formData.set('country', country);
+                formData.set('city', city);
+                formData.set('street', street);
+                formData.set('zipCode', zipCode);
+                categories.forEach((categories) => {
+                    formData.append('categories[]', categories.categoryId);
+                });
                 return onSubmit(formData);
             }}
         >
             <div className="flex flex-row gap-7">
                 <div className="w-24 md:w-40 lg:w-60">
-                    <label className="text-sm text-gray-900 cursor-default">Profile Picture</label>
+                    <label className="cursor-default text-sm text-gray-900">Profile Picture</label>
                     <ImageInput name="logo" initImage={state.logo} isAvatar={true} isError={checkLogo} />
-                    <p className="text-red-500 text-[12px] font-medium">
+                    <p className="text-[12px] font-medium text-red-500">
                         {Array.isArray(state.errors?.logo) ? state.errors.logo[0] : state.errors?.logo}
                     </p>
                 </div>
                 <div className="space-y-5">
                     <div className="relative col-span-1">
-                        <label className="text-sm text-gray-900 cursor-default">Enterprise name</label>
+                        <label className="cursor-default text-sm text-gray-900">Enterprise name</label>
                         <Input
                             defaultValue={state.name}
                             name="name"
@@ -97,13 +122,13 @@ export function FormUpdateRegisterEnterprises(props: {
                                     : 'focus-visible:border-primary focus-visible:ring-primary'
                             )}
                         />
-                        <p className="text-red-500 text-[12px] font-medium">
+                        <p className="text-[12px] font-medium text-red-500">
                             {state.errors?.name && state.errors.name[0]}
                         </p>
                     </div>
-                    <div className="flex flex-row gap-3 relative col-span-1">
+                    <div className="relative col-span-1 flex flex-row gap-3">
                         <div className="w-1/2">
-                            <label className="text-sm text-gray-900 cursor-default">Phone number</label>
+                            <label className="cursor-default text-sm text-gray-900">Phone number</label>
                             <Input
                                 defaultValue={state.phone}
                                 name="phone"
@@ -114,12 +139,12 @@ export function FormUpdateRegisterEnterprises(props: {
                                         : 'focus-visible:border-primary focus-visible:ring-primary'
                                 )}
                             />
-                            <p className="text-red-500 text-[12px] font-medium">
+                            <p className="text-[12px] font-medium text-red-500">
                                 {state.errors?.phone && state.errors.phone[0]}
                             </p>
                         </div>
                         <div className="w-1/2">
-                            <label className="text-sm text-gray-900 cursor-default">Email</label>
+                            <label className="cursor-default text-sm text-gray-900">Email</label>
                             <Input
                                 defaultValue={state.email}
                                 name="email"
@@ -130,14 +155,14 @@ export function FormUpdateRegisterEnterprises(props: {
                                         : 'focus-visible:border-primary focus-visible:ring-primary'
                                 )}
                             />
-                            <p className="text-red-500 text-[12px] font-medium">
+                            <p className="text-[12px] font-medium text-red-500">
                                 {state.errors?.email && state.errors.email[0]}
                             </p>
                         </div>
                     </div>
-                    <div className="flex flex-row gap-3 relative col-span-1">
+                    <div className="relative col-span-1 flex flex-row gap-3">
                         <div className="w-1/2">
-                            <label className="text-sm text-gray-900 cursor-default">Company vision</label>
+                            <label className="cursor-default text-sm text-gray-900">Company vision</label>
                             <Input
                                 defaultValue={state.vision}
                                 name="vision"
@@ -148,32 +173,114 @@ export function FormUpdateRegisterEnterprises(props: {
                                         : 'focus-visible:border-primary focus-visible:ring-primary'
                                 )}
                             />
-                            <p className="text-red-500 text-[12px] font-medium">
+                            <p className="text-[12px] font-medium text-red-500">
                                 {state.errors?.vision && state.errors.vision[0]}
                             </p>
                         </div>
                         <div className="w-1/2">
-                            <label className="text-sm text-gray-900 cursor-default">Team size</label>
-                            <Input
-                                defaultValue={state.size}
-                                name="size"
-                                className={clsx(
-                                    'h-12 rounded-sm',
-                                    state.errors?.size
-                                        ? 'border-2 border-danger ring-danger '
-                                        : 'focus-visible:border-primary focus-visible:ring-primary'
-                                )}
-                            />
-                            <p className="text-red-500 text-[12px] font-medium">
+                            <label className="cursor-default text-sm text-gray-900">Team size</label>
+                            <Select name="size" defaultValue={state.size}>
+                                <SelectTrigger
+                                    className={clsx(
+                                        'h-12 rounded-sm text-base',
+                                        state.errors?.size
+                                            ? 'border-2 border-danger focus:border-danger focus:ring-0'
+                                            : 'focus:border-primary focus:ring-primary'
+                                    )}
+                                >
+                                    <SelectValue placeholder="Select..." className="text-[#767F8C]" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="1-10">1-10</SelectItem>
+                                        <SelectItem value="11-50">11-50</SelectItem>
+                                        <SelectItem value="51-200">51-200</SelectItem>
+                                        <SelectItem value="200+">200+</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                            <p className="text-[12px] font-medium text-red-500">
                                 {state.errors?.size && state.errors.size[0]}
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="flex flex-row gap-3 relative col-span-1">
+            <div className="col-span-4">
+                <label className="cursor-default text-sm text-gray-900">Address</label>
+                <div className="mt-2 grid grid-cols-4 gap-4">
+                    <div>
+                        <Select name="country" value={country}>
+                            <SelectTrigger className="h-12 rounded-sm border text-base focus:border-primary focus:ring-1 focus:ring-primary">
+                                <SelectValue placeholder="Select a country" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {localCountries.map((country) => (
+                                    <SelectItem key={country} value={country}>
+                                        {country}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <p className="min-h-5 text-xs text-red-500">
+                            {state.errors?.country && state.errors.country[0]}
+                        </p>
+                    </div>
+                    <div>
+                        <Select name="city" value={city}>
+                            <SelectTrigger className="h-12 rounded-sm border text-base focus:border-primary focus:ring-1 focus:ring-primary">
+                                <SelectValue placeholder="Select a city" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {languagesData[country] &&
+                                    Object.entries(languagesData[country].cities).map(([index, city]) => (
+                                        <SelectItem key={index} value={city}>
+                                            {city}
+                                        </SelectItem>
+                                    ))}
+                            </SelectContent>
+                        </Select>
+                        <p className="min-h-5 text-xs text-red-500">{state.errors?.city && state.errors.city[0]}</p>
+                    </div>
+                    <div>
+                        <Input
+                            name="street"
+                            placeholder="Street"
+                            type="text"
+                            value={street}
+                            onChange={(e) => setStreet(e.target.value)}
+                            className={clsx(
+                                'h-12 rounded-sm',
+                                state.errors?.street
+                                    ? 'border-2 border-danger ring-danger'
+                                    : 'focus-visible:border-primary focus-visible:ring-primary'
+                            )}
+                        />
+                        <p className="min-h-5 text-xs text-red-500">{state.errors?.street && state.errors.street[0]}</p>
+                    </div>
+                    <div>
+                        <Input
+                            name="zipCode"
+                            placeholder="Zip Code"
+                            type="text"
+                            value={zipCode}
+                            onChange={(e) => setZipCode(e.target.value)}
+                            className={clsx(
+                                'h-12 rounded-sm',
+                                state.errors?.zipCode
+                                    ? 'border-2 border-danger ring-danger'
+                                    : 'focus-visible:border-primary focus-visible:ring-primary'
+                            )}
+                        />
+                        <p className="min-h-5 text-xs text-red-500">
+                            {state.errors?.zipCode && state.errors.zipCode[0]}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div className="relative col-span-1 flex flex-row gap-3">
                 <div className="w-1/2">
-                    <label className="text-sm text-gray-900 cursor-default">Founded in</label>
+                    <label className="cursor-default text-sm text-gray-900">Founded in</label>
                     <Input
                         defaultValue={state.foundedIn}
                         type="date"
@@ -185,16 +292,16 @@ export function FormUpdateRegisterEnterprises(props: {
                                 : 'focus-visible:border-primary focus-visible:ring-primary'
                         )}
                     />
-                    <p className="text-red-500 text-[12px] font-medium">
+                    <p className="text-[12px] font-medium text-red-500">
                         {state.errors?.foundedIn && state.errors.foundedIn[0]}
                     </p>
                 </div>
                 <div className="w-1/2">
-                    <label className="text-sm text-gray-900 cursor-default">Organization type</label>
+                    <label className="cursor-default text-sm text-gray-900">Organization type</label>
                     <Select name="organizationType" defaultValue={state.organizationType}>
                         <SelectTrigger
                             className={clsx(
-                                'h-12 text-base rounded-sm',
+                                'h-12 rounded-sm text-base',
                                 state.errors?.organizationType
                                     ? 'border-2 border-danger focus:border-danger focus:ring-0'
                                     : 'focus:border-primary focus:ring-primary'
@@ -211,64 +318,57 @@ export function FormUpdateRegisterEnterprises(props: {
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-                    <p className="text-red-500 text-[12px] font-medium">
+                    <p className="text-[12px] font-medium text-red-500">
                         {state.errors?.organizationType && state.errors.organizationType[0]}
                     </p>
                 </div>
             </div>
-            <div className="flex flex-row gap-3 relative col-span-1">
+            <div className="relative col-span-1 flex flex-row gap-3">
                 <div className="w-1/2">
-                    <label className="text-sm text-gray-900 cursor-default">Industry type</label>
-                    <Input
-                        defaultValue={state.industryType}
-                        name="industryType"
-                        className={clsx(
-                            'h-12 rounded-sm',
-                            state.errors?.industryType
-                                ? 'border-2 border-danger ring-danger'
-                                : 'focus-visible:border-primary focus-visible:ring-primary'
-                        )}
-                    />
-                    <p className="text-red-500 text-[12px] font-medium">
-                        {state.errors?.industryType && state.errors.industryType[0]}
-                    </p>
-                </div>
-                <div className="w-1/2">
-                    <label className="text-sm text-gray-900 cursor-default">Bio </label>
+                    <label className="cursor-default text-sm text-gray-900">Bio </label>
                     <Input
                         defaultValue={state.bio}
                         name="bio"
                         className={clsx(
                             'h-12 rounded-sm',
                             state.errors?.bio
-                                ? 'border-2 border-danger ring-danger '
+                                ? 'border-2 border-danger ring-danger'
                                 : 'focus-visible:border-primary focus-visible:ring-primary'
                         )}
                     />
-                    <p className="text-red-500 text-[12px] font-medium">{state.errors?.bio && state.errors.bio[0]}</p>
+                    <p className="text-[12px] font-medium text-red-500">{state.errors?.bio && state.errors.bio[0]}</p>
+                </div>
+                <div className="w-1/2">
+                    <label className="cursor-default text-sm text-gray-900">Category type</label>
+                    <MultiSelectCategoriesSearchInput
+                        onChange={(newTagIds: Categories[]) => setCategories(newTagIds)}
+                        error={state.errors?.category}
+                        defaultValue={categories || []}
+                    />
+                    <p className="text-[12px] font-medium text-red-500">
+                        {state.errors?.category && state.errors.category[0]}
+                    </p>
                 </div>
             </div>
             <div className="relative col-span-1">
-                <label className="text-sm text-gray-900 cursor-default">Benefits</label>
+                <label className="cursor-default text-sm text-gray-900">Benefits</label>
                 <RichTextEditor
                     onChange={handleEnterpriseBenefits}
-                    placement="inside-bottom"
                     initialContent={enterpriseBenefits}
                     hasError={!!state.errors?.enterpriseBenefits}
                 />
-                <p className=" text-red-500 text-[12px] font-medium ">
+                <p className="text-[12px] font-medium text-red-500">
                     {state.errors?.enterpriseBenefits && state.errors.enterpriseBenefits[0]}
                 </p>
             </div>
             <div className="relative col-span-1">
-                <label className="text-sm text-gray-900 cursor-default">Description</label>
+                <label className="cursor-default text-sm text-gray-900">Description</label>
                 <RichTextEditor
                     onChange={handleDescription}
-                    placement="inside-bottom"
                     initialContent={description}
                     hasError={!!state.errors?.description}
                 />
-                <p className=" text-red-500 text-[12px] font-medium ">
+                <p className="text-[12px] font-medium text-red-500">
                     {state.errors?.description && state.errors.description[0]}
                 </p>
             </div>
@@ -277,7 +377,7 @@ export function FormUpdateRegisterEnterprises(props: {
                 <Button
                     type="reset"
                     variant="secondary"
-                    className="w-[102px] h-[48px] text-[#0A65CC] bg-[#E7F0FA]"
+                    className="h-[48px] w-[102px] bg-[#E7F0FA] text-[#0A65CC]"
                     onClick={() => setOpen(false)}
                 >
                     Cancel
@@ -285,10 +385,10 @@ export function FormUpdateRegisterEnterprises(props: {
                 <Button
                     type="submit"
                     isPending={isPending}
-                    className="group w-[168px] h-[48px] bg-[#0A65CC] text-[#FFFFFF]"
+                    className="group h-[48px] w-[168px] bg-[#0A65CC] text-[#FFFFFF]"
                 >
                     Update
-                    <ChevronRight className="group-hover:translate-x-2 transition-all ml-2 h-4 w-4" />
+                    <ChevronRight className="ml-2 h-4 w-4 transition-all group-hover:translate-x-2" />
                 </Button>
             </div>
         </form>

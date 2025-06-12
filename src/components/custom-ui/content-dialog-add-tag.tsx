@@ -3,13 +3,13 @@ import { useActionState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { ChevronRight } from 'lucide-react';
 import { addTag } from '@/lib/action';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { successKeyMessage } from '@/lib/message-keys';
 import { Input } from '../ui/input';
 import clsx from 'clsx';
 
-export function ContentAddTag(props: { setOpen: (value: boolean) => void }) {
-    const { setOpen } = props;
+export function ContentAddTag(props: { setOpen: (value: boolean) => void; refetch: () => void }) {
+    const { setOpen, refetch } = props;
     const [state, onSubmit, isPending] = useActionState(addTag, {
         tagName: '',
         errors: {},
@@ -18,10 +18,11 @@ export function ContentAddTag(props: { setOpen: (value: boolean) => void }) {
 
     useEffect(() => {
         if (state.errors?.name) {
-            toast.error(state.errors.name[0]);
+            toast.error('Oops! Something went wrong');
         }
         if (state.success) {
-            toast.success(successKeyMessage.APPLY_JOB_SUCCESSFULL);
+            toast.success(successKeyMessage.APPLY_JOB_SUCCESSFUL);
+            refetch();
             setOpen(false);
         }
     }, [state.success, state.errors]);
@@ -38,19 +39,19 @@ export function ContentAddTag(props: { setOpen: (value: boolean) => void }) {
                             : 'focus-visible:border-primary focus-visible:ring-primary'
                     )}
                 />
-                <p className="text-red-500 text-[12px] font-medium">{state.errors?.name && state.errors.name[0]}</p>
+                <p className="text-[12px] font-medium text-red-500">{state.errors?.name && state.errors.name[0]}</p>
             </div>
 
             <div className="flex justify-between gap-3">
                 <Button
                     type="button"
                     variant="outline"
-                    className="w-[102px] h-[48px] text-[#0A65CC] bg-[#E7F0FA]"
+                    className="h-[48px] w-[102px] bg-[#E7F0FA] text-[#0A65CC]"
                     onClick={() => setOpen(false)}
                 >
                     Cancel
                 </Button>
-                <Button type="submit" isPending={isPending} className="w-[168px] h-[48px] bg-[#0A65CC] text-[#FFFFFF]">
+                <Button type="submit" isPending={isPending} className="h-[48px] w-[168px] bg-[#0A65CC] text-[#FFFFFF]">
                     Add Tag
                     <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>

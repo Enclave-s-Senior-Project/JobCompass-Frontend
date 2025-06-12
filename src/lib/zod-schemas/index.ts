@@ -4,21 +4,25 @@ const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
 const signUpSchema = z
     .object({
-        full_name: z.string().min(1, 'Full name is required'),
+        full_name: z
+            .string()
+            .min(1, 'Full name is required')
+            .regex(/^[A-Z][a-zA-Z'’-]+(?: [A-Z][a-zA-Z'’-]+)*$/, 'Full name is invalid'),
         username: z
             .string()
+            .min(1, 'Username is required')
             .min(4, 'Username must be at least 4 characters')
-            .max(20, 'Username must be at most 20 characters.'),
+            .max(20, 'Username must be at most 20 characters'),
         email: z.string().min(1, 'Email is required').email('Invalid email'),
         password: z
             .string()
-            .min(1, 'New password is required')
+            .min(1, 'Password is required')
             .max(32, 'Password must be at most 32 characters')
             .regex(
                 passwordRegex,
                 'Password must be at least 8 characters with uppercase, number, and special character'
             ),
-        confirmPassword: z.string().min(8, 'Confirm Password is required'),
+        confirmPassword: z.string().min(1, 'Confirm password is required'),
     })
     .refine((data) => data.password === data.confirmPassword, {
         message: 'Confirm password does not match',
@@ -60,41 +64,48 @@ const resetPasswordSchema = z
     });
 
 const applyJobCoverLetterSchema = z.object({
+    selectedCv: z
+        .string({
+            required_error: 'CV is required',
+        })
+        .min(1, 'CV is required'),
     coverLetter: z.string().min(1, 'Cover letter is required'),
 });
-
 const updatePersonalProfile = z.object({
     fullname: z.string().min(1, 'Full name is required'),
-    phone: z.string().regex(/^\+?[0-9]{7,15}$/, 'Phone is invalid'),
+    phone: z
+        .string()
+        .regex(/^\+?[0-9]{7,15}$/, 'Phone is invalid')
+        .optional()
+        .or(z.literal('')),
+    maritalStatus: z.enum(['ALONE', 'MARRIED'], { message: 'Marital status is invalid' }).nullable().optional(),
+    dateOfBirth: z
+        .string()
+        .refine((date) => new Date(date).getTime() <= Date.now(), { message: 'Your birthday cannot be in the future' })
+        .refine(
+            (date) => {
+                const birthDate = new Date(date);
+                const today = new Date();
+
+                if (isNaN(birthDate.getTime())) return false; // Invalid date check
+
+                const age =
+                    today.getFullYear() -
+                    birthDate.getFullYear() -
+                    (today < new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate()) ? 1 : 0);
+                return age >= 18;
+            },
+            { message: 'You must be at least 18 years old' }
+        )
+        .nullable()
+        .optional(),
 });
 
 const updateCandidateProfile = z.object({
-    nationality: z.string().min(1, 'Nationality is required'),
-    dateOfBirth: z.string().refine(
-        (date) => {
-            const today = new Date();
-            const birthDate = new Date(date);
-
-            // Calculate age
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const monthDiff = today.getMonth() - birthDate.getMonth();
-            const dayDiff = today.getDate() - birthDate.getDate();
-
-            // Adjust age if birthday hasn't occurred this year
-            if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-                age--;
-            }
-
-            return age >= 18;
-        },
-        {
-            message: 'You must be at least 18 years old',
-        }
-    ),
+    nationality: z.string(),
     gender: z.enum(['FEMALE', 'MALE'], { message: 'Gender is required' }),
-    maritalStatus: z.enum(['ALONE', 'MARRIED'], { message: 'Marital status is required' }),
-    introduction: z.string().min(1, 'Introduction is required'),
 });
+
 const postJobSchema = z
     .object({
         title: z
@@ -124,7 +135,10 @@ const postJobSchema = z
         description: z.string().min(20, 'Description is required and must be at least 20 characters'),
         responsibilities: z.string().min(20, 'Responsibility is required and must be at least 20 characters'),
         type: z.string().max(50).optional(),
-        experience: z.coerce.number().min(1, 'Experience must be a positive number'),
+        experience: z.coerce
+            .number()
+            .min(1, 'Experience must be a positive number')
+            .max(30, 'Experience must not exceed 30 years'),
         deadline: z
             .string()
             .optional()
@@ -142,17 +156,21 @@ const postJobSchema = z
             .string({
                 required_error: 'Expiration date is required',
             })
-            .nonempty('Expiration date cannot be empty'),
-        jobLevel: z
-            .string({
-                required_error: 'Job level is required',
+            .nonempty('Expiration date cannot be empty')
+            .refine((date) => !isNaN(Date.parse(date)), {
+                message: 'Invalid date format',
             })
-            .min(1, 'Job level is required'),
+            .refine((date) => new Date(date) >= new Date(new Date().setHours(0, 0, 0, 0)), {
+                message: 'Expiration date cannot be in the past',
+            }),
         category: z
             .string({
                 required_error: 'Category is required',
             })
             .min(1, 'Category is required'),
+        benefit: z.string().min(20, 'Benefit is required and must be at least 20 characters'),
+        specializations: z.array(z.string()).min(1, 'At least one specializations is required'),
+        requirements: z.string().min(20, 'Requirements is required and must be at least 20 characters'),
         address: z
             .string({
                 required_error: 'Address is required',
@@ -167,7 +185,8 @@ const postJobSchema = z
 const addTagSchema = z.object({
     name: z
         .string()
-        .min(1, 'required')
+        .min(1, 'Tag name is required')
+        .max(10, 'Tag name must be at most 10 characters long')
         .refine((value) => /^[A-Z]/.test(value), {
             message: 'Tag name must start with an uppercase letter',
         }),
@@ -176,42 +195,28 @@ const addTagSchema = z.object({
 const addEnterpriseSchema = z.object({
     name: z
         .string()
-        .min(1, 'Name is required.')
-        .max(255, 'Name must be between 1 and 255 characters.')
+        .min(1, 'Name is required')
+        .max(255, 'Name must be between 1 and 255 characters')
         .refine((value) => /^[A-Z][a-zA-Z0-9\s]*$/.test(value), {
-            message: 'Name must start with an uppercase letter and contain only letters, numbers, and spaces.',
+            message: 'Name must start with an uppercase letter and contain only letters, numbers, and spaces',
         }),
     email: z
         .string()
-        .min(1, 'Email is required.')
-        .max(255, 'Email must be at most 255 characters.')
-        .email('Email format is invalid.')
+        .min(1, 'Email is required')
+        .max(255, 'Email must be at most 255 characters')
+        .email('Email format is invalid')
         .regex(
             /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|net|org|edu|gov|mil|biz|info|io|vn|us|uk|fr|de|ca|au|jp|kr)$/,
-            'Email format is invalid.'
+            'Email format is invalid'
         ),
 
-    phone: z.string().regex(/^\+?\d{7,15}$/, 'Phone must be a valid phone number.'),
+    phone: z.string().regex(/^\+?\d{7,15}$/, 'Phone must be a valid phone number'),
     description: z.string().min(20, 'Description is required and must be at least 20 characters'),
     vision: z.string().min(1, 'vision is required '),
     organizationType: z.string().min(1, 'Organization type is required'),
-    size: z
-        .string()
-        .min(1, 'Team size is required.')
-        .refine((value) => /^\d+$/.test(value), {
-            message: 'Team size must contain only numbers.',
-        }),
-    industryType: z
-        .string()
-        .min(1, 'Industry is require')
-        .max(255, 'Industry type must be at most 255 characters.')
-        .optional(),
-    bio: z
-        .string()
-        .min(1, 'Bio is required.')
-        .max(255, 'Bio must be at most 255 characters.')
-        .regex(/^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-./?%&=]*)?$/, 'Bio must be a valid URL.'),
-
+    size: z.string().min(1, 'Size is required'),
+    category: z.array(z.string()).min(1, 'At least one tag is required'),
+    bio: z.string().min(1, 'Bio is required').max(255, 'Bio must be at most 255 characters'),
     enterpriseBenefits: z.string().min(20, 'Benefit is required and must be at least 20 characters'),
     foundedIn: z
         .string({
@@ -228,6 +233,15 @@ const addEnterpriseSchema = z.object({
                 message: 'Founded in date cannot be in the future',
             }
         ),
+    country: z
+        .string()
+        .min(1, 'Country is required')
+        .refine((val) => validCountries.includes(val), {
+            message: 'Invalid country',
+        }),
+    city: z.string().min(1, 'City is required'),
+    street: z.string().min(1, 'Street is required'),
+    zipCode: z.string().min(1, 'Zip code is required'),
 });
 
 const companyProfileSchema = z.object({
@@ -240,6 +254,7 @@ const companyProfileSchema = z.object({
         .min(3, 'Company name must be at least 3 characters')
         .max(100, 'Company name is too long')
         .optional(),
+    phone: z.string().min(1, 'Phone is required').max(20, 'Phone is too long').optional(),
     description: z
         .string()
         .min(10, 'Description must be at least 10 characters')
@@ -249,7 +264,74 @@ const companyProfileSchema = z.object({
 
 export type CompanyProfileForm = z.infer<typeof companyProfileSchema>;
 
+// Define Zod Schema
+const companyProfileFoundingSchema = z.object({
+    name: z.string().min(1, 'Name is required'),
+    email: z.string().min(1, 'Email is required').email('Invalid email'),
+    phone: z.string().min(1, 'Phone is required'),
+    description: z.string().min(1, 'Description is required'),
+    companyVision: z.string().min(1, 'Vision is required'), // Fixed naming to match form
+    organizationType: z.string().min(1, 'Organization type is required'),
+    teamSize: z.string().min(1, 'Size is required'), // Fixed naming to match form
+    industryType: z.string().min(1, 'Industry type is required'),
+    bio: z.string().min(1, 'Bio is required'),
+    enterpriseBenefits: z.string().min(1, 'Enterprise benefits is required'),
+    foundedIn: z.string().min(1, 'Founded in is required'),
+});
+
+export type CompanyProfileFoundingForm = z.infer<typeof companyProfileFoundingSchema>;
+
+const uploadCVSchema = z.object({
+    cvName: z.string().min(8, 'Resume name is at least 8 characters').max(20, 'Resume name is at most 20 characters'),
+    cvFile: z.instanceof(File, { message: 'Resume file is required' }).refine(
+        (file) => {
+            // Check file size (12MB limit)
+            if (file.size / (1024 * 1024) >= 12) {
+                return false;
+            }
+            // Check if file is PDF
+            if (file.type !== 'application/pdf') {
+                return false;
+            }
+            return true;
+        },
+        { message: 'File must be a PDF and less than 12MB' }
+    ),
+});
+
+const updateCVSchema = z.object({
+    cvName: z.string().min(8, 'Resume name is at least 8 characters').max(20, 'Resume name is at most 20 characters'),
+});
+const validCountries = [
+    'United States',
+    'China',
+    'India',
+    'Japan',
+    'South Korea',
+    'Philippines',
+    'Vietnam',
+    'Singapore',
+    'United Kingdom',
+    'Germany',
+    'France',
+    'Russia',
+    'Canada',
+];
+
+const addressSchema = z.object({
+    country: z
+        .string()
+        .min(1, 'Country is required')
+        .refine((val) => validCountries.includes(val), {
+            message: 'Invalid country',
+        }),
+    city: z.string().min(1, 'City is required'),
+    street: z.string().min(1, 'Street is required'),
+    zipCode: z.string().min(1, 'Zip code is required'),
+});
+
 export {
+    companyProfileFoundingSchema,
     companyProfileSchema,
     signUpSchema,
     verifySignInSchema,
@@ -262,4 +344,7 @@ export {
     postJobSchema,
     addTagSchema,
     addEnterpriseSchema,
+    uploadCVSchema,
+    updateCVSchema,
+    addressSchema,
 };

@@ -40,7 +40,7 @@ export function Testimonials() {
     return (
         <HomePart title="Clients Testimonial">
             <motion.div
-                className="grid md:grid-cols-3 gap-8"
+                className="grid gap-8 md:grid-cols-3"
                 variants={motionVariant.itemVariants}
                 initial="hidden"
                 whileInView="visible"
@@ -49,23 +49,23 @@ export function Testimonials() {
                 {testimonials.map((testimonial, index) => (
                     <Card
                         key={index}
-                        className="p-6 flex flex-col justify-between border-gray-100 shadow-sm drop-shadow-sm"
+                        className="flex flex-col justify-between border-gray-100 p-6 shadow-sm drop-shadow-sm"
                     >
                         <div>
-                            <div className="flex gap-1 mb-4">
+                            <div className="mb-4 flex gap-1">
                                 <Rating size="xs" interactive={false} value={5} />
                             </div>
-                            <p className="text-muted-foreground mb-4">{testimonial.text}</p>
+                            <p className="mb-4 text-muted-foreground">{testimonial.text}</p>
                         </div>
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center overflow-hidden">
+                            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-slate-200">
                                 {testimonial.avatarUrl?.trim() ? (
                                     <Image
                                         src={testimonial.avatarUrl}
                                         alt={`${testimonial.name}'s Avatar`}
                                         width={40} // Đặt kích thước cố định để tránh layout shift
                                         height={40}
-                                        className="w-full h-full object-cover"
+                                        className="h-full w-full object-cover"
                                     />
                                 ) : (
                                     <Image
@@ -73,7 +73,7 @@ export function Testimonials() {
                                         alt="Default Avatar"
                                         width={40}
                                         height={40}
-                                        className="w-full h-full object-cover"
+                                        className="h-full w-full object-cover"
                                     />
                                 )}
                             </div>

@@ -3,17 +3,16 @@
 import React, { Fragment, Suspense, useState } from 'react';
 import { PrimaryPagination } from '@/components/ui/pagination';
 import { useSearchParams } from 'next/navigation';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import { queryKey } from '@/lib/react-query/keys';
 import { JobService } from '@/services/job.service';
 import { DetailedRequest, Meta } from '@/types';
-import { Separator } from '@/components/ui/separator';
 import { handleErrorToast } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
-import { toast } from 'sonner';
 import CardJobHorizontal from '@/components/custom-ui/card-job-horizontal';
+import { toast } from '@/lib/toast';
 
-const ITEM_PER_PAGE = 10;
+const ITEM_PER_PAGE = 5;
 
 export default function JobWishListPage() {
     return (
@@ -45,44 +44,39 @@ function PageContent() {
                 handleErrorToast(error);
             }
         },
-        staleTime: 1000 * 60, // 1 minute
-        refetchInterval: 1000 * 60, // 1 minute
         retry: 2,
         enabled: true,
+        placeholderData: keepPreviousData,
     });
 
     const removeFavoriteJobMutation = useMutation({
         mutationFn: async ({ jobId }: { jobId: string }) => {
-            try {
-                await JobService.removeFavoriteJob({ jobId });
-                await refetch();
-            } catch (error: any) {
-                handleErrorToast(error);
-            }
+            await JobService.removeFavoriteJob({ jobId });
+            await refetch();
         },
         onSuccess: () => {
             toast.success('Job added to favorite list');
         },
-        onError: () => {
-            toast.error('Failed to add job to favorite list');
+        onError: (error) => {
+            handleErrorToast(error);
         },
     });
 
     return (
-        <div className="min-h-[500px] flex flex-col justify-between p-6 md:pt-12 md:pl-12 md:pb-12 md:pr-0 space-y-2">
-            <div>
+        <div className="flex min-h-[500px] flex-col justify-between space-y-2">
+            <div className="space-y-4">
                 <div className="flex items-center">
-                    <h5 className="text-lg text-gray-900 font-medium">Favorite Jobs</h5>&nbsp;
-                    <span className="text-base text-gray-400 font-normal">({resultQuery?.meta.itemCount})</span>
+                    <h5 className="text-lg font-medium text-gray-900">Favorite Jobs</h5>&nbsp;
+                    <span className="text-base font-normal text-gray-400">({resultQuery?.meta?.itemCount})</span>
                 </div>
                 <div className="space-y-2">
                     {isPending
                         ? [...Array(ITEM_PER_PAGE)].map((_, i) => (
                               <div key={i} className="flex items-center space-x-2">
-                                  <Skeleton className="h-56 w-56 lg:h-28 lg:w-30 rounded-sm" />
-                                  <div className="space-y-2 h-56 lg:h-28 flex-1 flex flex-col">
+                                  <Skeleton className="lg:w-30 h-56 w-56 rounded-sm lg:h-28" />
+                                  <div className="flex h-56 flex-1 flex-col space-y-2 lg:h-28">
                                       <Skeleton className="h-9 w-full" />
-                                      <Skeleton className="flex-1 w-full" />
+                                      <Skeleton className="w-full flex-1" />
                                   </div>
                               </div>
                           ))
@@ -90,11 +84,10 @@ function PageContent() {
                               <Fragment key={job.jobId}>
                                   <CardJobHorizontal
                                       job={job}
-                                      handleUnMark={() => removeFavoriteJobMutation.mutate({ jobId: job.jobId })}
+                                      handleUnMark={() => removeFavoriteJobMutation.mutate({ jobId: job?.jobId })}
                                       mark={true}
                                       showMarkButton={true}
                                   />
-                                  <Separator />
                               </Fragment>
                           ))}
                 </div>

@@ -1,6 +1,4 @@
-import { CandidateProfileType, DetailedRequest, PersonalProfileType, SocialLink } from '@/types';
-import { toast } from 'sonner';
-import { errorKeyMessage } from './message-keys';
+import { Address, CandidateProfileType, DetailedRequest, PersonalProfileType, SocialLink } from '@/types';
 import {
     applyJobCoverLetterSchema,
     forgetPasswordSchema,
@@ -13,9 +11,12 @@ import {
     postJobSchema,
     addTagSchema,
     addEnterpriseSchema,
+    uploadCVSchema,
+    updateCVSchema,
+    addressSchema,
 } from './zod-schemas';
 import { handleErrorToast } from './utils';
-import { ApplyJobService } from '@/services/applyJob.service';
+import { ApplyJobService } from '@/services/apply-job.service';
 import { AuthService } from '@/services/auth.service';
 import { UploadService } from '@/services/upload.service';
 import { UserService } from '@/services/user.service';
@@ -24,8 +25,8 @@ import { getBackgroundColor, getRandomColor } from './random-color';
 import { TagService } from '@/services/tag.service';
 import { JobService } from '@/services/job.service';
 import { EnterpriseService } from '@/services/enterprises.service';
-import { storeTokenInfo } from './auth';
-
+import { setLoginCookie, storeTokenInfo } from './auth';
+import { CVService } from '@/services/cv.service';
 export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, formData: FormData) => {
     const username = formData.get('username')?.toString() ?? '';
     const password = formData.get('password')?.toString() ?? '';
@@ -47,8 +48,10 @@ export const signInSubmit = async (currentState: DetailedRequest.SignInRequest, 
 
     try {
         const res = await AuthService.login(data);
-        if (res.value)
+        if (res.value) {
             storeTokenInfo(res.value?.accessToken as string, res.value?.tokenType, res.value?.accessTokenExpires);
+            setLoginCookie(res.value?.refreshTokenExpires);
+        }
         return {
             ...currentState,
             errors: {},
@@ -99,7 +102,6 @@ export const signUpSubmit = async (currentState: DetailedRequest.SignUpRequest, 
             };
         }
     } catch (error: any) {
-        console.log(error);
         handleErrorToast(error);
     }
     return { ...currentState, errors: {}, success: false };
@@ -122,10 +124,7 @@ export const forgetPasswordSubmit = async (currentState: any, formData: FormData
         const data = await AuthService.forgetPassword({ email: currentState.email });
         return { ...currentState, errors: {}, success: true, data };
     } catch (error: any) {
-        if (error.props.title) {
-            const errorMessage = errorKeyMessage[error.props.title as keyof typeof errorKeyMessage] || 'Oops!';
-            toast.error(errorMessage);
-        }
+        handleErrorToast(error);
     }
 
     return { ...currentState, errors: {}, success: false, data: {} };
@@ -227,7 +226,12 @@ export const settingPersonalProfile = async (
         uploadPromises.push((() => {})());
     }
 
-    const validation = updatePersonalProfile.safeParse({ fullname: currentState.fullname, phone: currentState.phone });
+    const validation = updatePersonalProfile.safeParse({
+        fullname: currentState.fullName,
+        phone: currentState.phone,
+        maritalStatus: currentState.maritalStatus || null,
+        dateOfBirth: currentState.dateOfBirth || null,
+    });
     if (!validation.success) {
         return {
             ...currentState,
@@ -240,18 +244,20 @@ export const settingPersonalProfile = async (
         const [avatar, background] = await Promise.all(uploadPromises);
 
         const updatedProfile = await UserService.updatePersonalProfile({
-            fullName: currentState.fullname,
+            fullName: currentState.fullName,
             phone: currentState.phone,
             education: currentState.education,
             experience: currentState.experience,
-            profileUrl: avatar?.fileUrl || currentState.avatarUrl,
+            profileUrl: avatar?.fileUrl ?? currentState.avatarUrl,
             pageUrl: background?.fileUrl || currentState.backgroundUrl,
+            dateOfBirth: currentState.dateOfBirth,
+            maritalStatus: currentState.maritalStatus,
         });
 
         // update current state
         currentState.avatarUrl = updatedProfile?.profileUrl ?? currentState.avatarUrl;
         currentState.backgroundUrl = updatedProfile?.pageUrl ?? currentState.backgroundUrl;
-        currentState.fullname = updatedProfile?.fullName ?? currentState.fullname;
+        currentState.fullName = updatedProfile?.fullName ?? currentState.fullName;
         currentState.phone = updatedProfile?.phone ?? currentState.phone;
         currentState.education = updatedProfile?.education ?? currentState.education;
         currentState.experience = updatedProfile?.experience ?? currentState.experience;
@@ -265,11 +271,6 @@ export const settingPersonalProfile = async (
     }
 };
 export const settingEmployerProfile = async (formData: FormData) => {
-    console.log('Form Data:');
-    for (const [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-    }
-
     // Upload promises storage
     const uploadPromises: Promise<any>[] = [];
 
@@ -278,7 +279,6 @@ export const settingEmployerProfile = async (formData: FormData) => {
 
     const logoFile = formData.get('logoFile') as File;
     if (logoFile && logoFile.size > 0) {
-        console.log('Uploading Logo...');
         uploadPromises.push(
             UploadService.uploadFile(logoFile).then((res) => {
                 logoUrl = res.fileUrl || ''; // Update logoUrl after successful upload
@@ -288,10 +288,9 @@ export const settingEmployerProfile = async (formData: FormData) => {
 
     const backgroundFile = formData.get('backgroundFile') as File;
     if (backgroundFile && backgroundFile.size > 0) {
-        console.log('Uploading Background...');
         uploadPromises.push(
             UploadService.uploadFile(backgroundFile).then((res) => {
-                backgroundImageUrl = res.fileUrl || ''; // Update backgroundImageUrl after successful upload
+                backgroundImageUrl = res.fileUrl || '';
             })
         );
     }
@@ -300,21 +299,14 @@ export const settingEmployerProfile = async (formData: FormData) => {
         // Wait for all uploads to complete
         await Promise.all(uploadPromises);
 
-        console.log('Final Logo:', logoUrl);
-        console.log('Final Background:', backgroundImageUrl);
-
         // Now update company profile with the correct URLs
-        const updateData = await EnterpriseService.updateEnterpriseCompany(
-            {
-                logoUrl,
-                backgroundImageUrl,
-                name: formData.get('name')?.toString() || '',
-                description: formData.get('description')?.toString() || '',
-            },
-            formData.get('enterpriseId')?.toString() || ''
-        );
-
-        console.log('Update Data:', updateData);
+        await EnterpriseService.updateEnterpriseCompany({
+            logoUrl,
+            backgroundImageUrl,
+            name: formData.get('name')?.toString() || '',
+            description: formData.get('description')?.toString() || '',
+            phone: formData.get('phone')?.toString() || '',
+        });
     } catch (error) {
         handleErrorToast(error);
         return { ...formData, success: false, errors: {} };
@@ -336,17 +328,15 @@ export const updateCandidateProfile = async (
 
     try {
         const updatedProfile = await UserService.updateCandidateProfile({
-            nationality: currentState.nationality ?? '',
-            dateOfBirth: currentState.dateOfBirth ?? '',
-            gender: currentState.gender ?? '',
-            maritalStatus: currentState.maritalStatus ?? '',
-            introduction: currentState.introduction ?? '',
+            nationality: currentState.nationality || null,
+            gender: currentState.gender || null,
+            introduction: currentState.introduction || '',
+            industryId: currentState.industryId || null,
+            majorityId: currentState.majorityId || null,
         });
 
         currentState.nationality = updatedProfile?.nationality ?? '';
-        currentState.dateOfBirth = updatedProfile?.dateOfBirth ?? '';
         currentState.gender = updatedProfile?.gender ?? '';
-        currentState.maritalStatus = updatedProfile?.maritalStatus ?? '';
         currentState.introduction = updatedProfile?.introduction ?? '';
 
         return { ...currentState, success: true, errors: {} };
@@ -357,12 +347,13 @@ export const updateCandidateProfile = async (
 };
 
 const regex = {
-    FACEBOOK: /^(https?:\/\/)?(www\.)?(m\.)?(facebook|fb)\.com\/[A-Za-z0-9._-]+(\/)?$/,
+    FACEBOOK: /^(https?:\/\/)?(www\.)?(facebook\.com)\/(profile\.php\?id=\d{6,}|[\w\.]{5,})$/,
     YOUTUBE:
-        /^(https?:\/\/)?(www\.)?(youtube\.com\/(@[A-Za-z0-9_-]+|channel\/[A-Za-z0-9_-]+|watch\?v=[A-Za-z0-9_-]+)|youtu\.be\/[A-Za-z0-9_-]+)(\/)?$/,
-    INSTAGRAM: /^(https?:\/\/)?(www\.)?(instagram\.com\/[A-Za-z0-9._-]+(\/)?)$/,
-    LINKEDIN: /^(https?:\/\/)?(www\.)?(linkedin\.com\/(in|company)\/[A-Za-z0-9_-]+(\/)?)$/,
-    TWITTER: /^(https?:\/\/)?(www\.)?(x|twitter)\.com\/[A-Za-z0-9_]+(\/)?$/,
+        /^(https?:\/\/)?(?:www\.)?youtube\.com\/(?:@[\w-]{1,30}|channel\/[a-zA-Z0-9!@#$%^&*(),.?":{}|<>_-]{22,24})$/,
+    INSTAGRAM: /^(https?:\/\/)?(?:www\.)?instagram\.com\/[a-zA-Z0-9_\.]{1,30}$/,
+    LINKEDIN:
+        /^(https?:\/\/)?((www|\w\w)\.)?linkedin\.com\/(in\/[a-zA-Z0-9!@#$%^&*(),.?":{}|<>\-]{3,100}|company\/[a-zA-Z0-9!@#$%^&*(),.?":{}|<>\-]{3,100}|school\/[a-zA-Z0-9!@#$%^&*(),.?":{}|<>\-]{3,100})(\/)?$/,
+    TWITTER: /^(https?:\/\/)?(?:www\.|mobile\.)?twitter\.com\/[a-zA-Z0-9!@#$%^&*(),.?":{}|<>_]{1,15}$/,
 };
 
 export const updateCandidateSocialLinks = async (currentState: {
@@ -411,12 +402,14 @@ export const postJob = async (currentState: any, formData: FormData) => {
     currentState.experience = Number(formData.get('experience'));
     currentState.jobType = formData.get('jobType')?.toString() ?? '';
     currentState.expirationDate = formData.get('expirationDate')?.toString() ?? '';
-    currentState.jobLevel = formData.get('jobLevel')?.toString() ?? '';
     currentState.description = formData.get('description')?.toString() ?? '';
     currentState.responsibilities = formData.get('responsibilities')?.toString() ?? '';
     currentState.category = formData.get('category')?.toString() ?? '';
     currentState.address = formData.get('address')?.toString() ?? '';
     currentState.education = formData.get('education')?.toString() ?? '';
+    currentState.benefit = formData.get('benefit')?.toString() ?? '';
+    currentState.specializations = formData.getAll('specializations[]');
+    currentState.requirements = formData.get('requirements')?.toString() ?? '';
     const validation = postJobSchema.safeParse(currentState);
     if (!validation.success) {
         return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
@@ -437,6 +430,9 @@ export const postJob = async (currentState: any, formData: FormData) => {
             tagIds: currentState.tags,
             categoryIds: [currentState.category],
             address: [currentState.address],
+            enterpriseBenefits: currentState.benefit,
+            specializationIds: currentState.specializations,
+            requirements: currentState.requirements,
         });
         return { ...currentState, errors: {}, success: true };
     } catch (error: any) {
@@ -450,7 +446,6 @@ export const addTag = async (currentState: any, formData: FormData) => {
     currentState.name = formData.get('name')?.toString() ?? '';
     const validation = addTagSchema.safeParse(currentState);
     if (!validation.success) {
-        console.log('Error', validation.error.flatten().fieldErrors);
         return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
     }
     try {
@@ -493,16 +488,18 @@ export const addEnterprises = async (currentState: any, formData: FormData) => {
     currentState.size = formData.get('size')?.toString() ?? '';
     currentState.foundedIn = formData.get('foundedIn')?.toString() ?? '';
     currentState.organizationType = formData.get('organizationType')?.toString() ?? '';
-    currentState.industryType = formData.get('industryType')?.toString() ?? '';
+    currentState.category = formData.getAll('categories[]');
     currentState.bio = formData.get('bio')?.toString() ?? '';
     currentState.enterpriseBenefits = formData.get('enterpriseBenefits')?.toString() ?? '';
     currentState.description = formData.get('description')?.toString() ?? '';
+    currentState.country = formData.get('country')?.toString() ?? '';
+    currentState.city = formData.get('city')?.toString() ?? '';
+    currentState.street = formData.get('street')?.toString() ?? '';
+    currentState.zipCode = formData.get('zipCode')?.toString() ?? '';
     const validation = addEnterpriseSchema.safeParse(currentState);
     if (!validation.success) {
         Object.assign(errors, validation.error.flatten().fieldErrors);
     }
-
-    // Nếu có lỗi, trả về tất cả lỗi cùng lúc
     if (Object.keys(errors).length > 0) {
         return {
             ...currentState,
@@ -513,21 +510,31 @@ export const addEnterprises = async (currentState: any, formData: FormData) => {
     }
     try {
         const [logoFile] = await Promise.all(uploadPromises);
-        await EnterpriseService.postEnterprise({
+        const enterprise = await EnterpriseService.postEnterprise({
             name: currentState.name,
             email: currentState.email,
             phone: currentState.phone,
             description: currentState.description,
-            enterpriseBenefits: currentState.enterpriseBenefits,
+            benefit: currentState.enterpriseBenefits,
             companyVision: currentState.vision,
             logoUrl: logoFile?.fileUrl || currentState.logoUrl,
             backgroundImageUrl: currentState.backgroundImageUrl,
             foundedIn: currentState.foundedIn,
             organizationType: currentState.organizationType,
             teamSize: currentState.size,
-            industryType: currentState.industryType,
+            categories: currentState.category,
             bio: currentState.bio,
             status: 'PENDING',
+        });
+        if (!enterprise) {
+            return { ...currentState, success: true, errors: {} };
+        }
+        await EnterpriseService.updateAddressEmployer({
+            enterpriseId: enterprise?.enterpriseId,
+            city: currentState.city,
+            street: currentState.street,
+            zipCode: currentState.zipCode,
+            country: currentState.country,
         });
 
         return { ...currentState, success: true, errors: {} };
@@ -537,7 +544,7 @@ export const addEnterprises = async (currentState: any, formData: FormData) => {
     return { ...currentState, errors: {}, success: false, data: null };
 };
 
-export const updateRegisterEnterprice = async (currentState: any, formData: FormData) => {
+export const updateRegisterEnterprise = async (currentState: any, formData: FormData) => {
     const errors: Record<string, any> = {};
     const uploadPromises = [];
     const logoFile = formData.get('logo') as File;
@@ -564,6 +571,11 @@ export const updateRegisterEnterprice = async (currentState: any, formData: Form
     currentState.bio = formData.get('bio')?.toString() ?? '';
     currentState.enterpriseBenefits = formData.get('enterpriseBenefits')?.toString() ?? '';
     currentState.description = formData.get('description')?.toString() ?? '';
+    currentState.category = formData.getAll('categories[]');
+    currentState.country = formData.get('country')?.toString() ?? '';
+    currentState.city = formData.get('city')?.toString() ?? '';
+    currentState.street = formData.get('street')?.toString() ?? '';
+    currentState.zipCode = formData.get('zipCode')?.toString() ?? '';
 
     const validation = addEnterpriseSchema.safeParse(currentState);
     if (!validation.success) {
@@ -586,14 +598,14 @@ export const updateRegisterEnterprice = async (currentState: any, formData: Form
                 email: currentState.email,
                 phone: currentState.phone,
                 description: currentState.description,
-                enterpriseBenefits: currentState.enterpriseBenefits,
+                benefit: currentState.enterpriseBenefits,
                 companyVision: currentState.vision,
                 logoUrl: logoUrl,
                 backgroundImageUrl: currentState.backgroundImageUrl,
                 foundedIn: currentState.foundedIn,
                 organizationType: currentState.organizationType,
                 teamSize: currentState.size,
-                industryType: currentState.industryType,
+                categories: currentState.category,
                 bio: currentState.bio,
                 status: 'PENDING',
             },
@@ -607,6 +619,186 @@ export const updateRegisterEnterprice = async (currentState: any, formData: Form
             ...currentState,
             errors: { general: 'An error occurred while updating the enterprise' },
             success: false,
+        };
+    }
+};
+
+export const settingEmployerFounding = async (formData: FormData) => {
+    try {
+        await EnterpriseService.updateEnterpriseCompanyFounding({
+            organizationType: formData.get('organizationType')?.toString() || '',
+            categories: formData.getAll('industryType') as string[],
+            teamSize: formData.get('teamSize')?.toString() || '',
+            foundedIn: formData.get('foundedIn') ? new Date(formData.get('foundedIn') as string) : new Date(),
+            email: formData.get('email')?.toString() || '',
+            bio: formData.get('bio')?.toString() || '',
+            companyVision: formData.get('companyVision')?.toString() || '',
+            description: formData.get('description')?.toString() || '',
+        });
+    } catch (error) {
+        handleErrorToast(error);
+        return { ...formData, success: false, errors: {} };
+    }
+};
+
+export const updateEnterpriseSocialLinks = async (currentState: {
+    links: SocialLink[];
+}): Promise<{ success: boolean; errors: (string[] | null)[] }> => {
+    let success = true;
+
+    const errors = [];
+    const links: SocialLink[] = currentState.links ?? [];
+    for (const link of links) {
+        if (!link.socialLink) {
+            errors.push(['This field is required']);
+            success = false;
+        } else if (!regex[link.socialType].test(link.socialLink)) {
+            errors.push([`This ${link.socialType.toLowerCase()} url is not a valid`]);
+            success = false;
+        } else {
+            errors.push(null);
+        }
+    }
+
+    if (success) {
+        try {
+            const linksWithoutId = links.map<Omit<SocialLink, 'websiteId'>>((link) => ({
+                socialLink: link.socialLink,
+                socialType: link.socialType,
+            }));
+            await WebsiteService.updateEmployerSocialLinks(linksWithoutId);
+        } catch (error) {
+            handleErrorToast(error);
+        }
+    }
+
+    return {
+        success,
+        errors,
+    };
+};
+
+export const uploadCV = async (currentState: any) => {
+    const validation = uploadCVSchema.safeParse(currentState);
+    if (!validation.success) {
+        return {
+            ...currentState,
+            errors: validation.error.flatten().fieldErrors,
+            success: false,
+        };
+    }
+
+    const { success, fileUrl } = await UploadService.presignedCV(currentState?.cvFile);
+    if (!success || !fileUrl) {
+        return {
+            ...currentState,
+            errors: { cvFile: 'Failed to upload CV' },
+            success: false,
+        };
+    }
+
+    await CVService.uploadCV({
+        cvName: currentState?.cvName,
+        cvUrl: fileUrl,
+        isPublished: currentState?.isPublished,
+        size: (currentState?.cvFile as File).size / (1024 * 1024),
+    });
+
+    return { ...currentState, success: true };
+};
+
+export const updateCV = async (currentState: any) => {
+    const validation = updateCVSchema.safeParse(currentState);
+    if (!validation.success) {
+        return {
+            ...currentState,
+            errors: validation.error.flatten().fieldErrors,
+            success: false,
+        };
+    }
+
+    await CVService.updateCV({
+        cvId: currentState?.cvId,
+        cvName: currentState?.cvName,
+        isPublished: currentState?.isPublished,
+    });
+
+    return { ...currentState, success: true };
+};
+
+export const updateJob = async (currentState: any, formData: FormData) => {
+    currentState.title = formData.get('title')?.toString() ?? '';
+    currentState.tags = formData.getAll('tags[]');
+    currentState.minSalary = formData.get('minSalary');
+    currentState.maxSalary = formData.get('maxSalary');
+    currentState.education = formData.get('education')?.toString() ?? '';
+    currentState.experience = Number(formData.get('experience'));
+    currentState.jobType = formData.get('jobType')?.toString() ?? '';
+    currentState.expirationDate = formData.get('expirationDate')?.toString() ?? '';
+    currentState.description = formData.get('description')?.toString() ?? '';
+    currentState.responsibilities = formData.get('responsibilities')?.toString() ?? '';
+    currentState.category = formData.get('category')?.toString() ?? '';
+    currentState.address = formData.get('address')?.toString() ?? '';
+    currentState.education = formData.get('education')?.toString() ?? '';
+    currentState.benefit = formData.get('benefit')?.toString() ?? '';
+    currentState.specializations = formData.getAll('specializations[]');
+    currentState.jobId = formData.get('jobId')?.toString() ?? '';
+    currentState.requirements = formData.get('requirements')?.toString() ?? '';
+    const validation = postJobSchema.safeParse(currentState);
+    if (!validation.success) {
+        return { ...currentState, errors: validation.error.flatten().fieldErrors, success: false, data: null };
+    }
+    try {
+        await JobService.updateJob(currentState.jobId, {
+            name: currentState.title,
+            lowestWage: currentState.minSalary,
+            highestWage: currentState.maxSalary,
+            description: currentState.description,
+            responsibility: currentState.responsibilities,
+            type: currentState.jobType,
+            experience: currentState.experience,
+            deadline: currentState.expirationDate,
+            introImg: '',
+            status: false,
+            education: currentState.education,
+            tagIds: currentState.tags,
+            categoryIds: [currentState.category],
+            address: [currentState.address],
+            enterpriseBenefits: currentState.benefit,
+            specializationIds: currentState.specializations,
+            requirements: currentState.requirements,
+        });
+        return { ...currentState, errors: {}, success: true };
+    } catch (error: any) {
+        handleErrorToast(error);
+    }
+
+    return { ...currentState, errors: {}, success: false, data: null };
+};
+
+export const settingAddressEmployer = async (formData: Address) => {
+    const validation = addressSchema.safeParse(formData);
+    if (!validation.success) {
+        return {
+            errors: validation.error.flatten().fieldErrors,
+            success: false,
+            data: null,
+        };
+    }
+
+    try {
+        const data = await EnterpriseService.updateAddressEmployer(formData);
+        return {
+            errors: null,
+            success: true,
+            data,
+        };
+    } catch (error: any) {
+        handleErrorToast(error);
+        return {
+            errors: ['An error occurred while updating the address.'],
+            success: false,
+            data: null,
         };
     }
 };

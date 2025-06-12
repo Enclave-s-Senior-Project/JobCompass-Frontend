@@ -5,8 +5,7 @@ import CardJob from './card-job';
 import { useMutation } from '@tanstack/react-query';
 import { JobService } from '@/services/job.service';
 import { handleErrorToast } from '@/lib/utils';
-import { toast } from 'sonner';
-import { Separator } from '@/components/ui/separator';
+import { toast } from '@/lib/toast';
 
 export function JobCardTwoType(props: {
     job: Job;
@@ -18,48 +17,37 @@ export function JobCardTwoType(props: {
     const { job, viewType, refetch } = props;
     const removeFavoriteJobMutation = useMutation({
         mutationFn: async ({ jobId }: { jobId: string }) => {
-            try {
-                await JobService.removeFavoriteJob({ jobId });
-                await refetch();
-            } catch (error: any) {
-                handleErrorToast(error);
-            }
+            await JobService.removeFavoriteJob({ jobId });
+            await refetch();
         },
         onSuccess: () => {
             toast.success('Job added to favorite list');
         },
-        onError: () => {
-            toast.error('Failed to add job to favorite list');
+        onError: (error) => {
+            handleErrorToast(error);
         },
     });
 
     const addFavoriteJobMutation = useMutation({
         mutationFn: async ({ jobId }: { jobId: string }) => {
-            try {
-                await JobService.addFavoriteJob({ jobId });
-                await refetch();
-            } catch (error: any) {
-                handleErrorToast(error);
-            }
+            await JobService.addFavoriteJob({ jobId });
+            await refetch();
         },
         onSuccess: () => {
             toast.success('Job added to favorite list');
         },
-        onError: () => {
-            toast.error('Failed to add job to favorite list');
+        onError: (error) => {
+            handleErrorToast(error);
         },
     });
     return viewType === 'list' ? (
-        <>
-            <CardJobHorizontal
-                job={job}
-                handleUnMark={() => removeFavoriteJobMutation.mutate({ jobId: job.jobId })}
-                handleMark={() => addFavoriteJobMutation.mutate({ jobId: job.jobId })}
-                mark={job.isFavorite || false}
-                showMarkButton={false}
-            />
-            <Separator className="my-4" /> {/* 👈 Thêm Separator ở đây */}
-        </>
+        <CardJobHorizontal
+            job={job}
+            handleUnMark={() => removeFavoriteJobMutation.mutate({ jobId: job.jobId })}
+            handleMark={() => addFavoriteJobMutation.mutate({ jobId: job.jobId })}
+            mark={job.isFavorite || false}
+            showMarkButton={false}
+        />
     ) : (
         <CardJob job={job} />
     );

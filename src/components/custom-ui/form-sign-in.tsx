@@ -10,11 +10,10 @@ import { LuArrowRight } from 'react-icons/lu';
 import { signInSubmit } from '@/lib/action';
 import { ButtonOptionsSignIn } from '@/components/custom-ui/button-options-sign-in';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import clsx from 'clsx';
 import { routes } from '@/configs/routes';
 import { UserContext } from '@/contexts/user-context';
-import { setLoginCookie } from '@/lib/auth';
 import { errorKeyMessage } from '@/lib/message-keys';
 
 interface Props {
@@ -53,7 +52,6 @@ export function FormSignIn({ error_code, redirect }: Props) {
             refreshMe();
             // set cookies and redirect to dashboard
             toast.success('Login successful');
-            setLoginCookie();
             router.push(redirect ?? '/');
         }
     }, [state.success, state.errors, router]);
@@ -73,7 +71,7 @@ export function FormSignIn({ error_code, redirect }: Props) {
                                 : 'focus-visible:border-primary focus-visible:ring-primary'
                         )}
                     />
-                    <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                    <p className="absolute bottom-0 top-full mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-red-500">
                         {state.errors?.username && state.errors.username[0]}
                     </p>
                 </div>
@@ -92,28 +90,28 @@ export function FormSignIn({ error_code, redirect }: Props) {
                                 : 'focus-within:border-primary focus-within:ring-1 focus-within:ring-primary focus-visible:ring-primary'
                         )}
                     />
-                    <p className="absolute top-full bottom-0 line-clamp-1 text-red-500 text-[12px] font-medium mb-1 min-h-5">
+                    <p className="absolute bottom-0 top-full mb-1 line-clamp-1 min-h-5 text-[12px] font-medium text-red-500">
                         {state.errors?.password && state.errors.password[0]}
                     </p>
                 </div>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-[10px] text-gray-500">
                         <Checkbox name="remember" id={checkboxId} className="size-5 border-primary-200 shadow-none" />
-                        <label htmlFor={checkboxId} className="select-none cursor-pointer text-sm">
+                        <label htmlFor={checkboxId} className="cursor-pointer select-none text-sm">
                             Remember me
                         </label>
                     </div>
-                    <Link href={routes.forgetPassword} className="text-primary text-sm hover:underline font-medium">
+                    <Link href={routes.forgetPassword} className="text-sm font-medium text-primary hover:underline">
                         Forget password
                     </Link>
                 </div>
             </div>
             <Button type="submit" size="xl" className="group font-semibold" isPending={isPending}>
-                Sign in <LuArrowRight className="group-hover:translate-x-2 transition-all duration-100" />
+                Sign in <LuArrowRight className="transition-all duration-100 group-hover:translate-x-2" />
             </Button>
             <div className="space-y-4">
                 <p className="text-center text-sm text-gray-500">or</p>
-                <ButtonOptionsSignIn />
+                <ButtonOptionsSignIn redirect={redirect} />
             </div>
         </form>
     );

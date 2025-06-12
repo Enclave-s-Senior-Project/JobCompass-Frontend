@@ -18,7 +18,7 @@ export const IconPresent = {
                     'group',
                     className,
                     animation
-                        ? 'transition-all  [&_svg]:transition-all [&_div]:transition-all duration-300 [&_div]:duration-300 [&_svg]:duration-300'
+                        ? 'transition-all duration-300 [&_div]:transition-all [&_div]:duration-300 [&_svg]:transition-all [&_svg]:duration-300'
                         : ''
                 )}
             >
@@ -28,7 +28,7 @@ export const IconPresent = {
     },
     Icon: ({ Icon, size = 'md' }: { Icon: any; size: 'sm' | 'md' | 'lg' }) => {
         return (
-            <div className="p-4 bg-primary-50 rounded-md group-hover:bg-primary">
+            <div className="rounded-md bg-primary-50 p-4 group-hover:bg-primary">
                 <Icon
                     className={clsx(
                         size === 'sm'

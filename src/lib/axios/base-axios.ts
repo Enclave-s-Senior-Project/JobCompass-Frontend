@@ -4,9 +4,10 @@ import Error from 'next/error';
 
 export class BaseAxios {
     protected axiosInstance: AxiosInstance;
-    constructor(prefix: string) {
+    constructor(prefix: string, baseURL?: string) {
+        const defaultBaseURL = baseURL || process.env.NEXT_PUBLIC_APP_SERVER_URL;
         this.axiosInstance = axios.create({
-            baseURL: `${process.env.NEXT_PUBLIC_APP_SERVER_URL}/${prefix}`,
+            baseURL: `${defaultBaseURL}/${prefix}`,
             timeout: 10000,
             withCredentials: true,
             headers: { 'Content-Type': 'application/json' },
@@ -28,7 +29,7 @@ export class BaseAxios {
     }
 
     protected handleErrorRequest(response: ApiResponse<any>) {
-        if (response.payload?.code >= 400) {
+        if (response.payload?.code >= 400 || response.payload?.code < 200) {
             throw new Error({
                 statusCode: response.payload.code,
                 title: response.payload.message_code,
