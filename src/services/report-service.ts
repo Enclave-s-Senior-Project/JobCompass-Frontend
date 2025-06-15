@@ -15,24 +15,24 @@ export class ReportService {
             return undefined;
         }
     }
-    public static async getAll(query: ReportFilterDto): Promise<ReportResponseDto> {
-        try {
-            const dataResponse = await authAxios.get<ApiResponse<ReportResponseDto>>(`/`, { params: query });
-            if (!dataResponse.payload.value) {
-                return {
-                    value: [],
-                    total: 0,
-                    success: false,
-                };
-            }
-            return dataResponse.payload.value;
-        } catch (err) {
-            handleErrorApi(err);
-            return {
-                value: [],
-                total: 0,
-                success: false,
-            };
-        }
-    }
+    // public static async getAll(query: ReportFilterDto): Promise<ReportResponseDto> {
+    //     try {
+    //         const dataResponse = await authAxios.get<ApiResponse<ReportResponseDto>>(`/`, { params: query });
+    //         if (!dataResponse.payload.value) {
+    //             return {
+    //                 value: [],
+    //                 total: 0,
+    //                 success: false,
+    //             };
+    //         }
+    //         return dataResponse.payload.value;
+    //     } catch (err) {
+    //         handleErrorApi(err);
+    //         return {
+    //             value: [],
+    //             total: 0,
+    //             success: false,
+    //         };
+    //     }
+    // }
 }

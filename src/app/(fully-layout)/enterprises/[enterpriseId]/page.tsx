@@ -13,7 +13,6 @@ import { RichTextContent } from '@/components/custom-ui/global/rich-text-content
 import { TopJob } from '@/components/custom-ui/top-job';
 import EnterpriseReviews from '@/components/ui/reviews/enterprise-reviews';
 import { UserContext } from '@/contexts';
-import { EnterpriseReport } from '@/components/enterprise-report';
 
 
 export default function DetailEnterprise() {
