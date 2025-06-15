@@ -12,6 +12,8 @@ import { UserService } from './user.service';
 import { WebsiteService } from './website.service';
 import { FcmTokenService } from './fcm-token.service';
 import { AIService } from './ai.service';
+import { ReviewService } from './review.service';
+import { ReportService } from './report-service';
 import Error from 'next/error';
 
 const handleErrorApi = (err: any) => {
@@ -39,4 +41,6 @@ export {
     WebsiteService,
     FcmTokenService,
     AIService,
+    ReviewService,
+    ReportService,
 };

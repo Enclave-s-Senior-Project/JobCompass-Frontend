@@ -233,6 +233,32 @@ export namespace DetailedResponse {
         introImg: string;
         enterprise: Enterprise;
     };
+
+    interface RatingDistribution {
+        1: number;
+        2: number;
+        3: number;
+        4: number;
+        5: number;
+    }
+
+    interface ReviewSummary {
+        averageRating: number;
+        totalReviews: number;
+        ratingDistribution: RatingDistribution;
+    }
+
+    interface UserRating {
+        id: string;
+        rating: number;
+        comment?: string;
+        createdAt: string;
+        updatedAt: string;
+        user?: {
+            id: string;
+            name: string;
+        };
+    }
 }
 
 export namespace DetailedRequest {
@@ -531,5 +557,10 @@ export namespace DetailedRequest {
     export interface GetApplicationDetails {
         applicationId: string;
         role: 'candidate' | 'enterprise';
+    }
+    export interface PostReport {
+        reason: string;
+        fileAttachment: string[];
+        enterpriseId: string;
     }
 }

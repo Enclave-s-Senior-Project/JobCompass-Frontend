@@ -44,4 +44,6 @@ export const queryKey = {
     getCategoryHomePage: 'get-category-home-page',
     getCategoryChildHomePage: 'get-category-child-home-page',
     getJobHomePage: 'get-job-home-page',
-};
+    getSummaryReviewByEnterpriseId: 'get-summary-review-by-enterprise-id',
+    getEnterpriseReviews: 'get-enterprise-reviews',
+} as const;

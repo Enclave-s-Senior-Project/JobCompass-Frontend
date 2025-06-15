@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Mail, MapPin } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import defaultAvatarImage from '@/assets/images/avatar/default-avatar.jpg';
+import { EnterpriseReport } from '@/components/enterprise-report';
 
 type Props = {
     enterpriseInfo?: Enterprise;
@@ -63,6 +64,7 @@ export function EnterpriseCard({ enterpriseInfo, isPending = false }: Props) {
                         <Mail className="hidden md:block" /> Send Mail
                     </Button>
                 </a>
+                <EnterpriseReport enterpriseId={enterpriseInfo?.enterpriseId || ''} />
                 {/* {hasPermission(ownUserInfo, 'hireCandidate', 'hire') && (
                     <Button
                         disabled={isPending}

@@ -8,11 +8,16 @@ import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import { EnterpriseCard } from '@/components/custom-ui/local/enterprise-card';
 import { Enterprise, Job } from '@/types';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { RichTextContent } from '@/components/custom-ui/global/rich-text-content';
 import { TopJob } from '@/components/custom-ui/top-job';
+import EnterpriseReviews from '@/components/ui/reviews/enterprise-reviews';
+import { UserContext } from '@/contexts';
+import { EnterpriseReport } from '@/components/enterprise-report';
+
 
 export default function DetailEnterprise() {
+    const {userInfo} = useContext(UserContext);
     const { enterpriseId } = useParams<{ enterpriseId: string }>();
     const [enterprise, setEnterprise] = useState<Enterprise | undefined>(undefined);
     const [jobs, setJobs] = useState<Job[]>([]);
@@ -113,6 +118,8 @@ export default function DetailEnterprise() {
                         </div>
                     ) : null}
                 </div>
+                
+                <EnterpriseReviews enterpriseId={enterpriseId} currentUserId={userInfo?.profileId} />
             </div>
         </div>
     );

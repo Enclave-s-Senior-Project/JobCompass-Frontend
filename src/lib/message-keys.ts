@@ -52,6 +52,8 @@ const errorKeyMessage = {
     JOB_IS_OPEN: 'Job is open.',
     JOB_DEADLINE_INVALID: 'Job deadline is invalid.',
     JOB_IS_CLOSED: 'Job is closed.',
+    ALREADY_RATED: 'You have already rated this enterprise.',
+    ALREADY_REPORTED: 'You have already reported this enterprise.',
 };
 
 const warningKeyMessage = {
@@ -75,6 +77,7 @@ const successKeyMessage = {
     SUCCESSFUL_PAYMENT: 'Successful Payment',
     UNSUCCESSFUL_PAYMENT: 'Unsuccessful Payment',
     JOB_BOOST_SUCCESSFUL: 'Job boost successful.',
+    REPORT_ENTERPRISE_SUCCESSFUL: 'Report enterprise successful.',
 };
 
 export { errorKeyMessage, successKeyMessage, warningKeyMessage };
